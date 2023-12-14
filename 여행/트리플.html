@@ -34,8 +34,8 @@
         .list + .list {margin-top:24px;padding-top:12px;}
         .list +  .list::before {content:'';display:block;position:absolute;top:0;left:0;right:0;height:12px;background-color:#ddd;}
         .list-item  {display:flex;align-items:center;padding:12px 0;}
-        .list-title {position:sticky;top:0;padding:12px 0;color:#464646;background-color: #fff;}
-        .list-icon {margin-right:12px;}
+        .list-title {position:sticky;top:0;display:flex;align-items:center;padding:12px 0;color:#464646;background-color: #fff;}
+        .list-icon {height:24px;margin-right:12px;}
         .list-city {color:#999;font-size:12px;}
         .list-name {font-size:16px;font-weight:600;}
         .list-desc {margin-top:4px; color:#999;}
@@ -46,7 +46,8 @@
         .amount-currency {color:#999;font-size:12px;}
 
         .amount-total-group {margin-top:24px;padding:24px 16px 0;border-top:12px solid #ddd;text-align:right;}
-        .amount-total-krw {margin-top:12px;text-align:right;font-size:20px;font-weight:600;}
+        .amount-total-krw {margin-top:12px;padding:0 16px;text-align:right;font-size:16px;}
+        .amount-total-krw b {font-size:32px;font-weight:600;}
     </style>
     <div id="wrap">
         <header id="header">
@@ -55,14 +56,14 @@
         </header>
         <main id="main">
             <div id="a" style="margin-top:20px;"></div>
-            <div id="c"></div>
+            <div id="total"></div>
             <div id="b"></div>
         </main>
     </div>
     <script>
         var wrap = document.getElementById('a');
         var wrap2 = document.getElementById('b');
-        var wrap3 = document.getElementById('c');
+        var wrap3 = document.getElementById('total');
         var exchange = {
             "KRW": [1, '원'], // 환율, 단위
             "VND": [0.05, '동'],
@@ -113,7 +114,7 @@
                 date: "2023.12.02",
                 name: "The Angel Spa",
                 url: 'https://www.google.com/maps?cid=10296173432950896393',
-                desc: '',
+                desc: '발마사지 완전 비추',
                 city: "호이안",
                 currency: "VND",
                 amount: 300000,
@@ -175,53 +176,56 @@
             groupedByDate[key].push(item);
         });
 
-        // HTML parsing and display for Date-wise List
-        var output = ``;
-        for (var date in groupedByDate) {
-            if (groupedByDate.hasOwnProperty(date)) {
-                output += `<div class="list">`;
-                output += `<h3 class="list-title date">${date}</h3>`;
-                output += `<ul class="list-group">`;
+        function sortDate() {
+            // HTML parsing and display for Date-wise List
+            var output = ``;
+            for (var date in groupedByDate) {
+                if (groupedByDate.hasOwnProperty(date)) {
+                    output += `<div class="list">`;
+                    output += `<h3 class="list-title date">${date}</h3>`;
+                    output += `<ul class="list-group">`;
 
-                var currencyTotals = {};
+                    var currencyTotals = {};
 
-                groupedByDate[date].forEach(function (item, index) {
-                    output += 
-                        `<li class="list-item">
-                            <div class="list-icon"><img src="./img/${item.category[1]}.svg" alt=""></div>
-                            <div class="list-info-group">
-                                <div class="list-city">${item.category[0]} · ${item.city}</div>
-                                <div class="list-name"><a href="${item.url}" target="_blank" title="새창으로 열림">${item.name}</a></div>`
-                    if(item.desc !== undefined) {
-                        output += `<div class="list-desc">${item.desc}</div>`
-                    }
-                    output += 
-                        `</div>
-                            <div class="list-amount-group">
-                                <div class="list-amount"><b>${item.amount.toLocaleString('ko-KR')}</b>${exchange[item.currency][1]}</div>
-                            </div>
-                        </li>`;
+                    groupedByDate[date].forEach(function (item, index) {
+                        output += 
+                            `<li class="list-item">
+                                <div class="list-icon"><img src="./img/${item.category[1]}.svg" alt=""></div>
+                                <div class="list-info-group">
+                                    <div class="list-city">${item.category[0]} · ${item.city}</div>
+                                    <div class="list-name"><a href="${item.url}" target="_blank" title="새창으로 열림">${item.name}</a></div>`
+                        if(item.desc !== undefined) {
+                            output += `<div class="list-desc">${item.desc}</div>`
+                        }
+                        output += 
+                            `</div>
+                                <div class="list-amount-group">
+                                    <div class="list-amount"><b>${item.amount.toLocaleString('ko-KR')}</b>${exchange[item.currency][1]}</div>
+                                </div>
+                            </li>`;
 
-                    // Calculate currency-wise totals for each date
-                    if (!currencyTotals[item.currency]) {
-                        currencyTotals[item.currency] = 0;
+                        // Calculate currency-wise totals for each date
+                        if (!currencyTotals[item.currency]) {
+                            currencyTotals[item.currency] = 0;
+                        }
+                        currencyTotals[item.currency] += item.amount;
+                    });
+                    output += `</ul>`;
+                    // Display currency-wise totals for each date
+                    // output += `<h3 class="list-title amount">합계</h3>`;
+                    output += `<ul class="amount-group">`;
+                    for (var currency in currencyTotals) {
+                        if (currencyTotals.hasOwnProperty(currency)) {
+                            output += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">(${currency})</span></li>`;
+                        }
                     }
-                    currencyTotals[item.currency] += item.amount;
-                });
-                output += `</ul>`;
-                // Display currency-wise totals for each date
-                // output += `<h3 class="list-title amount">합계</h3>`;
-                output += `<ul class="amount-group">`;
-                for (var currency in currencyTotals) {
-                    if (currencyTotals.hasOwnProperty(currency)) {
-                        output += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">(${currency})</span></li>`;
-                    }
+                    output += `</ul>`;
+                    output += `</div>`;
                 }
-                output += `</ul>`;
-                output += `</div>`;
             }
+            wrap.innerHTML = output;
         }
-        wrap.innerHTML = output;
+        sortDate();
 
 
 
@@ -235,81 +239,87 @@
         });
 
         // HTML parsing and display for Category-wise Listing
-        var output2 = "<h2>Category-wise Listing with Currency-wise Totals</h2>";
+        function sortCategory() {
+            var output = "<h2>카테고리별</h2>";
+            for (var category in groupedByCategory) {
+                if (groupedByCategory.hasOwnProperty(category)) {
+                output += `<div class="list">`;
+                output += `<h3 class="list-title date"><div class="list-icon"><img src="./img/${category.split(',')[1]}.svg" alt=""></div><div>${category.split(',')[0]}</div></h3>`;
+                output += `<ul class="list-group">`;
 
-        for (var category in groupedByCategory) {
-            if (groupedByCategory.hasOwnProperty(category)) {
-            output2 += `<div class="list">`;
-            output2 += `<h3 class="list-title date">${category.split(',')[0]}</h3>`;
-            output2 += `<ul class="list-group">`;
+                var currencyTotals = {};
 
-            var currencyTotals = {};
+                groupedByCategory[category].forEach(function (item) {
+                    output += 
+                        `<li class="list-item">
+                            <div class="list-info-group">
+                                <div class="list-city">${item.category[0]} · ${item.city}</div>
+                                <div class="list-name"><a href="${item.url}" target="_blank" title="새창으로 열림">${item.name}</a></div>`
+                                if(item.desc !== undefined) {
+                            output += `<div class="list-desc">${item.desc}</div>`
+                        }
+                        output += 
+                            `</div>
+                            <div class="list-amount-group">
+                                <div class="list-amount"><b>${item.amount.toLocaleString('ko-KR')}</b>${exchange[item.currency][1]}</div>
+                            </div>
+                        </li>`;
+                        // output += `City: " + item.city + ", Amount: " + item.amount + ", Currency: " + item.currency + "</li>`
 
-            groupedByCategory[category].forEach(function (item) {
-                output2 += 
-                    `<li class="list-item">
-                        <div class="list-info-group">
-                            <div class="list-city">${item.category[0]} · ${item.city}</div>
-                            <div class="list-name"><a href="${item.url}" target="_blank" title="새창으로 열림">${item.name}</a></div>`
-                            if(item.desc !== undefined) {
-                        output2 += `<div class="list-desc">${item.desc}</div>`
+                    // Calculate currency-wise totals for each category
+                    if (!currencyTotals[item.currency]) {
+                    currencyTotals[item.currency] = 0;
                     }
-                    output2 += 
-                        `</div>
-                        <div class="list-amount-group">
-                            <div class="list-amount"><b>${item.amount.toLocaleString('ko-KR')}</b>${exchange[item.currency][1]}</div>
-                        </div>
-                    </li>`;
-                    // output += `City: " + item.city + ", Amount: " + item.amount + ", Currency: " + item.currency + "</li>`
+                    currencyTotals[item.currency] += item.amount;
+                });
+                output += `</ul>`;
 
-                // Calculate currency-wise totals for each category
-                if (!currencyTotals[item.currency]) {
-                currencyTotals[item.currency] = 0;
+                // Display currency-wise totals for each category
+                output += `<ul class="amount-group">`;
+                // output += `<h3>Currency-wise Totals<h3>`;
+                for (var currency in currencyTotals) {
+                    if (currencyTotals.hasOwnProperty(currency)) {
+                    output += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">(${currency})</span></li>`;
+                    }
                 }
-                currencyTotals[item.currency] += item.amount;
-            });
-            output2 += `</ul>`;
+                output += `</ul>`;
 
-            // Display currency-wise totals for each category
-            output2 += `<ul class="amount-group">`;
-            // output2 += `<h3>Currency-wise Totals<h3>`;
-            for (var currency in currencyTotals) {
-                if (currencyTotals.hasOwnProperty(currency)) {
-                output2 += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">(${currency})</span></li>`;
+                output += `</div>`;
                 }
             }
-            output += `</ul>`;
-
-            output2 += `</div>`;
-            }
+            wrap2.innerHTML = output;
         }
-        wrap2.innerHTML = output2;
+        sortCategory();
 
 
 
         // 전체 합계
-        var currencyTotals = {};
-        var totalAmountKRW = 0;
+        function totalAmount() {
+            var currencyTotals = {};
+            var totalAmountKRW = 0;
 
-        myArray.forEach(function (item) {
-            if (!currencyTotals[item.currency]) {
-            currencyTotals[item.currency] = 0;
-            }
-            currencyTotals[item.currency] += item.amount;
-            totalAmountKRW += item.amount * exchange[item.currency][0];
-        });
+            myArray.forEach(function (item) {
+                if (!currencyTotals[item.currency]) {
+                currencyTotals[item.currency] = 0;
+                }
+                currencyTotals[item.currency] += item.amount;
+                totalAmountKRW += item.amount * exchange[item.currency][0];
+            });
 
-        var output3 = `<ul class="amount-total-group">`;
-        for (var currency in currencyTotals) {
-            if (currencyTotals.hasOwnProperty(currency)) {
-                output3 += `<li class="amount-total-item">${currency} : <b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}</li>`;
+            var output = `<ul class="amount-total-group">`;
+            for (var currency in currencyTotals) {
+                if (currencyTotals.hasOwnProperty(currency)) {
+                    output += `<li class="amount-total-item">${currency} : <b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}</li>`;
+                }
             }
+            output += `</ul>`;
+            output += `<div class="amount-total-krw">합계 <b>${totalAmountKRW.toLocaleString('ko-KR')}</b>원</div>`;
+
+
+            wrap3.innerHTML = output;
         }
-        output3 += `</ul>`;
-        output3 += `<div class="amount-total-krw">합계 : ${totalAmountKRW.toLocaleString('ko-KR')}원</div>`;
-
-
-        wrap3.innerHTML = output3;
+        totalAmount();
+        
     </script>
 </body>
 
