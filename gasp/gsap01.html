@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="kr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/TextPlugin.min.js"></script>
+    
+    <script src="./GSDevTools.js"></script>
+    <title>gsap</title>
+</head>
+
+<body>
+    <style>
+        body {
+            min-height: 500vh;
+            margin: 0;
+            padding:0 24px;
+            background-color: #111;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, .07) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(255, 255, 255, .07) 2px, transparent 2px),
+                linear-gradient(rgba(255, 255, 255, .06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, .06) 1px, transparent 1px);
+            background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+            background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+            overflow-x: hidden;
+        }
+
+        * {
+            box-sizing: border-box;
+            color: #999
+        }
+
+        h1 {
+            color: #eee;
+            margin-top: 100px;
+        }
+
+        button {
+            padding: 4px 10px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .mgt10 {margin-top:10px !important}
+
+        .box {
+            background-color: gray;
+            width: 100px;
+            height: 100px;
+            padding: 10px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .flex {display: flex; gap:30px;}
+
+        .orange {background-color: orange;}
+        .green {background-color: green;}
+        .pink {background-color: pink;}
+        .blue {background-color: blue;}
+
+        .box+.box {
+            margin-top: 20px;
+        }
+
+        .flex .box+.box {
+            margin-top: 0;
+        }
+    </style>
+
+    <h1># to</h1>
+    <div class="gsap01">
+        <div class="box gsap0101">gsap0101</div>
+        <div class="box gsap0102">gsap0102</div>
+        <div class="box gsap0103">gsap0103</div>
+        <div class="box mgt10 gsap0104">gsap0104</div>
+
+        <div class="mgt10">
+            <button class="btn-play">play</button>
+            <button class="btn-pause">pause</button>
+            <button class="btn-reverse">reverse</button>
+            <button class="btn-killTweensOf">killTweensOf</button>
+            <button class="btn-clearProps">clearProps</button>
+        </div>
+
+        
+    </div>
+
+    <h1># utils</h1>
+    <div class="gsap02 flex">
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+    </div>
+
+    <h1># registerEffect</h1>
+    <div class="gsap03">
+        <div class="gsap0301 flex">
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+        </div>
+        <div class="gsap0302 flex">
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+        </div>
+    </div>
+
+
+    <script>
+        const { wrap, toArray, wrapYoyo } = gsap.utils;
+
+        /* gsap01 02 */
+        function gsap01() {
+            const tl = gsap.timeline({
+                // 기본 세팅(모든 요소에 적용)
+                defaults: {
+                    duration: 0.5,
+                }
+            });
+            gsap.set('.gsap0104',{transformPerspective:600})
+            tl.to('.gsap0101', { 
+                opacity: 0.8,
+                x: 300, // x축 이동
+                // y: 10, // y축 이동
+                width: '10%',
+                scale: 0.8, // 오브젝트 사이즈 transform scale
+                duration: 1, // 1s 실행 시간
+                // repeat: -1, // 정의된 수만큼 반복, -1은 무한 반복
+                // ease: 'linear', // 속도
+                // yoyo: true, // 마지막에서 되돌아 오기
+            })
+            .to('.gsap0101', {
+                duration: 1,
+                x: 100,
+                immediateRender: true, // true 면 초기값에서 시작, false 면 마지막 상태에서 시작
+                                       // x의 초기값이 0 이므로 0으로 바로 세팅 후 100으로 이동
+            })
+            .from('.gsap0102', {
+                x: 200,
+            })
+            .from('.gsap0102', {
+                duration: 1,
+                x: 100,
+                immediateRender: true, // x의 초기값이 200이므로 200으로 바로 세팅 후 100으로 이동
+            })
+            //         엘리먼트,   시작값(form) ,  끝값(to)
+            .fromTo('.gsap0103', { x: 400 }, { x: 100 })
+            .to('.gsap0104',{
+                rotationY:360,
+                duration:1,
+                ease:'none',
+                transformOrigin:'50% 50% 400',
+            })
+
+
+
+            
+            /* gsap.to('.gsap0104',{
+                rotationY:360,
+                duration:3,
+                ease:'none',
+                transformOrigin:'50% 50% 400'
+            }) */
+           
+
+
+            document.querySelector('.btn-play').addEventListener('click', () => { tl.play() })
+            document.querySelector('.btn-pause').addEventListener('click', () => { tl.pause() })
+            document.querySelector('.btn-reverse').addEventListener('click', () => { tl.reverse() })
+
+            // 애니메이션 중지
+            document.querySelector('.btn-killTweensOf').addEventListener('click', () => {
+                gsap.killTweensOf('.gsap0101')
+            })
+
+            // css 속성 초기화
+            document.querySelector('.btn-clearProps').addEventListener('click', () => {
+                gsap.set('.gsap0101', { clearProps: 'width'})
+                // gsap.set('.gsap0501', { clearProps: 'x'})
+            })
+
+            GSDevTools.create({animation:tl})
+        }
+        gsap01();
+
+        /* gsap01 02 */
+        function gsap02() {
+            const list = gsap.utils.toArray('.gsap02 > div');
+            const tl = gsap.timeline();
+
+            tl.from(list, {
+                // x: wrap([20, -20]),
+                // y: wrap([10, -10]),
+                y: wrap(['random(100,-100)', 1000]), // random(a,b) a와 b 사이의 값 랜덤
+                // opacity: 'random(0.5,0)',
+                opacity: 1,
+                // opacity: wrap([0, 0.2]),
+                stagger: {
+                    each: 0.1, // 각 항목별 딜레이 0.1s
+                    from: 'center', // stagger가 시작되는 위치 (start, center, edges, random, end)
+                    amount: 2, // 전체 시간 2s
+                },
+            });
+
+            // console.log(list)
+            // GSDevTools.create({animation:tl})
+        }
+        gsap02();
+
+        function gsap03() {
+            // gsap.set('.gsap03', { autoAlpha: 1 })
+            gsap.registerEffect({
+                name: 'customEffect',
+                extendTimeline: true, // timeline 사용 여부
+                defaults: {
+                    y: -105,
+                    backgroundColors: ['red', 'orange'],
+                    opacity: 0,
+                },
+                effect: (target, config) => {
+                    const list = gsap.utils.toArray(target);
+                    const tl = gsap.timeline();
+                    console.log(target,config)
+                    tl.from(list, { y: config.y, opacity: config.opacity, stagger: 0.2 })
+                      .to(list, { backgroundColor: gsap.utils.wrap(config.backgroundColors), stagger: 0.2})
+                    return tl;
+                }
+            })
+
+            const animation = gsap.timeline();
+            animation.customEffect('.gsap0301 > div') // 효과는 defaults 에 있는 값 적용
+                     .customEffect('.gsap0302 > div', { y: 'random(100,0)', backgroundColors: ['blue', 'green'], opacity:0.1 }) // 효과 개별로 적용
+        }
+        gsap03();
+    </script>
+</body>
+</html>
