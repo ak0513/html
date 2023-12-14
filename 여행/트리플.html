@@ -29,6 +29,7 @@
         .page-title {color:#fff;}
         .map-link {color:#fff;text-decoration:underline;}
 
+        #main {padding-bottom:40px;}
         .list {position:relative;padding:0 16px;}
         .list + .list {margin-top:24px;padding-top:12px;}
         .list +  .list::before {content:'';display:block;position:absolute;top:0;left:0;right:0;height:12px;background-color:#ddd;}
@@ -52,9 +53,11 @@
             <h1 class="page-title">페이지 타이틀</h1>
             <a href="https://www.google.com/maps/d/viewer?hl=ko&mid=1IngMMEnBJtcJt977z5tkUmn9SSmSF5M&ll=16.056310439202626%2C108.24648315275527&z=14" target="_blank" class="map-link">구글맵 보기</a>
         </header>
-        <div id="a" style="margin-top:20px;"></div>
-        <div id="c"></div>
-        <div id="b"></div>
+        <main id="main">
+            <div id="a" style="margin-top:20px;"></div>
+            <div id="c"></div>
+            <div id="b"></div>
+        </main>
     </div>
     <script>
         var wrap = document.getElementById('a');
@@ -96,17 +99,17 @@
                 amount: 127000,
             },
             {
-                category: ['현지식당','restaurant'],
+                category: ['식당','restaurant'],
                 date: "2023.12.02",
                 name: "Hi restaurant",
                 url: 'https://www.google.com/maps?cid=16051465188882781673',
-                desc: '',
+                desc: '현지식당',
                 city: "호이안",
                 currency: "VND",
                 amount: 210000,
             },
             {
-                category: ['발 마사지','spa'],
+                category: ['마사지','spa'],
                 date: "2023.12.02",
                 name: "The Angel Spa",
                 url: 'https://www.google.com/maps?cid=10296173432950896393',
@@ -188,7 +191,6 @@
                             <div class="list-icon"><img src="./img/${item.category[1]}.svg" alt=""></div>
                             <div class="list-info-group">
                                 <div class="list-city">${item.category[0]} · ${item.city}</div>
-                                <div ckass="list-city"></div>
                                 <div class="list-name"><a href="${item.url}" target="_blank" title="새창으로 열림">${item.name}</a></div>`
                     if(item.desc !== undefined) {
                         output += `<div class="list-desc">${item.desc}</div>`
@@ -237,12 +239,28 @@
 
         for (var category in groupedByCategory) {
             if (groupedByCategory.hasOwnProperty(category)) {
-            output2 += "<h3>Category: " + category + "</h3><ul>";
+            output2 += `<div class="list">`;
+            output2 += `<h3 class="list-title date">${category.split(',')[0]}</h3>`;
+            output2 += `<ul class="list-group">`;
 
             var currencyTotals = {};
 
             groupedByCategory[category].forEach(function (item) {
-                output2 += "<li>Name: " + item.name + ", Age: " + item.age + ", City: " + item.city + ", Amount: " + item.amount + ", Currency: " + item.currency + "</li>";
+                output2 += 
+                    `<li class="list-item">
+                        <div class="list-info-group">
+                            <div class="list-city">${item.category[0]} · ${item.city}</div>
+                            <div class="list-name"><a href="${item.url}" target="_blank" title="새창으로 열림">${item.name}</a></div>`
+                            if(item.desc !== undefined) {
+                        output2 += `<div class="list-desc">${item.desc}</div>`
+                    }
+                    output2 += 
+                        `</div>
+                        <div class="list-amount-group">
+                            <div class="list-amount"><b>${item.amount.toLocaleString('ko-KR')}</b>${exchange[item.currency][1]}</div>
+                        </div>
+                    </li>`;
+                    // output += `City: " + item.city + ", Amount: " + item.amount + ", Currency: " + item.currency + "</li>`
 
                 // Calculate currency-wise totals for each category
                 if (!currencyTotals[item.currency]) {
@@ -250,17 +268,19 @@
                 }
                 currencyTotals[item.currency] += item.amount;
             });
+            output2 += `</ul>`;
 
             // Display currency-wise totals for each category
-            output2 += "<li>Currency-wise Totals<ul>";
+            output2 += `<ul class="amount-group">`;
+            // output2 += `<h3>Currency-wise Totals<h3>`;
             for (var currency in currencyTotals) {
                 if (currencyTotals.hasOwnProperty(currency)) {
-                output2 += "<li>Currency: " + currency + ", Total Amount: " + currencyTotals[currency] + "</li>";
+                output2 += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">(${currency})</span></li>`;
                 }
             }
-            output2 += "</ul></li>";
+            output += `</ul>`;
 
-            output2 += "</ul>";
+            output2 += `</div>`;
             }
         }
         wrap2.innerHTML = output2;
