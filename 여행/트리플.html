@@ -25,11 +25,18 @@
         address,caption,cite,code,dfn,em,var {font-style:normal;font-weight:normal}
         
         body {background:#fefefe;-webkit-text-size-adjust:none;color:#111}
-        #header{padding:20px 24px;background-color:#10B886;}
+        #header{position:relative;padding:20px 24px;background-color:#10B886;}
         .page-title {color:#fff;}
-        .map-link {color:#fff;text-decoration:underline;}
+        .sort {display:flex;}
+        .sort-btn {color:#fff;text-decoration:underline;}
+        .sort-btn.active {color:#fff000;}
+        .sort-btn + .sort-btn {margin-left:8px;}
+        .map-link {position:absolute;top:50%;right:24px;transform:translateY(-50%);background-color:#0a926a;padding:4px 8px;border-radius:4px;color:#fff;}
 
         #main {padding-bottom:40px;}
+        .list-wrap {display:none;margin-top:20px;}
+        .list-wrap.active {display:block;}
+
         .list {position:relative;padding:0 16px;}
         .list + .list {margin-top:24px;padding-top:12px;}
         .list +  .list::before {content:'';display:block;position:absolute;top:0;left:0;right:0;height:12px;background-color:#ddd;}
@@ -52,18 +59,22 @@
     <div id="wrap">
         <header id="header">
             <h1 class="page-title">페이지 타이틀</h1>
+            <div class="sort">
+                <button type="button" class="sort-btn active" data-id="listDate">날짜</button>
+                <button type="button" class="sort-btn" data-id="listCategory">카테고리</button>
+            </div>
             <a href="https://www.google.com/maps/d/viewer?hl=ko&mid=1IngMMEnBJtcJt977z5tkUmn9SSmSF5M&ll=16.056310439202626%2C108.24648315275527&z=14" target="_blank" class="map-link">구글맵 보기</a>
         </header>
         <main id="main">
-            <div id="a" style="margin-top:20px;"></div>
+            <div id="listDate" class="list-wrap active"></div>
+            <div id="listCategory" class="list-wrap"></div>
             <div id="total"></div>
-            <div id="b"></div>
         </main>
     </div>
     <script>
-        var wrap = document.getElementById('a');
-        var wrap2 = document.getElementById('b');
-        var wrap3 = document.getElementById('total');
+        var listDate = document.getElementById('listDate');
+        var listCategory = document.getElementById('listCategory');
+        var totalAmountEle = document.getElementById('total');
         var exchange = {
             "KRW": [1, '원'], // 환율, 단위
             "VND": [0.05, '동'],
@@ -159,14 +170,9 @@
                 currency: "VND",
                 amount: 104000,
             },
-            { name: "Alice", age: 30, city: "London", date: "2023-12-07", amount: 2000, currency: "VND",category: 'a' },
-            { name: "Bob", age: 22, city: "Tokyo", date: "2023-12-06", amount: 1, currency: "KRW",category: 'a' },
-            { name: "Eva", age: 28, city: "Paris", date: "2023-12-07", amount: 2000, currency: "VND",category: 'b' },
-            { name: "Mike", age: 35, city: "Berlin", date: "2023-12-06", amount: 2000, currency: "VND",category: 'a' },
-            { name: "Laura", age: 27, city: "Madrid", date: "2023-12-07", amount: 2000, currency: "VND",category: 'b' }
         ];
 
-        // Grouping the elements by date
+        // 날짜별 정렬
         var groupedByDate = {};
         myArray.forEach(function (item) {
             var key = item.date;
@@ -223,12 +229,11 @@
                     output += `</div>`;
                 }
             }
-            wrap.innerHTML = output;
+            listDate.innerHTML = output;
         }
         sortDate();
 
-
-
+        // 카테고리별 정렬
         var groupedByCategory = {};
         myArray.forEach(function (item) {
             var key = item.category;
@@ -238,9 +243,8 @@
             groupedByCategory[key].push(item);
         });
 
-        // HTML parsing and display for Category-wise Listing
         function sortCategory() {
-            var output = "<h2>카테고리별</h2>";
+            var output = ``;
             for (var category in groupedByCategory) {
                 if (groupedByCategory.hasOwnProperty(category)) {
                 output += `<div class="list">`;
@@ -287,7 +291,7 @@
                 output += `</div>`;
                 }
             }
-            wrap2.innerHTML = output;
+            listCategory.innerHTML = output;
         }
         sortCategory();
 
@@ -316,10 +320,39 @@
             output += `<div class="amount-total-krw">합계 <b>${totalAmountKRW.toLocaleString('ko-KR')}</b>원</div>`;
 
 
-            wrap3.innerHTML = output;
+            totalAmountEle.innerHTML = output;
         }
         totalAmount();
         
+
+        // 노출
+        function siblings(ele) {
+            if(typeof(ele) === 'string') {
+                ele = document.querySelector(ele)
+            }
+            var siblings = [...ele.parentNode.children].filter((child) =>
+                child !== ele
+            )
+            return siblings
+        }
+        var sort = document.querySelectorAll('.sort-btn');
+        var listWrap = document.querySelectorAll('.list-wrap');
+
+        sort.forEach(function(item) {
+            item.addEventListener('click', function() {
+                var si = siblings(item)
+                si.forEach(function(item) {
+                    item.classList.remove('active');
+                });
+                item.classList.add('active');
+
+                listWrap.forEach(function(item) {
+                    item.classList.remove('active')
+                });
+                var tarId = document.getElementById(item.dataset.id);
+                tarId.classList.add('active')
+            })
+        })
     </script>
 </body>
 
