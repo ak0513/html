@@ -1,0 +1,21 @@
+.area_view {width:770px;margin:0 auto;padding: 100px 0;}
+.google-auto-placed {display:none !important}
+
+
+
+
+/* 
+    추가
+*/
+
+/* highlighter */
+.highlighter {background:linear-gradient(to top, #ffbb0074 40%, transparent 60%)}
+
+
+
+@media only screen and (max-width: 768px) {
+    .area_view {width:100%;}
+
+
+    #tt-body-page [data-ke-size='size26'] {font-size:32px;}
+}

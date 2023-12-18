@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css"
+        href="https://tistory1.daumcdn.net/tistory_admin/userblog/tistory-4bde1fb20f0ffa5bc6d0d4a8edcb5c6bd4625b4b/static/style/content.css">
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory/4823763/skin/style.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://tistory1.daumcdn.net/tistory_admin/userblog/tistory-4bde1fb20f0ffa5bc6d0d4a8edcb5c6bd4625b4b/static/style/uselessPMargin.css">
+    <link href="./css/font.css" rel="stylesheet" type="text/css">
+    <link href="./css/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div id="tt-body-page">
+        <div class="area_view">
+            <div class="tt_article_useless_p_margin contents_style" style="height: auto !important;">
+                <h2 style="text-align: justify;" data-ke-size="size26"><span>String.indexOf()</span></h2>
+                <p data-ke-size="size16">문자열에서 원하는 문자의 위치를 찾거나 배열에서는 배열 값의 존재 여부를 확인하는 방법으로 indexOf() 함수가 사용된다.&nbsp;
+                </p>
+                <h3 data-ke-size="size23">문법(Syntax)</h3>
+                <blockquote data-ke-style="style3">str.indexOf(searchValue[,&nbsp;fromIndex])</blockquote>
+                <ul style="list-style-type: disc;" data-ke-list-type="disc">
+                    <li><span style="color: #212121;">searchValue가 <u>처음으로 탐색되는&nbsp;index를 반환</u>하고 존재하지 않으면 -1을
+                            반환한다.&nbsp;</span></li>
+                    <li>문자열을 찾을 때는 <u>대소문자를 구분</u>한다.&nbsp;</li>
+                    <li>배열에서도 사용 가능하다.</li>
+                </ul>
+                <h4 data-ke-size="size20">매개변수(Parameter)</h4>
+                <p data-ke-size="size18">1. searchValue</p>
+                <ul style="list-style-type: disc;" data-ke-list-type="disc">
+                    <li>찾으려는 문자열</li>
+                    <li>아무값도 주어지지 않으면 'undefined'를 찾으려는 문자열로 사용한다.&nbsp;</li>
+                </ul>
+                <div class="hljs-header">HTML</div>
+                <pre id="code_1625633079770" class="language-javascript" data-ke-language="html"
+                    data-ke-type="codeblock"><code class="hljs language-javascript"><span class="hljs-keyword">let</span> str = <span class="hljs-string">'hello world'</span>;
+                str.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">'e'</span>); <span class="hljs-comment">// 1</span>
+                str.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">'E'</span>); <span class="hljs-comment">// -1</span>
+                str.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">'a'</span>); <span class="hljs-comment">// -1</span></code></pre>
+                <p data-ke-size="size16">문자열과 index를 매칭 하면 아래와 같다.</p>
+                <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;"><ins
+                        data-ad-format="auto" class="adsbygoogle adsbygoogle-noablate"
+                        data-ad-client="ca-pub-3844333110432592" data-adsbygoogle-status="done"
+                        style="display: block; margin: 16px auto 10px; background-color: transparent; height: 280px;"
+                        data-ad-status="filled">
+                        <div id="aswift_3_host"
+                            style="border: none; height: 280px; width: 770px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block; overflow: visible;"
+                            tabindex="0" title="Advertisement" aria-label="Advertisement"><iframe id="aswift_3"
+                                name="aswift_3" browsingtopics="true"
+                                style="left:0;position:absolute;top:0;border:0;width:770px;height:280px;"
+                                sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
+                                width="770" height="280" frameborder="0" marginwidth="0" marginheight="0" vspace="0"
+                                hspace="0" allowtransparency="true" scrolling="no" allow="attribution-reporting"
+                                src="https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-3844333110432592&amp;output=html&amp;h=280&amp;adk=2047480353&amp;adf=3400411981&amp;pi=t.aa~a.4284856229~rp.1&amp;w=770&amp;fwrn=4&amp;fwrnh=100&amp;lmt=1701230286&amp;rafmt=1&amp;to=qs&amp;pwprc=9570079984&amp;format=770x280&amp;url=https%3A%2F%2Fak-coding.tistory.com%2F1&amp;ea=0&amp;host=ca-host-pub-9691043933427338&amp;fwr=0&amp;pra=3&amp;rpe=1&amp;resp_fmts=3&amp;wgl=1&amp;fa=40&amp;uach=WyJtYWNPUyIsIjEzLjMuMSIsIng4NiIsIiIsIjExOS4wLjYwNDUuMTU5IixudWxsLDAsbnVsbCwiNjQiLFtbIkdvb2dsZSBDaHJvbWUiLCIxMTkuMC42MDQ1LjE1OSJdLFsiQ2hyb21pdW0iLCIxMTkuMC42MDQ1LjE1OSJdLFsiTm90P0FfQnJhbmQiLCIyNC4wLjAuMCJdXSwwXQ..&amp;dt=1701230286955&amp;bpp=2&amp;bdt=619&amp;idt=2&amp;shv=r20231109&amp;mjsv=m202311150101&amp;ptt=9&amp;saldr=aa&amp;abxe=1&amp;cookie=ID%3D782a2a53579c783a-22da103147e10063%3AT%3D1684826793%3ART%3D1701230282%3AS%3DALNI_MZLI5oYDf7SEYBwRH5v0-8KhxNmLg&amp;gpic=UID%3D00000c09ca417e44%3AT%3D1684826793%3ART%3D1699503578%3AS%3DALNI_Maih5bmNowWRZfeSj5sLbA1kuj8RA&amp;prev_fmts=0x0%2C770x280%2C770x280&amp;nras=2&amp;correlator=559531891601&amp;frm=20&amp;pv=1&amp;ga_vid=944256186.1701064573&amp;ga_sid=1701230287&amp;ga_hid=1440268546&amp;ga_fc=1&amp;u_tz=540&amp;u_his=26&amp;u_h=1440&amp;u_w=2560&amp;u_ah=1354&amp;u_aw=2560&amp;u_cd=24&amp;u_sd=2&amp;dmc=8&amp;adx=421&amp;ady=1483&amp;biw=1310&amp;bih=1218&amp;scr_x=0&amp;scr_y=0&amp;eid=44759875%2C44759926%2C44759837%2C31079437%2C44809315%2C31078301%2C44807764%2C44808149%2C44808285%2C44809071%2C31078663%2C31078665%2C31078668%2C31078670&amp;oid=2&amp;pvsid=4139858276529799&amp;tmod=1444364020&amp;uas=0&amp;nvt=1&amp;ref=https%3A%2F%2Fak-coding.tistory.com%2Fcategory%2FJavaScript%3Fpage%3D2&amp;fc=1920&amp;brdim=0%2C25%2C0%2C25%2C2560%2C25%2C2560%2C1354%2C1325%2C1233&amp;vis=1&amp;rsz=%7C%7Cs%7C&amp;abl=NS&amp;fu=128&amp;bc=31&amp;td=1&amp;psd=W251bGwsbnVsbCxudWxsLDNd&amp;nt=1&amp;ifi=4&amp;uci=a!4&amp;btvi=2&amp;fsb=1&amp;dtd=25"
+                                data-google-container-id="a!4" data-google-query-id="CPTbxteo6IIDFQE9vQodUlIHqQ"
+                                data-load-complete="true"></iframe></div>
+                    </ins></div>
+                <table style="border-collapse: collapse; width: 100%; height: 38px;" border="1"
+                    data-ke-align="alignLeft" data-ke-style="style1">
+                    <tbody>
+                        <tr>
+                            <th colspan="12">문자열: hello world</th>
+                        </tr>
+                        <tr style="height: 19px;">
+                            <th style="height: 19px; width: 8.72093%;">h</th>
+                            <th style="height: 19px; width: 8.72093%;">e</th>
+                            <th style="height: 19px; width: 8.72093%;">l</th>
+                            <th style="height: 19px; width: 8.60465%;">l</th>
+                            <th style="height: 19px; width: 8.95349%;">o</th>
+                            <th style="height: 19px; width: 8.72093%;">공백</th>
+                            <th style="height: 19px; width: 9.53488%;">w</th>
+                            <th style="height: 19px; width: 8.95349%;">o</th>
+                            <th style="height: 19px; width: 8.72093%;">r</th>
+                            <th style="height: 19px; width: 8.60465%;">l</th>
+                            <th style="height: 19px; width: 11.6279%;">d</th>
+                        </tr>
+                        <tr style="height: 19px;">
+                            <td style="height: 19px; width: 8.72093%;">0</td>
+                            <td style="height: 19px; width: 8.72093%;">1</td>
+                            <td style="height: 19px; width: 8.72093%;">2</td>
+                            <td style="height: 19px; width: 8.60465%;">3</td>
+                            <td style="height: 19px; width: 8.95349%;">4</td>
+                            <td style="height: 19px; width: 8.72093%;">5</td>
+                            <td style="height: 19px; width: 9.53488%;">6</td>
+                            <td style="height: 19px; width: 8.95349%;">7</td>
+                            <td style="height: 19px; width: 8.72093%;">8</td>
+                            <td style="height: 19px; width: 8.60465%;">9</td>
+                            <td style="height: 19px; width: 11.6279%;">10</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-ke-size="size16">문자열에서 'e'가 존재하는 index는 1이므로 1을 반환</p>
+                <p data-ke-size="size16">대문자 'E'와 'a'는 문자열에 존재하지 않으므로 -1을 반환</p>
+                <p data-ke-size="size18">2. fromIndex(optional)</p>
+                <ul style="list-style-type: disc;" data-ke-list-type="disc">
+                    <li>문자열에서 탐색하기 시작하는 위치로 기본값은 0이다.</li>
+                    <li>fromIndex의 값이 양의 정수이면 해당 index부터 찾는다.</li>
+                    <li>fromIndex의 값이 음의 정수이면 전체 문자열에서 찾는다.(기본값과 동일)</li>
+                </ul>
+                <div class="hljs-header">HTML</div>
+                <pre id="code_1625634000579" class="language-javascript" data-ke-language="html"
+                    data-ke-type="codeblock"><code class="hljs language-javascript">lex str = <span class="hljs-string">'hello world'</span>;
+                str.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">'o'</span>, <span class="hljs-number">4</span>); <span class="hljs-comment">// 4</span>
+                str.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">'o'</span>, <span class="hljs-number">5</span>); <span class="hljs-comment">// 7</span>
+                str.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">'o'</span>, -<span class="hljs-number">10</span>); <span class="hljs-comment">// 4</span></code></pre>
+                <p style="text-align: justify;" data-ke-size="size16">fromIndex값이 4이므로 str의 index 4(o wolrd)부터 'o'를
+                    탐색한다.</p>
+                <p style="text-align: justify;" data-ke-size="size16">탐색한 'o'의 실제 index인 4를 반환한다.</p>
+                <p style="text-align: justify;" data-ke-size="size16">&nbsp;</p>
+                <p style="text-align: justify;" data-ke-size="size16">마찬가지로 fromIndex 5는 (공백) world부터 탐색하여 hello에 있는
+                    'o'는 무시하고 world에 있는 'o'를 탐색하여 7을 반환한다.</p>
+                <p style="text-align: justify;" data-ke-size="size16">fromIndex값이 음수인 경우는 기본값인 0을 기준으로 문자열 전체를 탐색하여 4를
+                    반환한다.</p>
+                <h3 style="text-align: justify;" data-ke-size="size23">문자열 내의 특정 문자가 있는지 확인하는 방법</h3>
+                <div class="hljs-header">HTML</div>
+                <pre id="code_1625636972977" class="language-javascript" data-ke-language="html"
+                    data-ke-type="codeblock"><code class="hljs language-javascript"><span class="hljs-keyword">let</span> str = <span class="hljs-string">'hello world'</span>;
+                <span class="hljs-keyword">if</span>(str.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">'h'</span>) !== -<span class="hljs-number">1</span>) {
+                  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'true'</span>);
+                } <span class="hljs-keyword">else</span> {
+                  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'false'</span>);
+                }
+                <span class="hljs-comment">// true</span></code></pre>
+                <p data-ke-size="size16">문자열에 'h'가 있으면 'true'를 없으면 'false'를 표시한다.</p>
+                <p data-ke-size="size16">요소를 찾을 수 없는 경우 반환하는 -1을 반환한다.</p>
+                <p data-ke-size="size16">&nbsp;</p>
+                <h3 data-ke-size="size23">문자열 내의 특정 문자 개수 구하기</h3>
+                <div class="hljs-header">HTML</div>
+                <pre id="code_1625637791030" class="language-javascript" data-ke-language="html"
+                    data-ke-type="codeblock"><code class="hljs language-javascript"><span class="hljs-keyword">let</span> str = <span class="hljs-string">'hello world'</span>;
+                <span class="hljs-keyword">function</span> <span class="hljs-title function_">getIndexOfNum</span>(<span class="hljs-params">str, searchValue</span>) {
+                  <span class="hljs-keyword">let</span> count = <span class="hljs-number">0</span>;
+                  <span class="hljs-keyword">let</span> pos = str.<span class="hljs-title function_">indexOf</span>(searchValue);
+                  <span class="hljs-keyword">while</span>(pos !== -<span class="hljs-number">1</span>) {
+                    pos = str.<span class="hljs-title function_">indexOf</span>(searchValue, pos + <span class="hljs-number">1</span>);
+                    count++;
+                  }
+                  <span class="hljs-keyword">return</span> count;
+                }
+                <span class="hljs-title function_">getIndexOfNum</span>(str, o); <span class="hljs-comment">// 2</span>
+                <span class="hljs-title function_">getIndexOfNum</span>(str, l); <span class="hljs-comment">// 3</span></code></pre>
+                <ol style="list-style-type: decimal;" data-ke-list-type="decimal">
+                    <li>두 번째 매개변수의 index를 찾아 변수 pos 대입한다.</li>
+                    <li>while문에서 pos가 -1이 아니면 pos에 1을 더한 값을 fromIndex값에 대입하여 그다음 값을 반복적으로 찾는다.</li>
+                    <li>count를 0에서부터 증가시킨다.</li>
+                    <li>매개변수 searchValue가 더이상 문자열에 존재하지 않으면 while문을 종료시킨다.</li>
+                    <li>count의 값을 반환한다.</li>
+                </ol>
+                <p data-ke-size="size16">해당 문자열에는 'o'가 2개 'l'은 3개가 존재한다.</p>
+                <h3 data-ke-size="size23">문자열의 n번째 위치 index값 가져오기</h3>
+                <div class="hljs-header">HTML</div>
+                <pre id="code_1625724699387" class="language-javascript" data-ke-language="html"
+                    data-ke-type="codeblock"><code class="hljs language-javascript"><span class="hljs-keyword">let</span> str = <span class="hljs-string">'hello wolrd hello wolrd'</span>;
+                <span class="hljs-keyword">function</span> <span class="hljs-title function_">getIndexOfPos</span>(<span class="hljs-params">str, searchValue, nth</span>) {
+                  <span class="hljs-keyword">let</span> count = <span class="hljs-number">0</span>;
+                  <span class="hljs-keyword">let</span> pos = <span class="hljs-number">0</span>;
+                  <span class="hljs-keyword">while</span>(count &lt; nth &amp;&amp; pos !== <span class="hljs-number">1</span>) {
+                    <span class="hljs-keyword">if</span>(str.<span class="hljs-title function_">indexOf</span>(searchValue) === <span class="hljs-number">0</span>) {
+                      <span class="hljs-keyword">if</span>(nth === <span class="hljs-number">1</span>) {
+                        pos = <span class="hljs-number">1</span>;
+                        <span class="hljs-keyword">break</span>;
+                      }
+                      count = <span class="hljs-number">1</span>;
+                    }
+                    pos = str.<span class="hljs-title function_">indexOf</span>(searchValue, pos + <span class="hljs-number">1</span>);
+                    count++;
+                  }
+                  <span class="hljs-keyword">return</span> pos;
+                }
+                <span class="hljs-title function_">getIndexOfPos</span>(str, <span class="hljs-string">'h'</span> <span class="hljs-number">2</span>); <span class="hljs-comment">// 12</span>
+                <span class="hljs-title function_">getIndexOfPos</span>(str, <span class="hljs-string">'h'</span> <span class="hljs-number">1</span>); <span class="hljs-comment">// 1</span></code></pre>
+                <ol style="list-style-type: decimal;" data-ke-list-type="decimal">
+                    <li>while문의 count가 nth(찾고자 하는 n번째 위치) 보다 작거나 없는 경우까지 실행</li>
+                    <li>str.indexOf(searchValue)가 0인 경우 예외처리(뒤 구문에서 fromIndex에 pos + 1을 연산하여 fromIndex가 0인 경우는 제외가 되기
+                        때문)<br>
+                        <ol style="list-style-type: decimal;" data-ke-list-type="decimal">
+                            <li>nth가 1이면 pos에 1을 대입 후 while문 종료 후 &nbsp;pos 값 반환</li>
+                            <li>count 변수에 1을 대입하여 index가 0 다음부터 searchValue 검색 시작 후 pos 값을 반환</li>
+                        </ol>
+                    </li>
+                    <li>pos에 1을 더한 값을 fromIndex값에 대입하여 그 다음 값을 반복적으로 찾는다.</li>
+                    <li>count가 nth보다 작아지거나&nbsp;매개변수 searchValue가 더 이상 문자열에 존재하지 않으면 while문을 종료시킨다.</li>
+                    <li>pos 값을 반환한다.</li>
+                </ol>
+                <h3 data-ke-size="size23">문자열에 있는 특정 문자 위치 모두 찾기</h3>
+                <div class="hljs-header">HTML</div>
+                <pre id="code_1625648533626" class="language-javascript" data-ke-language="html"
+                    data-ke-type="codeblock"><code class="hljs language-javascript"><span class="hljs-keyword">let</span> str = <span class="hljs-string">'hello world'</span>(
+                <span class="hljs-keyword">function</span> <span class="hljs-title function_">getIndexOfPosFind</span>(<span class="hljs-params">str, searchValue</span>) {
+                  <span class="hljs-keyword">let</span> pos = <span class="hljs-number">0</span>;
+                  <span class="hljs-keyword">while</span>(<span class="hljs-literal">true</span>) {
+                    <span class="hljs-keyword">let</span> posFind = str.<span class="hljs-title function_">indexOf</span>(searchValue, pos);
+                    <span class="hljs-keyword">if</span>(posFind === -<span class="hljs-number">1</span>) <span class="hljs-keyword">break</span>;
+                    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(posFind);
+                    pos = posFind + <span class="hljs-number">1</span>;
+                  }
+                }
+                <span class="hljs-title function_">getOndexOfPosFind</span>(str, <span class="hljs-string">'l'</span>); <span class="hljs-comment">// 2, 3, 9</span></code></pre>
+                <p data-ke-size="size16">워와 같이도 사용할 수 있다.</p>
+                <h3 data-ke-size="size23">배열의 경우 배열 index를 반환</h3>
+                <div class="hljs-header">HTML</div>
+                <pre id="code_1625641828131" class="language-javascript" data-ke-language="html"
+                    data-ke-type="codeblock"><code class="hljs language-javascript"><span class="hljs-keyword">let</span> arr = [<span class="hljs-string">'apple'</span>, <span class="hljs-string">'banana'</span>, <span class="hljs-string">'orange'</span>];
+                arr.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">'banana'</span>); <span class="hljs-comment">// 1</span></code></pre>
+                <figure id="og_1627066186177" contenteditable="false" data-ke-type="opengraph"
+                    data-ke-align="alignCenter" data-og-type="article"
+                    data-og-title="lastIndexOf() 특정 문자 위치 찾기 - 자바스크립트[JavaScript]"
+                    data-og-description="String.lastIndexOf() indexOf()와 동일하게 문자열에서 원하는 문자의 위치를 찾거나 배열에서 배열값의 위치를 확인하는 방법으로 lastIndexOf() 함수가 사용된다. indexOf()와 차이점 fromIndex로부터 역순(오."
+                    data-og-host="ak-coding.tistory.com" data-og-source-url="https://ak-coding.tistory.com/2"
+                    data-og-url="https://ak-coding.tistory.com/2"
+                    data-og-image="https://scrap.kakaocdn.net/dn/YGUUu/hyKZhigXBC/uO78oxbp29UZ7N8ksN6CtK/img.png?width=800&amp;height=800&amp;face=0_0_800_800,https://scrap.kakaocdn.net/dn/Zemck/hyKZZUB24G/LEqL7cI5XZQ68F3AnWTC50/img.png?width=800&amp;height=800&amp;face=0_0_800_800,https://scrap.kakaocdn.net/dn/ceYazi/hyKZgRao95/bDs7Jq0fCFDE4CccRPZU50/img.jpg?width=428&amp;height=428&amp;face=0_0_428_428">
+                    <a href="https://ak-coding.tistory.com/2" target="_blank" rel="noopener"
+                        data-source-url="https://ak-coding.tistory.com/2">
+                        <div class="og-image"
+                            style="background-image: url('https://scrap.kakaocdn.net/dn/YGUUu/hyKZhigXBC/uO78oxbp29UZ7N8ksN6CtK/img.png?width=800&amp;height=800&amp;face=0_0_800_800,https://scrap.kakaocdn.net/dn/Zemck/hyKZZUB24G/LEqL7cI5XZQ68F3AnWTC50/img.png?width=800&amp;height=800&amp;face=0_0_800_800,https://scrap.kakaocdn.net/dn/ceYazi/hyKZgRao95/bDs7Jq0fCFDE4CccRPZU50/img.jpg?width=428&amp;height=428&amp;face=0_0_428_428');">
+                            &nbsp;</div>
+                        <div class="og-text">
+                            <p class="og-title" data-ke-size="size16">lastIndexOf() 특정 문자 위치 찾기 - 자바스크립트[JavaScript]</p>
+                            <p class="og-desc" data-ke-size="size16">String.lastIndexOf() indexOf()와 동일하게 문자열에서 원하는 문자의
+                                위치를 찾거나 배열에서 배열값의 위치를 확인하는 방법으로 lastIndexOf() 함수가 사용된다. indexOf()와 차이점 fromIndex로부터
+                                역순(오.</p>
+                            <p class="og-host" data-ke-size="size16">ak-coding.tistory.com</p>
+                        </div>
+                    </a></figure>
+                <p data-ke-size="size16">&nbsp;</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

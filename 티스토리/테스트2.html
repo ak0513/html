@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Array Parsing with Category-wise Listing, Currency-wise Totals, and KRW Conversion Example</title>
+</head>
+<body>
+
+<script>
+  var myArray = [
+    { name: "John", age: 25, city: "New York", date: "2023-12-06", amount: 100, currency: "USD", category: "Food" },
+    { name: "Alice", age: 30, city: "London", date: "2023-12-07", amount: 150, currency: "GBP", category: "Clothing" },
+    { name: "Bob", age: 22, city: "Tokyo", date: "2023-12-06", amount: 200, currency: "USD", category: "Food" },
+    { name: "Eva", age: 28, city: "Paris", date: "2023-12-07", amount: 120, currency: "EUR", category: "Electronics" },
+    { name: "Mike", age: 35, city: "Berlin", date: "2023-12-06", amount: 180, currency: "USD", category: "Food" },
+    { name: "Laura", age: 27, city: "Madrid", date: "2023-12-07", amount: 90, currency: "EUR", category: "Clothing" }
+  ];
+
+  // Exchange rates
+  var exchangeRates = {
+    "USD": 1200,
+    "GBP": 1500,
+    "EUR": 1400
+  };
+
+  // Grouping the elements by category
+  var groupedByCategory = {};
+  myArray.forEach(function (item) {
+    var key = item.category;
+    if (!groupedByCategory[key]) {
+      groupedByCategory[key] = [];
+    }
+    groupedByCategory[key].push(item);
+  });
+
+  // Calculating the total amount for each currency and KRW
+  var currencyTotals = {};
+  var totalAmountKRW = 0;
+  myArray.forEach(function (item) {
+    if (!currencyTotals[item.currency]) {
+      currencyTotals[item.currency] = 0;
+    }
+    currencyTotals[item.currency] += item.amount;
+
+    // Convert amount to KRW based on exchange rate
+    totalAmountKRW += item.amount * exchangeRates[item.currency];
+  });
+
+  // HTML parsing and display for Category-wise Listing
+  var output = "<h2>Category-wise Listing with Currency-wise Totals and KRW Conversion</h2>";
+
+  for (var category in groupedByCategory) {
+    if (groupedByCategory.hasOwnProperty(category)) {
+      output += "<h3>Category: " + category + "</h3><ul>";
+
+      var categoryTotal = 0;
+
+      groupedByCategory[category].forEach(function (item) {
+        output += "<li>Name: " + item.name + ", Age: " + item.age + ", City: " + item.city + ", Amount: " + item.amount + " " + item.currency + " (KRW: " + item.amount * exchangeRates[item.currency] + " KRW)</li>";
+        categoryTotal += item.amount;
+      });
+
+      // Display category total in both original currency and KRW
+      output += "<li>Category Total: " + categoryTotal + " (KRW: " + categoryTotal * exchangeRates[myArray[0].currency] + " KRW)</li>";
+
+      output += "</ul>";
+    }
+  }
+
+  // Display currency-wise totals in both original currency and KRW
+  output += "<h2>Currency-wise Totals</h2><ul>";
+  for (var currency in currencyTotals) {
+    if (currencyTotals.hasOwnProperty(currency)) {
+      output += "<li>Currency: " + currency + ", Total Amount: " + currencyTotals[currency] + " (KRW: " + currencyTotals[currency] * exchangeRates[currency] + " KRW)</li>";
+    }
+  }
+  output += "</ul>";
+
+  // Display total amount in both original currency and KRW
+  output += "<h2>Total Amount</h2>";
+  output += "<p>Total Amount in Original Currency: " + totalAmountKRW / exchangeRates[myArray[0].currency] + " " + myArray[0].currency + "</p>";
+  output += "<p>Total Amount in KRW: " + totalAmountKRW + " KRW</p>";
+
+  document.body.innerHTML = output;
+</script>
+
+</body>
+</html>
+``

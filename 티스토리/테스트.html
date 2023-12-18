@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+</head>
+<body>
+
+    <script>
+        var myObject = {
+  key1: 'value1',
+  key2: 'value2',
+  key3: 'value3'
+};
+
+for (var key in myObject) {
+  if (myObject.hasOwnProperty(key)) {
+    // console.log(key + ': ' + myObject[key]);
+  }
+  console.log(myObject)
+  console.log(key)
+  console.log(myObject[key])
+}
+
+var myObject2 = {
+  key1: 'value1',
+  key2: 'value2',
+  key3: 'value3'
+};
+
+Object.keys(myObject2).forEach(function(key) {
+  console.log(key + ': ' + myObject2[key]);
+});
+    </script>
+</body>
+</html>
