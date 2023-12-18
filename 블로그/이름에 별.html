@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[JavaScript] 이름 사이에 마스킹 넣기</title>
+    <script src="../basic/js/common.js"></script>
+    <script src="../common/js/highlight.min.js"></script>
+    <script src="./css/test.js"></script><!-- highlight 미리 보기 위해 삽입 -->
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory_admin/userblog/tistory-4bde1fb20f0ffa5bc6d0d4a8edcb5c6bd4625b4b/static/style/content.css">
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory/4823763/skin/style.css">
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory_admin/userblog/tistory-4bde1fb20f0ffa5bc6d0d4a8edcb5c6bd4625b4b/static/style/uselessPMargin.css">
+    <link href="./css/font.css" rel="stylesheet" type="text/css">
+    <link href="./css/style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div id="tt-body-page">
+        <div class="area_view">
+            <div class="tt_article_useless_p_margin contents_style">
+                <h2 data-ke-size="size26">개인정보 마스킹</h2>
+                <p data-ke-size="size16">보안이 중요시 되기 때문에 이름, 계좌번호, 전화번호 등등의 개인정보에 마스킹은 필수가 되어가고 있다.</p>
+                <h3 data-ke-size="size23">이름 마스킹</h3>
+                <p data-ke-size="size16">기본적으로 이름의 가운데 문자열을 *로 치환한다. 이름이 외자인 경우에는 성만 노출이 되며 성이 2글자인 경우에는 맨 앞과 맨 뒤만 *로 치환된다.</p>
+                <div class="highlight js">
+function maskName(name) {
+    if (name.length === 1) {
+        return name;
+    } else if (name.length === 2) {
+        return name.charAt(0) + '*';
+    } else {
+        const firstChar = name.charAt(0);
+        const lastChar = name.charAt(name.length - 1);
+        const middleStars = '*'.repeat(name.length - 2);
+        return firstChar + middleStars + lastChar;
+    }
+
+    return lastName + firstName;
+}
+
+maskName('홍길동') // 홍*동
+                </div>
+
+                <h3 data-ke-size="size23">전화번호 마스킹</h3>
+                <p data-ke-size="size16">가운데 4자리를 *로 치환한다. 전화번호는 11자리의 숫자로만 존재해야 한다.</p>
+                <div class="highlight js">
+function maskPhoneNumber(phoneNumber) {
+    // 휴대폰 번호가 11자리인지 확인
+    if (phoneNumber.length !== 11) {
+        console.error("휴대폰 번호는 11자리여야 합니다.");
+        return phoneNumber;
+    }
+
+    // 가운데 4자리를 '*'로 대체
+    var maskedNumber = phoneNumber.substring(0, 3) + '****' + phoneNumber.substring(7);
+    return maskedNumber;
+}
+
+maskPhoneNumber('01012345678') // 010****5678
+// 전화번호에 하이픈이 있는경우 아래 함수를 이용하여 하이픈 제거 후 마스킹 적용
+maskPhoneNumber(convertToNumer('010-1234-5678')) // 010****5678
+                </div>
+                <h3 data-ke-size="size20">전화번호 하이픈 제거</h3>
+                <p data-ke-size="size16">만약 전화번호에 하이픈('-')이 있다면 아래 함수를 통해 하이픈을 제거하여 사용 할 수 있다.</p>
+                <div class="highlight js">
+function convertToNumer(phoneNumber) {
+    // '-' 제거
+    var numericNumber = phoneNumber.replace(/-/g, '');
+    return numericNumber;
+}
+
+convertToNumer('010-1234-5678') // 01012345678
+                </div>
+
+                <h3 data-ke-size="size23">계좌번호 마스킹</h3>
+                <p data-ke-size="size16">계좌번호 앞 3자리와 뒤 3자리를 제외한 나머지 숫자를 '*'로 치환된다.</p>
+                <div class="highlight js">
+function maskAccountNumber(accountNumber) {
+    const maskedNumber = accountNumber.slice(0, 3) + '*'.repeat(accountNumber.length - 6) + accountNumber.slice(-3);
+    return maskedNumber;
+}
+maskAccountNumber('234567040975542') // 234*********542
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <script>
+    function maskName(name) {
+        if (name.length === 1) {
+            return name;
+        } else if (name.length === 2) {
+            return name.charAt(0) + '*';
+        } else {
+            const firstChar = name.charAt(0);
+            const lastChar = name.charAt(name.length - 1);
+            const middleStars = '*'.repeat(name.length - 2);
+            
+            return firstChar + middleStars + lastChar;
+        }
+
+        return lastName + firstName;
+    }
+    
+    // 테스트
+    console.log(maskName('김훈'))
+    console.log(maskName('김동훈'))
+    console.log(maskName('선우동훈'))
+
+
+
+
+    function convertToNumer(phoneNumber) {
+        // '-' 제거
+        var numericNumber = phoneNumber.replace(/-/g, '');
+        return numericNumber;
+    }
+
+    // 테스트
+    var hyphenatedNumber = '010-1234-5678';
+    var numericResult = convertToNumer(hyphenatedNumber);
+
+    console.log('하이픈이 포함된 번호:', hyphenatedNumber);
+    console.log('하이픈 제거된 번호:', numericResult);
+
+    function maskPhoneNumber(phoneNumber) {
+      // 휴대폰 번호가 11자리인지 확인
+      if (phoneNumber.length !== 11) {
+        console.error("휴대폰 번호는 11자리여야 합니다.");
+        return phoneNumber;
+      }
+
+      // 가운데 4자리를 '*'로 대체
+      var maskedNumber = phoneNumber.substring(0, 3) + '****' + phoneNumber.substring(7);
+      return maskedNumber;
+    }
+
+    // 테스트
+    var originalNumber = '01012345678';
+    var maskedResult = maskPhoneNumber(originalNumber);
+
+    console.log('원본 번호:', originalNumber);
+    console.log('마스킹된 번호:', maskedResult);
+
+
+
+
+    function maskAccountNumber(accountNumber) {
+        // 앞 3자리와 뒤 3자리를 제외한 나머지 숫자를 '*'로 치환
+        const maskedNumber = accountNumber.slice(0, 3) + '*'.repeat(accountNumber.length - 6) + accountNumber.slice(-3);
+        return maskedNumber;
+    }
+    console.log(maskAccountNumber('234567040975542'))
+    </script>
+</body>
+</html>
