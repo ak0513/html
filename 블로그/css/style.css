@@ -14,8 +14,7 @@
 
 
 @media only screen and (max-width: 768px) {
-    .area_view {width:100%;}
-
+    .area_view {width:auto;padding:0 24px;}
 
     #tt-body-page [data-ke-size='size26'] {font-size:32px;}
 }

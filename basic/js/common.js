@@ -519,7 +519,7 @@ var ui = (function() {
 		removeClass: removeClass,           // class 삭제
 		getRandomNum: getRandomNum,         // 난수 생성
 		setAttrRandomNum: setAttrRandomNum, // attr 난수 적용
-		attr: attr,                   // attr 세팅
+		attr: attr,                         // attr 세팅
 		removeAttr: removeAttr,             // attr 삭제
 		getUrlParam: getUrlParam,           // url파라미터 값 구하기
 
@@ -530,3 +530,50 @@ var ui = (function() {
 		scrolldown: scrolldown,             // 스크롤 시 오브젝트 보여주기
 	};
 })();
+
+
+/***** 개인정보 마스킹 *****/
+// 성명 마스킹
+function maskName(name) {
+	if (name.length === 1) {
+		return name;
+	} else if (name.length === 2) {
+		return name.charAt(0) + '*';
+	} else {
+		const firstChar = name.charAt(0);
+		const lastChar = name.charAt(name.length - 1);
+		const middleStars = '*'.repeat(name.length - 2);
+		
+		return firstChar + middleStars + lastChar;
+	}
+
+	return lastName + firstName;
+}
+
+// 하이픈 제거
+function convertToNumer(phoneNumber) {
+	// '-' 제거
+	var numericNumber = phoneNumber.replace(/-/g, '');
+	return numericNumber;
+}
+
+
+// 휴대폰 번호 마스킹
+function maskCellPhone(phoneNumber) {
+  // 휴대폰 번호가 11자리인지 확인
+  if (phoneNumber.length !== 11) {
+	console.error("휴대폰 번호는 11자리여야 합니다.");
+	return phoneNumber;
+  }
+
+  // 가운데 4자리를 '*'로 대체
+  var maskedNumber = phoneNumber.substring(0, 3) + '****' + phoneNumber.substring(7);
+  return maskedNumber;
+}
+
+// 계좌번호 마스킹
+function maskAccountNumber(accountNumber) {
+	// 앞 3자리와 뒤 3자리를 제외한 나머지 숫자를 '*'로 치환
+	const maskedNumber = accountNumber.slice(0, 3) + '*'.repeat(accountNumber.length - 6) + accountNumber.slice(-3);
+	return maskedNumber;
+}

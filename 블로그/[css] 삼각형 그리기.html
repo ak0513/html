@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[JavaScript] 개인정보 마스킹</title>
+    <script src="../basic/js/common.js"></script>
+    <script src="../common/js/highlight.min.js"></script>
+    <script src="./css/test.js"></script><!-- highlight 미리 보기 위해 삽입 -->
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory_admin/userblog/tistory-4bde1fb20f0ffa5bc6d0d4a8edcb5c6bd4625b4b/static/style/content.css">
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory/4823763/skin/style.css">
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory_admin/userblog/tistory-4bde1fb20f0ffa5bc6d0d4a8edcb5c6bd4625b4b/static/style/uselessPMargin.css">
+    <link href="./css/font.css" rel="stylesheet" type="text/css">
+    <link href="./css/style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div id="tt-body-page">
+        <div class="area_view">
+            <div class="tt_article_useless_p_margin contents_style">
+                <h2 data-ke-size="size26">삼각형 그리기</h2>
+                <p data-ke-size="size16">이미지를 사용하여 삼격형을 적용할 수 있지만 컬러나 모양이 변경되는 경우 이미지를 수정해야 하는 번거로움이 있기 때문에 css를 통해 삼격형을 그리는 게 효과적이다.</p>
+                <p data-ke-size="size16">보더 컬러를 수정하여 삼격형의 색상을 변경할 수 있다.</p>
+                <h3 data-ke-size="size23">정삼각형</h3>
+                <div class="highlight css">
+.triangle {
+    width: 0px;
+    height: 0px;
+    border-bottom: calc( 90px * 1.732 ) solid #666666;
+    border-left: 90px solid transparent;
+    border-right: 90px solid transparent;
+}
+                </div>
+                <h4 data-ke-size="size20">결과물</h4>
+                <div class="sample sample1">
+                    <div class="flex flex-column align-center">
+                        <div class="triangle"></div>
+                    </div>
+                </div>
+
+                <h3 data-ke-size="size23">직각삼각형</h3>
+                <div class="highlight css">
+.triangle {
+    width: 0px;
+    height: 0px;
+    border-bottom: 180px solid #666666;
+    border-left: 0px solid transparent;
+    border-right: 180px solid transparent;
+}
+                </div>
+                <h4 data-ke-size="size20">결과물</h4>
+                <div class="sample sample1">
+                    <div class="flex flex-column align-center">
+                        <div class="triangle2"></div>
+                    </div>
+                </div>
+
+                <h3 data-ke-size="size23">이등변삼각형</h3>
+                <div class="highlight css">
+/* 위 */
+.triangle {
+    width: 0px;
+    height: 0px;
+    border-bottom: 180px solid #666666;
+    border-left: 90px solid transparent;
+    border-right: 90px solid transparent;
+}
+
+/* 오른쪽 */
+.triangle {
+    width: 0px;
+    height: 0px;
+    border-left: 180px solid #666666;
+    border-top: 90px solid transparent;
+    border-bottom: 90px solid transparent;
+}
+
+/* 아래 */
+.triangle {
+    width: 0px;
+    height: 0px;
+    border-top: 180px solid #666666;
+    border-left: 90px solid transparent;
+    border-right: 90px solid transparent;
+}
+
+/* 왼쪽 */
+.triangle {
+    width: 0px;
+    height: 0px;
+    border-right: 180px solid #666666;
+    border-top: 90px solid transparent;
+    border-bottom: 90px solid transparent;
+}
+                </div>
+                <h4 data-ke-size="size20">결과물</h4>
+                <div class="sample sample1">
+                    <div class="flex flex-column align-center gap20">
+                        <div class="triangle3-1"></div>
+                        <div class="triangle3-2"></div>
+                        <div class="triangle3-3"></div>
+                        <div class="triangle3-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+/* 정삼각형 */
+.triangle {
+    width: 0px;
+    height: 0px;
+    border-bottom: calc( 90px * 1.732 ) solid #666666;
+    border-left: 90px solid transparent;
+    border-right: 90px solid transparent;
+}
+
+/* 직각삼각형 */
+.triangle2 {
+    width: 0px;
+    height: 0px;
+    border-bottom: 180px solid #666666;
+    border-left: 0px solid transparent;
+    border-right: 180px solid transparent;
+}
+
+/* 이등변 위 */
+.triangle3-1 {
+    width: 0px;
+    height: 0px;
+    border-bottom: 180px solid #666666;
+    border-left: 90px solid transparent;
+    border-right: 90px solid transparent;
+}
+
+/* 이등변 오른쪽 */
+.triangle3-2 {
+    width: 0px;
+    height: 0px;
+    border-left: 180px solid #666666;
+    border-top: 90px solid transparent;
+    border-bottom: 90px solid transparent;
+}
+
+/* 이등변 아래 */
+.triangle3-3 {
+    width: 0px;
+    height: 0px;
+    border-top: 180px solid #666666;
+    border-left: 90px solid transparent;
+    border-right: 90px solid transparent;
+}
+
+/* 이등변 왼쪽 */
+.triangle3-4 {
+    width: 0px;
+    height: 0px;
+    border-right: 180px solid #666666;
+    border-top: 90px solid transparent;
+    border-bottom: 90px solid transparent;
+}
+    </style>
+</body>
+</html>
