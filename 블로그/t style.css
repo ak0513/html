@@ -301,7 +301,7 @@ html, body{height:100%;min-height:100%}
 .area_view [data-ke-size='size23'] {margin:0 0 12px 0;font-size:26px !important;}
 .area_view * + [data-ke-size='size23'] {margin-top:52px !important;}
 
-.area_view [data-ke-size='size20'] {margin:0 0 8px 0;font-size:22px !important;}
+.area_view [data-ke-size='size20'] {margin:0 0 8px 0;font-size:22px !important;color:#464646;}
 .area_view * + [data-ke-size='size20'] {margin-top:40px !important;}
 
 /* 뷰 상단 - 단락 */
@@ -315,7 +315,7 @@ html, body{height:100%;min-height:100%}
 .area_view [data-ke-list-type] {margin-left:24px;}
 .area_view * + [data-ke-list-type] {margin-top:12px;}
 .area_view [data-ke-list-type] li {font-size:18px !important;color:var(--dark);}
-.area_view [data-ke-list-type] li + li {margin-top:8px;}
+.area_view [data-ke-list-type] li + li {margin-top:4px;}
 .area_view [data-ke-list-type] [data-ke-list-type],
 .area_view [data-ke-list-type] [data-ke-list-type] li + li {margin-top:4px;}
 
