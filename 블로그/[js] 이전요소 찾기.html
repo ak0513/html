@@ -24,7 +24,7 @@
                     <li>jQuery의 prev()와 동일한 기능을 JavaScript로 구현</li>
                     <li>매개변수 selector가 제공되는 경우에는 이전 요소가 selector와 일치하는 경우에만 반환을 하며 일치하지 않는 경우에는 null 을 반환한다.</li>
                 </ul>
-                <div class="highlight js">
+                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
 function prev(ele, selector) {
     var prevEle = ele.previousElementSibling;
     if (!selector || (prevEle && prevEle.matches(selector))) {
@@ -32,14 +32,14 @@ function prev(ele, selector) {
     }
     return null;
 }
-                </div>
+                </code></pre>
 
                 <h3 data-ke-size="size23">prevAll()</h3>
                 <ul data-ke-list-type="disc">
                     <li>jQuery의 prevAll()와 동일한 기능을 JavaScript로 구현</li>
                     <li>이전 요소가 없거나 매개변수 selector와 일치하는 이전 요소를 찾을 수 없는 경우에는 빈 배열을 반환한다.</li>
                 </ul>
-                <div class="highlight js">
+                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
 function prevAll(ele, selector) {
     var prevAllEle = [];
     var currentEle = ele.previousElementSibling;
@@ -51,20 +51,20 @@ function prevAll(ele, selector) {
     }
     return prevAllEle;
 }
-                </div>
+                </code></pre>
 
 <hr contenteditable="false" data-ke-type="horizontalRule" data-ke-style="style3">
 
                 <h3 data-ke-size="size23">예시</h3>
-                <div class="highlight html">
+                <pre class="html xml" data-ke-language="html" data-ke-type="codeblock"><code>
 <ul>
     <li class="apple">사과</li>
     <li class="banana">바나나</li>
     <li class="pineapple">파인애플</li>
     <li class="strawberry">딸기</li>
 </ul>
-                </div>
-                <div class="highlight js">
+                </code></pre>
+                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
 var bananaEle = document.querySelector('.banana'); // 바나나
 var strawberryEle = document.querySelector('.strawberry'); // 딸기
 
@@ -85,7 +85,7 @@ var prevAllEle = prevAll(strawberryEle, '.banana');
 prevAllEle.forEach(function(item) {
     item.style.color = 'red'
 })
-                </div>
+                </code></pre>
 
                 <h4 data-ke-size="size20">결과물</h4>
                 <div class="sample sample1">

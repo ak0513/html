@@ -26,7 +26,7 @@
                     <li>성이 2자인 경우에는 성과 이름 구분없이 성명의 맨 앞과 맨 뒤를 제외한 나머지가 *로 치환된다.<br>예시) 선우길동 → 선**동</li>
                     <li>성만 입력 또는 이름이 외자인데 이름만 입력하여 이름값이 1자리수라면 해당 이름이 그대로 노출된다.</li>
                 </ul>
-                <div class="highlight js">
+                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
 function maskName(name) {
     if (name.length === 1) {
         return name;
@@ -41,14 +41,14 @@ maskName('홍') // 홍
 maskName('홍길') // 홍*
 maskName('홍길동') // 홍*동
 maskName('선우길동') // 선**동
-                </div>
+                </code></pre>
 
                 <h3 data-ke-size="size23">전화번호 마스킹</h3>
                 <ul data-ke-list-type="disc">
                     <li>전화번호는 11자리의 숫자로만 존재해야 한다.</li>
                     <li>가운데 4자리를 *로 치환한다.</li>
                 </ul>
-                <div class="highlight js">
+                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
 function maskCellPhone(phoneNumber) {
     // 휴대폰 번호가 11자리인지 확인
     if (phoneNumber.length !== 11) {
@@ -64,10 +64,10 @@ function maskCellPhone(phoneNumber) {
 maskCellPhone('01012345678') // 010****5678
 // 전화번호에 하이픈이 있는경우 아래 함수를 이용하여 하이픈 제거 후 마스킹 적용
 maskCellPhone(convertToNumer('010-1234-5678')) // 010****5678
-                </div>
+                </code></pre>
                 <h3 data-ke-size="size20">전화번호 하이픈 제거</h3>
                 <p data-ke-size="size16">만약 전화번호에 하이픈('-')이 있다면 아래 함수를 통해 하이픈을 제거하여 사용 할 수 있다.</p>
-                <div class="highlight js">
+                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
 function convertToNumer(phoneNumber) {
     // '-' 제거
     var numericNumber = phoneNumber.replace(/-/g, '');
@@ -75,19 +75,19 @@ function convertToNumer(phoneNumber) {
 }
 
 convertToNumer('010-1234-5678') // 01012345678
-                </div>
+                </code></pre>
 
                 <h3 data-ke-size="size23">계좌번호 마스킹</h3>
                 <ul data-ke-list-type="disc">
                     <li>계좌번호 앞 3자리와 뒤 3자리를 제외한 나머지 숫자를 '*'로 치환된다.</li>
                 </ul>
-                <div class="highlight js">
+                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
 function maskAccountNumber(accountNumber) {
     const maskedNumber = accountNumber.slice(0, 3) + '*'.repeat(accountNumber.length - 6) + accountNumber.slice(-3);
     return maskedNumber;
 }
 maskAccountNumber('234567040975542') // 234*********542
-                </div>
+                </code></pre>
                 
             </div>
         </div>

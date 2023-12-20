@@ -1016,3 +1016,133 @@ i.area_view .another_category th a.current{border-bottom:none !important;}
 	.jk.full{margin-left:-15px;margin-right:-15px;}
 	.jk.line{margin-left:-15px;margin-right:-15px;padding:1.0em;border-left:0;border-right:0;}
 }
+
+
+
+/****** page35 ******/
+/* 정삼각형 */
+.sample.page35 .triangle {
+	width: 0px;
+	height: 0px;
+	border-bottom: calc( 90px * 1.732 ) solid #666666;
+	border-left: 90px solid transparent;
+	border-right: 90px solid transparent;
+}
+
+/* 직각삼각형 */
+.sample.page35 .triangle2 {
+	width: 0px;
+	height: 0px;
+	border-bottom: 180px solid #666666;
+	border-left: 0px solid transparent;
+	border-right: 180px solid transparent;
+}
+
+/* 이등변 위 */
+.sample.page35 .triangle3-1 {
+	width: 0px;
+	height: 0px;
+	border-bottom: 180px solid #666666;
+	border-left: 90px solid transparent;
+	border-right: 90px solid transparent;
+}
+
+/* 이등변 오른쪽 */
+.sample.page35 .triangle3-2 {
+	width: 0px;
+	height: 0px;
+	border-left: 180px solid #666666;
+	border-top: 90px solid transparent;
+	border-bottom: 90px solid transparent;
+}
+
+/* 이등변 아래 */
+.sample.page35 .triangle3-3 {
+	width: 0px;
+	height: 0px;
+	border-top: 180px solid #666666;
+	border-left: 90px solid transparent;
+	border-right: 90px solid transparent;
+}
+
+/* 이등변 왼쪽 */
+.sample.page35 .triangle3-4 {
+	width: 0px;
+	height: 0px;
+	border-right: 180px solid #666666;
+	border-top: 90px solid transparent;
+	border-bottom: 90px solid transparent;
+}
+
+/* 변경 삼각형 */
+.sample.page35 .triangle4 {
+	width: 0px;
+	height: 0px;
+	border-bottom: 180px solid #666666;
+	border-left: 240px solid transparent;
+	border-right: 90px solid transparent;
+}
+
+/* 회전 */
+.sample.page35 .triangle5 {
+	width: 0px;
+	height: 0px;
+	border-bottom: calc( 90px * 1.732 ) solid #666666;
+	border-left: 90px solid transparent;
+	border-right: 90px solid transparent;
+	transform: rotate( 45deg );
+}
+
+
+/****** page36 ******/
+.sample.page36 .speech-bubble {
+    position:relative;
+    width:200px;
+    padding:20px;
+    background-color:#666;
+    border-radius:4px;
+    color:#fff;
+}
+
+.sample.page36 .speech-bubble.left:after {
+    content:'';
+    position:absolute;
+    top:50%;
+    left:-16px;
+    border-right:16px solid #666;
+    border-top:10px solid transparent;
+    border-bottom:10px solid transparent;
+    transform:translateY(-50%);
+}
+
+.sample.page36 .speech-bubble.right:after {
+    content:'';
+    position:absolute;
+    top:50%;
+    right:-16px;
+    border-left:16px solid #666;
+    border-top:10px solid transparent;
+    border-bottom:10px solid transparent;
+    transform:translateY(-50%);
+}
+
+.sample.page36 .speech-bubble.top:after {
+    content:'';
+    position:absolute;
+    top:-8px;
+    left:50%;
+    border-bottom:8px solid #666;
+    border-left:16px solid transparent;
+    border-right:16px solid transparent;
+    transform:translateX(-50%);
+}
+
+.sample.page36 .speech-bubble.bottom:after {
+    content:'';
+    position:absolute;
+    left:30px;
+    bottom:-8px;
+    border-left:16px solid transparent;
+    border-right:16px solid transparent;
+    border-top:8px solid #666;
+}
