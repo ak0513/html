@@ -71,6 +71,40 @@
                     <span data-url="https://blog.kakaocdn.net/dn/Km3mM/btsBcazrM27/k3hPknZHRtVLctajyVZUhK/img.png" data-lightbox="lightbox"><img src="https://blog.kakaocdn.net/dn/Km3mM/btsBcazrM27/k3hPknZHRtVLctajyVZUhK/img.png" srcset="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&amp;fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FKm3mM%2FbtsBcazrM27%2Fk3hPknZHRtVLctajyVZUhK%2Fimg.png" onerror="this.onerror=null; this.src='//t1.daumcdn.net/tistory_admin/static/images/no-image-v1.png'; this.srcset='//t1.daumcdn.net/tistory_admin/static/images/no-image-v1.png';" data-filename="voiceover1.png" data-origin-width="829" data-origin-height="1793"></span>
                     <figcaption>설정 → 손쉬운 사용</figcaption>
                 </figure>
+
+
+                javascript
+                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
+                    function next(ele, selector) {
+                        var nextEl = ele.nextElementSibling;
+                        if (!selector || (nextEl &amp;&amp; nextEl.matches(selector))) {
+                            return nextEl;
+                        }
+                        return null;
+                    }
+                </code></pre>
+
+                css
+                <pre class="css" data-ke-language="css" data-ke-type="codeblock"><code>
+                    .triangle {
+                        width: 0px;
+                        height: 0px;
+                        border-bottom: calc( 90px * 1.732 ) solid #666666;
+                        border-left: 90px solid transparent;
+                        border-right: 90px solid transparent;
+                        transform: rotate( 45deg );
+                    }
+                </code></pre>
+                
+                html
+                <pre class="html xml" data-ke-language="html" data-ke-type="codeblock"><code>
+                    <ul>
+                        <li class="apple">사과</li>
+                        <li class="banana">바나나</li>
+                        <li class="pineapple">파인애플</li>
+                        <li class="strawberry">딸기</li>
+                    </ul>
+                </code></pre>
             </div>
         </div>
     </div>

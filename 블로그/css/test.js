@@ -18,6 +18,29 @@ document.addEventListener('DOMContentLoaded', function() {
             item.innerHTML = '<div class="hljs-header">CSS</div><pre><code>' + eleHtml + '</code></pre>';
         }
     })
+
+    var highlightEle2 = document.querySelectorAll('[data-ke-language]');
+    highlightEle2.forEach(function(item) {
+        if(item.dataset.keLanguage === 'html') {
+            var eleHtml = item.querySelector('code').innerHTML
+            eleHtml = eleHtml.replaceAll('<', '&lt;');
+            eleHtml = eleHtml.replaceAll('>', '&gt;');
+            eleHtml = eleHtml.trim();
+            item.innerHTML = `<pre class="html xml" data-ke-language="html" data-ke-type="codeblock"><code>${eleHtml}</code></pre>`;
+        } else if(item.dataset.keLanguage === 'javascript') {
+            var eleHtml = item.querySelector('code').innerHTML
+            eleHtml = eleHtml.trim();
+            item.innerHTML = `<pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>${eleHtml}</code></pre>`;
+        } else if(item.dataset.keLanguage === 'css') {
+            var eleHtml = item.querySelector('code').innerHTML
+            eleHtml = eleHtml.trim();
+            item.innerHTML = `<pre class="css" data-ke-language="css" data-ke-type="codeblock"><code>${eleHtml}</code></pre>`;
+        }
+        var hljsHeader = document.createElement("div");
+        hljsHeader.classList.add('hljs-header');
+        hljsHeader.innerText = item.dataset.keLanguage.toUpperCase();
+        item.before(hljsHeader);
+    })
     hljs.initHighlightingOnLoad();
 
     /* 이미지 변환 */
