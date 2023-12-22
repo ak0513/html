@@ -4,8 +4,8 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<script src="../basic/css/common.css"></script>
-	<script src="../basic/css/style.css"></script>
+	<link rel="stylesheet" href="../basic/css/common.css"></link>
+	<link rel="stylesheet" href="../basic/css/style.css"></link>
 	<title>기본 스타일</title>
 </head>
 <body>
@@ -45,7 +45,7 @@
                     <li>3. 주가가 하락하지 않고 횡보를 한다면</li>
                     <li>4. 거래량이 줄었는데 주가가 줄어들지 않고 버텨준다면 상승 가능성 있음</li>
                 </ol>
-                <div class="btn-wrap"><a href="https://www.youtube.com/embed/VaK8fwcTxFw" target="_blank" class="btn show-youtube" role="button">동영상 바로가기</a></div>
+                <div class="btn-wrap"><a href="https://www.youtube.com/embed/VaK8fwcTxFw" target="_blank" class="btn btn-youtube" role="button">동영상 바로가기</a></div>
             </div>
         </section>
 
@@ -57,15 +57,15 @@
 
 
     <script>
-        var showYoutube = document.querySelectorAll('.show-youtube');
+        var btnYoutube = document.querySelectorAll('.btn-youtube');
         var youtubeWrap = document.querySelector('#youtube');
         var wrap = document.querySelector('#wrap');
-        showYoutube.forEach(function(ele) {
+        btnYoutube.forEach(function(ele) {
             ele.addEventListener('click', function() {
                 event.preventDefault();
                 wrap.classList.add('show-youtube');
                 youtubeWrap.innerHTML = '<iframe src="' + ele.getAttribute('href') + '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
-                wrap.style.paddingBottom = (315 * wrap.clientWidth / 560) + 30 + 'px';
+                wrap.style.paddingBottom = (315 * wrap.clientWidth / 560) + 'px';
             });
         })
     </script>
