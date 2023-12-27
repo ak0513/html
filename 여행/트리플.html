@@ -517,7 +517,7 @@
                             `</div>
                                 <div class="list-amount-group">
                                     <div class="list-amount"><b>${item.amount.toLocaleString('ko-KR')}</b>${exchange[item.currency][1]}</div>`
-                                    if(item.currency !== 'KRW') {output += `<div class="list-amount krw">(${(item.amount * exchange[item.currency][0]).toLocaleString('ko-KR')}원)</div>`}
+                                    if(item.currency !== 'KRW' && item.amount !== 0) {output += `<div class="list-amount krw">(${(item.amount * exchange[item.currency][0]).toLocaleString('ko-KR')}원)</div>`}
                         output += 
                                 `</div>
                             </li>`;
@@ -577,8 +577,9 @@
                         output += 
                             `</div>
                             <div class="list-amount-group">
-                                <div class="list-amount"><b>${item.amount.toLocaleString('ko-KR')}</b>${exchange[item.currency][1]}</div>
-                            </div>
+                                <div class="list-amount"><b>${item.amount.toLocaleString('ko-KR')}</b>${exchange[item.currency][1]}</div>`
+                                if(item.currency !== 'KRW' && item.amount !== 0) {output += `<div class="list-amount krw">(${(item.amount * exchange[item.currency][0]).toLocaleString('ko-KR')}원)</div>`}
+                        output += `</div>
                         </li>`;
                         // output += `City: " + item.city + ", Amount: " + item.amount + ", Currency: " + item.currency + "</li>`
 
