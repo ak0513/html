@@ -1,3 +1,5 @@
 /* highlighter */
 .highlighter {background:linear-gradient(to top, #ff5d0074 20%, transparent 60%);font-weight:700;}
-.highlighter-c2 {border-bottom:2px dashed #b41212}
+.highlighter-c2 {border-bottom:2px dashed #dc1e1e}
+u.c1 {text-decoration:none;border-bottom:2px dashed #dc1e1e}
+u.c2 {text-decoration:none;border-bottom:2px dashed #1e34dc}
