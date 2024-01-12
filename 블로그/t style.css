@@ -1146,3 +1146,29 @@ i.area_view .another_category th a.current{border-bottom:none !important;}
     border-right:16px solid transparent;
     border-top:8px solid #666;
 }
+
+
+/* 맥 키보드 */
+.mac-keyboard {display:flex;gap:8px;align-items:center;margin-top:8px;}
+.mac-keyboard > div {position:relative;min-width:40px;border:2px solid #666;padding:28px 8px 4px;border-radius:4px;font-size:14px;color:#888;}
+.mac-keyboard > div::before {position:absolute;top:6px;right:6px;color:#888;}
+
+.mac-keyboard [class*='number'] {text-align:center;}
+.mac-keyboard [class*='number']::before {right:50%;transform:translateX(50%);}
+
+.mac-keyboard .plus {min-width:auto;border:none;padding:0;font-size:16px;}
+
+.mac-keyboard .command::before {content:'⌘'}
+.mac-keyboard .option::before {content:'⌥'}
+.mac-keyboard .control::before {content:'⌃'}
+.mac-keyboard .shift {min-width:100px;}
+.mac-keyboard .shift::before {content:'⇧'}
+.mac-keyboard .space {min-width:140px;}
+
+.mac-keyboard .number1::before {content:'!'}
+.mac-keyboard .number2::before {content:'@'}
+.mac-keyboard .number3::before {content:'#'}
+.mac-keyboard .number4::before {content:'$'}
+.mac-keyboard .number5::before {content:'%'}
+
+.mac-keyboard .f::before {content:'ㄹ'}

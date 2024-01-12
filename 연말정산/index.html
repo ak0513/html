@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../basic/css/common.css"></link>
+	<link rel="stylesheet" href="../basic/css/style.css"></link>
+	<title>연말정산</title>
+</head>
+<body>
+	
+	<div id="wrap">
+		<section id="container">
+			<div class="container-inner">
+				<h2 class="h-tit1"><span>연말정산</span></h2>
+				<p>
+					총금여액의 25%를 초과되는 사용액에 대해서<br>
+					신용카드(15%)/체크카드,현금영수증(30%) 금액이 소득공제 대상이다.<br>
+					이들 합쳐서 최대 300만원까지 가능하다.<br><br>
+
+					신용카드공제는 세금을 깎아주는 세액공제와는 다르다.<br>
+					신용카드공제는 총금여액에서 공제되어 과세표준이 낮아지는 것이다.<br><br>
+
+					결정세액(내가 내야할 세금) = 산출세액 - 세액공제<br><br>
+
+					산출세액 = 과세표준 x 세율(과세구간 계산법)<br><br>
+
+					과세표준 = 총급여액 - 소득공제<br><br>
+
+					기 소득이 결정세액보다  많았다면 환급, 적었다면 추납.
+				</p>
+
+				<h3 class="h-tit2">계산</h3>
+				<div class="table-wrap">
+					<table class="table">
+						<caption></caption>
+						<colgroup>
+							<col style="width:20%">
+							<col style="width:30%">
+							<col>
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col">단계</th>
+								<th scope="col">결과</th>
+								<th scope="col">계산방법</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1단계</td>
+								<td>총급여액</td>
+								<td>연간 근로소득 - 비과세소득</td>
+							</tr>
+							<tr>
+								<td>2단계</td>
+								<td>근로소득금액</td>
+								<td>총급여액 - 근로소득공제</td>
+							</tr>
+							<tr>
+								<td>3단계</td>
+								<td>차감소득금액</td>
+								<td>
+									근로소득금액 - (①+②+③)<br>
+									① 인적공제(기본공제, 추가공제)<br>
+									② 연금보험료공제(공적연금의 근로자 부담금)<br>
+									③ 특별소득공제
+								</td>
+							</tr>
+							<tr>
+								<td>4단계</td>
+								<td>과세표준</td>
+								<td>차감소득금액 - 그 밖의 소득공제 - 소득공제 종합한도 초과액</td>
+							</tr>
+							<tr>
+								<td>5단계</td>
+								<td>산출세액</td>
+								<td>과세표준에 기본세율을 적용하여 계산</td>
+							</tr>
+							<tr>
+								<td>6단계</td>
+								<td>결정세액</td>
+								<td>산출세액 - 세액감면 - 세액공제</td>
+							</tr>
+							<tr>
+								<td>7단계</td>
+								<td>차감납부&middot;환급세액</td>
+								<td>결정세액 - 기납부세액 - 납부특례세액</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+
+				<h3 class="h-tit2">소득 공제</h3>
+				<p>과세표준을 계산하기 위해 총급여액에서 일정 금액을 공제하는 것</p>
+				<p>연금보험공제료, 건강보험, 고용보험, 신용카드 등이 있다.</p>
+
+				<h3 class="h-tit2">세액 공제</h3>
+				<p>산출된 세액에서 일정금액을 공제해 주는 것으로 납부해야 하는 세액에 직접적으로 영향을 줌</p>
+				<p>보장성 보험료, 의료비, 연금저축, 교육비, 기부금 등이 있다.</p>
+
+				<h3 class="h-tit2">과세표준</h3>
+				<p>세금이 부과되는 기준이 되는 금액</p>
+
+				<h3 class="h-tit2">과세표준 구간</h3>
+				<div class="table-wrap">
+					<table class="table">
+						<caption></caption>
+						<colgroup>
+							<col>
+							<col>
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col">과세표준 구간</th>
+								<th scope="col">기본세율</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1,200만원 이하</td>
+								<td>과세표준의 6%</td>
+							</tr>
+							<tr>
+								<td>1,200만원 초과 ~ 4,600만원 이하</td>
+								<td>72만원 + (1,200만원 초과 금액의 15%)</td>
+							</tr>
+							<tr>
+								<td>4,600만원 초과 ~ 8,800만원 이하</td>
+								<td>582만원 + (4,600만원 초과 금액의 24%)</td>
+							</tr>
+							<tr>
+								<td>8,800만원 초과 ~ 1억 5천만원 이하</td>
+								<td>1,590만원 + (8,800만원 초과 금액의 35%)</td>
+							</tr>
+							<tr>
+								<td>1억 5천만원 초과 ~ 3억원 이하</td>
+								<td>3,760만원 + (1억 5천만원 초과 금액의 38%)</td>
+							</tr>
+							<tr>
+								<td>3억원 초과 ~ 5억원 이하</td>
+								<td>9,460만원 + (3억원 초과 금액의 40%)</td>
+							</tr>
+							<tr>
+								<td>5억원 초과 ~ 10억원 이하</td>
+								<td>17,460만원 + (5억원 초과 금액의 42%)</td>
+							</tr>
+							<tr>
+								<td>10억원 초과</td>
+								<td>38,460만원 + (10억원 초과 금액의 45%)</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<p>과세표준이 3,000만원인 경우 산출 세액의 계산은 72만원 + (3,000만원 - 1,200만원) x 15%로 계산하여 3,420,000원이다.</p>
+
+
+
+				<h3 class="h-tit2">총급여액</h3>
+				<p>연간 근로소득 - 비과세소득</p>
+				
+				<h3 class="h-tit2">소득공제</h3>
+				<ul class="bullet-dot">
+					<li>세금이 부과되는 소득을 줄여 과세표준을 낮추는 것</li>
+					<li>1년간 근로소득이 5,000만원에서 500만원의 소득공제를 받았다면 4,500만원에 대해서만 세금을 책정한다.<br>500만원에 대한 세금은 납부하지 않아도 된다.</li>
+					<li>소득공제 항목으로는 인적공제, 신용체크카드 사용액 공제, 보험료 공제 등이 있다.</li>
+					<li><b>소득공제 총 한도는 2,500만원이다.</b> 공제 금액이 2,500만원을 넘어갈 경우 과세표준에 합산된다.</li>
+				</ul>
+
+				<h4 class="h-tit3">소득공제 &dash; 인적공제</h4>
+				<p>인적공제는 함께 살고 있지만 소득 기준에 부합하는 부양가족에 대해 소득공제를 받을 수 있다.</p>
+				<h5 class="h-tit4">기본공제</h5>
+				<ul class="bullet-dot">
+					<li>본인, 배우자, 부양가족에 대해 1명당 150만원 공제</li>
+					<li>공제 대상은 연간 소득액이 100만원 이하여야 한다.</li>
+					<li>근로소득이 있다면 총금여액이 연간 500만원 이하여야 한다.</li>
+					<li>기본공제의 범위는 본인, 배우자, 직계존속, 직계비속, 형제, 자매를 포함한다.</li>
+				</ul>
+				<h5 class="h-tit4">추가공제</h5>
+				<ul class="bullet-dot">
+					<li>기본공제 대상자가 경로우대자, 장애인, 부녀자, 한부모에 해당하는 경우 추가공제를 받을 수 있다.</li>
+					<li>경로우대자 100만원, 장애인 200만원, 부녀자 50만원, 한부모 100만원 공제</li>
+				</ul>
+
+				<h4 class="h-tit3">소득공제 &dash; 신용&middot;체크카드</h4>
+				<p>신용카드, 체크카드, 현금영수증 사용액에 따라 소득공제를 받을 수 있다.</p>
+				<div class="table-wrap">
+					<table class="table">
+						<caption></caption>
+						<colgroup>
+							<col>
+							<col>
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col">구분</th>
+								<th scope="col">공제비율</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th scope="row">신용카드</th>
+								<td>15%</td>
+							</tr>
+							<tr>
+								<th scope="row">체크카드, 현금영수증</th>
+								<td>30%</td>
+							</tr>
+							<tr>
+								<th scope="row">전통시장, 대중교통</th>
+								<td>40%</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<h5 class="h-tit4">총금여액에 따른 한도</h5>
+				<div class="table-wrap">
+					<table class="table">
+						<caption></caption>
+						<colgroup>
+							<col>
+							<col>
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col">총금여액</th>
+								<th scope="col">소득공제 한도</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th scope="row">7,000만원 이하</th>
+								<td>300만원</td>
+							</tr>
+							<tr>
+								<th scope="row">7,000만원 초과</th>
+								<td>250만원</td>
+							</tr>
+							<tr>
+								<th scope="row">1억 2,000만원 초과</th>
+								<td>200만원</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+
+				<h4 class="h-tit3">소득공제 &dash; 주택자금 공제</h4>
+				<h5 class="h-tit4">주택임차차입금(전세자금대출) 원리금 공제</h5>
+				<p>무주택 세대주가 국민주택(85m<sup>2</sup>이하)을 임차하기 위해 대출한 전세대출의 원리금 상황금액 40%가 공제. 연 400만원까지 공제.</p>
+
+				<h5 class="h-tit4">주택마련저축(주택청약) 소득공제</h5>
+				<p>총금여액이 7,000만원 이하인 세대주가 주택청약저축에 납입한 금액의 40%가 공제. 연 납입액은 240만원 이하.</p>
+
+				<h5 class="h-tit4">장기주택저당차입금(주택담보대출) 이자 공제</h5>
+				<p>무주택 또는 1주택 세대주가 시가 5억원 이하의 집을 구매할 때 주택담보대출의 이자 상환액이 공제. 상환기간과 조건에 따라 연 300~ 1,500만원까지 공제</p>
+
+				<h4 class="h-tit3">소득공제 &dash; 기타 공제</h4>
+				<h5 class="h-tit4">개인연금저축 소득공제</h5>
+				<p>개인연금저축 납입액의 40% 공제. 연 72만원까지 공제.</p>
+
+				<h5 class="h-tit4">소상공인(노란우산) 소득공제</h5>
+				<p>총금여액 7,000만원 이하인 소상공인 법인 대표자가 노란우산 공제에 납부하는 금액에 대한 공제. 공제한도는 공제 금액에 따라 다르다.</p>
+
+
+				<h2 class="h-tit1"><span>보장성 보험</span></h2>
+				<p>보장성 보험료(자동차보험 + 운전자보험 + 손해보험) 세액공제 납입액 한도 : 100만원(세액 공제율 : 12%)</p>
+
+				
+				<h2 class="h-tit1"><span>신용카드 공제 제외대상</span></h2>
+				<p>의료비는 의료비 세액공제와 신용카드 소득공제를 중복 공제 받을 수 있다.</p>
+				<ul class="bullet-dot">
+					<li>자동차 구입 비용 / 중고자동차구입비는 가능(구입액 x 10%)</li>
+					<li>보험료 또는 공제료 - 건강보험료, 고용보험료, 국민연금보험료, 각종 보험계약의 보험료 또는 공제료)</li>
+					<li>공과금 - 국세, 지방세, 공과금 등, 도로통행료 등</li>
+					<li>렌트카 이용료</li>
+					<li>아파트 관리비</li>
+					<li>도로 통행료</li>
+					<li>교육비 - 어린이집, 유치원, 초 중 고 대학교 교육비 (※단, 사설학원 수강료는 가능)</li>
+					<li>유가증권 구입 - 상품권 등 유가증권 구입비</li>
+					<li>리스료 - 차량 리스료 등</li>
+					<li>자산의 구입 비용 - 취득세, 등록 면허세가 부과 대상 재산의 구입 비용⇒부동산, 자동차(단, 중고 자동차 구입 비용 가능) 등</li>
+					<li>국가,지자체 수수료 등</li>
+					<li>금융수수료 - 차입금 이자상환액, 증권거래수수료 등</li>
+					<li>기부금 등 - 정당기부금, 지정기부금 등을 신용카드로 지급한 금액</li>
+					<li>월세세액공제액 - 월세액 세액공제를 적용받은 월세금액</li>
+				</ul>
+
+				<h2 class="h-tit1"><span>의료비 공제</span></h2>
+				<p>공제한도 700만원</p>
+				<p>(의료비 총액-(총급여액*3%)) * 15%</p>
+				<p>의료비는 의료비 세액공제와 신용카드 소득공제를 중복 공제 받을 수 있다.</p>
+			</div>
+
+
+
+
+			https://kin.naver.com/qna/detail.naver?d1id=4&dirId=40311&docId=451833277
+			https://cash-story.tistory.com/entry/%EC%97%B0%EB%A7%90%EC%A0%95%EC%82%B0-%EC%86%8C%EB%93%9D%EA%B3%B5%EC%A0%9C-%EC%84%B8%EC%95%A1%EA%B3%B5%EC%A0%9C-%ED%95%AD%EB%AA%A9-%ED%95%9C%EB%8F%84
+			https://blog.naver.com/rec1820/223003323190
+
+		</section>
+	</div>
+</body>

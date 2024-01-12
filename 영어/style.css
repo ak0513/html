@@ -1,0 +1,5 @@
+* {margin:0;padding:0;box-sizing:border-box;}
+ul,ol,li {list-style: none;}
+a {color:#000;text-decoration:none;}
+body {font-size:16px;font-family: -apple-system, Pretendard, BlinkMacSystemFont, sans-serif;color:#000;}
+#container {padding:20px;}

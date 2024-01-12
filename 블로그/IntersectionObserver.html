@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Elements Visibility and Class Manipulation</title>
+    <style>
+
+        .element,
+        .element2 {
+            opacity: 0;
+            width: 1000px;
+            height: 400px;
+            margin: 10px;
+            background-color: lightgreen;
+            transition: all 0.4s;
+        }
+        .element.visible,
+        .element2.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div><button type="button" id="unobserve">관찰중지</button>
+    <div style="height:2000px"></div>
+    <div style="height:500px;overflow: auto;">
+        <div style="height:2000px">
+            <div style="height:2000px"></div>
+            <div class="element">Element 1-1</div>
+        </div>
+    </div>
+    <div style="height:1000px"></div>
+    <div class="element">Element 1-2</div>
+    <div style="height:1000px"></div>
+    <div class="element2">Element 2-1</div>
+    <div style="height:5000px"></div>
+
+    <script>
+        function io() {
+            var elements = document.querySelectorAll('.element');
+            var elements2 = document.querySelectorAll('.element2');
+            var unobserve = document.getElementById('unobserve');
+
+            var options = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.4 // Intersection Observer가 변경되는 임계값 설정
+            };
+            var options2 = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.5
+            };
+
+            var callback = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    } else {
+                        entry.target.classList.remove('visible');
+                    }
+                });
+            };
+
+            var observer = new IntersectionObserver(callback, options);
+            var observer2 = new IntersectionObserver(callback, options2);
+            
+            elements.forEach(element => {
+                observer.observe(element);
+            });
+            elements2.forEach(element2 => {
+                observer2.observe(element2);
+            });
+
+            unobserve.addEventListener('click', function() {
+                elements.forEach(element => {
+                    observer.unobserve(element);
+                });
+            })
+        }
+        io();
+    </script>
+</body>
+</html>

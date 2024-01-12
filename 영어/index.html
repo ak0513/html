@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css" media="all">
+    <script src="./common.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="wrap">
+        <div id="container">
+            <a href="#" class="list-title">title <span>가나다라</span></a>
+            <ul class="list-group">
+                <li class="list-item">
+                    <div class="list-lang eng">
+                        <p class="list-sentence">I wanna go home</p>
+                        <button type="button" class="list-toggle-btn"></button>
+                    </div>
+                    <div class="list-lang kor">
+                        <p class="list-sentence">가나다라 가나다라 가나다라 가나다라</p>
+                        <button type="button" class="list-toggle-btn"></button>
+                    </div>
+                </li>
+
+                <li class="list-item">
+                    <div class="list-lang eng">
+                        <p class="list-sentence">abcde abcde abcde abcde</p>
+                        <button type="button" class="list-toggle-btn"></button>
+                    </div>
+                    <div class="list-lang kor">
+                        <p class="list-sentence">가나다 가나다 가나다 가나다</p>
+                        <button type="button" class="list-toggle-btn"></button>
+                    </div>
+                </li>
+            </ul>
+            
+            <button type="button" class="btn-reverse">전환</button>
+        </div>
+    </div>
+
+
+
+    <style>
+        .list-title {display:block;padding:10px 0;}
+
+        .list-group {border-bottom:1px solid #ddd;}
+        .list-group.hide {display:none;}
+        .list-item {display:flex;flex-direction:column;border-top:1px solid #ddd;}
+
+        .list-lang {display:flex;justify-content:space-between;align-items:center;}
+        .list-toggle-btn {display:block;flex-shrink:0;background:url('./arrow-down.svg') no-repeat;width:24px;height:24px;border:none;}
+        .list-lang.kor {display:none;background-color: #ebebeb;margin-top:8px;padding:8px;}
+        .list-lang.kor .list-toggle-btn {display: none;}
+        .list-sentence {display:flex;flex-wrap:wrap;padding:12px;}
+
+        .open .list-lang.kor {display:block;}
+        
+        .btn-reverse {display:flex;align-items:center;justify-content:center;width:100%;height:40px;margin-top:10px;border:none;font-size:16px;}
+        
+
+        .reverse .list-item {flex-direction:column-reverse;}
+        .reverse .list-lang.kor {display:flex;background-color: #fff;margin:0;padding:0;}
+        .reverse .list-lang.kor .list-toggle-btn {display: block;}
+        .reverse .list-lang.eng {display:none;background-color: #ebebeb;margin-top:8px;padding:8px;}
+        .reverse .list-lang.eng .list-toggle-btn {display: none;}
+
+        .reverse .open .list-lang.eng {display:block;}
+    </style>
+
+
+    <script>
+        var listTitle = document.querySelectorAll('.list-title');
+        listTitle.forEach(function(item) {
+            item.addEventListener('click', function() {
+                var nextEl =  item.nextElementSibling
+                nextEl.classList.contains('hide') ? nextEl.classList.remove('hide') : nextEl.classList.add('hide')
+            })
+        })
+
+
+
+        var listItem = document.querySelectorAll('.list-item');
+        listItem.forEach(function(item) {
+            let original = item.querySelector('.eng .list-sentence');
+            let wordsArray = original.innerText.split(" ");
+            let taggedArray = wordsArray.map(word => `<a href="https://papago.naver.com/?sk=en&tk=ko&hn=1&st=${word}" target="_blank" title="새창 열림">${word}</a>&nbsp;`);
+            let finalString = taggedArray.join(" ");
+            original.innerHTML = finalString;
+        })
+
+        var list = document.querySelector('.list-group');
+        var listBtn = document.querySelectorAll('.list-toggle-btn');
+        listBtn.forEach(function(item) {
+            item.addEventListener('click', function() {
+                item.closest('.list-item').classList.contains('open') ? item.closest('.list-item').classList.remove('open') : item.closest('.list-item').classList.add('open')
+            })
+        })
+
+        var btnReverse = document.querySelector('.btn-reverse')
+        btnReverse.addEventListener('click', function() {
+            list.classList.contains('reverse') ? list.classList.remove('reverse') : list.classList.add('reverse')
+        })
+
+    </script>
+</body>
+</html>
