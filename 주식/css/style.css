@@ -1,3 +1,3 @@
 /* highlighter */
-.highlighter-c1 {background:linear-gradient(to top, #ff5d0074 20%, transparent 60%);font-weight:700;}
-.highlighter-c2 {background:linear-gradient(to top, #008fff74 20%, transparent 60%);font-weight:700;}
+.highlighter {background:linear-gradient(to top, #ff5d0074 20%, transparent 60%);font-weight:700;}
+.highlighter-c2 {border-bottom:2px dashed #b41212}
