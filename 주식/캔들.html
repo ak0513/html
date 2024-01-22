@@ -7,10 +7,12 @@
 	<link rel="stylesheet" href="../basic/css/common.css"></link>
 	<link rel="stylesheet" href="../basic/css/style.css"></link>
 	<link rel="stylesheet" href="./css/style.css"></link>
+    <script src="./js/common.js"></script>
 	<title>캔들</title>
 </head>
 <body>
 	<div id="wrap">
+        <header id="header"></header>
         <section id="container">
 			<div class="container-inner">
                 <h2 class="h-tit1"><span>상승 예상 캔들</span></h2>
@@ -26,17 +28,53 @@
                 <div class="mgt20"><img src="./img/망치 캔들.png" alt="" width="300"></div>
 
                 <h3 class="h-tit2"><span>상승 장악형(Bullish Engulfing) 캔들</span></h3>
-                <p>첫번째 캔들이 하락하며 두번째 캔들이 그 전 하락 캔들을 완전히 감싸는 형태로 하락 흐름을 상승 흐름으로 반전하는 전환점이다.</p>
+                <p>첫번째 캔들이 하락하며 오늘 캔들이 그 전 하락 캔들을 완전히 감싸는 형태로 하락 흐름을 상승 흐름으로 반전하는 전환점이다.</p>
                 <ul class="bullet-dot">
                     <li>하락 추세에서 등장한다.</li>
-                    <li>이전 캔들의 어떤 부분도 두번째 캔들의 범위를 반드시 넘으면 안된다.</li>
-                    <li>이전 캔들의 몸통이 두번째 캔들의 몸통안에 있는지는 유효한 시그널이다.</li>
-                    <li>이전 캔들은 음봉이고 두번째 캔들은 큰 양봉이어야 한다.</li>
-                    <li>첫번재 캔들의 꼬리가 길면 강한 하락세를 나타내므로 상승 패턴의 신뢰성을 약화시킨다.</li>
-                    <li>두번째 캔들의 꼬리가 없을수록 좋다.(이는 매수자가 성공적으로 가격을 끌어올려 최고가를 유지했다는 강한 상승 압력이다.)</li>
-                    <li>이전 거래량보다 높은 거래량이 나와야 한다.</li>
+                    <li>꼬리보다는 몸통 위주로 파악</li>
+                    <li>어제 캔들의 어떤 부분도 오늘 캔들의 범위를 반드시 넘으면 안된다.</li>
+                    <li>어제 캔들의 몸통이 오늘 캔들의 몸통안에 있는지는 유효한 시그널이다.</li>
+                    <li>어제 캔들은 음봉이고 오늘 캔들은 큰 양봉이어야 한다.</li>
+                    <li>어제 캔들은 이평선 아래에 있으며 오늘 캔들은 이평선을 돌파하면 좋다.</li>
+                    <li>어제 캐들의 꼬리가 길면 강한 하락세를 나타내므로 상승 패턴의 신뢰성을 약화시킨다.</li>
+                    <li>오늘 캔들의 꼬리가 없을수록 좋다.(이는 매수자가 성공적으로 가격을 끌어올려 최고가를 유지했다는 강한 상승 압력이다.)</li>
+                    <li>어제 거래량보다 2배 이상의 높은 거래량이 나와야 한다.</li>
+                    <li>바닥권에서는 강한 상승 반전 신호로 해석된다.</li>
+                    <li>어제 캔들의 몸통이 작고 오늘 캔들의 몸통이 클수록 강한 추세 전환</li>
+                    <li>오늘 캔들의 저가가 지지선을 형선한다.</li>
+                    <li>내일 캔들이 음봉이 나오더라도 오늘 캔들의 몸통 절반을 하락하지 않는다면 매도 보류</li>
                 </ul>
                 <div class="mgt20"><img src="./img/상승장악형 캔들.png" alt="" width="300"></div>
+
+                <h3 class="h-tit2"><span>관통형 캔들</span></h3>
+                <p>전일 종가 밑에서 시가를 형성해 전일 음봉의 50% 이상을 당일 양봉으로 관통</p>
+                <ul class="bullet-dot">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+                <div class="mgt20"><img src="./img/관통형 캔들.png" alt="" width="100"></div>
+
+                <h2 class="h-tit1"><span>하락 예상 캔들</span></h2>
+
+                <h3 class="h-tit2"><span>하락 장악형(Bearish Engulfing) 캔들</span></h3>
+                <ul class="bullet-dot">
+                    <li>오늘 캔들의 고가가 저항선을 형성한다.</li>
+                </ul>
+
+                <h3 class="h-tit2"><span>먹구름형 캔들</span></h3>
+                <p>먹구름형은 전일의 양봉 중간에서 마무리가 되는데 추세의 전환 신호로 강한편은 아니나 추세의 고가권에서 형성이 된다면 보수적으로 접근하라는 신호이다.</p>
+                <ul class="bullet-dot">
+                    <li>오늘 캔들이 긴 몸통을 가진 음봉이다.</li>
+                    <li>어제 캔들이 긴 몸통의 양봉이다다.</li>
+                    <li>오늘 캔들의 시가는 어제 캔들의 고가 위에 형성된다.</li>
+                    <li>오늘 캔들의 종가는 이번 캔들의 저가 근처에 형성된다.(저가에 많이 근접할수록 하락 반전의 신뢰도는 높다.)</li>
+                    <li>상승 추세의 정상권에서 이 패턴이 나타난다면 중요한 하락 반전 신호이다.</li>
+                    <li>오늘 캔들의 종가가 어제 캔들의 몸통 50%이상을 하락하지 않는다면 매도를 보류해도 좋다.</li>
+                    <li>오늘 캔들 다음날에도 음봉이 나온다면 매도 대응</li>
+                </ul>
+                <div class="mgt20"><img src="./img/먹구름형 캔들.png" alt="" width="300"></div>
             </div>
         </section>
     </div>
