@@ -1,8 +1,8 @@
 /* highlighter */
 .highlighter {background:linear-gradient(to top, #ff5d0074 20%, transparent 60%);font-weight:700;}
 .highlighter-c2 {border-bottom:2px dashed #dc1e1e}
-u.c1 {text-decoration:none;padding-bottom:2px;border-bottom:1px solid #dc1e1e;color:#dc1e1e;font-weight:500;}
-u.c2 {text-decoration:none;padding-bottom:2px;border-bottom:1px solid #1e34dc;color:#1e34dc;font-weight:500;}
+u.c1 {text-decoration:none;padding-bottom:2px;border-bottom:1px solid #dc1e1e;color:#dc1e1e;}
+u.c2 {text-decoration:none;padding-bottom:2px;border-bottom:1px solid #1e34dc;color:#1e34dc;}
 
 
 #header {padding:0;border:none;}
@@ -11,3 +11,5 @@ u.c2 {text-decoration:none;padding-bottom:2px;border-bottom:1px solid #1e34dc;co
 #allMenu {position:fixed;top:120px;right:-100%;bottom:0;z-index:10;width:100%;background-color:#fff;border-top:1px solid #ddd;}
 #allMenu.allmenu-open {right:0;}
 .allMenu-link {display:block;padding:8px 20px;border-bottom:1px solid #ddd;}
+
+.h-tit2::before {content:'';display:block;width:40px;height:3px;margin-bottom:18px;background-color:#160057;}
