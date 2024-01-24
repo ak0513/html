@@ -1,3 +1,7 @@
+:root {
+    --font-basic: 1.6rem;
+}
+
 /* highlighter */
 .highlighter {background:linear-gradient(to top, #ff5d0074 20%, transparent 60%);font-weight:700;}
 .highlighter-c2 {border-bottom:2px dashed #dc1e1e}
@@ -22,3 +26,10 @@ p.bullet-dot, .bullet-dot > li {padding-left:1.8rem}
 
 .box {padding:16px 20px;background-color:#f8f8f8;font-size:1.6rem;}
 * + .box {margin-top:0.8rem;}
+
+
+@media (max-width: 576px) {
+    :root {
+        --font-basic: 1.8rem;
+    }
+}
