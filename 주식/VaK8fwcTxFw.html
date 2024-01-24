@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../basic/css/common.css"></link>
+	<link rel="stylesheet" href="../basic/css/style.css"></link>
+    <link rel="stylesheet" href="./css/style.css"></link>
+    <script src="./js/common.js"></script>
+	<title>기본</title>
+</head>
+<body>
+	
+	<div id="wrap">
+        <header id="header"></header>
+        <section id="container">
+			<div class="container-inner">
+                <h2 class="h-tit1"><span>거래량</span></h2>
+                <p>거래량은 힘을 나타낸다.<br>주가가 상승하기 위해서는 과거에 비해 거래량이 늘어나야 한다.</p>
+                <p>주가는 속일 수 있어도 거래량은 속일 수 없다는 말이 있다.</p>
+
+                <h3 class="h-tit2">매수 타이밍</h3>
+                <ul class="bullet-dot">
+                    <li>강력한 거래량과 함께 급상승 후 거래량이 이전의 거래량만큼 줄었지만 주가가 하락하지 않고 버텨준다면 상승 가능성이 있다.</li>
+                    <li>거래량이 줄어들때가 기회가 될 수 있다.</li>
+                </ul>
+
+                <h3 class="h-tit2">매도 타이밍</h3>
+                <ul class="bullet-dot">
+                    <li>거래량은 이전 평균보다 많이 나오지만 주가가 상승하지 않는다면 위험.</li>
+                </ul>
+
+                <h3 class="h-tit2">세력의 행동</h3>
+                <ul class="bullet-dot">
+                    <li>저점에서 거래량이 많이 나오면 매집</li>
+                    <li>고점에서 거래량이 많이 나오면 매도</li>
+                </ul>
+
+                <h3 class="h-tit2">주가 상승 가능성</h3>
+                <p>평균적으로 주가가 하락하면 거래량은 줄어들지만 바닥인데 거래량이 과거에 비해 늘어나면 바닥권에서 물량 매집을 한 형태가 거래량 증가로 나타난다.</p>
+                
+                <h3 class="h-tit2">주가 하락 가능성</h3>
+                <p>고점에서 거래량이 많이 나오고 윗꼬리가 많으면 하락으로 갈 가능성이 생김.<br>세력이 물량을 던짐</p>
+                <ol class="bullet-num">
+                    <li>많은 거래량과 급상승 후</li>
+                    <li>거래량이 이전의 거래량(100~120%)만큼 줄어있다.</li>
+                    <li>주가가 하락하지 않고 횡보를 한다면</li>
+                    <li>거래량이 줄었는데 주가가 줄어들지 않고 버텨준다면 상승 가능성 있음</li>
+                </ol>
+                <div class="btn-wrap"><a href="https://www.youtube.com/embed/VaK8fwcTxFw" target="_blank" class="btn btn-youtube" role="button">동영상 바로가기</a></div>
+            </div>
+        </section>
+
+        <div id="youtube">
+        </div>
+    </div>
+
+
+
+
+    <script>
+        var btnYoutube = document.querySelectorAll('.btn-youtube');
+        var youtubeWrap = document.querySelector('#youtube');
+        var wrap = document.querySelector('#wrap');
+        btnYoutube.forEach(function(ele) {
+            ele.addEventListener('click', function() {
+                event.preventDefault();
+                wrap.classList.add('show-youtube');
+                youtubeWrap.innerHTML = '<iframe src="' + ele.getAttribute('href') + '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+                wrap.style.paddingBottom = (315 * wrap.clientWidth / 560) + 'px';
+            });
+        })
+    </script>
+    <style>
+        #youtube {display:none;position: fixed; bottom:0;left:0;right:0;height:0;padding-top:56.25%;}
+        .show-youtube #youtube {display:block;}
+        #youtube iframe {position:absolute;top:0;left:0; width:100%;height:100%;}
+    </style>
+</body>
+
+
+<!-- 
+
+https://www.youtube.com/watch?v=tCxOFpHw9Wk
+주가상승원리 필수조건 - 숨기고 싶어하는 세력 거래량의 비밀
+
+주가는 속일 수 있어도 거래량은 속일 수 없다.
+
+대량 거래량이 터지면서 양봉이면 세력 유입을 유추할 수 있다.
+
+거래량 = 기대감 -> 돈, 자금 투입 -> 거래량 증가로 나타남.
+
+장대 거리량 + 장대 양봉보다는 -> 장대 거래량 +  단봉 ~ 중봉에 주목할 필요도 있다.
+장대양봉은 티가 나기 때문에 티를 덜 내고 싶은 세력이 단봉~중봉으로 매수 시작하기도 한다.
+
+
+장대양봉과 장대거래량이 터졌을 때
+장대 거래량이 이전의 평균 거래량을 훨씬 뛰어넘거나 많이 나온 거래량과 비슷하거나
++ 주가는 이전 고점대에 가깝거나 돌파를 한 것이 중요하다.
++ 20이평과의 이격도 격차가 벌어지면 좋지 않다.
+
+현재 나온 장대양봉의 고점 중단 하방이 가이드라인이 된다
+
+
+
+
+장대양봉 고점 중단 하방 체크
+
+
+
+https://www.youtube.com/watch?v=taE1mrfmDnA
+1 정배열에서 급상승이 나오며
+2 전저점 지지 받고 상승
+2-1. 상승 중 급상승이 아닌 시세 조정(하락)중 급상승인 패턴
+3 전고점을 돌파하되 심하게 돌파하지 않는 금액대
+4. 고점대를 유지하며 가격을 다지는 기간을 거친 후 다시 상승 가능성 있음.
+4-1 급상승한 장대양봉의 중단 부분을 깨지 않고 지지해야 함
+5. 지지를 받는 금액대 또는 20일선 지지대에서 매매 - 뇌피셜 
+
+급상승 이후 조정을 받을텐데
+그 조정이 가격이 밑으로 내려가는 가격조정이 아닌
+가격을 유지하는 기간 조정을 받는지 체크
+급상승된 금액을 깨지 않고 유지하는 기간조정이어야 한다.
+
+급상승한 장대양봉의 중단을 깨고 내려오면 단타로 수익을 내기는 어렵다. -->
