@@ -4,6 +4,8 @@
 u.c1 {text-decoration:none;border-bottom:1px solid #dc1e1e;color:#dc1e1e;}
 u.c2 {text-decoration:none;border-bottom:1px solid #1e34dc;color:#1e34dc;}
 
+li {color:#464646;}
+p.bullet-dot, .bullet-dot > li {padding-left:1.8rem}
 
 #header {padding:0;border:none;}
 .btn-allmenu {position:fixed;top:46px;right:20px;z-index:10;display:block;width:36px;height:36px;background:url('../img/menu.svg') no-repeat center / 36px;}
@@ -12,7 +14,10 @@ u.c2 {text-decoration:none;border-bottom:1px solid #1e34dc;color:#1e34dc;}
 #allMenu.allmenu-open {right:0;}
 .allMenu-link {display:block;padding:8px 20px;border-bottom:1px solid #ddd;}
 
-.h-tit2 {font-size:3.0rem;}
-.h-tit2::before {content:'';display:block;width:40px;height:3px;margin-bottom:18px;background-color:#160057;}
+.h-tit2 {font-size:3.0rem;border-bottom:1px solid #ddd;}
+* + .h-tit2 {margin-top:8.0rem;}
+.h-tit2 span {position:relative;display: inline-block;}
+.h-tit2 span::before {content:'';display:block;position:absolute;bottom:-1px;width:100%;height:3px;background-color:#dc1e1e;}
+* + .h-tit3 {margin-top:6.0rem;}
 
 .box {padding:16px 20px;background-color:#f8f8f8;}
