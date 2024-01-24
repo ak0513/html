@@ -163,11 +163,20 @@ ol[class*='bullet'] {
 
 ul[class*='bullet'] li + li,
 ol[class*='bullet'] li + li {
-	margin-top:0.4rem;
+	margin-top:0.8rem;
 }
 
 ul[class*='bullet'] li ul,
+ul[class*='bullet'] li ol,
+ol[class*='bullet'] li ol,
 ol[class*='bullet'] li ul {
+	margin-top:0.4rem;
+}
+
+ul[class*='bullet'] ul[class*='bullet'] li + li,
+ul[class*='bullet'] ol[class*='bullet'] li + li,
+ol[class*='bullet'] ol[class*='bullet'] li + li,
+ol[class*='bullet'] ul[class*='bullet'] li + li {
 	margin-top:0.4rem;
 }
 
