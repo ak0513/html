@@ -20,5 +20,5 @@ p.bullet-dot, .bullet-dot > li {padding-left:1.8rem}
 .h-tit2 span::before {content:'';display:block;position:absolute;bottom:-1px;width:100%;height:3px;background-color:#dc1e1e;}
 * + .h-tit3 {margin-top:6.0rem;}
 
-.box {padding:16px 20px;background-color:#f8f8f8;}
+.box {padding:16px 20px;background-color:#f8f8f8;font-size:1.6rem;}
 * + .box {margin-top:0.8rem;}
