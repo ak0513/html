@@ -203,12 +203,17 @@ body {
 
 /* gap */
 .mgt0 {margin-top: 0 !important;}
+.mgt5 {margin-top: 0.5rem !important;}
 .mgt10 {margin-top: 1.0rem !important;}
-.mgt10 {margin-top: 1.0rem !important;}
+.mgt15 {margin-top: 1.5rem !important;}
 .mgt20 {margin-top: 2.0rem !important;}
+.mgt25 {margin-top: 2.5rem !important;}
 .mgt30 {margin-top: 3.0rem !important;}
+.mgt35 {margin-top: 3.5rem !important;}
 .mgt40 {margin-top: 4.0rem !important;}
+.mgt45 {margin-top: 4.5rem !important;}
 .mgt50 {margin-top: 5.0rem !important;}
+.mgt55 {margin-top: 5.5rem !important;}
 
 .mgb0 {margin-bottom: 0 !important;}
 .mgb10 {margin-bottom: 1.0rem !important;}

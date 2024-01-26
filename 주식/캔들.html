@@ -75,15 +75,30 @@
                 </ul>
                 <div class="candle">
                     <div class="candle-group">
-                        <div class="candle-item plus">
-                            <div class="candle-top h0"></div>
+                        <div class="candle-item plus mgt35">
+                            <div class="candle-top"></div>
                             <div class="candle-body h20"></div>
-                            <div class="candle-bottom h80"></div>
+                            <div class="candle-bottom"></div>
+                        </div>
+                        <div class="candle-item plus">
+                            <div class="candle-top h5"></div>
+                            <div class="candle-body h50"></div>
+                            <div class="candle-bottom"></div>
                         </div>
                         <div class="candle-item minus">
                             <div class="candle-top h0"></div>
                             <div class="candle-body h20"></div>
                             <div class="candle-bottom h80"></div>
+                        </div>
+                        <div class="candle-item plus mgt25">
+                            <div class="candle-top h0"></div>
+                            <div class="candle-body h40"></div>
+                            <div class="candle-bottom"></div>
+                        </div>
+                        <div class="candle-item minus mgt50">
+                            <div class="candle-top"></div>
+                            <div class="candle-body h60"></div>
+                            <div class="candle-bottom"></div>
                         </div>
                     </div>
                 </div>
@@ -160,6 +175,7 @@
                             <div class="candle-top"></div>
                             <div class="candle-body"></div>
                             <div class="candle-bottom"></div>
+                            <div class="candle-txt">교수형 캔들</div>
                         </div>
                         <div class="candle-item minus mgt10">
                             <div class="candle-top"></div>
@@ -190,14 +206,15 @@
                     .candle .h90 {height: 90px !important;}
                     .candle .h95 {height: 95px !important;}
                     .candle .h100 {height: 100px !important;}
-                    .candle {padding:30px;border:1px solid #ddd;}
+                    .candle {display:inline-block;margin-top:20px;padding:20px;border:1px solid #ddd;}
                     .candle-group {display:flex;gap:8px;}
                     .candle-item.plus > div {background-color: #be0000;}
                     .candle-item.minus > div {background-color: #0057be;}
 
-                    .candle-body {width: 10px;height:40px;}
+                    .candle-body {width: 10px;height:40px;margin:0 auto;}
                     .candle-top,
                     .candle-bottom {width: 2px;height:15px;margin:0 auto;}
+                    .candle-txt {margin-top:10px;background-color:transparent !important;}
                 </style>
             </div>
 
