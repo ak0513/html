@@ -15,19 +15,124 @@
         <header id="header"></header>
         <section id="container">
 			<div class="container-inner">
-                <h2 class="h-tit1"><span>상승 예상 캔들</span></h2>
-                <h3 class="h-tit2"><span>망치(hammer)캔들</span></h3>
-                <p>하락하던 시장을 강력하게 상승 전환하는것을 예측하게 하는 캔들</p>
+                <!-- 망치형 캔들 -->
+                <h2 class="h-tit1"><span>망치형 캔들</span></h2>
+                <h3 class="h-tit2"><span>망치(Hammer)캔들</span></h3>
+                <p>하락추세의 끝(저점)에 등장하며 상승 반전의 신호이다.</p>
+                <div class="d-flex gap8">
+                    <div class="candle">
+                        <div class="candle-group">
+                            <div class="candle-item plus">
+                                <div class="candle-top h0"></div>
+                                <div class="candle-body h20"></div>
+                                <div class="candle-bottom h80"></div>
+                                <div class="candle-txt">망치형 캔들</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="candle">
+                        <div class="candle-group">
+                            <div class="candle-item minus">
+                                <div class="candle-top"></div>
+                                <div class="candle-body h20"></div>
+                                <div class="candle-bottom"></div>
+                            </div>
+                            <div class="candle-item minus mgt35">
+                                <div class="candle-top h5"></div>
+                                <div class="candle-body h40"></div>
+                                <div class="candle-bottom"></div>
+                            </div>
+                            <div class="candle-item candle-point plus mgt80">
+                                <div class="candle-top h0"></div>
+                                <div class="candle-body h20"></div>
+                                <div class="candle-bottom h80"></div>
+                            </div>
+                            <div class="candle-item minus mgt50">
+                                <div class="candle-top h0"></div>
+                                <div class="candle-body h20"></div>
+                                <div class="candle-bottom"></div>
+                            </div>
+                            <div class="candle-item plus mgt5">
+                                <div class="candle-top"></div>
+                                <div class="candle-body h20"></div>
+                                <div class="candle-bottom"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <ul class="bullet-dot">
-                    <li>하락 추세에서 등장한다.</li>
-                    <li>몸체가 짧아야 한다.</li>
-                    <li>꼬리는 길어야 한다.</li>
+                    <li>하락 추세의 저점에서 출현한다.</li>
+                    <li>몸체는 짧고 꼬리는 길어야 한다.</li>
                     <li>하락의 마지막에 다달았을 때 나타나야 한다.</li>
-                    <li>양봉 음봉 상관없지만 양봉이면 더욱 더 강력하다.</li>
+                    <li>양봉 음봉 상관없지만 양봉이면 신뢰도가 더 높다.</li>
                     <li>아래꼬리가 긴 것은 크게 하락했으나 매수세가 끌어올린 것으로 판단 가능</li>
                     <li>바로 매수보다는 다음날 추세 보고 진입</li>
                 </ul>
-                <div class="img"><img src="./img/candle-hammer.png" alt=""></div>
+
+                <h3 class="h-tit2"><span>교수형(Hanging man) 캔들</span></h3>
+                <p>상승추세의 끝(고점)에 등장하며 하락 반전의 신호이다.</p>
+                <div class="d-flex gap8">
+                    <div class="candle">
+                        <div class="candle-group">
+                            <div class="candle-item minus">
+                                <div class="candle-top h0"></div>
+                                <div class="candle-body h20"></div>
+                                <div class="candle-bottom h80"></div>
+                                <div class="candle-txt">교수형 캔들</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="candle">
+                        <div class="candle-group">
+                            <div class="candle-item plus mgt35">
+                                <div class="candle-top"></div>
+                                <div class="candle-body h20"></div>
+                                <div class="candle-bottom"></div>
+                            </div>
+                            <div class="candle-item plus">
+                                <div class="candle-top h5"></div>
+                                <div class="candle-body h50"></div>
+                                <div class="candle-bottom"></div>
+                            </div>
+                            <div class="candle-item candle-point minus">
+                                <div class="candle-top h0"></div>
+                                <div class="candle-body h20"></div>
+                                <div class="candle-bottom h80"></div>
+                            </div>
+                            <div class="candle-item plus mgt25">
+                                <div class="candle-top h0"></div>
+                                <div class="candle-body h40"></div>
+                                <div class="candle-bottom"></div>
+                            </div>
+                            <div class="candle-item minus mgt50">
+                                <div class="candle-top"></div>
+                                <div class="candle-body h60"></div>
+                                <div class="candle-bottom"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ul class="bullet-dot">
+                    <li>상승 추세의 고점에서 출현한다.</li>
+                    <li>몸체는 짧고 꼬리는 길어야 한다.</li>
+                    <li>아래꼬리가 길 수록 윗꼬리가 짧을수록 몸통이 짧을수록 의미가 더 있다.</li>
+                    <li>양봉 음봉 상관없지만 음봉이면 신뢰도가 더 높다.</li>
+                    <li>
+                        장 중에 매도 세력이 가격을 낮추려했으나 매수 세력이 매도세를 받아먹으며 가격을 올렸다.<br>
+                        그러나 매수세가 충분하지 못해 결국 종가는 시가보다 아래에서 마감되었다.<br>
+                        남은 매도물량을 팔기위한 속임수일 수 있다.
+                    </li>
+                </ul>
+                https://bitmexarthur.tistory.com/76
+
+
+                https://blog.naver.com/pengyou_/221261975422
+                https://redchartgoddess.tistory.com/56
+                <!-- //망치형 캔들 -->
+
+
+                <h2 class="h-tit1"><span>상승 예상 캔들</span></h2>
+
 
                 <h3 class="h-tit2"><span>상승 장악형(Bullish Engulfing) 캔들</span></h3>
                 <p>첫번째 캔들이 하락하며 오늘 캔들이 그 전 하락 캔들을 완전히 감싸는 형태로 하락 흐름을 상승 흐름으로 반전하는 전환점이다.</p>
@@ -58,66 +163,11 @@
                 </ul>
                 <div class="img"><img src="./img/candle-piercing-line.png" alt=""></div>
 
+
+
                 <h2 class="h-tit1"><span>하락 예상 캔들</span></h2>
 
-                <h3 class="h-tit2"><span>교수형(Hanging man) 캔들</span></h3>
-                <p>상승추세의 끝에 등장해 하락 반전의 신호</p>
-                <div class="d-flex gap8">
-                    <div class="candle">
-                        <div class="candle-group">
-                            <div class="candle-item minus">
-                                <div class="candle-top h0"></div>
-                                <div class="candle-body h20"></div>
-                                <div class="candle-bottom h80"></div>
-                                <div class="candle-txt">교수형 캔들</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="candle">
-                        <div class="candle-group">
-                            <div class="candle-item plus mgt35">
-                                <div class="candle-top"></div>
-                                <div class="candle-body h20"></div>
-                                <div class="candle-bottom"></div>
-                            </div>
-                            <div class="candle-item plus">
-                                <div class="candle-top h5"></div>
-                                <div class="candle-body h50"></div>
-                                <div class="candle-bottom"></div>
-                            </div>
-                            <div class="candle-item minus">
-                                <div class="candle-top h0"></div>
-                                <div class="candle-body h20"></div>
-                                <div class="candle-bottom h80"></div>
-                            </div>
-                            <div class="candle-item plus mgt25">
-                                <div class="candle-top h0"></div>
-                                <div class="candle-body h40"></div>
-                                <div class="candle-bottom"></div>
-                            </div>
-                            <div class="candle-item minus mgt50">
-                                <div class="candle-top"></div>
-                                <div class="candle-body h60"></div>
-                                <div class="candle-bottom"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <ul class="bullet-dot">
-                    <li>캔들의 몸통은 작고 아래꼬리가 길게 위치한다.</li>
-                    <li>아래꼬리가 길 수록 윗꼬리가 짧을수록 몸통이 짧을수록 의미가 더 있다.</li>
-                    <li>양봉 음봉 상관없지만 음봉이면 신뢰도가 더 높다.</li>
-                    <li>
-                        장 중에 매도 세력이 가격을 낮추려했으나 매수 세력이 매도세를 받아먹으며 가격을 올렸다.<br>
-                        그러나 매수세가 충분하지 못해 결국 종가는 시가보다 아래에서 마감되었다.<br>
-                        남은 매도물량을 팔기위한 속임수일 수 있다.
-                    </li>
-                </ul>
-                https://bitmexarthur.tistory.com/76
-
-
-                https://blog.naver.com/pengyou_/221261975422
-                https://redchartgoddess.tistory.com/56
+                
 
                 <h3 class="h-tit2"><span>하락 장악형(Bearish Engulfing) 캔들</span></h3>
                 <ul class="bullet-dot">
@@ -215,7 +265,7 @@
                     .candle .h90 {height: 90px !important;}
                     .candle .h95 {height: 95px !important;}
                     .candle .h100 {height: 100px !important;}
-                    .candle {margin-top:20px;}
+                    .candle {display:flex;margin-top:20px;}
                     .candle-group {display:inline-flex;gap:8px;padding:20px;border:1px solid #ddd;}
                     .candle-item.plus > div {background-color: #be0000;}
                     .candle-item.minus > div {background-color: #0057be;}
@@ -224,6 +274,8 @@
                     .candle-top,
                     .candle-bottom {width: 2px;height:15px;margin:0 auto;}
                     .candle-txt {margin-top:10px;background-color:transparent !important;}
+                    .candle-point {position:relative;}
+                    .candle-point::before {content:'';display:block;position:absolute;top:-10px;left:50%;width:6px;height:6px;background-color:red;border-radius:50%;transform:translateX(-50%);}
                 </style>
             </div>
 
