@@ -290,6 +290,13 @@ body {
 .grow0 {flex-grow: 0 !important;}
 .shrink0 {flex-shrink: 0 !important;}
 
+/* gap */
+.gap4 {gap:4px;}
+.gap8 {gap:8px;}
+.gap12 {gap:12px;}
+.gap16 {gap:16px;}
+.gap20 {gap:20px;}
+
 /* num */
 .circle-num {
 	display:inline-flex;
