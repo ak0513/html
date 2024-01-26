@@ -73,6 +73,20 @@
                         그러나 매수세가 충분하지 못해 결국 종가는 시가보다 아래에서 마감되었다.
                     </li>
                 </ul>
+                <div class="candle">
+                    <div class="candle-group">
+                        <div class="candle-item plus">
+                            <div class="candle-top h0"></div>
+                            <div class="candle-body h20"></div>
+                            <div class="candle-bottom h80"></div>
+                        </div>
+                        <div class="candle-item minus">
+                            <div class="candle-top h0"></div>
+                            <div class="candle-body h20"></div>
+                            <div class="candle-bottom h80"></div>
+                        </div>
+                    </div>
+                </div>
                 <div class="img"><img src="./img/canlde-hanging-man.png" alt=""></div>
                 <div class="img"><img src="./img/canlde-hanging-man2.png" alt=""></div>
                 https://bitmexarthur.tistory.com/76
@@ -139,6 +153,52 @@
                 일반적으로 저점이 지지선 역할을 함.
 
                 <div class="img"><img src="./img/candle-tweezers3.png" alt=""></div>
+                <div style="height:1500px"></div>
+                <div class="candle">
+                    <div class="candle-group">
+                        <div class="candle-item plus">
+                            <div class="candle-top"></div>
+                            <div class="candle-body"></div>
+                            <div class="candle-bottom"></div>
+                        </div>
+                        <div class="candle-item minus mgt10">
+                            <div class="candle-top"></div>
+                            <div class="candle-body"></div>
+                            <div class="candle-bottom"></div>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                    .candle .h0 {height: 0 !important;}
+                    .candle .h5 {height: 5px !important;}
+                    .candle .h10 {height: 10px !important;}
+                    .candle .h15 {height: 15px !important;}
+                    .candle .h20 {height: 20px !important;}
+                    .candle .h25 {height: 25px !important;}
+                    .candle .h30 {height: 30px !important;}
+                    .candle .h35 {height: 35px !important;}
+                    .candle .h40 {height: 40px !important;}
+                    .candle .h45 {height: 45px !important;}
+                    .candle .h50 {height: 50px !important;}
+                    .candle .h55 {height: 55px !important;}
+                    .candle .h60 {height: 60px !important;}
+                    .candle .h65 {height: 65px !important;}
+                    .candle .h70 {height: 70px !important;}
+                    .candle .h75 {height: 75px !important;}
+                    .candle .h80 {height: 80px !important;}
+                    .candle .h85 {height: 85px !important;}
+                    .candle .h90 {height: 90px !important;}
+                    .candle .h95 {height: 95px !important;}
+                    .candle .h100 {height: 100px !important;}
+                    .candle {padding:30px;border:1px solid #ddd;}
+                    .candle-group {display:flex;gap:8px;}
+                    .candle-item.plus > div {background-color: #be0000;}
+                    .candle-item.minus > div {background-color: #0057be;}
+
+                    .candle-body {width: 10px;height:40px;}
+                    .candle-top,
+                    .candle-bottom {width: 2px;height:15px;margin:0 auto;}
+                </style>
             </div>
 
         </section>
