@@ -29,7 +29,7 @@ p.bullet-dot, .bullet-dot > li {padding-left:1.8rem}
 .h-tit2 + .h-tit3 {margin-top:3.0rem;}
 
 .box {padding:16px 20px;background-color:#f8f8f8;font-size:1.6rem;}
-* + .box {margin-top:0.8rem;}
+* + .box {margin-top:1.2rem;}
 
 
 .img {width:300px;margin-top:20px;}
