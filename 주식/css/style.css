@@ -39,6 +39,7 @@ p.bullet-dot, .bullet-dot > li {padding-left:1.8rem}
     :root {
         --font-basic: 1.8rem;
     }
+    .h-tit2 {font-size:2.4rem;}
 
     .img {max-width:100%;width:auto;}
 }
