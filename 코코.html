@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sorting and Filtering Objects in DOM</title>
+</head>
+<body>
+
+<!-- HTML에서 데이터를 표시할 곳 -->
+<!-- 검색창 -->
+<input type="text" id="search" placeholder="Search by number">
+<hr>
+<div id="data-container"></div>
+<hr>
+<div id="data-container2"></div>
+
+
+
+<script>
+// 객체 배열 생성
+var data = [
+    { date: "2024-02-18", number: 1, name: "가나다라1", amount: 100, discount: 10, quantity: 2 },
+    { date: "2024-02-18", number: 2, name: "가나다라2", amount: 150, discount: 5, quantity: 1 },
+    { date: "2024-02-19", number: 1, name: "가나다라1", amount: 120, discount: 8, quantity: 3 },
+    { date: "2024-02-19", number: 2, name: "가나다라2", amount: 200, discount: 15, quantity: 2 },
+    { date: "2024-02-19", number: 2, name: "가나다라3", amount: 2000, discount: 15, quantity: 2 }
+];
+
+// 날짜와 넘버로 그룹화하고 소팅하는 함수
+function groupAndSortByDateAndNumber(data, sort) {
+    var groupedData = {};
+    data.forEach(function(item) {
+        var key = null;
+        if(sort === 'date') {
+            key = item.date;
+        } else if(sort === 'number') {
+            key = item.number;
+        }
+        if (!groupedData[key]) {
+            groupedData[key] = [];
+        }
+        groupedData[key].push(item);
+    });
+
+    // 날짜별로 객체 배열 소팅
+    for (var key in groupedData) {
+        if (groupedData.hasOwnProperty(key)) {
+            groupedData[key].sort(function(a, b) {
+                return a.number - b.number;
+            });
+        }
+    }
+
+    return groupedData;
+}
+
+// 데이터를 DOM에 표시하는 함수
+function renderData(data, container, sort) {
+    // 기존 내용 비우기
+    container.innerHTML = "";
+
+    // 날짜별로 그룹화하고 넘버별로 소팅
+    var groupedData = groupAndSortByDateAndNumber(data, sort);
+
+    // 날짜순으로 소팅
+    var dates = Object.keys(groupedData).sort();
+
+    // 날짜별로 데이터 표시
+    dates.forEach(function(date) {
+        var dateDiv = document.createElement("div");
+        dateDiv.textContent = `Date: ${date}`;
+        container.appendChild(dateDiv);
+
+        groupedData[date].forEach(function(item) {
+            var div = document.createElement("div");
+            var price = item.amount - item.discount;
+            div.textContent = `
+                Number: ${item.number}, Amount: ${item.amount}, Discount: ${item.discount}, Price: ${price}, Quantity: ${item.quantity}, Name: ${item.name}
+            `;
+            container.appendChild(div);
+        });
+    });
+}
+
+// 검색 기능 구현
+document.getElementById("search").addEventListener("input", function() {
+    var searchTerm = this.value.trim().toLowerCase();
+    var filteredData = data.filter(function(item) {
+        return item.name.toString().includes(searchTerm);
+    });
+    renderData(filteredData, document.getElementById('data-container'), 'date');
+    renderData(filteredData, document.getElementById('data-container2'), 'number');
+});
+
+// 초기 데이터를 DOM에 렌더링
+renderData(data, document.getElementById('data-container'), 'date');
+renderData(data, document.getElementById('data-container2'), 'number');
+</script>
+
+</body>
+</html>
