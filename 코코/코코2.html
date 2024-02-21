@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Div 클릭하여 텍스트 복사하기</title>
+</head>
+<body>
+
+<!-- 클릭하여 텍스트 복사할 div -->
+<div class="copyDiv">이 텍스트를 클릭하여 복사하세요!</div>
+<div class="copyDiv">다른 텍스트를 클릭하여 복사하세요!</div>
+
+<script>
+// 모든 copyDiv 클래스를 가진 요소에 대해 반복
+document.querySelectorAll('.copyDiv').forEach(function(div) {
+    div.addEventListener('click', function() {
+        // div 내부의 텍스트 선택
+        var text = this.innerText;
+
+        // 텍스트를 클립보드에 복사
+        navigator.clipboard.writeText(text)
+            .then(function() {
+                console.log('텍스트가 성공적으로 복사되었습니다: ' + text);
+            })
+            .catch(function(err) {
+                console.error('텍스트 복사 실패: ', err);
+            });
+    });
+});
+</script>
+
+</body>
+</html>

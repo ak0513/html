@@ -248,7 +248,24 @@ function renderData(data, container, sort) {
             `;
             container.appendChild(div);
         });
-    });
+    },
+    // 모든 copyDiv 클래스를 가진 요소에 대해 반복
+    document.querySelectorAll('.copyDiv').forEach(function(div) {
+        div.addEventListener('click', function() {
+            // div 내부의 텍스트 선택
+            var text = this.innerText;
+
+            // 텍스트를 클립보드에 복사
+            navigator.clipboard.writeText(text)
+                .then(function() {
+                    console.log('텍스트가 성공적으로 복사되었습니다: ' + text);
+                })
+                .catch(function(err) {
+                    console.error('텍스트 복사 실패: ', err);
+                });
+        });
+    })
+    );
 }
 
 // 이미지 확대하기
@@ -289,22 +306,6 @@ document.getElementById("search").addEventListener("input", function() {
     renderData(filteredData2, document.getElementById('data-container2'), 'number');
 }); */
 
-// 모든 copyDiv 클래스를 가진 요소에 대해 반복
-document.querySelectorAll('.copyDiv').forEach(function(div) {
-    div.addEventListener('click', function() {
-        // div 내부의 텍스트 선택
-        var text = this.innerText;
-
-        // 텍스트를 클립보드에 복사
-        navigator.clipboard.writeText(text)
-            .then(function() {
-                console.log('텍스트가 성공적으로 복사되었습니다: ' + text);
-            })
-            .catch(function(err) {
-                console.error('텍스트 복사 실패: ', err);
-            });
-    });
-});
 
 function siblings(ele) {
     if(typeof(ele) === 'string') {
