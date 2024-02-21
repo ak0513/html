@@ -14,13 +14,17 @@
             <input type="text" id="search" placeholder="검색어 입력">
         </div>
         <div class="sort">
-            <button type="button" class="sort-btn active" data-id="data-container">날짜</button>
-            <button type="button" class="sort-btn" data-id="data-container2">번호</button>
+            <button type="button" class="sort-btn active" data-id="data-container">코코(날짜)</button>
+            <button type="button" class="sort-btn" data-id="data-container2">코코(번호)</button>
+            <button type="button" class="sort-btn" data-id="data-container3">맘스</button>
+            <button type="button" class="sort-btn" data-id="data-container4">개봉역</button>
         </div>
     </header>
     <main id="main">
         <div id="data-container" class="list-wrap active"></div>
         <div id="data-container2" class="list-wrap"></div>
+        <div id="data-container3" class="list-wrap"></div>
+        <div id="data-container4" class="list-wrap"></div>
     </main>
 </div>
 
@@ -91,7 +95,9 @@
     .no-img .list-img {display:none;}
 
 
-    #data-container .list-date {display:none;}
+    #data-container .list-date,
+    #data-container3 .list-date,
+    #data-container4 .list-date {display:none;}
     #data-container2 .list-number {display:none;}
 
     .modal {display: none;position: fixed;z-index: 1;left: 0;top: 0;right:0;bottom:0;overflow: auto;background-color: rgba(0, 0, 0, 0.9);padding:12px;}
@@ -100,6 +106,7 @@
 
 <script>
 // 객체 배열 생성
+// 코코
 var data = [
     // ℓ ㎖ g kg 병 
     { date: "2024.02.17", number: 623559, name: "진로소주360", amount: 24190, discount: 0, weight:20, unit:'병'},
@@ -113,10 +120,24 @@ var data = [
     { date: "2024.02.17", number: 530318, name: "친환경양배추", amount: 5990, discount: 0, weight:4, unit:'kg', img:true},
     
     { date: "2024.02.19", number: 647983, name: "체리토마토 2KG", amount: 16990, discount: 0, weight:2, unit:'kg'},
-    { date: "2024.02.19", number: 520440, name: "국산검은 콩두유", amount: 16990, discount: 3400, weight:0, unit:'kg'},
+    { date: "2024.02.19", number: 520440, name: "국산검은콩두유", amount: 16990, discount: 3400, weight:0, unit:'kg'},
     { date: "2024.02.19", number: 637146, name: "동물복지란 60개", amount: 15890, discount: 0, weight:0, unit:'kg'},
 
 ];
+
+// 맘스
+var data2 = [
+    { date: "2024.02.17", number: 8809605750219, name: "참한입인절미 235g", amount: 2500, discount: 0, weight:235, unit:'g'},
+    { date: "2024.02.17", number: 8801039000953, name: "해표광천도시락김 5g*24번들", amount: 7980, discount: 0, weight:120, unit:'g'},
+    { date: "2024.02.17", number: 8809052116576, name: "뉴 월남쌈 300g", amount: 4050, discount: 0, weight:300, unit:'g'},
+    { date: "2024.02.17", number: 8801121020968, name: "매일)엣지우유 기획 900ml*2", amount: 5650, discount: 0, weight:1800, unit:'㎖'},
+    { date: "2024.02.17", number: 201328, name: "청양고추", amount: 3750, discount: 0, weight:20, unit:'kg'},
+]
+
+// 개봉역
+var data3 = [
+    { date: "2024.02.17", number: 8809605750219, name: "상품명", amount: 2500, discount: 0, weight:235, unit:'g'},
+]
 
 // 날짜와 넘버로 그룹화하고 소팅하는 함수
 function groupAndSortByDateAndNumber(data, sort) {
@@ -290,8 +311,18 @@ document.getElementById("search").addEventListener("input", function() {
         // item.name 또는 item.number에서 검색을 수행합니다.
         return item.name.toString().includes(searchTerm) || item.number.toString().includes(searchTerm);
     });
+    var filteredData2 = data2.filter(function(item) {
+        // item.name 또는 item.number에서 검색을 수행합니다.
+        return item.name.toString().includes(searchTerm) || item.number.toString().includes(searchTerm);
+    });
+    var filteredData3 = data3.filter(function(item) {
+        // item.name 또는 item.number에서 검색을 수행합니다.
+        return item.name.toString().includes(searchTerm) || item.number.toString().includes(searchTerm);
+    });
     renderData(filteredData, document.getElementById('data-container'), 'date');
     renderData(filteredData, document.getElementById('data-container2'), 'number');
+    renderData(filteredData2, document.getElementById('data-container3'), 'date');
+    renderData(filteredData3, document.getElementById('data-container4'), 'date');
 });
 
 
@@ -330,6 +361,8 @@ sort.forEach(function(item) {
 // 초기 데이터를 DOM에 렌더링
 renderData(data, document.getElementById('data-container'), 'date');
 renderData(data, document.getElementById('data-container2'), 'number');
+renderData(data2, document.getElementById('data-container3'), 'date');
+renderData(data3, document.getElementById('data-container4'), 'date');
 </script>
 
 </body>
