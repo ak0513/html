@@ -39,6 +39,7 @@
     a:active, a:hover {text-decoration:underline}
     a:active {background-color:transparent}
     address,caption,cite,code,dfn,em,var {font-style:normal;font-weight:normal}
+    img {max-width:100%;height:auto;}
     
     body {background:#fefefe;-webkit-text-size-adjust:none;color:#111}
     #header{position:relative;padding:20px 24px;background-color:#e31838;background-color:#fff;}
@@ -58,9 +59,12 @@
     .list-wrap {display:none;margin-top:20px;}
     .list-wrap.active {display:block;}
 
-    .list {display:flex;justify-content:space-between;align-items:center;padding:12px 0;}
+    .list {display:flex;align-items:center;padding:12px 0;}
     .list + .list {margin-top:20px;}
-    .list-right {flex-shrink:0;text-align:right;}
+    .list-left {margin-right:auto;}
+    .list-right {flex-shrink:0;margin-left:8px;text-align:right;}
+    .list-img {width:40px;flex-shrink:0;margin-right:8px;border-radius:4px;}
+    .list-img img {display:block;}
     .list-date,
     .list-number {font-size:12px;color:#999;}
     .list-name {font-size:16px;font-weight:600;}
@@ -88,11 +92,11 @@ var data = [
     { date: "2024.02.17", number: 643733, name: "카스473MLX24 캔", amount: 37990, discount: 0, weight:11352, unit:'㎖'},
     { date: "2024.02.17", number: 639952, name: "백진주쌀 10KG", amount: 36990, discount: 3000, weight:10, unit:'kg'},
     { date: "2024.02.17", number: 647983, name: "체리토마토 2KG", amount: 16990, discount: 0, weight:2, unit:'kg'},
-    { date: "2024.02.17", number: 647019, name: "친환경양피망", amount: 14990, discount: 0, weight:4, unit:'kg'},
-    { date: "2024.02.17", number: 659969, name: "청경채 7C0G", amount: 7290, discount: 0, weight:0, unit:'kg'},
-    { date: "2024.02.17", number: 507154, name: "햄스빌베이컨", amount: 16890, discount: 0, weight:0, unit:'kg'},
-    { date: "2024.02.17", number: 612635, name: "찌개부침두부", amount: 5690, discount: 0, weight:0, unit:'kg'},
-    { date: "2024.02.17", number: 530318, name: "친환경양배추", amount: 5990, discount: 0, weight:0, unit:'kg'},
+    { date: "2024.02.17", number: 647019, name: "친환경양파망", amount: 14990, discount: 0, weight:4, unit:'kg'},
+    { date: "2024.02.17", number: 659969, name: "청경채 700G", amount: 7290, discount: 0, weight:700, unit:'g'},
+    { date: "2024.02.17", number: 507154, name: "햄스빌베이컨", amount: 16890, discount: 0, weight:205, unit:'g'},
+    { date: "2024.02.17", number: 612635, name: "찌개부침두부", amount: 5690, discount: 0, weight:840, unit:'g'},
+    { date: "2024.02.17", number: 530318, name: "친환경양배추", amount: 5990, discount: 0, weight:4, unit:'kg'},
 ];
 
 // 날짜와 넘버로 그룹화하고 소팅하는 함수
@@ -197,6 +201,7 @@ function renderData(data, container, sort) {
                     break;
             }
             div.innerHTML = `
+                <div class="list-img"><img src="./img/${item.number}.jpg" alt=""></div>
                 <div class="list-left">
                     <div class="list-date">${item.date}</div>
                     <div class="list-number">${item.number}</div>
