@@ -7,24 +7,80 @@
 </head>
 <body>
 
-<!-- HTML에서 데이터를 표시할 곳 -->
-<!-- 검색창 -->
-<input type="text" id="search" placeholder="Search by number">
-<hr>
-<div id="data-container"></div>
-<hr>
-<div id="data-container2"></div>
+<div id="wrap">
+    <header id="header">
+        <h1 class="page-title">제목</h1>
+        <input type="text" id="search" placeholder="Search by number">
+        <div class="sort">
+            <button type="button" class="sort-btn active" data-id="data-container">날짜</button>
+            <button type="button" class="sort-btn" data-id="data-container2">넘버</button>
+        </div>
+    </header>
+    <main id="main">
+        <div id="data-container" class="list-wrap active"></div>
+        <div id="data-container2" class="list-wrap"></div>
+    </main>
+</div>
 
 
+
+<style>
+    /* reset */
+    body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button{margin:0;padding:0}
+    fieldset,img{border:0 none}
+    dl,ul,ol,menu,li {list-style:none}
+    blockquote, q {quotes: none}
+    blockquote:before, blockquote:after,q:before, q:after {content:'';content:none}
+    input,select,textarea,button {vertical-align:middle;outline:none}
+    input::-ms-clear {display:none}
+    button {border:0 none;background-color:transparent;cursor:pointer}
+    body,th,td,input,select,textarea,button {font-size:14px;line-height:1.5;font-family:-apple-system, BlinkMacSystemFont, Pretendard, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell,'Noto Sans KR', 'Spoqa Han Sans', "Helvetica Neue", sans-serif;}
+    a {color:#333;text-decoration:none} 
+    a:active, a:hover {text-decoration:underline}
+    a:active {background-color:transparent}
+    address,caption,cite,code,dfn,em,var {font-style:normal;font-weight:normal}
+    
+    body {background:#fefefe;-webkit-text-size-adjust:none;color:#111}
+    #header{position:relative;padding:20px 24px;background-color:#e31838;background-color:#fff;}
+    .page-title {color:#fff;}
+    .sort {display:flex;}
+    .sort-btn {color:#fff;text-decoration:underline;}
+    .sort-btn.active {color:#fff000;}
+    .sort-btn + .sort-btn {margin-left:8px;}
+
+    .h-tit2 {font-weight:700;font-size:16px;margin-bottom:12px;}
+
+    #main {padding:0 24px 40px;}
+    .list-wrap {display:none;margin-top:20px;}
+    .list-wrap.active {display:block;}
+
+    .list {display:flex;justify-content:space-between;align-items:center;padding:12px 0;}
+    .list + .list {margin-top:20px;}
+    .list-date,
+    .list-number {font-size:12px;color:#999;}
+    .list-name {font-size:16px;font-weight:600;}
+    .list-amount-group {font-size:12px;}
+    .list-amount {color:#999;text-decoration:line-through;font-size:12px;}
+    .list-price {font-weight:600;}
+
+    .no-discount .list-amount,
+    .no-discount .list-discount {display:none;}
+
+
+    #data-container .list-date {display:none;}
+    #data-container2 .list-number {display:none;}
+
+
+</style>
 
 <script>
 // 객체 배열 생성
 var data = [
-    { date: "2024-02-18", number: 1, name: "가나다라1", amount: 100, discount: 10, quantity: 2 },
-    { date: "2024-02-18", number: 2, name: "가나다라2", amount: 150, discount: 5, quantity: 1 },
-    { date: "2024-02-19", number: 1, name: "가나다라1", amount: 120, discount: 8, quantity: 3 },
-    { date: "2024-02-19", number: 2, name: "가나다라2", amount: 200, discount: 15, quantity: 2 },
-    { date: "2024-02-19", number: 2, name: "가나다라3", amount: 2000, discount: 15, quantity: 2 }
+    { date: "2024-02-18", number: 1, name: "가나다라1", amount: 100, discount: 0, weight:500, unit:'g'},
+    { date: "2024-02-18", number: 2, name: "가나다라2", amount: 150, discount: 5, weight:1500, unit:'g'},
+    { date: "2024-02-19", number: 1, name: "가나다라1", amount: 120, discount: 8, weight:5200, unit:'g'},
+    { date: "2024-02-19", number: 2, name: "가나다라2", amount: 200, discount: 15, weight:1500, unit:'ml'},
+    { date: "2024-02-19", number: 2, name: "가나다라3", amount: 2000, discount: 15, weight:2, unit:'kg'}
 ];
 
 // 날짜와 넘버로 그룹화하고 소팅하는 함수
@@ -44,15 +100,20 @@ function groupAndSortByDateAndNumber(data, sort) {
     });
 
     // 날짜별로 객체 배열 소팅
-    for (var key in groupedData) {
+   /*  for (var key in groupedData) {
         if (groupedData.hasOwnProperty(key)) {
             groupedData[key].sort(function(a, b) {
                 return a.number - b.number;
             });
         }
-    }
+    } */
 
     return groupedData;
+}
+
+// amount에 쉼표 추가하는 함수
+function addCommasToAmount(amount) {
+    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 // 데이터를 DOM에 표시하는 함수
@@ -69,14 +130,35 @@ function renderData(data, container, sort) {
     // 날짜별로 데이터 표시
     dates.forEach(function(date) {
         var dateDiv = document.createElement("div");
-        dateDiv.textContent = `Date: ${date}`;
+        dateDiv.classList.add('h-tit2')
+        dateDiv.textContent = `${date}`;
         container.appendChild(dateDiv);
 
         groupedData[date].forEach(function(item) {
             var div = document.createElement("div");
-            var price = item.amount - item.discount;
-            div.textContent = `
-                Number: ${item.number}, Amount: ${item.amount}, Discount: ${item.discount}, Price: ${price}, Quantity: ${item.quantity}, Name: ${item.name}
+            div.classList.add('list');
+            var formattedPrice = addCommasToAmount(item.amount - item.discount);
+            var formattedAmount = addCommasToAmount(item.amount);
+            var formattedDiscount = addCommasToAmount(item.discount);
+            if(item.discount === 0) {
+                div.classList.add('no-discount')
+            }
+            div.innerHTML = `
+                <div class="list-left">
+                    <div class="list-date">${item.date}</div>
+                    <div class="list-number">${item.number}</div>
+                    <div class="list-name-group">
+                        <span class="list-name">${item.name}</span>
+                        <span class="list-weight">${item.weight}</span>
+                    </div>
+                </div>
+                <div class="list-right">
+                    <div class="list-amount-group">
+                        <span class="list-amount">${formattedAmount}</span>
+                        <span class="list-discount">(${formattedDiscount})</span>
+                    </div>
+                    <div class="list-price">${formattedPrice}원</div>
+                </div>
             `;
             container.appendChild(div);
         });
@@ -92,6 +174,37 @@ document.getElementById("search").addEventListener("input", function() {
     renderData(filteredData, document.getElementById('data-container'), 'date');
     renderData(filteredData, document.getElementById('data-container2'), 'number');
 });
+
+function siblings(ele) {
+    if(typeof(ele) === 'string') {
+        ele = document.querySelector(ele)
+    }
+    var siblings = [...ele.parentNode.children].filter((child) =>
+        child !== ele
+    )
+    return siblings
+}
+
+
+// 탭
+var sort = document.querySelectorAll('.sort-btn');
+var listWrap = document.querySelectorAll('.list-wrap');
+
+sort.forEach(function(item) {
+    item.addEventListener('click', function() {
+        var si = siblings(item)
+        si.forEach(function(item) {
+            item.classList.remove('active');
+        });
+        item.classList.add('active');
+
+        listWrap.forEach(function(item) {
+            item.classList.remove('active')
+        });
+        var tarId = document.getElementById(item.dataset.id);
+        tarId.classList.add('active')
+    })
+})
 
 // 초기 데이터를 DOM에 렌더링
 renderData(data, document.getElementById('data-container'), 'date');
