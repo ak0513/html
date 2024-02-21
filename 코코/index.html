@@ -231,7 +231,7 @@ function renderData(data, container, sort) {
                 <div class="list-img"><img src="./img/${item.number}.jpg" alt="" onclick="showImage('./img/${item.number}.jpg')"></div>
                 <div class="list-left">
                     <div class="list-date">${item.date}</div>
-                    <div class="list-number">${item.number}</div>
+                    <div class="list-number copyDiv">${item.number}</div>
                     <div class="list-name">
                         ${item.name}
                         <span class="list-weight">${addCommasToAmount(item.weight)}${item.unit}</span>
@@ -288,6 +288,23 @@ document.getElementById("search").addEventListener("input", function() {
     renderData(filteredData, document.getElementById('data-container'), 'date');
     renderData(filteredData2, document.getElementById('data-container2'), 'number');
 }); */
+
+// 모든 copyDiv 클래스를 가진 요소에 대해 반복
+document.querySelectorAll('.copyDiv').forEach(function(div) {
+    div.addEventListener('click', function() {
+        // div 내부의 텍스트 선택
+        var text = this.innerText;
+
+        // 텍스트를 클립보드에 복사
+        navigator.clipboard.writeText(text)
+            .then(function() {
+                console.log('텍스트가 성공적으로 복사되었습니다: ' + text);
+            })
+            .catch(function(err) {
+                console.error('텍스트 복사 실패: ', err);
+            });
+    });
+});
 
 function siblings(ele) {
     if(typeof(ele) === 'string') {
