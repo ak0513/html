@@ -79,7 +79,7 @@
     .list-weight {font-size:14px;color:#666;font-weight:400;}
     .list-by-unit {font-size:14px;color:#666;}
     .list-amount-group {font-size:12px;}
-    .list-amount {color:#666;text-decoration:line-through;font-size:12px;}
+    .list-amount {color:#999;text-decoration:line-through;font-size:14px;font-weight:400;}
     .list-price {font-weight:600;font-size:16px;}
 
     .no-discount .list-amount,
@@ -233,11 +233,11 @@ function renderData(data, container, sort) {
                     </div>
                 </div>
                 <div class="list-right">
-                    <div class="list-amount-group">
-                        <span class="list-amount">${formattedAmount}</span>
-                        <span class="list-discount">(${formattedDiscount}원 할인)</span>
-                    </div>
-                    <div class="list-price">${formattedPrice}원</div>
+                    <div class="list-discount">${formattedDiscount}원 할인</div>
+                    <div class="list-price">
+                        <span class="list-amount">(${formattedAmount})</span>
+                        ${formattedPrice}원
+                        </div>
                     <div class="list-by-unit">${listByUnit}</div>
                 </div>
             `;
