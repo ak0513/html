@@ -84,6 +84,8 @@
     .no-weight .list-weight,
     .no-weight .list-by-unit {display:none;}
 
+    .no-img .list-img {display:none;}
+
 
     #data-container .list-date {display:none;}
     #data-container2 .list-number {display:none;}
@@ -114,11 +116,11 @@ var data = [
     { date: "2024.02.17", number: 643733, name: "카스473MLX24 캔", amount: 37990, discount: 0, weight:11352, unit:'㎖'},
     { date: "2024.02.17", number: 639952, name: "백진주쌀 10KG", amount: 36990, discount: 3000, weight:10, unit:'kg'},
     { date: "2024.02.17", number: 647983, name: "체리토마토 2KG", amount: 16990, discount: 0, weight:2, unit:'kg'},
-    { date: "2024.02.17", number: 647019, name: "친환경양파망", amount: 14990, discount: 0, weight:4, unit:'kg'},
+    { date: "2024.02.17", number: 647019, name: "친환경양파망", amount: 14990, discount: 0, weight:4, unit:'kg', img:true},
     { date: "2024.02.17", number: 659969, name: "청경채 700G", amount: 7290, discount: 0, weight:700, unit:'g'},
     { date: "2024.02.17", number: 507154, name: "햄스빌베이컨", amount: 16890, discount: 0, weight:205, unit:'g'},
     { date: "2024.02.17", number: 612635, name: "찌개부침두부", amount: 5690, discount: 0, weight:840, unit:'g'},
-    { date: "2024.02.17", number: 530318, name: "친환경양배추", amount: 5990, discount: 0, weight:4, unit:'kg'},
+    { date: "2024.02.17", number: 530318, name: "친환경양배추", amount: 5990, discount: 0, weight:4, unit:'kg', img:true},
 ];
 
 // 날짜와 넘버로 그룹화하고 소팅하는 함수
@@ -206,6 +208,10 @@ function renderData(data, container, sort) {
             // 무게가 없는 경우 노출 제외
             if(item.weight === 0) {
                 div.classList.add('no-weight')
+            }
+             // 이미지가 없는 경우 노출 제외
+             if(item.img !== true) {
+                div.classList.add('no-img')
             }
             // 단위 당 금액
             var listByUnit = null;
