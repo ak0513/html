@@ -22,7 +22,11 @@
     </main>
 </div>
 
-
+<!-- 모달 이미지 -->
+<div id="myModal" class="modal" onclick="hideImage()">
+    <!-- <span class="close">&times;</span> -->
+    <img class="modal-content" id="modalImg">
+  </div>
 
 <style>
     /* reset */
@@ -81,7 +85,22 @@
     #data-container .list-date {display:none;}
     #data-container2 .list-number {display:none;}
 
-
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        right:0;
+        bottom:0;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.9);
+        padding:12px;
+    }
+    .modal-content {
+        display: block;
+        margin: auto;
+    }
 </style>
 
 <script>
@@ -201,7 +220,7 @@ function renderData(data, container, sort) {
                     break;
             }
             div.innerHTML = `
-                <div class="list-img"><img src="./img/${item.number}.jpg" alt=""></div>
+                <div class="list-img"><img src="./img/${item.number}.jpg" alt="" onclick="showImage('./img/${item.number}.jpg')"></div>
                 <div class="list-left">
                     <div class="list-date">${item.date}</div>
                     <div class="list-number">${item.number}</div>
@@ -223,6 +242,21 @@ function renderData(data, container, sort) {
         });
     });
 }
+
+// 이미지 확대하기
+function showImage(imageSrc) {
+    var modal = document.getElementById('myModal');
+    var modalImg = document.getElementById("modalImg");
+    
+    modal.style.display = "flex";
+    modalImg.src = imageSrc;
+  }
+
+  // 이미지 닫기
+  function hideImage() {
+    var modal = document.getElementById('myModal');
+    modal.style.display = "none";
+  }
 
 // 검색 기능 구현
 document.getElementById("search").addEventListener("input", function() {
