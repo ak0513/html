@@ -48,6 +48,8 @@
     .sort-btn.active {color:#fff000;}
     .sort-btn + .sort-btn {margin-left:8px;}
 
+    input {font-size:16px;}
+
     .h-tit2 {position:relative; font-weight:700;font-size:16px;margin-bottom:12px;}
     .list + .h-tit2 {margin-top:24px;padding-top:36px;}
     .list + .h-tit2::before {content:'';display:block;position:absolute;top:0;left:-24px;right:-24px;height:12px;background-color:#ddd;}
@@ -82,15 +84,15 @@
 // 객체 배열 생성
 var data = [
     // ℓ ㎖ g kg 병 
-    { date: "2024.02.18", number: 623559, name: "진로소주360", amount: 24190, discount: 0, weight:20, unit:'병'},
-    { date: "2024.02.18", number: 643733, name: "카스473MLX24 캔", amount: 37990, discount: 0, weight:11352, unit:'㎖'},
-    { date: "2024.02.19", number: 639952, name: "백진주쌀 10KG", amount: 36990, discount: 3000, weight:10, unit:'kg'},
-    { date: "2024.02.19", number: 647983, name: "체리토마토 2KG", amount: 16990, discount: 0, weight:2, unit:'kg'},
-    { date: "2024.02.19", number: 647019, name: "친환경양피망", amount: 14990, discount: 0, weight:4, unit:'kg'},
-    { date: "2024.02.19", number: 659969, name: "청경채 7C0G", amount: 7290, discount: 0, weight:0, unit:'kg'},
-    { date: "2024.02.19", number: 507154, name: "햄스빌베이컨", amount: 16890, discount: 0, weight:0, unit:'kg'},
-    { date: "2024.02.19", number: 612635, name: "찌개부침두부", amount: 5690, discount: 0, weight:0, unit:'kg'},
-    { date: "2024.02.19", number: 530318, name: "친환경양배추", amount: 5990, discount: 0, weight:0, unit:'kg'},
+    { date: "2024.02.17", number: 623559, name: "진로소주360", amount: 24190, discount: 0, weight:20, unit:'병'},
+    { date: "2024.02.17", number: 643733, name: "카스473MLX24 캔", amount: 37990, discount: 0, weight:11352, unit:'㎖'},
+    { date: "2024.02.17", number: 639952, name: "백진주쌀 10KG", amount: 36990, discount: 3000, weight:10, unit:'kg'},
+    { date: "2024.02.17", number: 647983, name: "체리토마토 2KG", amount: 16990, discount: 0, weight:2, unit:'kg'},
+    { date: "2024.02.17", number: 647019, name: "친환경양피망", amount: 14990, discount: 0, weight:4, unit:'kg'},
+    { date: "2024.02.17", number: 659969, name: "청경채 7C0G", amount: 7290, discount: 0, weight:0, unit:'kg'},
+    { date: "2024.02.17", number: 507154, name: "햄스빌베이컨", amount: 16890, discount: 0, weight:0, unit:'kg'},
+    { date: "2024.02.17", number: 612635, name: "찌개부침두부", amount: 5690, discount: 0, weight:0, unit:'kg'},
+    { date: "2024.02.17", number: 530318, name: "친환경양배추", amount: 5990, discount: 0, weight:0, unit:'kg'},
 ];
 
 // 날짜와 넘버로 그룹화하고 소팅하는 함수
