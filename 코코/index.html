@@ -9,7 +9,13 @@
 
 <div id="wrap">
     <header id="header">
-        <input type="text" id="search" placeholder="검색">
+        <div class="input-wrap">
+            <select id="search-option">
+                <option value="name">이름</option>
+                <option value="number">번호</option>
+            </select>
+            <input type="text" id="search" placeholder="검색">
+        </div>
         <div class="sort">
             <button type="button" class="sort-btn active" data-id="data-container">날짜</button>
             <button type="button" class="sort-btn" data-id="data-container2">넘버</button>
@@ -53,7 +59,9 @@
     .sort-btn.active {color:#000;}
     .sort-btn + .sort-btn {margin-left:8px;}
 
-    input {margin:0;font-size:16px;border:none;width:100%;height:44px;padding-left:12px;border-bottom:1px solid #eee;background-color:#f2f2f2;}
+    .input-wrap {display:flex;background-color:#f2f2f2;border-bottom:1px solid #ddd;}
+    .input-wrap select {height:44px;padding:0 8px;border:none;background-color:#f2f2f2;}
+    .input-wrap input {width:100%;height:44px;padding-left:12px;margin-left:8px;font-size:16px;border:none;border-left:1px solid #ddd;border-bottom:1px solid #eee;background-color:#f2f2f2;}
 
     .h-tit2 {position:relative; font-weight:700;font-size:16px;margin-bottom:12px;}
     .list + .h-tit2 {margin-top:24px;padding-top:36px;}
@@ -260,12 +268,25 @@ function showImage(imageSrc) {
 // 검색 기능 구현
 document.getElementById("search").addEventListener("input", function() {
     var searchTerm = this.value.trim().toLowerCase();
+    var searchOption = document.getElementById("search-option").value;
     var filteredData = data.filter(function(item) {
-        return item.name.toString().includes(searchTerm);
+        return item[searchOption].toString().includes(searchTerm);
     });
     renderData(filteredData, document.getElementById('data-container'), 'date');
     renderData(filteredData, document.getElementById('data-container2'), 'number');
 });
+
+/* document.getElementById("search").addEventListener("input", function() {
+    var searchTerm = this.value.trim().toLowerCase();
+    var filteredData = data.filter(function(item) {
+        return item.name.toString().includes(searchTerm);
+    });
+    var filteredData2 = data.filter(function(item) {
+        return item.number.toString().includes(searchTerm);
+    });
+    renderData(filteredData, document.getElementById('data-container'), 'date');
+    renderData(filteredData2, document.getElementById('data-container2'), 'number');
+}); */
 
 function siblings(ele) {
     if(typeof(ele) === 'string') {
