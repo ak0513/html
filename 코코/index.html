@@ -167,7 +167,7 @@ function addCommasToAmount(amount) {
     const decimalIndex = amount.indexOf(".");
     if (decimalIndex !== -1) {
         // 소수점 이하 3자리까지만 유지합니다.
-        amount = parseFloat(amount).toFixed(3);
+        amount = parseFloat(amount).toFixed(1);
         // 소수점 이하의 0을 모두 제거합니다.
         amount = amount.replace(/\.?0*$/, "");
     }
@@ -217,19 +217,19 @@ function renderData(data, container, sort) {
             var listByUnit = null;
             switch(item.unit) {
                 case 'g' :
-                    listByUnit = '(100g 당 ' + addCommasToAmount(price / item.weight * 100) + '원)';
+                    listByUnit = '100g 당 ' + addCommasToAmount(price / item.weight * 100) + '원';
                     break;
                 case 'kg' :
-                    listByUnit = '(100g 당 ' + addCommasToAmount(price / item.weight / 10) + '원)';
-                    break;
-                case 'ℓ' :
-                    listByUnit = '(100㎖ 당 ' + addCommasToAmount(price / item.weight * 100) + '원)';
+                    listByUnit = '100g 당 ' + addCommasToAmount(price / item.weight / 10) + '원';
                     break;
                 case '㎖' :
-                    listByUnit = '(100㎖ 당 ' + addCommasToAmount(price / item.weight / 10) + '원)';
+                    listByUnit = '100㎖ 당 ' + addCommasToAmount(price / item.weight * 100) + '원';
+                    break;
+                case 'ℓ' :
+                    listByUnit = '100㎖ 당 ' + addCommasToAmount(price / item.weight / 10) + '원';
                     break;
                 case '병' :
-                    listByUnit = '(1병 당 ' + addCommasToAmount(price / item.weight) + '원)';
+                    listByUnit = '1병 당 ' + addCommasToAmount(price / item.weight) + '원';
                     break;
             }
             div.innerHTML = `
@@ -239,7 +239,7 @@ function renderData(data, container, sort) {
                     <div class="list-number">${item.number}</div>
                     <div class="list-name">
                         ${item.name}
-                        <span class="list-weight">(${addCommasToAmount(item.weight)}${item.unit})</span>
+                        <span class="list-weight">${addCommasToAmount(item.weight)}${item.unit}</span>
                     </div>
                 </div>
                 <div class="list-right">
