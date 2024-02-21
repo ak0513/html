@@ -81,6 +81,9 @@
     .no-discount .list-amount,
     .no-discount .list-discount {display:none;}
 
+    .no-weight .list-weight,
+    .no-weight .list-by-unit {display:none;}
+
 
     #data-container .list-date {display:none;}
     #data-container2 .list-number {display:none;}
@@ -199,6 +202,10 @@ function renderData(data, container, sort) {
             // 할인이 없는 경우 금액만 노출
             if(item.discount === 0) {
                 div.classList.add('no-discount')
+            }
+            // 무게가 없는 경우 노출 제외
+            if(item.weight === 0) {
+                div.classList.add('no-weight')
             }
             // 단위 당 금액
             var listByUnit = null;
