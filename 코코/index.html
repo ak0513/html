@@ -286,6 +286,8 @@ function showImage(imageSrc) {
 // 검색 기능 구현
 document.getElementById("search-option").addEventListener("change", function() {
     document.getElementById("search").value = ""; // 검색 인풋의 값을 삭제
+    renderData(data, document.getElementById('data-container'), 'date');
+    renderData(data, document.getElementById('data-container2'), 'number');
 });
 
 document.getElementById("search").addEventListener("input", function() {
