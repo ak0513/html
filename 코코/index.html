@@ -10,14 +10,14 @@
 
 <div id="wrap">
     <header id="header">
+        <div class="input-wrap">
+            <input type="text" id="search" placeholder="검색어 입력">
+        </div>
         <div class="sort">
             <button type="button" class="sort-btn active" data-id="data-container">코코(날짜)</button>
             <button type="button" class="sort-btn" data-id="data-container2">코코(번호)</button>
             <button type="button" class="sort-btn" data-id="data-container3">맘스</button>
             <button type="button" class="sort-btn" data-id="data-container4">개봉역</button>
-        </div>
-        <div class="input-wrap">
-            <input type="text" id="search" placeholder="검색어 입력">
         </div>
     </header>
     <main id="main">
@@ -53,7 +53,7 @@
     img {max-width:100%;height:auto;}
     
     body {-webkit-text-size-adjust:none;color:#111;}
-    #header{position:fixed;bottom:0;left:0;right:0;z-index:1;background-color:#fff;}
+    #header{position:fixed;top:0;left:0;right:0;z-index:1;background-color:#fff;}
     .page-title {color:#fff;}
     .sort {display:flex;margin-top:4px;padding:0 16px;}
     .sort-btn {padding:8px; color:#666;}
@@ -67,7 +67,7 @@
     .list + .h-tit2 {margin-top:24px;padding-top:36px;}
     .list + .h-tit2::before {content:'';display:block;position:absolute;top:0;left:-24px;right:-24px;height:12px;background-color:#ddd;}
 
-    #main {padding:0 24px 126px;}
+    #main {padding:86px 24px 40px;}
     .list-wrap {display:none;margin-top:20px;}
     .list-wrap.active {display:block;}
 
