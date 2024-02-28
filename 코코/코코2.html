@@ -106,11 +106,12 @@ updateSelectedWeightUnitButton();
 
 document.getElementById('print').addEventListener('click', function() {
     var resultDiv = document.createElement('div');
+    var totalWeight = parseFloat(document.getElementById('totalWeight').value);
+    var price = parseFloat(document.getElementById('price').value);
     resultDiv.textContent = document.getElementById('result').innerText;
-    resultDiv.textContent += '(' + document.getElementById('price').value + '원/' + document.getElementById('totalWeight').value + selectedWeightUnit + ')'
+    resultDiv.textContent += '(' + price.toLocaleString() + '원/' + totalWeight.toLocaleString() + selectedWeightUnit + ')'
     document.getElementById('result2').appendChild(resultDiv);
-    console.log(parseFloat(document.getElementById('totalWeight').value))
-    console.log(selectedWeightUnit)
+    console.log(document.getElementById('price').value.toLocaleString())
 })
 </script>
 </body>
