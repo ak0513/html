@@ -1,38 +1,49 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>무게당 금액 계산기</title>
-<style>
-  .selected {
-    background-color: lightblue;
-  }
-  #result2 {margin-top:50px;}
-  #result2 div {margin-top:10px;}
-</style>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="../basic/js/common.js"></script>
+	<link rel="stylesheet" href="../basic/css/common.css">
+	<link rel="stylesheet" href="../basic/css/style.css">
+	<title>무게당 금액 계산기</title>
 </head>
 <body>
-<h2>무게당 금액 계산기</h2>
+
+<style>
+    #result {margin-top:20px;background-color:#f8f8f8;padding:12px 16px;}
+    #result2 {margin-top:20px;background-color:#f8f8f8;padding:12px 16px;}
+    #result2 div + div {margin-top:10px;padding-top:10px;border-top:1px dashed #ddd;}
+    
+    button {display:flex;align-items:center;justify-content:center;width:100%;height:50px;border:none;background-color:#f8f8f8;font-size:16px;}
+    button.selected {background-color: #007bff;border-color:#007bff;color:#fff;}
+</style>
+
+<div id="wrap">
+    <section id="container">
+        <div class="container-inner">
+            <h2 class="h-tit2">무게당 금액 계산기</h2>
 
 
-<div>
-    <input type="number" id="totalWeight" placeholder="총 무게를 입력하세요">
-  <button onclick="selectWeightUnit('g')" id="gButton" class="selected">g</button>
-  <button onclick="selectWeightUnit('kg')" id="kgButton">kg</button>
+            <div class="row gutter-x4">
+                <div class="col"><input type="number" id="totalWeight" placeholder="총 무게를 입력하세요"></div>
+                <div class="col col1"><button onclick="selectWeightUnit('g')" id="gButton" class="btn selected">g</button></div>
+                <div class="col col1"><button onclick="selectWeightUnit('kg')" id="kgButton" class="btn">kg</button></div>
+            </div>
+            <div class="mgt4"><input type="number" id="price" placeholder="총 금액을 입력하세요"></div>
+            <h3 class="h-tit4">단위 설정</h3>
+            <div id="unitButtons" class="row gutter-x4">
+                <div class="col"><button onclick="selectUnitWeight(10)" id="10gButton" class="btn">10g</button></div>
+                <div class="col"><button onclick="selectUnitWeight(100)" id="100gButton" class="btn selected">100g</button></div>
+            </div>
+            <div class="mgt20"><button id="print" class="btn primary">저장하기</button></div>
+
+            <div id="result"></div>
+            <div id="result2"></div>
+        </div>
+    </section>
 </div>
-<div><input type="number" id="price" placeholder="총 금액을 입력하세요"></div>
-<div id="unitButtons">
-  <button onclick="selectUnitWeight(10)" id="10gButton">10g</button>
-  <button onclick="selectUnitWeight(100)" id="100gButton" class="selected">100g</button>
-</div>
-<br>
-<div>
-  <button id="print">저장하기</button>
-</div>
-<br>
-<div id="result"></div>
-<div id="result2"></div>
 <script>
 let selectedUnitWeight = 100;
 let selectedWeightUnit = 'g';
