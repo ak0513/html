@@ -96,6 +96,8 @@ function calculatePricePerUnit() {
   var pricePerUnit = price / (totalWeight / selectedUnitWeight);
   console.log(selectedUnitWeight, pricePerUnit)
   document.getElementById('result').innerText = selectedUnitWeight+'g 당 ' + pricePerUnit.toLocaleString() + '원';
+
+
 }
 
 document.getElementById('totalWeight').addEventListener('input', calculatePricePerUnit);
@@ -111,8 +113,13 @@ document.getElementById('print').addEventListener('click', function() {
     resultDiv.textContent = document.getElementById('result').innerText;
     resultDiv.textContent += '(' + price.toLocaleString() + '원/' + totalWeight.toLocaleString() + selectedWeightUnit + ')'
     document.getElementById('result2').appendChild(resultDiv);
-    console.log(document.getElementById('price').value.toLocaleString())
+
+    // 입력 값 초기화
+    document.getElementById('totalWeight').value = '';
+    document.getElementById('price').value = '';
 })
+
+
 </script>
 </body>
 </html>
