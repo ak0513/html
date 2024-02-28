@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[JavaScript] 숫자 3자리(천단위)마다 콤마(,) 추가(정규식, toLocaleString)</title>
+    <script src="../basic/js/common.js"></script>
+    <script src="../common/js/highlight.min.js"></script>
+    <script src="./css/test.js"></script><!-- highlight 미리 보기 위해 삽입 -->
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory_admin/userblog/tistory-4bde1fb20f0ffa5bc6d0d4a8edcb5c6bd4625b4b/static/style/content.css">
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory/4823763/skin/style.css">
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory_admin/userblog/tistory-4bde1fb20f0ffa5bc6d0d4a8edcb5c6bd4625b4b/static/style/uselessPMargin.css">
+    <link href="./css/font.css" rel="stylesheet" type="text/css">
+    <link href="./css/style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div id="tt-body-page">
+        <div class="area_view">
+            <div class="tt_article_useless_p_margin contents_style">
+                <h2 data-ke-size="size26">숫자 3자리마다 콤마(,) 찍기</h2>
+                <p data-ke-size="size16">숫자 3자리마다(천단위) 콤마(,)를 찍는 2가지 방법</p>
+                <h3 data-ke-size="size23">정규식(Regular Expression) 사용</h3>
+                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
+var number = 100000;
+var number2 = 100000.123;
+function addCommas(amount) {
+    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+console.log(addCommas(number)) //100,000
+console.log(addCommas(number2)) //100,000.123
+                </code></pre>
+                
+
+                <h3 data-ke-size="size23">toLocaleString() 함수 사용</h3>
+                <blockquote data-ke-style="style3">number.toLocaleString(locales, options)</blockquote>
+                <p data-ke-size="size16">toLocaleString() 함수는 숫자를 로컬의 language format에 맞는 문자열로 변경해 줍니다.<br>매개변수를 전달하지 않으면 Default locale이 사용됩니다.</p>
+                
+                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
+var number = 100000;
+var number2 = 100000.123456;
+
+console.log(number.toLocaleString()); //100,000
+console.log(number2.toLocaleString()); //100,000.123
+
+                </code></pre>
+                <p data-ke-size="size16">toLocaleString() 함수를 통해서 나온 결과는 소수점 3자리까지만 표현하기에 변수 number2의 소수점이 6자리인데 3자리로 출력이 되는걸 확인하실 수 있습니다.</p>
+                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
+var option = {
+    maximumFractionDigits: 6 // 소수점을 6자리까지 표시
+};
+console.log(number2.toLocaleString('ko-KR', option)); //100,000.123456
+                </code></pre>
+                <p data-ke-size="size16">두번째 매개변수인 option 객체 안에는 maximumFractionDigits 값을 변경하여 소수점 자리수를 지정할 수 있습니다.</p>
+
+                <h4 data-ke-size="size20">사용자 PC환경의 locale 확인 방법</h4>
+                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
+console.log(navigator.language) // 'ko-KR'
+                </code></pre>
+
+                <script>
+                    // 숫자 3자리마다(천단위) 콤마(,)를 찍는 2가지 방법
+                    /* var number = 100000;
+                    var number2 = 100000.123;
+                    function addCommas(amount) {
+                        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    }
+                    console.log(addCommas(number)) //1,234,567
+                    console.log(addCommas(number2)) //1,234,567.123 */
+
+                    var number = 100000;
+                    var number2 = 100000.123456;
+                    var option = {
+                        maximumFractionDigits: 6
+                    };
+                    console.log(number.toLocaleString()); //100,000
+                    console.log(number2.toLocaleString()); //100,000
+                    console.log(number2.toLocaleString('ko-KR', option)); //100,000.123
+                </script>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
