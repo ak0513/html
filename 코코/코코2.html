@@ -14,26 +14,21 @@
 </head>
 <body>
 <h2>무게당 금액 계산기</h2>
-<label for="totalWeight">총 무게:</label>
-<input type="number" id="totalWeight" placeholder="총 무게를 입력하세요">
-<input type="number" id="price" placeholder="총 금액을 입력하세요">
+
+
 <div>
-  <label>무게 단위:</label>
+    <input type="number" id="totalWeight" placeholder="총 무게를 입력하세요">
   <button onclick="selectWeightUnit('g')" id="gButton" class="selected">g</button>
   <button onclick="selectWeightUnit('kg')" id="kgButton">kg</button>
 </div>
-<br>
-<label for="price">총 금액:</label>
-
-<br>
+<div><input type="number" id="price" placeholder="총 금액을 입력하세요"></div>
 <div id="unitButtons">
-  <label>일정 무게:</label>
   <button onclick="selectUnitWeight(10)" id="10gButton">10g</button>
   <button onclick="selectUnitWeight(100)" id="100gButton" class="selected">100g</button>
 </div>
 <br>
 <div>
-  <button id="print">계산하기</button>
+  <button id="print">저장하기</button>
 </div>
 <br>
 <div id="result"></div>
@@ -101,9 +96,10 @@ updateSelectedWeightUnitButton();
 document.getElementById('print').addEventListener('click', function() {
     var resultDiv = document.createElement('div');
     resultDiv.textContent = document.getElementById('result').innerText;
-    resultDiv.textContent += '(' + document.getElementById('totalWeight').value + ')'
+    resultDiv.textContent += '(' + document.getElementById('price').value + '원/' + document.getElementById('totalWeight').value + selectedWeightUnit + ')'
     document.getElementById('result2').appendChild(resultDiv);
     console.log(parseFloat(document.getElementById('totalWeight').value))
+    console.log(selectedWeightUnit)
 })
 </script>
 </body>
