@@ -34,8 +34,8 @@
             <div class="mgt4"><input type="number" id="price" placeholder="총 금액을 입력하세요"></div>
             <h3 class="h-tit4">단위 설정</h3>
             <div id="unitButtons" class="row gutter-x4">
-                <div class="col"><button onclick="selectUnitWeight(10)" id="10gButton" class="btn">10g</button></div>
-                <div class="col"><button onclick="selectUnitWeight(100)" id="100gButton" class="btn selected">100g</button></div>
+                <div class="col"><button onclick="selectUnitWeight(10)" id="10gButton" class="btn">10g 당</button></div>
+                <div class="col"><button onclick="selectUnitWeight(100)" id="100gButton" class="btn selected">100g 당</button></div>
             </div>
             <div class="mgt20"><button id="print" class="btn primary">저장하기</button></div>
 
@@ -47,6 +47,7 @@
 <script>
 let selectedUnitWeight = 100;
 let selectedWeightUnit = 'g';
+let state = false;
 
 function selectUnitWeight(unit) {
   selectedUnitWeight = unit;
@@ -117,6 +118,7 @@ document.getElementById('print').addEventListener('click', function() {
     // 입력 값 초기화
     document.getElementById('totalWeight').value = '';
     document.getElementById('price').value = '';
+    state = true;
 })
 
 
