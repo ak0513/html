@@ -12,6 +12,7 @@
     <header id="header">
         <div class="input-wrap">
             <input type="text" id="search" placeholder="검색어 입력">
+            <button type="button"></button>
         </div>
         <div class="sort">
             <button type="button" class="sort-btn active" data-id="data-container">코코(날짜)</button>
@@ -63,6 +64,7 @@
 
     .input-wrap {display:flex;background-color:#f2f2f2;border-bottom:1px solid #ddd;}
     .input-wrap input {width:100%;height:44px;padding-left:12px;font-size:16px;border:none;background-color:#f2f2f2;border-radius:0;}
+    .input-wrap button {position:absolute;top:0;right:0;display:block;width:44px;height:44px; background:url('./img/icon-close.svg') no-repeat center;}
 
     .h-tit2 {position:relative; font-weight:700;font-size:16px;margin-bottom:12px;}
     .list + .h-tit2 {margin-top:24px;padding-top:36px;}
@@ -337,7 +339,11 @@ document.getElementById("search").addEventListener("input", function() {
     renderData(filteredData3, document.getElementById('data-container4'), 'date');
 });
 
-
+document.querySelector('.input-wrap button').addEventListener('click', function() {
+    console.log(this.previousElementSibling)
+    this.previousElementSibling.value = ''
+    renderDataInit();
+})
 
 function siblings(ele) {
     if(typeof(ele) === 'string') {
@@ -371,10 +377,13 @@ sort.forEach(function(item) {
 })
 
 // 초기 데이터를 DOM에 렌더링
-renderData(data, document.getElementById('data-container'), 'date');
-renderData(data, document.getElementById('data-container2'), 'number');
-renderData(data2, document.getElementById('data-container3'), 'date');
-renderData(data3, document.getElementById('data-container4'), 'date');
+function renderDataInit() {
+    renderData(data, document.getElementById('data-container'), 'date');
+    renderData(data, document.getElementById('data-container2'), 'number');
+    renderData(data2, document.getElementById('data-container3'), 'date');
+    renderData(data3, document.getElementById('data-container4'), 'date');
+}
+renderDataInit();
 </script>
 
 </body>
