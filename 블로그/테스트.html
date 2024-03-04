@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JSON 파일 생성하기</title>
+</head>
+<body>
+
+<input type="text" id="input1" placeholder="값 1 입력">
+<input type="text" id="input2" placeholder="값 2 입력">
+<button onclick="createJSON()">JSON 파일 생성</button>
+
+<script>
+function createJSON() {
+    // 입력된 값들을 가져오기
+    var value1 = document.getElementById('input1').value;
+    var value2 = document.getElementById('input2').value;
+
+    // JSON 객체 생성
+    var data = {
+        "value1": value1,
+        "value2": value2
+    };
+
+    // JSON 문자열로 변환
+    var jsonString = JSON.stringify(data);
+
+    // JSON 파일 생성
+    var blob = new Blob([jsonString], {type: "application/json"});
+    var url = URL.createObjectURL(blob);
+
+    // 다운로드 링크 생성
+    var a = document.createElement('a');
+    a.download = 'data.json';
+    a.href = url;
+    a.textContent = 'JSON 파일 다운로드';
+
+    // 링크를 추가하고 클릭
+    document.body.appendChild(a);
+    a.click();
+
+    // 링크 제거
+    document.body.removeChild(a);
+}
+</script>
+
+</body>
+</html>

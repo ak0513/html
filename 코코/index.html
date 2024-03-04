@@ -67,8 +67,8 @@
     .input-wrap button {position:absolute;top:0;right:0;display:block;width:44px;height:44px; background:url('./img/icon-close.svg') no-repeat center;}
 
     .h-tit2 {position:relative; font-weight:700;font-size:16px;margin-bottom:12px;}
-    .list + .h-tit2 {margin-top:24px;padding-top:36px;}
-    .list + .h-tit2::before {content:'';display:block;position:absolute;top:0;left:-24px;right:-24px;height:12px;background-color:#ddd;}
+    .total-amount-container + .h-tit2 {margin-top:24px;padding-top:36px;}
+    .total-amount-container + .h-tit2::before {content:'';display:block;position:absolute;top:0;left:-24px;right:-24px;height:12px;background-color:#ddd;}
 
     #main {padding:86px 24px 40px;}
     .list-wrap {display:none;margin-top:20px;}
@@ -88,6 +88,8 @@
     .list-amount-group {font-size:12px;}
     .list-amount {color:#999;text-decoration:line-through;font-size:14px;font-weight:400;}
     .list-price {font-weight:600;font-size:16px;}
+
+    .total-amount {display:flex;justify-content:flex-end;margin-top:30px;padding-top:16px;border-top:2px dashed #ddd;text-align:right;}
 
     .no-discount .list-amount,
     .no-discount .list-discount {display:none;}
@@ -125,12 +127,21 @@ var data = [
     { date: "2024.02.19", number: 647983, name: "체리토마토", amount: 16990, discount: 0, weight:2, unit:'kg'},
     { date: "2024.02.19", number: 520440, name: "국산검은콩두유", amount: 16990, discount: 3400, weight:0, unit:'kg'},
     { date: "2024.02.19", number: 637146, name: "동물복지란", amount: 15890, discount: 0, weight:60, unit:'개'},
-    { date: "2024.02.17", number: 585284, name: "백설굴소스350GX3", amount: 10790, discount: 0, weight:1050, unit:'g'},
-    { date: "2024.02.17", number: 600523, name: "EPA 참치 150G X 10", amount: 22190, discount: 2400, weight:1500, unit:'g'},
-    { date: "2024.02.17", number: 664370, name: "GALILEO MINI PIZ", amount: 15990, discount: 3200, weight:0, unit:'kg'},
+    { date: "2024.02.19", number: 585284, name: "백설굴소스350GX3", amount: 10790, discount: 0, weight:1050, unit:'g'},
+    { date: "2024.02.19", number: 600523, name: "EPA 참치 150G X 10", amount: 22190, discount: 2400, weight:1500, unit:'g'},
+    { date: "2024.02.19", number: 664370, name: "GALILEO MINI PIZ", amount: 15990, discount: 3200, weight:0, unit:'kg'},
 
     { date: "2024.02.28", number: 647983, name: "체리토마토", amount: 17490, discount: 0, weight:2, unit:'kg'},
     { date: "2024.02.28", number: 605698, name: "아보카도", amount: 13990, discount: 0, weight:6, unit:'개'},
+
+    { date: "2024.03.01", number: 660472, name: "트롤리미니버거", amount: 19990, discount: 0, weight:100, unit:'개'},
+    { date: "2024.03.01", number: '030669', name: "델몬트 바나나", amount: 3190, discount: 0, weight:7, unit:'개'},
+    { date: "2024.03.01", number: 664924, name: "데일리샐러드믹스", amount: 9490, discount: 0, weight:1, unit:'kg'},
+    { date: "2024.03.01", number: 656361, name: "BBQ 닭강정", amount: 16990, discount: 2700, weight:1.2, unit:'kg'},
+    { date: "2024.03.01", number: 565617, name: "호밀빵", amount: 7490, discount: 0, weight:860, unit:'g'},
+
+    { date: "2024.03.03", number: 647983, name: "고메탕수육", amount: 12990, discount: 2200, weight:1, unit:'kg'},
+    { date: "2024.03.03", number: 647983, name: "체리토마토", amount: 17490, discount: 0, weight:2, unit:'kg'},
 
 ];
 
@@ -146,11 +157,16 @@ var data2 = [
     { date: "2024.02.24", number: 201382, name: "표고버섯(국산)", amount: 3240, discount: 0, weight:163.636, unit:'g'},
     { date: "2024.02.24", number: 8801117368005, name: "오리온키위알맹이 67g", amount: 1000, discount: 0, weight:0, unit:'kg'},
     { date: "2024.02.24", number: 88011173651031, name: "오리온리찌알맹이 67g", amount: 1000, discount: 0, weight:0, unit:'kg'},
+    
+    { date: "2024.03.01", number: 8801052012919, name: "청성원부마토 스파게티소스", amount: 4180, discount: 0, weight:600, unit:'g'},
+    { date: "2024.03.01", number: 22001290, name: "찰가지 3개", amount: 3980, discount: 0, weight:448, unit:'g'},
+    { date: "2024.03.01", number: 22001276, name: "인큐애호박(특)", amount: 1980, discount: 0, weight:0, unit:'kg'},
+
 ]
 
 // 개봉역
 var data3 = [
-    { date: "2024.02.17", number: 8809605750219, name: "상품명", amount: 2500, discount: 0, weight:235, unit:'g'},
+    { date: "2024.02.29", number: 8801121020968, name: "매일우유오리지", amount: 5150, discount: 0, weight:1800, unit:'㎖'},
 ]
 
 // 날짜와 넘버로 그룹화하고 소팅하는 함수
@@ -195,6 +211,31 @@ function addCommasToAmount(amount) {
     return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+// 날짜별 토탈 금액 합계를 계산하는 함수
+function calculateTotalAmountByDate(data) {
+    var totalAmountByDate = {};
+    data.forEach(function(item) {
+        if (!totalAmountByDate[item.date]) {
+            totalAmountByDate[item.date] = 0;
+        }
+        totalAmountByDate[item.date] += item.amount - item.discount;
+    });
+    return totalAmountByDate;
+}
+
+// 날짜별 토탈 금액을 DOM에 표시하는 함수
+function renderTotalAmountByDate(data, container) {
+    var totalAmountByDate = calculateTotalAmountByDate(data);
+
+    // 각 날짜별 토탈 금액을 DOM에 추가
+    for (var date in totalAmountByDate) {
+        var totalDiv = document.createElement("div");
+        totalDiv.classList.add('total-amount');
+        totalDiv.innerHTML = `<b>${addCommasToAmount(totalAmountByDate[date])}</b>원`;
+        container.appendChild(totalDiv);
+    }
+}
+
 
 // 데이터를 DOM에 표시하는 함수
 function renderData(data, container, sort) {
@@ -222,6 +263,7 @@ function renderData(data, container, sort) {
             var formattedPrice = addCommasToAmount(price);
             var formattedAmount = addCommasToAmount(item.amount);
             var formattedDiscount = addCommasToAmount(item.discount);
+
             // 할인이 없는 경우 금액만 노출
             if(item.discount === 0) {
                 div.classList.add('no-discount')
@@ -256,6 +298,8 @@ function renderData(data, container, sort) {
                     listByUnit = '1개 당 ' + addCommasToAmount(price / item.weight) + '원';
                     break;
             }
+
+          
             div.innerHTML = `
                 <div class="list-img"><img src="./img/${item.number}.jpg" alt="" onclick="showImage('./img/${item.number}.jpg')"></div>
                 <div class="list-left">
@@ -277,6 +321,12 @@ function renderData(data, container, sort) {
             `;
             container.appendChild(div);
         });
+
+        // 각 날짜별 토탈 금액을 해당 날짜의 리스트 하단에 추가
+        var totalAmountContainer = document.createElement("div");
+        totalAmountContainer.classList.add('total-amount-container');
+        container.appendChild(totalAmountContainer);
+        renderTotalAmountByDate(groupedData[date], totalAmountContainer);
     },
     // 모든 copyDiv 클래스를 가진 요소에 대해 반복
     document.querySelectorAll('.copyDiv').forEach(function(div) {
