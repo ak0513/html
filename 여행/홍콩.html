@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>홍콩</title>
+</head>
+
+<body>
+    <style>
+        /* reset */
+        body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button{margin:0;padding:0}
+        fieldset,img{border:0 none}
+        dl,ul,ol,menu,li {list-style:none}
+        blockquote, q {quotes: none}
+        blockquote:before, blockquote:after,q:before, q:after {content:'';content:none}
+        input,select,textarea,button {vertical-align:middle;outline:none}
+        input::-ms-clear {display:none}
+        button {border:0 none;background-color:transparent;cursor:pointer}
+        body,th,td,input,select,textarea,button {font-size:14px;line-height:1.5;font-family:-apple-system, BlinkMacSystemFont, Pretendard, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell,'Noto Sans KR', 'Spoqa Han Sans', "Helvetica Neue", sans-serif;}
+        a {color:#333;text-decoration:none} 
+        a:active, a:hover {text-decoration:underline}
+        a:active {background-color:transparent}
+        address,caption,cite,code,dfn,em,var {font-style:normal;font-weight:normal}
+        
+        body {background:#fefefe;-webkit-text-size-adjust:none;color:#111}
+        #header{position:relative;padding:20px 24px;background-color:#10B886;}
+        .page-title {color:#fff;}
+        .sort {display:flex;}
+        .sort-btn {color:#fff;text-decoration:underline;}
+        .sort-btn.active {color:#fff000;}
+        .sort-btn + .sort-btn {margin-left:8px;}
+        .map-link {position:absolute;top:50%;right:24px;transform:translateY(-50%);background-color:#0a926a;padding:4px 8px;border-radius:4px;color:#fff;}
+
+        #main {padding-bottom:40px;}
+        .list-wrap {display:none;margin-top:20px;}
+        .list-wrap.active {display:block;}
+
+        .list {position:relative;padding:0 16px;}
+        .list + .list {margin-top:24px;padding-top:12px;}
+        .list +  .list::before {content:'';display:block;position:absolute;top:0;left:0;right:0;height:12px;background-color:#ddd;}
+        .list-item  {display:flex;align-items:center;padding:12px 0;}
+        .list-amount-group {flex-shrink:0;text-align:right;}
+        .list-amount.krw {font-size:12px;color:#999;}
+        .list-title {position:sticky;top:0;display:flex;align-items:center;padding:12px 0;color:#464646;background-color: #fff;}
+        .list-icon {height:24px;margin-right:12px;}
+        .list-city {color:#999;font-size:12px;}
+        .list-name {font-size:16px;font-weight:600;}
+        .list-desc {margin-top:4px; color:#999;}
+        .list-info-group {flex-grow:1;}
+
+        .amount-group {display:flex;justify-content:flex-end;padding-top:16px;border-top:2px dashed #ddd;text-align:right;}
+        .amount-item + .amount-item {margin-left:8px;}
+        .amount-currency {color:#999;font-size:12px;}
+
+        .amount-total-group {margin-top:24px;padding:24px 16px 0;border-top:12px solid #ddd;text-align:right;}
+        .amount-total-krw {margin-top:12px;padding:0 16px;text-align:right;font-size:16px;}
+        .amount-total-krw b {font-size:36px;font-weight:700;color:#10B886;}
+    </style>
+    <div id="wrap">
+        <header id="header">
+            <h1 class="page-title">홍콩</h1>
+            <div class="sort">
+                <button type="button" class="sort-btn active" data-id="listDate">날짜</button>
+                <button type="button" class="sort-btn" data-id="listCategory">카테고리</button>
+            </div>
+            <a href="https://www.google.com/maps/d/viewer?hl=ko&mid=1IngMMEnBJtcJt977z5tkUmn9SSmSF5M&ll=16.056310439202626%2C108.24648315275527&z=14" target="_blank" class="map-link">구글맵 보기</a>
+        </header>
+        <main id="main">
+            <div id="listDate" class="list-wrap active"></div>
+            <div id="listCategory" class="list-wrap"></div>
+            <div id="total"></div>
+        </main>
+    </div>
+    <script>
+        var listDate = document.getElementById('listDate');
+        var listCategory = document.getElementById('listCategory');
+        var totalAmountEle = document.getElementById('total');
+        var exchange = {
+            "KRW": [1, '원'], // 환율, 단위
+            "HKD": [0.05, '동'],
+        };
+        var myArray = [
+            // 1일차
+            {
+                category: ['항공','airplane'],
+                date: "2024.03.09",
+                name: "서울에서 홍콩 왕복",
+                url: 'https://www.google.com/maps?cid=3536651011900568809',
+                desc: '',
+                city: "서울",
+                currency: "KRW",
+                amount: 755200,
+            },
+
+            {
+                category: ['숙소','home'],
+                date: "2024.03.09",
+                name: "쉐라톤 그랜드 마카오",
+                url: '',
+                desc: '1박',
+                city: "마카오",
+                currency: "KRW",
+                amount: 229846,
+            },
+
+            {
+                category: ['숙소','home'],
+                date: "2024.03.10",
+                name: "아크보 호텔",
+                url: '',
+                desc: '2박',
+                city: "홍콩",
+                currency: "KRW",
+                amount: 334198,
+            },
+        ];
+
+        // 날짜별 정렬
+        var groupedByDate = {};
+        myArray.forEach(function (item) {
+            var key = item.date;
+            if (!groupedByDate[key]) {
+                groupedByDate[key] = [];
+            }
+            groupedByDate[key].push(item);
+        });
+
+        function sortDate() {
+            // HTML parsing and display for Date-wise List
+            var output = ``;
+            for (var date in groupedByDate) {
+                if (groupedByDate.hasOwnProperty(date)) {
+                    output += `<div class="list">`;
+                    output += `<h3 class="list-title date">${date}</h3>`;
+                    output += `<ul class="list-group">`;
+
+                    var currencyTotals = {};
+
+                    groupedByDate[date].forEach(function (item, index) {
+                        output += 
+                            `<li class="list-item">
+                                <div class="list-icon"><img src="./img/${item.category[1]}.svg" alt=""></div>
+                                <div class="list-info-group">
+                                    <div class="list-city">${item.category[0]} · ${item.city}</div>
+                                    <div class="list-name"><a href="${item.url}" target="_blank" title="새창으로 열림">${item.name}</a></div>`
+                        if(item.desc !== undefined) {
+                            output += `<div class="list-desc">${item.desc}</div>`
+                        }
+                        output += 
+                            `</div>
+                                <div class="list-amount-group">
+                                    <div class="list-amount"><b>${item.amount.toLocaleString('ko-KR')}</b>${exchange[item.currency][1]}</div>`
+                                    if(item.currency !== 'KRW' && item.amount !== 0) {output += `<div class="list-amount krw">(${(item.amount * exchange[item.currency][0]).toLocaleString('ko-KR')}원)</div>`}
+                        output += 
+                                `</div>
+                            </li>`;
+
+                        // Calculate currency-wise totals for each date
+                        if (!currencyTotals[item.currency]) {
+                            currencyTotals[item.currency] = 0;
+                        }
+                        currencyTotals[item.currency] += item.amount;
+                    });
+                    output += `</ul>`;
+                    // Display currency-wise totals for each date
+                    // output += `<h3 class="list-title amount">합계</h3>`;
+                    output += `<ul class="amount-group">`;
+                    for (var currency in currencyTotals) {
+                        if (currencyTotals.hasOwnProperty(currency)) {
+                            output += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">(${currency})</span></li>`;
+                        }
+                    }
+                    output += `</ul>`;
+                    output += `</div>`;
+                }
+            }
+            listDate.innerHTML = output;
+        }
+        sortDate();
+
+        // 카테고리별 정렬
+        var groupedByCategory = {};
+        myArray.forEach(function (item) {
+            var key = item.category;
+            if (!groupedByCategory[key]) {
+                groupedByCategory[key] = [];
+            }
+            groupedByCategory[key].push(item);
+        });
+
+        function sortCategory() {
+            var output = ``;
+            for (var category in groupedByCategory) {
+                if (groupedByCategory.hasOwnProperty(category)) {
+                output += `<div class="list">`;
+                output += `<h3 class="list-title date"><div class="list-icon"><img src="./img/${category.split(',')[1]}.svg" alt=""></div><div>${category.split(',')[0]}</div></h3>`;
+                output += `<ul class="list-group">`;
+
+                var currencyTotals = {};
+
+                groupedByCategory[category].forEach(function (item) {
+                    output += 
+                        `<li class="list-item">
+                            <div class="list-info-group">
+                                <div class="list-city">${item.category[0]} · ${item.city}</div>
+                                <div class="list-name"><a href="${item.url}" target="_blank" title="새창으로 열림">${item.name}</a></div>`
+                                if(item.desc !== undefined) {
+                            output += `<div class="list-desc">${item.desc}</div>`
+                        }
+                        output += 
+                            `</div>
+                            <div class="list-amount-group">
+                                <div class="list-amount"><b>${item.amount.toLocaleString('ko-KR')}</b>${exchange[item.currency][1]}</div>`
+                                if(item.currency !== 'KRW' && item.amount !== 0) {output += `<div class="list-amount krw">(${(item.amount * exchange[item.currency][0]).toLocaleString('ko-KR')}원)</div>`}
+                        output += `</div>
+                        </li>`;
+                        // output += `City: " + item.city + ", Amount: " + item.amount + ", Currency: " + item.currency + "</li>`
+
+                    // Calculate currency-wise totals for each category
+                    if (!currencyTotals[item.currency]) {
+                    currencyTotals[item.currency] = 0;
+                    }
+                    currencyTotals[item.currency] += item.amount;
+                });
+                output += `</ul>`;
+
+                // Display currency-wise totals for each category
+                output += `<ul class="amount-group">`;
+                // output += `<h3>Currency-wise Totals<h3>`;
+                for (var currency in currencyTotals) {
+                    if (currencyTotals.hasOwnProperty(currency)) {
+                    output += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">(${currency})</span></li>`;
+                    }
+                }
+                output += `</ul>`;
+
+                output += `</div>`;
+                }
+            }
+            listCategory.innerHTML = output;
+        }
+        sortCategory();
+
+
+
+        // 전체 합계
+        function totalAmount() {
+            var currencyTotals = {};
+            var totalAmountKRW = 0;
+
+            myArray.forEach(function (item) {
+                if (!currencyTotals[item.currency]) {
+                currencyTotals[item.currency] = 0;
+                }
+                currencyTotals[item.currency] += item.amount;
+                totalAmountKRW += item.amount * exchange[item.currency][0];
+            });
+
+            var output = `<ul class="amount-total-group">`;
+            for (var currency in currencyTotals) {
+                if (currencyTotals.hasOwnProperty(currency)) {
+                    output += `<li class="amount-total-item">${currency} : <b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}</li>`;
+                }
+            }
+            output += `</ul>`;
+            output += `<div class="amount-total-krw">합계 <b>${totalAmountKRW.toLocaleString('ko-KR')}</b>원</div>`;
+
+
+            totalAmountEle.innerHTML = output;
+        }
+        totalAmount();
+        
+
+        // 노출
+        function siblings(ele) {
+            if(typeof(ele) === 'string') {
+                ele = document.querySelector(ele)
+            }
+            var siblings = [...ele.parentNode.children].filter((child) =>
+                child !== ele
+            )
+            return siblings
+        }
+        var sort = document.querySelectorAll('.sort-btn');
+        var listWrap = document.querySelectorAll('.list-wrap');
+
+        sort.forEach(function(item) {
+            item.addEventListener('click', function() {
+                var si = siblings(item)
+                si.forEach(function(item) {
+                    item.classList.remove('active');
+                });
+                item.classList.add('active');
+
+                listWrap.forEach(function(item) {
+                    item.classList.remove('active')
+                });
+                var tarId = document.getElementById(item.dataset.id);
+                tarId.classList.add('active')
+            })
+        })
+    </script>
+</body>
+
+</html>     
