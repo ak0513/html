@@ -402,9 +402,9 @@ var ui = (function() {
             }
 			// 아코디언 오픈 시 윈도우 높이보다 본문 높이가 크다면 스크롤 이동시키기
 			setTimeout(function() {
-				if(accCollapse.clientHeight > window.innerHeight) {
+				// if(accCollapse.clientHeight > window.innerHeight) {
 					scrollTo(0, self.offsetTop)
-				}
+				// }
 			},350)
 			
         }
