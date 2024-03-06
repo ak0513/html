@@ -27,11 +27,11 @@
 
 
             <div class="row gutter-x4">
-                <div class="col"><input type="number" id="totalWeight" placeholder="총 무게를 입력하세요"></div>
+                <div class="col"><input type="tel" id="totalWeight" placeholder="총 무게를 입력하세요"></div>
                 <div class="col col2"><button onclick="selectWeightUnit('g')" id="gButton" class="btn selected">g</button></div>
                 <div class="col col2"><button onclick="selectWeightUnit('kg')" id="kgButton" class="btn">kg</button></div>
             </div>
-            <div class="mgt4"><input type="number" id="price" placeholder="총 금액을 입력하세요"></div>
+            <div class="mgt4"><input type="tel" id="price" placeholder="총 금액을 입력하세요"></div>
             <h3 class="h-tit4">단위 설정</h3>
             <div id="unitButtons" class="row gutter-x4">
                 <div class="col"><button onclick="selectUnitWeight(10)" id="10gButton" class="btn">10g 당</button></div>
