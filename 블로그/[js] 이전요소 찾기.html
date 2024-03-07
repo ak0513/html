@@ -14,133 +14,137 @@
     <link href="./css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <div id="tt-body-page">
-        <div class="area_view">
-            <div class="tt_article_useless_p_margin contents_style">
-                <h2 data-ke-size="size26">이전요소 찾기</h2>
-                <p data-ke-size="size16">JavaScript에서 기본적으로 제공하는 previousElementSibling 기능은 단순히 선택된 요소의 이전 요소만 찾아주기에 jQuery와 동일한 기능을 JavaScript로 만들어봤다.</p>
-                <h3 data-ke-size="size23">prev()</h3>
-                <ul data-ke-list-type="disc">
-                    <li>jQuery의 prev()와 동일한 기능을 JavaScript로 구현</li>
-                    <li>매개변수 selector가 제공되는 경우에는 이전 요소가 selector와 일치하는 경우에만 반환을 하며 일치하지 않는 경우에는 null 을 반환한다.</li>
-                </ul>
-                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
-function prev(ele, selector) {
-    var prevEle = ele.previousElementSibling;
-    if (!selector || (prevEle && prevEle.matches(selector))) {
-        return prevEle;
-    }
-    return null;
-}
-                </code></pre>
-
-                <h3 data-ke-size="size23">prevAll()</h3>
-                <ul data-ke-list-type="disc">
-                    <li>jQuery의 prevAll()와 동일한 기능을 JavaScript로 구현</li>
-                    <li>이전 요소가 없거나 매개변수 selector와 일치하는 이전 요소를 찾을 수 없는 경우에는 빈 배열을 반환한다.</li>
-                </ul>
-                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
-function prevAll(ele, selector) {
-    var prevAllEle = [];
-    var currentEle = ele.previousElementSibling;
-    while (currentEle) {
-        if (!selector || currentEle.matches(selector)) {
-            prevAllEle.push(currentEle);
-        }
-        currentEle = currentEle.previousElementSibling;
-    }
-    return prevAllEle;
-}
-                </code></pre>
-
-<hr contenteditable="false" data-ke-type="horizontalRule" data-ke-style="style3">
-
-                <h3 data-ke-size="size23">예시</h3>
-                <pre class="html xml" data-ke-language="html" data-ke-type="codeblock"><code>
-<ul>
-    <li class="apple">사과</li>
-    <li class="banana">바나나</li>
-    <li class="pineapple">파인애플</li>
-    <li class="strawberry">딸기</li>
-</ul>
-                </code></pre>
-                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
-var bananaEle = document.querySelector('.banana'); // 바나나
-var strawberryEle = document.querySelector('.strawberry'); // 딸기
-
-// 바나나의 이전요소
-prev(bananaEle).style.color = 'red'
-
-// 딸기의 이전요소가 파인애플과 일치하는 경우
-prev(strawberryEle, '.pineapple').style.color = 'red'
-
-// 딸기의 이전요소 모두
-var prevAllEle = prevAll(strawberryEle);
-prevAllEle.forEach(function(item) {
-    item.style.color = 'red'
-})
-
-// 딸기의 이전요소 중 바나나와 일치하는 경우
-var prevAllEle = prevAll(strawberryEle, '.banana');
-prevAllEle.forEach(function(item) {
-    item.style.color = 'red'
-})
-                </code></pre>
-
-                <h4 data-ke-size="size20">결과물</h4>
-                <div class="sample sample1">
+    <div id="wrap">
+        <div id="header"></div>
+        <div id="aside"></div>
+        <div id="tt-body-page">
+            <div class="area_view">
+                <div class="tt_article_useless_p_margin contents_style">
+                    <h2 data-ke-size="size26">이전요소 찾기</h2>
+                    <p data-ke-size="size16">JavaScript에서 기본적으로 제공하는 previousElementSibling 기능은 단순히 선택된 요소의 이전 요소만 찾아주기에 jQuery와 동일한 기능을 JavaScript로 만들어봤다.</p>
+                    <h3 data-ke-size="size23">prev()</h3>
                     <ul data-ke-list-type="disc">
-                        <li class="apple">사과</li>
-                        <li class="banana">바나나</li>
-                        <li class="pineapple">파인애플</li>
-                        <li class="strawberry">딸기</li>
+                        <li>jQuery의 prev()와 동일한 기능을 JavaScript로 구현</li>
+                        <li>매개변수 selector가 제공되는 경우에는 이전 요소가 selector와 일치하는 경우에만 반환을 하며 일치하지 않는 경우에는 null 을 반환한다.</li>
                     </ul>
-                </div>
+                    <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
+    function prev(ele, selector) {
+        var prevEle = ele.previousElementSibling;
+        if (!selector || (prevEle && prevEle.matches(selector))) {
+            return prevEle;
+        }
+        return null;
+    }
+                    </code></pre>
 
-                <div class="sample-btn">
-                    <button type="button" id="btn-prev-1">바나나의 이전요소</button>
-                    <button type="button" id="btn-prev-2">딸기의 이전요소가 파인애플과 일치하는 경우</button>
-                    <button type="button" id="btn-prevAll-1">딸기의 이전요소 모두</button>
-                    <button type="button" id="btn-prevAll-2">딸기의 이전요소 중 바나나와 일치하는 경우</button>
+                    <h3 data-ke-size="size23">prevAll()</h3>
+                    <ul data-ke-list-type="disc">
+                        <li>jQuery의 prevAll()와 동일한 기능을 JavaScript로 구현</li>
+                        <li>이전 요소가 없거나 매개변수 selector와 일치하는 이전 요소를 찾을 수 없는 경우에는 빈 배열을 반환한다.</li>
+                    </ul>
+                    <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
+    function prevAll(ele, selector) {
+        var prevAllEle = [];
+        var currentEle = ele.previousElementSibling;
+        while (currentEle) {
+            if (!selector || currentEle.matches(selector)) {
+                prevAllEle.push(currentEle);
+            }
+            currentEle = currentEle.previousElementSibling;
+        }
+        return prevAllEle;
+    }
+                    </code></pre>
+
+    <hr contenteditable="false" data-ke-type="horizontalRule" data-ke-style="style3">
+
+                    <h3 data-ke-size="size23">예시</h3>
+                    <pre class="html xml" data-ke-language="html" data-ke-type="codeblock"><code>
+    <ul>
+        <li class="apple">사과</li>
+        <li class="banana">바나나</li>
+        <li class="pineapple">파인애플</li>
+        <li class="strawberry">딸기</li>
+    </ul>
+                    </code></pre>
+                    <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
+    var bananaEle = document.querySelector('.banana'); // 바나나
+    var strawberryEle = document.querySelector('.strawberry'); // 딸기
+
+    // 바나나의 이전요소
+    prev(bananaEle).style.color = 'red'
+
+    // 딸기의 이전요소가 파인애플과 일치하는 경우
+    prev(strawberryEle, '.pineapple').style.color = 'red'
+
+    // 딸기의 이전요소 모두
+    var prevAllEle = prevAll(strawberryEle);
+    prevAllEle.forEach(function(item) {
+        item.style.color = 'red'
+    })
+
+    // 딸기의 이전요소 중 바나나와 일치하는 경우
+    var prevAllEle = prevAll(strawberryEle, '.banana');
+    prevAllEle.forEach(function(item) {
+        item.style.color = 'red'
+    })
+                    </code></pre>
+
+                    <h4 data-ke-size="size20">결과물</h4>
+                    <div class="sample sample1">
+                        <ul data-ke-list-type="disc">
+                            <li class="apple">사과</li>
+                            <li class="banana">바나나</li>
+                            <li class="pineapple">파인애플</li>
+                            <li class="strawberry">딸기</li>
+                        </ul>
+                    </div>
+
+                    <div class="sample-btn">
+                        <button type="button" id="btn-prev-1">바나나의 이전요소</button>
+                        <button type="button" id="btn-prev-2">딸기의 이전요소가 파인애플과 일치하는 경우</button>
+                        <button type="button" id="btn-prevAll-1">딸기의 이전요소 모두</button>
+                        <button type="button" id="btn-prevAll-2">딸기의 이전요소 중 바나나와 일치하는 경우</button>
+                    </div>
                 </div>
             </div>
         </div>
+        <script>
+            var bananaEle = document.querySelector('.sample .banana');
+            var strawberryEle = document.querySelector('.sample .strawberry');
+            
+            var sampleLi = document.querySelectorAll('.sample ul > li');
+
+            // 바나나의 이전요소 컬러 변경
+            document.getElementById('btn-prev-1').addEventListener('click', function() {
+                ui.removeAttr(sampleLi, 'style');
+                ui.prev(bananaEle).style.color = 'red'
+            })
+            
+            // 딸기의 이전요소가 파인애플과 일치하는 경우에만 컬러 변경
+            document.getElementById('btn-prev-2').addEventListener('click', function() {
+                ui.removeAttr(sampleLi, 'style');
+                ui.prev(strawberryEle, '.pineapple').style.color = 'red'
+            })
+
+            // 딸기의 이전요소 모두 선택하여 컬러 변경
+            document.getElementById('btn-prevAll-1').addEventListener('click', function() {
+                ui.removeAttr(sampleLi, 'style');
+                var prevAllEle = ui.prevAll(strawberryEle);
+                prevAllEle.forEach(function(item) {
+                    item.style.color = 'red'
+                })
+            })
+
+            // 딸기의 이전요소 중 바나나와 일치하는 경우에만 컬러 변경
+            document.getElementById('btn-prevAll-2').addEventListener('click', function() {
+                ui.removeAttr(sampleLi, 'style');
+                var prevAllEle = ui.prevAll(strawberryEle, '.banana');
+                prevAllEle.forEach(function(item) {
+                    item.style.color = 'red'
+                })
+            })
+        </script>
     </div>
-    <script>
-        var bananaEle = document.querySelector('.sample .banana');
-        var strawberryEle = document.querySelector('.sample .strawberry');
-        
-        var sampleLi = document.querySelectorAll('.sample ul > li');
-
-        // 바나나의 이전요소 컬러 변경
-        document.getElementById('btn-prev-1').addEventListener('click', function() {
-            ui.removeAttr(sampleLi, 'style');
-            ui.prev(bananaEle).style.color = 'red'
-        })
-        
-        // 딸기의 이전요소가 파인애플과 일치하는 경우에만 컬러 변경
-        document.getElementById('btn-prev-2').addEventListener('click', function() {
-            ui.removeAttr(sampleLi, 'style');
-            ui.prev(strawberryEle, '.pineapple').style.color = 'red'
-        })
-
-        // 딸기의 이전요소 모두 선택하여 컬러 변경
-        document.getElementById('btn-prevAll-1').addEventListener('click', function() {
-            ui.removeAttr(sampleLi, 'style');
-            var prevAllEle = ui.prevAll(strawberryEle);
-            prevAllEle.forEach(function(item) {
-                item.style.color = 'red'
-            })
-        })
-
-        // 딸기의 이전요소 중 바나나와 일치하는 경우에만 컬러 변경
-        document.getElementById('btn-prevAll-2').addEventListener('click', function() {
-            ui.removeAttr(sampleLi, 'style');
-            var prevAllEle = ui.prevAll(strawberryEle, '.banana');
-            prevAllEle.forEach(function(item) {
-                item.style.color = 'red'
-            })
-        })
-    </script>
 </body>
 </html>
