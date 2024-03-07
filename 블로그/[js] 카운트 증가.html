@@ -14,81 +14,85 @@
     <link href="./css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <div id="tt-body-page">
-        <div class="area_view">
-            <div class="tt_article_useless_p_margin contents_style">
-                <h2 data-ke-size="size26">카운트 증가 / 숫자 증가</h2>
-                <p data-ke-size="size16">requestAnimationFrame을 사용하여 카운트를 증가시키는 스크립트로 duration을 통해 애니메이션의 시간을 조절할 수 있다.</p>
-                <pre class="html xml" data-ke-language="html" data-ke-type="codeblock"><code>
-                    <div class="counter" data-count="125000000">0</div>
-                </code></pre>
+    <div id="wrap">
+        <div id="header"></div>
+        <div id="aside"></div>
+        <div id="tt-body-page">
+            <div class="area_view">
+                <div class="tt_article_useless_p_margin contents_style">
+                    <h2 data-ke-size="size26">카운트 증가 / 숫자 증가</h2>
+                    <p data-ke-size="size16">requestAnimationFrame을 사용하여 카운트를 증가시키는 스크립트로 duration을 통해 애니메이션의 시간을 조절할 수 있다.</p>
+                    <pre class="html xml" data-ke-language="html" data-ke-type="codeblock"><code>
+                        <div class="counter" data-count="125000000">0</div>
+                    </code></pre>
 
 
-                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
-// 모든 counter 요소를 가져옵니다.
-var counterElements = document.querySelectorAll('.counter');
+                    <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
+    // 모든 counter 요소를 가져옵니다.
+    var counterElements = document.querySelectorAll('.counter');
 
-// 각각의 counter 요소에 대해 애니메이션을 적용합니다.
-counterElements.forEach(function(counterElement) {
-    var countLimit = parseInt(counterElement.getAttribute('data-count'), 10);
-    var duration = 1000; // 애니메이션 시간 (ms)
-    var start = null;
+    // 각각의 counter 요소에 대해 애니메이션을 적용합니다.
+    counterElements.forEach(function(counterElement) {
+        var countLimit = parseInt(counterElement.getAttribute('data-count'), 10);
+        var duration = 1000; // 애니메이션 시간 (ms)
+        var start = null;
 
-    function step(timestamp) {
-        if (!start) start = timestamp;
-        var progress = timestamp - start;
-        var percentage = Math.min(progress / duration, 1); // 진행률은 최대 1까지
+        function step(timestamp) {
+            if (!start) start = timestamp;
+            var progress = timestamp - start;
+            var percentage = Math.min(progress / duration, 1); // 진행률은 최대 1까지
 
-        // data-count에 따라 최종 값 계산
-        var currentValue = Math.floor(countLimit * percentage).toLocaleString(); // 쉼표 추가
-        counterElement.textContent = currentValue;
+            // data-count에 따라 최종 값 계산
+            var currentValue = Math.floor(countLimit * percentage).toLocaleString(); // 쉼표 추가
+            counterElement.textContent = currentValue;
 
-        // 애니메이션 종료 조건
-        if (progress < duration) {
-            requestAnimationFrame(step);
+            // 애니메이션 종료 조건
+            if (progress < duration) {
+                requestAnimationFrame(step);
+            }
         }
-    }
 
-    // 애니메이션 시작
-    requestAnimationFrame(step);
-});
-                </code></pre>
+        // 애니메이션 시작
+        requestAnimationFrame(step);
+    });
+                    </code></pre>
 
-                <h4 data-ke-size="size20">결과물</h4>
-                <div class="sample">
-                  <div class="counter" data-count="125000000">0</div>
-                </div>
-            
+                    <h4 data-ke-size="size20">결과물</h4>
+                    <div class="sample">
+                    <div class="counter" data-count="125000000">0</div>
+                    </div>
+                
 
-                <script>
-                    // 모든 counter 요소를 가져옵니다.
-                    var counterElements = document.querySelectorAll('.counter');
+                    <script>
+                        // 모든 counter 요소를 가져옵니다.
+                        var counterElements = document.querySelectorAll('.counter');
 
-                    // 각각의 counter 요소에 대해 애니메이션을 적용합니다.
-                    counterElements.forEach(function(counterElement) {
-                        var countLimit = parseInt(counterElement.getAttribute('data-count'), 10);
-                        var duration = 1000; // 애니메이션 기간 (ms)
-                        var start = null;
+                        // 각각의 counter 요소에 대해 애니메이션을 적용합니다.
+                        counterElements.forEach(function(counterElement) {
+                            var countLimit = parseInt(counterElement.getAttribute('data-count'), 10);
+                            var duration = 1000; // 애니메이션 기간 (ms)
+                            var start = null;
 
-                        function step(timestamp) {
-                            if (!start) start = timestamp;
-                            var progress = timestamp - start;
-                            var percentage = Math.min(progress / duration, 1); // 진행률은 최대 1까지
+                            function step(timestamp) {
+                                if (!start) start = timestamp;
+                                var progress = timestamp - start;
+                                var percentage = Math.min(progress / duration, 1); // 진행률은 최대 1까지
 
-                            // data-count에 따라 최종 값 계산
-                            var currentValue = Math.floor(countLimit * percentage).toLocaleString(); // 쉼표 추가
-                            counterElement.textContent = currentValue;
+                                // data-count에 따라 최종 값 계산
+                                var currentValue = Math.floor(countLimit * percentage).toLocaleString(); // 쉼표 추가
+                                counterElement.textContent = currentValue;
 
-                            // 애니메이션 종료 조건
-                            if (progress < duration) {
-                                requestAnimationFrame(step);
+                                // 애니메이션 종료 조건
+                                if (progress < duration) {
+                                    requestAnimationFrame(step);
+                                }
                             }
-                        }
 
-                        // 애니메이션 시작
-                        requestAnimationFrame(step);
-                    });
-                </script>
+                            // 애니메이션 시작
+                            requestAnimationFrame(step);
+                        });
+                    </script>
+                </div>
             </div>
         </div>
     </div>

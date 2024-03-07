@@ -14,61 +14,65 @@
     <link href="./css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <div id="tt-body-page">
-        <div class="area_view">
-            <div class="tt_article_useless_p_margin contents_style">
-                <h2 data-ke-size="size26">테이블</h2>
-                <h3 data-ke-size="size23">행 추가하기 insertRow(), insertCell()</h3>
-                <h4 data-ke-size="size20">insertRow()</h4>
-            </div>
-        </div>
+  <div id="wrap">
+    <div id="header"></div>
+    <div id="aside"></div>
+      <div id="tt-body-page">
+          <div class="area_view">
+              <div class="tt_article_useless_p_margin contents_style">
+                  <h2 data-ke-size="size26">테이블</h2>
+                  <h3 data-ke-size="size23">행 추가하기 insertRow(), insertCell()</h3>
+                  <h4 data-ke-size="size20">insertRow()</h4>
+              </div>
+          </div>
 
-<style>
-    .box {
-      width: 100px;
-      height: 100px;
-      background-color: lightblue;
-      margin: 20px;
-      opacity: 0;
-      transition: opacity 0.5s ease-in-out;
+  <style>
+      .box {
+        width: 100px;
+        height: 100px;
+        background-color: lightblue;
+        margin: 20px;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      .visible {
+        opacity: 1;
+      }
+    </style>
+  <div style="height:1500px"></div>
+  <div class="box" id="myBox"></div>
+  <div style="height:1500px"></div>
+  <script>
+    // 타겟 요소
+    const targetElement = document.getElementById('myBox');
+
+    // 스크롤 이벤트 핸들러
+    function handleScroll() {
+      // 요소의 위치 정보
+      const elementRect = targetElement.getBoundingClientRect();
+
+      // 화면의 높이
+      const windowHeight = window.innerHeight;
+
+      // 요소가 화면에 보일 때 visible 클래스 추가
+      if (elementRect.top < windowHeight && elementRect.bottom > 0) {
+        targetElement.classList.add('visible');
+      } else {
+        // 화면에서 사라지면 visible 클래스 제거
+        targetElement.classList.remove('visible');
+      }
     }
 
-    .visible {
-      opacity: 1;
-    }
-  </style>
-<div style="height:1500px"></div>
-<div class="box" id="myBox"></div>
-<div style="height:1500px"></div>
-<script>
-  // 타겟 요소
-  const targetElement = document.getElementById('myBox');
+    // 초기에 한 번 실행
+    handleScroll();
 
-  // 스크롤 이벤트 핸들러
-  function handleScroll() {
-    // 요소의 위치 정보
-    const elementRect = targetElement.getBoundingClientRect();
-
-    // 화면의 높이
-    const windowHeight = window.innerHeight;
-
-    // 요소가 화면에 보일 때 visible 클래스 추가
-    if (elementRect.top < windowHeight && elementRect.bottom > 0) {
-      targetElement.classList.add('visible');
-    } else {
-      // 화면에서 사라지면 visible 클래스 제거
-      targetElement.classList.remove('visible');
-    }
-  }
-
-  // 초기에 한 번 실행
-  handleScroll();
-
-  // 스크롤 이벤트 리스너 등록
-  window.addEventListener('scroll', handleScroll);
-</script>
+    // 스크롤 이벤트 리스너 등록
+    window.addEventListener('scroll', handleScroll);
+  </script>
 
 
-    </div>
+      </div>
+  </div>
 </body>
 </html>

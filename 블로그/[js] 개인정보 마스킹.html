@@ -14,81 +14,85 @@
     <link href="./css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <div id="tt-body-page">
-        <div class="area_view">
-            <div class="tt_article_useless_p_margin contents_style">
-                <h2 data-ke-size="size26">개인정보 마스킹</h2>
-                <p data-ke-size="size16">보안이 중요시 되기 때문에 이름, 계좌번호, 전화번호 등등의 개인정보에 마스킹은 필수가 되어가고 있다.</p>
-                <h3 data-ke-size="size23">성명 마스킹</h3>
-                <ul data-ke-list-type="disc">
-                    <li>성명의 맨 앞과 맨 뒤 1자리씩 제외하고 나머지는 *로 치환된다.</li>
-                    <li>이름이 외자인 경우에 성은 노출이 되고 이름은 *로 치환된다.</li>
-                    <li>성이 2자인 경우에는 성과 이름 구분없이 성명의 맨 앞과 맨 뒤를 제외한 나머지가 *로 치환된다.<br>예시) 선우길동 → 선**동</li>
-                    <li>성만 입력 또는 이름이 외자인데 이름만 입력하여 이름값이 1자리수라면 해당 이름이 그대로 노출된다.</li>
-                </ul>
-                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
-function maskName(name) {
-    if (name.length === 1) {
-        return name;
-    } else if (name.length === 2) {
-        return name.slice(0, 1) + '*';
-    } else {
-        return name.slice(0, 1) + '*'.repeat(name.length - 2) + name.slice(-1)
-    }
-}
-
-maskName('홍') // 홍
-maskName('홍길') // 홍*
-maskName('홍길동') // 홍*동
-maskName('선우길동') // 선**동
-                </code></pre>
-
-                <h3 data-ke-size="size23">전화번호 마스킹</h3>
-                <ul data-ke-list-type="disc">
-                    <li>전화번호는 11자리의 숫자로만 존재해야 한다.</li>
-                    <li>가운데 4자리를 *로 치환한다.</li>
-                </ul>
-                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
-function maskCellPhone(phoneNumber) {
-    // 휴대폰 번호가 11자리인지 확인
-    if (phoneNumber.length !== 11) {
-        console.error("휴대폰 번호는 11자리여야 합니다.");
-        return phoneNumber;
+    <div id="wrap">
+        <div id="header"></div>
+        <div id="aside"></div>
+        <div id="tt-body-page">
+            <div class="area_view">
+                <div class="tt_article_useless_p_margin contents_style">
+                    <h2 data-ke-size="size26">개인정보 마스킹</h2>
+                    <p data-ke-size="size16">보안이 중요시 되기 때문에 이름, 계좌번호, 전화번호 등등의 개인정보에 마스킹은 필수가 되어가고 있다.</p>
+                    <h3 data-ke-size="size23">성명 마스킹</h3>
+                    <ul data-ke-list-type="disc">
+                        <li>성명의 맨 앞과 맨 뒤 1자리씩 제외하고 나머지는 *로 치환된다.</li>
+                        <li>이름이 외자인 경우에 성은 노출이 되고 이름은 *로 치환된다.</li>
+                        <li>성이 2자인 경우에는 성과 이름 구분없이 성명의 맨 앞과 맨 뒤를 제외한 나머지가 *로 치환된다.<br>예시) 선우길동 → 선**동</li>
+                        <li>성만 입력 또는 이름이 외자인데 이름만 입력하여 이름값이 1자리수라면 해당 이름이 그대로 노출된다.</li>
+                    </ul>
+                    <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
+    function maskName(name) {
+        if (name.length === 1) {
+            return name;
+        } else if (name.length === 2) {
+            return name.slice(0, 1) + '*';
+        } else {
+            return name.slice(0, 1) + '*'.repeat(name.length - 2) + name.slice(-1)
+        }
     }
 
-    // 가운데 4자리를 '*'로 대체
-    var maskedNumber = phoneNumber.substring(0, 3) + '****' + phoneNumber.substring(7);
-    return maskedNumber;
-}
+    maskName('홍') // 홍
+    maskName('홍길') // 홍*
+    maskName('홍길동') // 홍*동
+    maskName('선우길동') // 선**동
+                    </code></pre>
 
-maskCellPhone('01012345678') // 010****5678
-// 전화번호에 하이픈이 있는경우 아래 함수를 이용하여 하이픈 제거 후 마스킹 적용
-maskCellPhone(convertToNumer('010-1234-5678')) // 010****5678
-                </code></pre>
-                <h3 data-ke-size="size20">전화번호 하이픈 제거</h3>
-                <p data-ke-size="size16">만약 전화번호에 하이픈('-')이 있다면 아래 함수를 통해 하이픈을 제거하여 사용 할 수 있다.</p>
-                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
-function convertToNumer(phoneNumber) {
-    // '-' 제거
-    var numericNumber = phoneNumber.replace(/-/g, '');
-    return numericNumber;
-}
+                    <h3 data-ke-size="size23">전화번호 마스킹</h3>
+                    <ul data-ke-list-type="disc">
+                        <li>전화번호는 11자리의 숫자로만 존재해야 한다.</li>
+                        <li>가운데 4자리를 *로 치환한다.</li>
+                    </ul>
+                    <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
+    function maskCellPhone(phoneNumber) {
+        // 휴대폰 번호가 11자리인지 확인
+        if (phoneNumber.length !== 11) {
+            console.error("휴대폰 번호는 11자리여야 합니다.");
+            return phoneNumber;
+        }
 
-convertToNumer('010-1234-5678') // 01012345678
-                </code></pre>
+        // 가운데 4자리를 '*'로 대체
+        var maskedNumber = phoneNumber.substring(0, 3) + '****' + phoneNumber.substring(7);
+        return maskedNumber;
+    }
 
-                <h3 data-ke-size="size23">계좌번호 마스킹</h3>
-                <ul data-ke-list-type="disc">
-                    <li>계좌번호 앞 3자리와 뒤 3자리를 제외한 나머지 숫자를 '*'로 치환된다.</li>
-                </ul>
-                <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
-function maskAccountNumber(accountNumber) {
-    const maskedNumber = accountNumber.slice(0, 3) + '*'.repeat(accountNumber.length - 6) + accountNumber.slice(-3);
-    return maskedNumber;
-}
-maskAccountNumber('234567040975542') // 234*********542
-                </code></pre>
-                
+    maskCellPhone('01012345678') // 010****5678
+    // 전화번호에 하이픈이 있는경우 아래 함수를 이용하여 하이픈 제거 후 마스킹 적용
+    maskCellPhone(convertToNumer('010-1234-5678')) // 010****5678
+                    </code></pre>
+                    <h3 data-ke-size="size20">전화번호 하이픈 제거</h3>
+                    <p data-ke-size="size16">만약 전화번호에 하이픈('-')이 있다면 아래 함수를 통해 하이픈을 제거하여 사용 할 수 있다.</p>
+                    <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
+    function convertToNumer(phoneNumber) {
+        // '-' 제거
+        var numericNumber = phoneNumber.replace(/-/g, '');
+        return numericNumber;
+    }
+
+    convertToNumer('010-1234-5678') // 01012345678
+                    </code></pre>
+
+                    <h3 data-ke-size="size23">계좌번호 마스킹</h3>
+                    <ul data-ke-list-type="disc">
+                        <li>계좌번호 앞 3자리와 뒤 3자리를 제외한 나머지 숫자를 '*'로 치환된다.</li>
+                    </ul>
+                    <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
+    function maskAccountNumber(accountNumber) {
+        const maskedNumber = accountNumber.slice(0, 3) + '*'.repeat(accountNumber.length - 6) + accountNumber.slice(-3);
+        return maskedNumber;
+    }
+    maskAccountNumber('234567040975542') // 234*********542
+                    </code></pre>
+                    
+                </div>
             </div>
         </div>
     </div>

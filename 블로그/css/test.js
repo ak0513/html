@@ -78,4 +78,40 @@ btnSample.forEach(function(item) {
     })
 })
 
+// 불러올 컨텐츠가 들어있는 URL
+var headerUrl = './header.html';
+var asideUrl = './aside.html';
 
+function loadData(url, targetElementId, callback) {
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Network response was not ok: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(data => {
+            const targetElement = document.getElementById(targetElementId);
+            if (targetElement) {
+                targetElement.innerHTML = data;
+                if (callback && typeof callback === 'function') {
+                    callback(); // 콜백 함수 호출
+					menuHtml() // 현재페이지 목차 노출
+                }
+            } else {
+                console.error(`Target element with ID '${targetElementId}' not found.`);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+}
+
+loadData(headerUrl, 'header');
+loadData(asideUrl, 'aside', callback);
+
+// callback 예시
+function callback() {
+	document.getElementById('callback').classList.add('callback')
+	// ui.menuHtml()
+}
