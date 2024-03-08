@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[JavaScript] URL 파라미터 값 가져오기</title>
+    <script src="../basic/js/common.js"></script>
+    <script src="../common/js/highlight.min.js"></script>
+    <script src="./css/test.js"></script><!-- highlight 미리 보기 위해 삽입 -->
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory_admin/userblog/tistory-4bde1fb20f0ffa5bc6d0d4a8edcb5c6bd4625b4b/static/style/content.css">
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory/4823763/skin/style.css">
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory_admin/userblog/tistory-4bde1fb20f0ffa5bc6d0d4a8edcb5c6bd4625b4b/static/style/uselessPMargin.css">
+    <link href="./css/font.css" rel="stylesheet" type="text/css">
+    <link href="./css/style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div id="wrap">
+        <div id="header"></div>
+        <div id="aside"></div>
+        <div id="tt-body-page">
+            <div class="area_view">
+                <div class="tt_article_useless_p_margin contents_style">
+                    <h2 data-ke-size="size26">URLSearchParams 객체 사용</h2>
+                    <p data-ke-size="size18">URL의 파라미터 값을 추출해야 할 경우가 생깁니다.</p>
+                    <p data-ke-size="size18">파마리터의 값을 가지고 분기처리를 할 수도 있고 해당 페이지 내부의 링크값을 변경할 수도 있는 등등 많은 곳에서 사용이 되고 있습니다.</p>
+                    <h3 data-ke-size="size23">모든 파라미터 구하기</h3>
+                    <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
+// URL 예시 : https://tistory.com/?name=apple&color=red
+
+// 현재 페이지의 URL을 가져옵니다.
+var urlParams = new URLSearchParams(window.location.search);
+
+// 모든 파라미터의 키-값 쌍을 출력합니다.
+for (var [key, value] of urlParams) {
+    console.log(key, value);
+    // name apple
+    // color red
+}
+                    </code></pre>
+
+                    <h3 data-ke-size="size23">특정 파마리터 구하기</h3>
+                    <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
+// URL 예시 : https://tistory.com/?name=apple&color=red
+
+// 현재 페이지의 URL을 가져옵니다.
+var urlParams = new URLSearchParams(window.location.search);
+
+console.log(urlParams.get('name')); // apple
+console.log(urlParams.get('color')); // red
+                        
+                    </code></pre>
+
+                </div>
+            </div>
+            <script>
+                // var btn = ui.getUrlParam('btn')
+                // console.log(btn) // 1
+
+                // var querystring2 = ui.getUrlParam('querystring2')
+                // console.log(querystring2) // 1
+
+                
+                // 현재 페이지의 URL을 가져옵니다.
+                var urlParams = new URLSearchParams(window.location.search);
+
+                // 모든 파라미터의 키-값 쌍을 출력합니다.
+                for (var [key, value] of urlParams) {
+                    console.group('모든 파라미터')
+                    console.log(key + ': ' + value);
+                    console.groupEnd();
+                }
+
+                // 특정 파라미터의 값을 가져옵니다.
+                var specificParamValue = urlParams.get('name');
+                console.group('특정 파라미터')
+                console.log(urlParams.get('name')); // apple
+                console.log(urlParams.get('color')); // red
+                console.groupEnd();
+            </script>
+        </div>
+    </div>
+</body>
+</html>

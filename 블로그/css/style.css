@@ -1,3 +1,6 @@
+:root {
+    --black : #0f0e10;
+}
 .area_view {width:770px;margin:0 auto;padding: 100px 0;}
 .google-auto-placed {display:none !important}
 
@@ -12,18 +15,17 @@
 .highlighter {background:linear-gradient(to top, #ffbb0074 40%, transparent 60%)}
 
 /* header */
-#header {display: none;}
-.logo {margin:0;font-size:2.4rem;}
+#header {display:flex;align-items:center;justify-content:center;position:fixed;top:0;left:0;right:0;z-index:20;height:60px;background-color: #fff;padding:0 24px;border-bottom:1px solid #e3e3e3;font-size:18px;font-weight:600;color:var(--black);}
 
 /* aside */
 .btn-menu {display:none;position:absolute;top:50%;left:20px;width:24px;height:24px;transform:translateY(-50%);}
 
-#aside {overflow:auto; position:fixed;top:0;left:0;z-index:10;width:220px;height:100%;padding:40px 24px;border-right:1px solid #e3e3e3;box-shadow:0 0 20px rgba(0,0,0,0.1)}
-.aside-menu-tit {font-size:16px;color:#000;font-weight:500;}
+#aside {overflow:auto; position:fixed;top:0;left:0;z-index:10;width:220px;height:100%;margin-top:60px;padding:40px 24px;border-right:1px solid #e3e3e3;box-shadow:0 0 20px rgba(0,0,0,0.1)}
+.aside-menu-tit {font-size:16px;color:var(--black);font-weight:500;}
 .aside-menu-group {margin-top:8px;}
 .aside-menu-group + .aside-menu-tit {margin-top:30px;}
 .aside-menu-link {display:block;font-size:14px;color:#888;transition: all 0.4s;}
-.aside-menu-link:hover {color:#000;}
+.aside-menu-link:hover {color:var(--black);}
 
 .aside-logo {display:flex;justify-content:center;gap:4px;margin-bottom:16px;}
 .aside-logo img {width:32px;height:32px;}

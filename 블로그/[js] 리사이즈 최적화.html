@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[JavaScript] 리사이즈 최적화</title>
+    <script src="../basic/js/common.js"></script>
+    <script src="../common/js/highlight.min.js"></script>
+    <script src="./css/test.js"></script><!-- highlight 미리 보기 위해 삽입 -->
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory_admin/userblog/tistory-4bde1fb20f0ffa5bc6d0d4a8edcb5c6bd4625b4b/static/style/content.css">
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory/4823763/skin/style.css">
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory_admin/userblog/tistory-4bde1fb20f0ffa5bc6d0d4a8edcb5c6bd4625b4b/static/style/uselessPMargin.css">
+    <link href="./css/font.css" rel="stylesheet" type="text/css">
+    <link href="./css/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header"></header>
+        <aside id="aside"></aside>
+        <div id="tt-body-page">
+            <div class="area_view">
+                <div class="tt_article_useless_p_margin contents_style">
+                    <h2 data-ke-size="size26">리사이즈 최적화</h2>
+                    <p data-ke-size="size16">resize 이벤트는 브라우저가 resize가 되는 동안 계속 실행이 되기 때문에 성능면에서 좋지 않다.</p>
+                    <pre class="javascript" data-ke-language="javascript" data-ke-type="codeblock"><code>
+var resizeTimer = null;
+function resizeComplete() {
+    // 리사이즈 후 사용할 함수
+    console.log('resize Complete');
+}
+
+window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resizeComplete, 400);
+}, false);
+                </code></pre>
+                </div>
+            </div>
+
+            <script>
+                var resizeTimer = null;
+                function resizeComplete() {
+                // 리사이즈 후 사용할 함수
+                console.log('resize Complete');
+                }
+        
+                window.addEventListener('resize', function() {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(resizeComplete, 400);
+                }, false);
+            </script>
+        </div>
+    </div>
+</body>
+</html>

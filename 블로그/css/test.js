@@ -106,10 +106,12 @@ function loadData(url, targetElementId, callback) {
         });
 }
 
-loadData(headerUrl, 'header');
-loadData(asideUrl, 'aside', callback);
+loadData(headerUrl, 'header', callback);
+loadData(asideUrl, 'aside');
 
 // callback 예시
 function callback() {
-	document.getElementById('callback').classList.add('callback')
+    var title = document.querySelector('title').textContent;
+    var header = document.getElementById('header');
+    header.textContent = title;
 }
