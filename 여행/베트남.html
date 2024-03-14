@@ -51,7 +51,8 @@
         .list-info-group {flex-grow:1;}
 
         .amount-group {display:flex;justify-content:flex-end;padding-top:16px;border-top:2px dashed #ddd;text-align:right;}
-        .amount-item + .amount-item {margin-left:8px;}
+        .amount-item + .amount-item {position:relative;margin-left:16px;}
+        .amount-item + .amount-item::before {content:'';display:block;position:absolute;top:50%;left:-8px;width:1px;height:8px;background-color:#ddd;transform:translateY(-50%);}
         .amount-currency {color:#999;font-size:12px;}
 
         .amount-total-group {margin-top:24px;padding:24px 16px 0;border-top:12px solid #ddd;text-align:right;}
@@ -584,7 +585,15 @@
                     output += `<ul class="amount-group">`;
                     for (var currency in currencyTotals) {
                         if (currencyTotals.hasOwnProperty(currency)) {
-                            output += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">(${currency})</span></li>`;
+                            var changeWon = null;
+                            if(exchange[currency][0] === 1) {
+                                changeWon = ''
+                            } else {
+                                changeWon = currencyTotals[currency] * exchange[currency][0];
+                                changeWon = '(' + changeWon.toLocaleString('ko-KR') + '원)'
+                            }
+                            output += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">${changeWon}</span></li>`;
+                            // output += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">(${currency})</span></li>`;
                         }
                     }
                     output += `</ul>`;
@@ -646,7 +655,15 @@
                 // output += `<h3>Currency-wise Totals<h3>`;
                 for (var currency in currencyTotals) {
                     if (currencyTotals.hasOwnProperty(currency)) {
-                    output += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">(${currency})</span></li>`;
+                        var changeWon = null;
+                            if(exchange[currency][0] === 1) {
+                                changeWon = ''
+                            } else {
+                                changeWon = currencyTotals[currency] * exchange[currency][0];
+                                changeWon = '(' + changeWon.toLocaleString('ko-KR') + '원)'
+                            }
+                            output += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">${changeWon}</span></li>`;
+                            // output += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">(${currency})</span></li>`;
                     }
                 }
                 output += `</ul>`;

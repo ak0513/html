@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>홍콩</title>
+    <title>스케쥴</title>
 </head>
 
 <body>
@@ -51,7 +51,8 @@
         .list-info-group {flex-grow:1;}
 
         .amount-group {display:flex;justify-content:flex-end;padding-top:16px;border-top:2px dashed #ddd;text-align:right;}
-        .amount-item + .amount-item {margin-left:8px;}
+        .amount-item + .amount-item {position:relative;margin-left:16px;}
+        .amount-item + .amount-item::before {content:'';display:block;position:absolute;top:50%;left:-8px;width:1px;height:8px;background-color:#ddd;transform:translateY(-50%);}
         .amount-currency {color:#999;font-size:12px;}
 
         .amount-total-group {margin-top:24px;padding:24px 16px 0;border-top:12px solid #ddd;text-align:right;}
@@ -79,7 +80,7 @@
         var totalAmountEle = document.getElementById('total');
         var exchange = {
             "KRW": [1, '원'], // 환율, 단위
-            "HKD": [0.05, '동'],
+            "HKD": [170, '달러'],
         };
         var myArray = [
             // 1일차
@@ -123,6 +124,67 @@
                 city: "홍콩",
                 currency: "KRW",
                 amount: 334198,
+            },
+
+            {
+                category: ['숙소','home'],
+                date: "2024.03.09",
+                name: "윙치케이 세나도 광장 점",
+                url: '',
+                desc: '',
+                city: "마카오",
+                currency: "HKD",
+                amount: 176,
+            },
+            {
+                category: ['숙소','home'],
+                date: "2024.03.09",
+                name: "바무 베이커리 하우스",
+                url: '',
+                desc: '',
+                city: "마카오",
+                currency: "HKD",
+                amount: 1,
+            },
+            {
+                category: ['숙소','home'],
+                date: "2024.03.09",
+                name: "레몬첼로 젤로또",
+                url: '',
+                desc: '',
+                city: "마카오",
+                currency: "HKD",
+                amount: 45,
+            },
+            {
+                category: ['숙소','home'],
+                date: "2024.03.09",
+                name: "노스",
+                url: '',
+                desc: '',
+                city: "마카오",
+                currency: "HKD",
+                amount: 475,
+            },
+            {
+                category: ['숙소','home'],
+                date: "2024.03.09",
+                name: "로드 스로우 베이커리 베네시안 마카오 리조트 점",
+                url: '',
+                desc: '',
+                city: "마카오",
+                currency: "HKD",
+                amount: 25,
+            },
+            {
+                category: ['숙소','home'],
+                date: "2024.03.09",
+                name: "쉐라톤 그랜드 마카오 카지노",
+                url: '',
+                desc: '',
+                city: "마카오",
+                currency: "HKD",
+                amount: 35,
             },
         ];
 
@@ -178,7 +240,14 @@
                     output += `<ul class="amount-group">`;
                     for (var currency in currencyTotals) {
                         if (currencyTotals.hasOwnProperty(currency)) {
-                            output += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">(${currency})</span></li>`;
+                            var changeWon = null;
+                            if(exchange[currency][0] === 1) {
+                                changeWon = ''
+                            } else {
+                                changeWon = currencyTotals[currency] * exchange[currency][0];
+                                changeWon = '(' + changeWon.toLocaleString('ko-KR') + '원)'
+                            }
+                            output += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">${changeWon}</span></li>`;
                         }
                     }
                     output += `</ul>`;
@@ -240,7 +309,15 @@
                 // output += `<h3>Currency-wise Totals<h3>`;
                 for (var currency in currencyTotals) {
                     if (currencyTotals.hasOwnProperty(currency)) {
-                    output += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">(${currency})</span></li>`;
+                        var changeWon = null;
+                        if(exchange[currency][0] === 1) {
+                            changeWon = ''
+                        } else {
+                            changeWon = currencyTotals[currency] * exchange[currency][0];
+                            changeWon = '(' + changeWon.toLocaleString('ko-KR') + '원)'
+                        }
+                        output += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">${changeWon}</span></li>`;
+                        // output += `<li class="amount-item"><b>${currencyTotals[currency].toLocaleString('ko-KR')}</b>${exchange[currency][1]}<span class="amount-currency">(${currency})</span></li>`;
                     }
                 }
                 output += `</ul>`;
