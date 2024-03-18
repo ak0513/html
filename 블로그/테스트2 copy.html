@@ -1,199 +1,52 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8" />
-  <title>Swiper demo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
-  <!-- Link Swiper's CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scroll Object Fixation</title>
+<style>
+  #fixedObject {
+    position: relative;
+    width: 100%;
+    background-color: #ccc;
+    padding: 10px;
+  }
 
-  <!-- Demo styles -->
-  <style>
-    html,
-    body {
-      position: relative;
-      height: 100%;
-    }
-
-    body {
-      background: #eee;
-      font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-      font-size: 14px;
-      color: #000;
-      margin: 0;
-      padding: 0;
-    }
-
-    .swiper {
-      width: 100%;
-      height: 100%;
-    }
-
-    .swiper-slide {
-      text-align: center;
-      font-size: 18px;
-      background: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .swiper-slide img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    body {
-      background: #000;
-      color: #000;
-    }
-
-    .swiper {
-      width: 100%;
-      height: 300px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .swiper-slide {
-      background-size: cover;
-      background-position: center;
-    }
-
-    .mySwiper2 {
-      height: 80%;
-      width: 100%;
-    }
-
-    .mySwiper {
-      height: 20%;
-      box-sizing: border-box;
-      padding: 10px 0;
-    }
-
-    .mySwiper .swiper-slide {
-      width: 25%;
-      height: 100%;
-      opacity: 0.4;
-    }
-
-    .mySwiper .swiper-slide-thumb-active {
-      opacity: 1;
-    }
-
-    .swiper-slide img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  </style>
+  #fixedObject.fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+</style>
 </head>
-
 <body>
-  <!-- Swiper -->
+  <div style="height:2000px"></div>
+<div id="fixedObject">고정할 오브젝트</div>
 
-  <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="swiper mySwiper2">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide no">
-        <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
-      </div>
-      <div class="swiper-slide no">
-        <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-10.jpg" />
-      </div>
-    </div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-  </div>
-  
-  <div thumbsSlider="" class="swiper mySwiper">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
-      </div>
-      <div class="swiper-slide">
-        <img src="https://swiperjs.com/demos/images/nature-10.jpg" />
-      </div>
-    </div>
-  </div>
+<div id="content">
+  <!-- 페이지 콘텐츠 -->
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pharetra justo a diam malesuada feugiat. Nulla facilisi. Mauris auctor eros euismod nunc laoreet, nec molestie sapien aliquam. Nulla facilisi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Ut et quam mi. Vivamus varius odio eu dui ullamcorper ultrices. Suspendisse nec augue nec nulla consequat faucibus. Etiam posuere, est nec auctor rutrum, libero ligula auctor mi, id convallis nisi odio eu tortor. Maecenas nec tortor id orci mattis sollicitudin.</p>
+  <p>Nullam aliquet turpis at velit aliquet, eget suscipit purus cursus. Integer accumsan sed lectus nec venenatis. Pellentesque blandit sapien nec nulla commodo fermentum. Aenean efficitur felis id scelerisque lobortis. Ut accumsan diam non luctus feugiat. Duis vel dolor dui. Aenean commodo mi vitae efficitur dictum. Duis nec magna non turpis placerat finibus. In id arcu et justo sodales viverra et id arcu. Fusce vel tortor sed mauris rhoncus hendrerit. Phasellus sit amet urna bibendum, congue neque sed, posuere tortor. Sed id ultrices dui, vel consectetur orci. Integer sit amet blandit arcu.</p>
+</div>
+<div style="height:2000px"></div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var fixedObject = document.getElementById("fixedObject");
+    // var content = document.getElementById("content");
 
-  <!-- Swiper JS -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    var objectTopOffset = fixedObject.offsetTop;
 
-  <!-- Initialize Swiper -->
-  <script>
-    var swiperA = new Swiper(".mySwiper", {
-      spaceBetween: 10,
-      slidesPerView: 4,
-      freeMode: true,
-      watchSlidesProgress: true,
-      
-    });
-    var swiperB = new Swiper(".mySwiper2", {
-      spaceBetween: 10,
-      navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-      },
-      thumbs: {
-        swiper: swiperA,
-      },
-      noSwiping: true,
-      noSwipingClass: 'no',
-    });
-  </script>
+    function fixObject() {
+      if (window.pageYOffset >= objectTopOffset) {
+        fixedObject.classList.add("fixed");
+      } else {
+        fixedObject.classList.remove("fixed");
+      }
+    }
+
+    window.addEventListener("scroll", fixObject);
+  });
+</script>
 </body>
-
 </html>

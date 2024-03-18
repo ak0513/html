@@ -1,74 +1,98 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>JSON 파일 생성하기</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scroll with Hash</title>
+<style>
+  /* Optional: Add some styles for demonstration */
+  body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+  }
+  section {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+  }
+  #sectionA {
+    background-color: #ffcccc;
+  }
+  #sectionB {
+    background-color: #ccffcc;
+  }
+  /* Add more sections and styles as needed */
+  .active {
+    background-color: #c4c4c4;
+  }
+</style>
 </head>
 <body>
 
-<table id="myTable">
-    <tr>
-        <td>date</td>
-        <td>number</td>
-        <td>name</td>
-    </tr>
-    <tr>
-        <td>1</td>
-        <td>2</td>
-        <td>3</td>
-    </tr>
-    <tr>
-        <td>4</td>
-        <td>5</td>
-        <td>6</td>
-    </tr>
-</table>
-<button onclick="createJSON()">JSON 파일 생성</button>
-<div id="json"></div>
+<section id="sectionA">
+  <h2>Section A</h2>
+  <button onclick="scrollToSection('sectionA')" data-target="sectionA">Scroll to A</button>
+</section>
+
+<section id="sectionB">
+  <h2>Section B</h2>
+  <button onclick="scrollToSection('sectionB')" data-target="sectionB">Scroll to B</button>
+</section>
+
+<!-- Add more sections as needed -->
+
 <script>
-function createJSON() {
-    var table = document.getElementById('myTable');
-    var rows = table.rows;
-    var jsonData = [];
+  // Function to scroll to a specific section by ID
+  function scrollToSection(sectionId) {
+    const targetSection = document.getElementById(sectionId);
+    const yOffset = -50; // Optional offset if you have a fixed header
+    const y = targetSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
 
-    // 첫 번째 행은 헤더이므로 제외하고 데이터를 가져옴
-    for (var i = 1; i < rows.length; i++) {
-        var row = rows[i];
-        var rowData = {};
+    window.scrollTo({top: y, behavior: 'smooth'});
+    setActiveButton(sectionId);
+  }
 
-        // 각 행의 td 값을 가져와서 JSON 객체에 추가
-        for (var j = 0; j < row.cells.length; j++) {
-            var cell = row.cells[j];
-            var header = table.rows[0].cells[j].innerText;
-            rowData[header] = cell.innerText;
-        }
+  // Function to set active button based on section ID
+  function setActiveButton(sectionId) {
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(function(button) {
+      if (button.getAttribute('data-target') === sectionId) {
+        button.classList.add('active');
+      } else {
+        button.classList.remove('active');
+      }
+    });
+  }
 
-        jsonData.push(rowData);
+  // Set active button and hash on initial load
+  window.addEventListener('DOMContentLoaded', function() {
+    const hash = window.location.hash.substring(1); // Remove '#' from hash
+    if (hash) {
+      setActiveButton(hash);
     }
+  });
 
-    // JSON 문자열로 변환 (따옴표 제거)
-    var jsonString = JSON.stringify(jsonData, null, 0).replace(/\"/g, '');
-
-    // JSON 파일 생성
-    var blob = new Blob([jsonString], {type: "application/json"});
-    var url = URL.createObjectURL(blob);
-
-    // 다운로드 링크 생성
-    var a = document.createElement('a');
-    a.download = 'data.json';
-    a.href = url;
-    a.textContent = 'JSON 파일 다운로드';
-
-    // 링크를 추가하고 클릭
-    document.body.appendChild(a);
-    a.click();
-
-    // 링크 제거
-    document.body.removeChild(a);
-}
-    document.getElementById('json').innerHTML = jsonString
-console.log(jsonString)
-
-[{date:1,number:2,name:3},{date:4,number:5,name:6}]
+  // Set active button and hash on scroll
+  window.addEventListener('scroll', function() {
+    const scrollPosition = window.scrollY;
+    const sections = document.querySelectorAll('section');
+    sections.forEach(function(section) {
+      const top = section.offsetTop;
+      const bottom = top + section.offsetHeight;
+      if (scrollPosition >= top && scrollPosition < bottom) {
+        setActiveButton(section.id);
+        if (history.replaceState) {
+          history.replaceState(null, null, '#' + section.id);
+        } else {
+          window.location.hash = '#' + section.id;
+        }
+      }
+    });
+  });
 </script>
 
 </body>

@@ -1,91 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>JSON 파일 생성하기</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scroll Effect</title>
+<style>
+  .container {
+    position: relative;
+  }
+  .box {
+    background-color: lightblue;
+    margin-bottom: 10px;
+  }
+  #A {
+    background-color: lightgreen;
+    width: 100%;
+    transition: top 0.3s;
+  }
+  #B {
+    background-color: lightcoral;
+    margin-top: 20px;
+  }
+  .fixed {
+    position: fixed;
+    top: 0;
+  }
+</style>
 </head>
 <body>
 
-<table id="myTable">
-    <tr>
-        <td>date</td>
-        <td>number</td>
-        <td>name</td>
-    </tr>
-    <tr>
-        <td>1</td>
-        <td>2</td>
-        <td>3</td>
-    </tr>
-    <tr>
-        <td>4</td>
-        <td>5</td>
-        <td>6</td>
-    </tr>
-    <tr>
-        <td>4</td>
-        <td>5</td>
-        <td>6</td>
-    </tr>
-    <tr>
-        <td>4</td>
-        <td>5</td>
-        <td>6</td>
-    </tr>
-    <tr>
-        <td>4</td>
-        <td>5</td>
-        <td>6</td>
-    </tr>
-</table>
-<button onclick="createJSON()">JSON 파일 생성</button>
-<div id="json"></div>
+<div class="container">
+  <div class="box" id="box1" style="height:300px"></div>
+  <div class="box" id="box2" style="height:300px"></div>
+  <div class="buttons" id="A">
+    <button>Button</button>
+  </div>
+  <div class="sections" id="B" style="height:2000px"></div>
+  <div style="height:4000px"></div>
+</div>
+
 <script>
-function createJSON() {
-    var table = document.getElementById('myTable');
-    var rows = table.rows;
-    var jsonData = [];
+window.onload = function() {
+  var buttons = document.getElementById('A');
+  var sections = document.getElementById('B');
+  var buttonsHeight = buttons.offsetHeight;
+  var sectionsHeight = sections.offsetHeight;
 
-    // 첫 번째 행은 헤더이므로 제외하고 데이터를 가져옴
-    for (var i = 1; i < rows.length; i++) {
-        var row = rows[i];
-        var rowData = {};
+  window.addEventListener('scroll', function() {
+    var scroll = window.scrollY || window.pageYOffset;
 
-        // 각 행의 td 값을 가져와서 JSON 객체에 추가
-        for (var j = 0; j < row.cells.length; j++) {
-            var cell = row.cells[j];
-            var header = table.rows[0].cells[j].innerText;
-            rowData[header] = cell.innerText;
-        }
-
-        jsonData.push(rowData);
+    // If scrolled past buttons, fix them to the top
+    if (scroll >= buttons.offsetTop && !buttons.classList.contains('fixed')) {
+      buttons.classList.add('fixed');
+    } else if (scroll < buttons.offsetTop && buttons.classList.contains('fixed')) {
+      buttons.classList.remove('fixed');
     }
 
-    // JSON 문자열로 변환 (따옴표 제거)
-    var jsonString = JSON.stringify(jsonData, null, 0).replace(/\"/g, '');
+    // If buttons are fixed and scrolled up to their original position, unfix them
+    if (buttons.classList.contains('fixed') && scroll < buttonsHeight) {
+      buttons.classList.remove('fixed');
+    }
 
-    // JSON 파일 생성
-    var blob = new Blob([jsonString], {type: "application/json"});
-    var url = URL.createObjectURL(blob);
-
-    // 다운로드 링크 생성
-    var a = document.createElement('a');
-    a.download = 'data.json';
-    a.href = url;
-    a.textContent = 'JSON 파일 다운로드';
-
-    // 링크를 추가하고 클릭
-    document.body.appendChild(a);
-    a.click();
-
-    // 링크 제거
-    document.body.removeChild(a);
-
-    document.getElementById('json').innerHTML = jsonString
-    console.log(jsonString)
-}
-
-
-[{date:1,number:2,name:3},{date:4,number:5,name:6}]
+    // If buttons are fixed and scrolled down to the end of sections, unfix them
+    if (buttons.classList.contains('fixed') && scroll > sectionsHeight + sections.offsetTop - window.innerHeight) {
+      buttons.classList.remove('fixed');
+    }
+  });
+};
 </script>
 
 </body>
