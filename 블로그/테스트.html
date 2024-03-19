@@ -3,71 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scroll Effect</title>
+<title>Hidden Scrollbar with JavaScript</title>
 <style>
-  .container {
-    position: relative;
-  }
-  .box {
-    background-color: lightblue;
-    margin-bottom: 10px;
-  }
-  #A {
-    background-color: lightgreen;
-    width: 100%;
-    transition: top 0.3s;
-  }
-  #B {
-    background-color: lightcoral;
-    margin-top: 20px;
-  }
-  .fixed {
-    position: fixed;
-    top: 0;
-  }
+    .scrollable-content {
+        width: 300px; /* 콘텐츠의 너비 설정 */
+        height: 200px; /* 콘텐츠의 높이 설정 */
+        overflow: hidden; /* 스크롤바 감추기 */
+    }
+
+    .scrollable-content-inner {
+        width: 100%; /* 내부 컨텐츠의 너비 설정 */
+        height: 100%; /* 내부 컨텐츠의 높이 설정 */
+        overflow-y: auto; /* 세로 스크롤만 허용 */
+    }
 </style>
 </head>
 <body>
-
-<div class="container">
-  <div class="box" id="box1" style="height:300px"></div>
-  <div class="box" id="box2" style="height:300px"></div>
-  <div class="buttons" id="A">
-    <button>Button</button>
-  </div>
-  <div class="sections" id="B" style="height:2000px"></div>
-  <div style="height:4000px"></div>
-</div>
+    <div class="scrollable-content">
+        <div class="scrollable-content-inner">
+            <!-- 내용 -->
+            <p>여기에 스크롤 가능한 콘텐츠가 들어갑니다.</p>
+            <!-- 콘텐츠가 더 많은 경우 스크롤바가 나타납니다. -->
+        </div>
+    </div>
 
 <script>
-window.onload = function() {
-  var buttons = document.getElementById('A');
-  var sections = document.getElementById('B');
-  var buttonsHeight = buttons.offsetHeight;
-  var sectionsHeight = sections.offsetHeight;
+    // JavaScript를 사용하여 스크롤바를 숨깁니다.
+    document.addEventListener('DOMContentLoaded', function() {
+        var scrollableContent = document.querySelector('.scrollable-content-inner');
 
-  window.addEventListener('scroll', function() {
-    var scroll = window.scrollY || window.pageYOffset;
-
-    // If scrolled past buttons, fix them to the top
-    if (scroll >= buttons.offsetTop && !buttons.classList.contains('fixed')) {
-      buttons.classList.add('fixed');
-    } else if (scroll < buttons.offsetTop && buttons.classList.contains('fixed')) {
-      buttons.classList.remove('fixed');
-    }
-
-    // If buttons are fixed and scrolled up to their original position, unfix them
-    if (buttons.classList.contains('fixed') && scroll < buttonsHeight) {
-      buttons.classList.remove('fixed');
-    }
-
-    // If buttons are fixed and scrolled down to the end of sections, unfix them
-    if (buttons.classList.contains('fixed') && scroll > sectionsHeight + sections.offsetTop - window.innerHeight) {
-      buttons.classList.remove('fixed');
-    }
-  });
-};
+        // 스크롤 이벤트 핸들러를 추가하여 스크롤 동작을 처리합니다.
+        scrollableContent.addEventListener('wheel', function(event) {
+            var deltaY = event.deltaY;
+            var currentScrollTop = scrollableContent.scrollTop;
+            scrollableContent.scrollTop = currentScrollTop - deltaY;
+            event.preventDefault();
+        });
+    });
 </script>
-
 </body>
 </html>
