@@ -3,97 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scroll with Hash</title>
+<title>Fixed Text Positioning</title>
 <style>
-  /* Optional: Add some styles for demonstration */
-  body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
+  /* Fixed Text 스타일 */
+  .fixed-text {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
   }
-  section {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f0f0f0;
+  /* A 영역 스타일 */
+  .content {
+    height: 2000px;
   }
-  #sectionA {
-    background-color: #ffcccc;
-  }
-  #sectionB {
-    background-color: #ccffcc;
-  }
-  /* Add more sections and styles as needed */
-  .active {
-    background-color: #c4c4c4;
-  }
+
+  .fixed-text.scroll-detected {color:red}
 </style>
 </head>
 <body>
 
-<section id="sectionA">
-  <h2>Section A</h2>
-  <button onclick="scrollToSection('sectionA')" data-target="sectionA">Scroll to A</button>
-</section>
+<div class="content">
+  <!-- A 영역 -->
+  <div style="height:10000px"></div>
+  <div id="a-section" style="margin-top:100px">
+    A 영역입니다.
+  </div>
+  <div style="height:10000px"></div>
+</div>
 
-<section id="sectionB">
-  <h2>Section B</h2>
-  <button onclick="scrollToSection('sectionB')" data-target="sectionB">Scroll to B</button>
-</section>
-
-<!-- Add more sections as needed -->
+<div class="fixed-text">Fixed된 텍스트</div>
 
 <script>
-  // Function to scroll to a specific section by ID
-  function scrollToSection(sectionId) {
-    const targetSection = document.getElementById(sectionId);
-    const yOffset = -50; // Optional offset if you have a fixed header
-    const y = targetSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+window.addEventListener('scroll', function() {
+  var fixedText = document.querySelector('.fixed-text');
+  var aSection = document.getElementById('a-section');
+  var rect = aSection.getBoundingClientRect();
 
-    window.scrollTo({top: y, behavior: 'smooth'});
-    setActiveButton(sectionId);
+  // A 영역이 fixed된 텍스트와 겹치는지 확인
+  if (rect.top < window.innerHeight - fixedText.offsetHeight) {
+    // 겹친다면 body에 클래스 추가
+    fixedText.classList.add('scroll-detected');
+  } else {
+    // 겹치지 않는다면 body 클래스 제거
+    fixedText.classList.remove('scroll-detected');
   }
-
-  // Function to set active button based on section ID
-  function setActiveButton(sectionId) {
-    const buttons = document.querySelectorAll('button');
-    buttons.forEach(function(button) {
-      if (button.getAttribute('data-target') === sectionId) {
-        button.classList.add('active');
-      } else {
-        button.classList.remove('active');
-      }
-    });
-  }
-
-  // Set active button and hash on initial load
-  window.addEventListener('DOMContentLoaded', function() {
-    const hash = window.location.hash.substring(1); // Remove '#' from hash
-    if (hash) {
-      setActiveButton(hash);
-    }
-  });
-
-  // Set active button and hash on scroll
-  window.addEventListener('scroll', function() {
-    const scrollPosition = window.scrollY;
-    const sections = document.querySelectorAll('section');
-    sections.forEach(function(section) {
-      const top = section.offsetTop;
-      const bottom = top + section.offsetHeight;
-      if (scrollPosition >= top && scrollPosition < bottom) {
-        setActiveButton(section.id);
-        if (history.replaceState) {
-          history.replaceState(null, null, '#' + section.id);
-        } else {
-          window.location.hash = '#' + section.id;
-        }
-      }
-    });
-  });
+});
 </script>
+
+<style>
+  
+</style>
 
 </body>
 </html>

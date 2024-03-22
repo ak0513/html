@@ -1,52 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scroll Object Fixation</title>
-<style>
-  #fixedObject {
-    position: relative;
-    width: 100%;
-    background-color: #ccc;
-    padding: 10px;
-  }
-
-  #fixedObject.fixed {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swiper Test</title>
+  <!-- Include Swiper CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
 </head>
 <body>
-  <div style="height:2000px"></div>
-<div id="fixedObject">고정할 오브젝트</div>
+    <!-- Include Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
-<div id="content">
-  <!-- 페이지 콘텐츠 -->
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pharetra justo a diam malesuada feugiat. Nulla facilisi. Mauris auctor eros euismod nunc laoreet, nec molestie sapien aliquam. Nulla facilisi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Ut et quam mi. Vivamus varius odio eu dui ullamcorper ultrices. Suspendisse nec augue nec nulla consequat faucibus. Etiam posuere, est nec auctor rutrum, libero ligula auctor mi, id convallis nisi odio eu tortor. Maecenas nec tortor id orci mattis sollicitudin.</p>
-  <p>Nullam aliquet turpis at velit aliquet, eget suscipit purus cursus. Integer accumsan sed lectus nec venenatis. Pellentesque blandit sapien nec nulla commodo fermentum. Aenean efficitur felis id scelerisque lobortis. Ut accumsan diam non luctus feugiat. Duis vel dolor dui. Aenean commodo mi vitae efficitur dictum. Duis nec magna non turpis placerat finibus. In id arcu et justo sodales viverra et id arcu. Fusce vel tortor sed mauris rhoncus hendrerit. Phasellus sit amet urna bibendum, congue neque sed, posuere tortor. Sed id ultrices dui, vel consectetur orci. Integer sit amet blandit arcu.</p>
-</div>
-<div style="height:2000px"></div>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    var fixedObject = document.getElementById("fixedObject");
-    // var content = document.getElementById("content");
+    <!-- Script for Swiper initialization and moveToSlide function -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var mySwiper = new Swiper('.swiper-container', {
+          pagination: {
+            el: '.swiper-pagination',
+          },
+        });
+  
+        function moveToSlide(num) {
+          mySwiper.slideTo(num);
+        }
+  
+        // Function to be accessed globally
+        window.moveToSlide = moveToSlide;
+      });
+    </script>
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">Slide 1</div>
+      <div class="swiper-slide">Slide 2</div>
+      <div class="swiper-slide">Slide 3</div>
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
 
-    var objectTopOffset = fixedObject.offsetTop;
 
-    function fixObject() {
-      if (window.pageYOffset >= objectTopOffset) {
-        fixedObject.classList.add("fixed");
-      } else {
-        fixedObject.classList.remove("fixed");
-      }
-    }
 
-    window.addEventListener("scroll", fixObject);
-  });
-</script>
+  <!-- Button to move to a specific slide -->
+  <button onclick="moveToSlide(1)">Move to Slide 2</button>
 </body>
 </html>
