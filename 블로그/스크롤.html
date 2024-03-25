@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scroll Position Detection</title>
+<style>
+.container {
+}
+
+.object {
+  height: 200px;
+  position: relative;
+  background-color: antiquewhite;
+}
+
+#fixedButton {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 100px;
+  background-color: blue; /* 초기 컬러 설정 */
+}
+
+.insideObject {
+  background-color: red !important;
+}
+</style>
+</head>
+<body>
+
+  <div class="container">
+    <div style="height: 2000px;"></div>
+    <div class="object" id="object">A 오브젝트 내용</div>
+    <button id="fixedButton">Fixed 버튼</button>
+    <div style="height: 2000px;"></div>
+  </div>
+  
+
+<script>
+function addInsideObjectClass(buttonId, objectId) {
+  var button = document.getElementById(buttonId);
+  var object = document.getElementById(objectId);
+ㅋ
+  // 스크롤 이벤트 감지
+  window.addEventListener('scroll', function() {
+    var buttonRect = button.getBoundingClientRect();
+    var objectRect = object.getBoundingClientRect();
+
+    // 버튼이 오브젝트 내부에 있는지 확인
+    if (buttonRect.top >= objectRect.top && buttonRect.bottom <= objectRect.bottom) {
+      button.classList.add('insideObject'); // 버튼에 클래스 추가
+    } else {
+      button.classList.remove('insideObject'); // 버튼에서 클래스 제거
+    }
+  });
+}
+
+// 함수 호출
+addInsideObjectClass('fixedButton', 'object');
+</script>
+
+</body>
+</html>

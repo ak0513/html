@@ -1,45 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Swiper Test</title>
-  <!-- Include Swiper CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-</head>
-<body>
-    <!-- Include Swiper JS -->
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
-    <!-- Script for Swiper initialization and moveToSlide function -->
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        var mySwiper = new Swiper('.swiper-container', {
-          pagination: {
-            el: '.swiper-pagination',
-          },
-        });
-  
-        function moveToSlide(num) {
-          mySwiper.slideTo(num);
-        }
-  
-        // Function to be accessed globally
-        window.moveToSlide = moveToSlide;
-      });
-    </script>
-  <div class="swiper-container">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide">Slide 1</div>
-      <div class="swiper-slide">Slide 2</div>
-      <div class="swiper-slide">Slide 3</div>
-    </div>
-    <div class="swiper-pagination"></div>
-  </div>
-
-
-
-  <!-- Button to move to a specific slide -->
-  <button onclick="moveToSlide(1)">Move to Slide 2</button>
-</body>
-</html>
+<style>
+  #object {background-color: gainsboro;}
+  .fixed {position: fixed;bottom:100px;left:0;right:0;}
+  #fixedButton {width:100%;height:300px;background-color: rebeccapurple;}
+</style>
+<div class="container">
+  <div style="height: 2000px;"></div>
+  <div class="object">A 오브젝트 내용</div>
+  <button id="fixedButton" class="fixed">Fixed 버튼</button>
+  <div style="height: 2000px;"></div>
+</div>
+스크롤을 움직이면 아래와 같이 동작하게 만들어줘
+1. fixedButton에 fixed가 있는 경우 fixedButton이 object하단에 위치하면 fixed를 제거한다.
+2. fixedButton에 fixed가 없는 경우 fixedButton이 object하단에 위치하면 fixed를 붙인다.

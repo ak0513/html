@@ -3,60 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fixed Text Positioning</title>
+<title>Scroll Height Change</title>
 <style>
-  /* Fixed Text 스타일 */
-  .fixed-text {
+  /* 스타일링을 위한 CSS */
+  #object {
+    width: 100px;
+    height: 500px; /* 초기 높이 설정 */
+    background-color: blue;
     position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #333;
-    color: #fff;
-    padding: 10px;
-    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: height 0.5s; /* 높이 변경에 대한 애니메이션 효과 */
   }
-  /* A 영역 스타일 */
-  .content {
-    height: 2000px;
-  }
-
-  .fixed-text.scroll-detected {color:red}
 </style>
 </head>
 <body>
 
-<div class="content">
-  <!-- A 영역 -->
-  <div style="height:10000px"></div>
-  <div id="a-section" style="margin-top:100px">
-    A 영역입니다.
-  </div>
-  <div style="height:10000px"></div>
-</div>
-
-<div class="fixed-text">Fixed된 텍스트</div>
+<div id="object"></div>
 
 <script>
 window.addEventListener('scroll', function() {
-  var fixedText = document.querySelector('.fixed-text');
-  var aSection = document.getElementById('a-section');
-  var rect = aSection.getBoundingClientRect();
+  var scrollPosition = window.scrollY;
 
-  // A 영역이 fixed된 텍스트와 겹치는지 확인
-  if (rect.top < window.innerHeight - fixedText.offsetHeight) {
-    // 겹친다면 body에 클래스 추가
-    fixedText.classList.add('scroll-detected');
-  } else {
-    // 겹치지 않는다면 body 클래스 제거
-    fixedText.classList.remove('scroll-detected');
-  }
+  // 스크롤 위치에 따라 오브젝트의 높이를 보간하여 계산
+  var objectHeight = interpolateHeight(scrollPosition);
+
+  // 오브젝트의 높이 설정
+  document.getElementById('object').style.height = objectHeight + 'px';
 });
+
+// 보간 함수 정의
+function interpolateHeight(scrollPosition) {
+  var minScroll = 0;
+  var maxScroll = 100;
+  var startHeight = 500;
+  var endHeight = 300;
+
+  // 보간 계산
+  var t = Math.max(0, Math.min(1, (scrollPosition - minScroll) / (maxScroll - minScroll)));
+  var interpolatedHeight = startHeight + (endHeight - startHeight) * t;
+
+  return interpolatedHeight;
+}
 </script>
 
-<style>
-  
-</style>
+<!-- 스크롤 영역을 추가하기 위한 여분의 높이 -->
+<div style="height: 2000px;"></div>
 
 </body>
 </html>
