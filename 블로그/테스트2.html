@@ -3,44 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3D Rotation Animation</title>
+<title>예 아니오 얼랏 창</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
-  .container {
-    margin-left:200px;
-    perspective: 1000px; /* 원근 거리 설정 */
-    position: relative;
-  }
-
-  .cube {
-    position: absolute;
-    transform-style: preserve-3d; /* 요소에 3D 변환 적용 */
-    animation: rotateCube 8s linear infinite; /* 애니메이션 적용 */
-  }
-
-
-
-  /* 각 면의 클래스 지정 */
-  .front { transform: translateZ(100px); }
-  .back { transform: rotateY(180deg) translateZ(100px); }
-  .left { transform: rotateY(-90deg) translateZ(300px); }
-  .right { transform: rotateY(90deg) translateZ(100px); }
-  .top { transform: rotateX(90deg) translateZ(100px); }
-  .bottom { transform: rotateX(-90deg) translateZ(100px); }
-
-  /* 회전 애니메이션 키 프레임 설정 */
-  @keyframes rotateCube {
-    0% { transform: rotateY(0deg); }
-    100% { transform: rotateY(360deg); }
-  }
+    /* CSS 스타일링 */
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="cube">
-    
-    <div class="face left"><div style="transform: rotate(90deg);"><img src="https://gongu.copyright.or.kr/gongu/wrt/cmmn/wrtFileImageView.do?wrtSn=13296907&filePath=L2Rpc2sxL25ld2RhdGEvMjAyMS8yMS9DTFMxMDAwNC8xMzI5NjkwN19XUlRfMjFfQ0xTMTAwMDRfMjAyMTEyMTNfMQ==&thumbAt=Y&thumbSe=b_tbumb&wrtTy=10004"></div></div>
 
-  </div>
-</div>
+<label>
+    <input type="radio" name="group1" value="예"> 예
+</label>
+<label>
+    <input type="radio" name="group1" value="아니오"> 아니오
+</label>
+
+<label>
+    <input type="radio" name="group2" value="예"> 예
+</label>
+<label>
+    <input type="radio" name="group2" value="아니오"> 아니오
+</label>
+
+<script>
+    // jQuery 코드
+    $(document).ready(function() {
+        $('input[type="radio"]').change(function() {
+            if ($('input[name="group1"]:checked').val() === '예' && $('input[name="group2"]:checked').val() === '예') {
+                alert('두 개의 라디오 버튼 쌍에서 모두 "예"가 선택되었습니다!');
+            }
+        });
+    });
+</script>
+
 </body>
 </html>

@@ -19,6 +19,7 @@
             <button type="button" class="sort-btn" data-id="data-container2">코코(번호)</button>
             <button type="button" class="sort-btn" data-id="data-container3">맘스</button>
             <button type="button" class="sort-btn" data-id="data-container4">개봉역</button>
+            <button type="button" class="sort-btn" data-id="data-container5">슈퍼맨</button>
         </div>
     </header>
     <main id="main">
@@ -26,6 +27,7 @@
         <div id="data-container2" class="list-wrap"></div>
         <div id="data-container3" class="list-wrap"></div>
         <div id="data-container4" class="list-wrap"></div>
+        <div id="data-container5" class="list-wrap"></div>
     </main>
 </div>
 
@@ -83,6 +85,7 @@
     .list-date,
     .list-number {font-size:12px;color:#666;}
     .list-name {font-size:16px;font-weight:600;}
+    .list-event {font-size:12px;font-weight:400;color:#da251c;}
     .list-weight {font-size:14px;color:#666;font-weight:400;}
     .list-by-unit {font-size:14px;color:#666;}
     .list-amount-group {font-size:12px;}
@@ -102,7 +105,8 @@
 
     #data-container .list-date,
     #data-container3 .list-date,
-    #data-container4 .list-date {display:none;}
+    #data-container4 .list-date,
+    #data-container5 .list-date {display:none;}
     #data-container2 .list-number {display:none;}
     #data-container2 .total-amount {display:none;}
 
@@ -183,7 +187,12 @@ var data2 = [
 // 개봉역
 var data3 = [
     { date: "2024.02.29", number: 8801121020968, name: "매일우유오리지널", amount: 5150, discount: 0, weight:1800, unit:'㎖'},
-    { date: "2024.03.20", number: 8801121020968, name: "매일우유오리지널", amount: 2980, discount: 0, weight:1800, unit:'㎖'},
+    { date: "2024.03.20", number: 8801121020968, name: "매일우유오리지널", amount: 3980, discount: 0, weight:1800, unit:'㎖', event:'행사'},
+]
+
+// 슈퍼맨
+var data4 = [
+    { date: "2024.02.29", number: 8801121020968, name: "매일우유오리지널", amount: 5150, discount: 0, weight:1800, unit:'㎖'},
 ]
 
 // 날짜와 넘버로 그룹화하고 소팅하는 함수
@@ -289,9 +298,13 @@ function renderData(data, container, sort) {
             if(item.weight === 0) {
                 div.classList.add('no-weight')
             }
-             // 이미지가 없는 경우 노출 제외
-             if(item.img !== true) {
+            // 이미지가 없는 경우 노출 제외
+            if(item.img !== true) {
                 div.classList.add('no-img')
+            }
+            // 이벤트가 있는 경우 노출
+            if(item.event === undefined) {
+                item.event = ''
             }
             // 단위 당 금액
             var listByUnit = null;
@@ -331,6 +344,7 @@ function renderData(data, container, sort) {
                     <div class="list-discount">${formattedDiscount}원 할인</div>
                     <div class="list-price">
                         <span class="list-amount">(${formattedAmount})</span>
+                        <span class="list-event">${item.event}</span>
                         ${formattedPrice}원
                         </div>
                     <div class="list-by-unit">${listByUnit}</div>
@@ -394,10 +408,15 @@ document.getElementById("search").addEventListener("input", function() {
         // item.name 또는 item.number에서 검색을 수행합니다.
         return item.name.toString().includes(searchTerm) || item.number.toString().includes(searchTerm);
     });
+    var filteredData4 = data4.filter(function(item) {
+        // item.name 또는 item.number에서 검색을 수행합니다.
+        return item.name.toString().includes(searchTerm) || item.number.toString().includes(searchTerm);
+    });
     renderData(filteredData, document.getElementById('data-container'), 'date');
     renderData(filteredData, document.getElementById('data-container2'), 'number');
     renderData(filteredData2, document.getElementById('data-container3'), 'date');
     renderData(filteredData3, document.getElementById('data-container4'), 'date');
+    renderData(filteredData4, document.getElementById('data-container5'), 'date');
 });
 
 document.querySelector('.input-wrap button').addEventListener('click', function() {
@@ -443,6 +462,7 @@ function renderDataInit() {
     renderData(data, document.getElementById('data-container2'), 'number');
     renderData(data2, document.getElementById('data-container3'), 'date');
     renderData(data3, document.getElementById('data-container4'), 'date');
+    renderData(data4, document.getElementById('data-container5'), 'date');
 }
 renderDataInit();
 
