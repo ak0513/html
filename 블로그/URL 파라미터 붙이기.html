@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[JavaScript] URL 파라미터 값 가져오기</title>
+    <script src="../basic/js/common.js"></script>
+    <script src="../common/js/highlight.min.js"></script>
+    <script src="./css/test.js"></script><!-- highlight 미리 보기 위해 삽입 -->
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory_admin/userblog/tistory-4bde1fb20f0ffa5bc6d0d4a8edcb5c6bd4625b4b/static/style/content.css">
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory/4823763/skin/style.css">
+    <link rel="stylesheet" type="text/css" href="https://tistory1.daumcdn.net/tistory_admin/userblog/tistory-4bde1fb20f0ffa5bc6d0d4a8edcb5c6bd4625b4b/static/style/uselessPMargin.css">
+    <link href="./css/font.css" rel="stylesheet" type="text/css">
+    <link href="./css/style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div id="wrap">
+        <div id="header"></div>
+        <div id="aside"></div>
+        <div id="tt-body-page">
+            <div class="area_view">
+                <div class="tt_article_useless_p_margin contents_style">
+                    <button type="button" onclick="addQueryParam('a', 1)">버튼</button>
+                    <button type="button" onclick="addOrReplaceQueryParam('a', 1)">버튼</button>
+                </div>
+            </div>
+            <script>
+                function addQueryParam(key, value) {
+                    const params = new URLSearchParams(window.location.search);
+                    params.append(key, value);
+                    window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+                }
+                
+                function addOrReplaceQueryParam(key, value) {
+                    const params = new URLSearchParams(window.location.search);
+                    params.set(key, value); // set 메서드를 사용하여 기존의 값을 덮어씁니다.
+                    window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+                }
+
+            </script>
+        </div>
+    </div>
+</body>
+</html>
