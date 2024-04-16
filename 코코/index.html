@@ -174,7 +174,7 @@ var data2 = [
     { date: "2024.02.17", number: 8801121020968, name: "매일)엣지우유 기획", amount: 5650, discount: 0, weight:1800, unit:'㎖'},
     { date: "2024.02.17", number: 201328, name: "청양고추", amount: 3750, discount: 0, weight:20, unit:'kg'},
 
-    { date: "2024.02.24", number: 22001382, name: "쪽파(작은단) 1단(국산)", amount: 4980, discount: 0, weight:0, unit:'kg'},
+    { date: "2024.02.24", number: 22001382, name: "쪽파(국산)", amount: 4980, discount: 0, weight:1, unit:'단'},
     { date: "2024.02.24", number: 201382, name: "표고버섯(국산)", amount: 3240, discount: 0, weight:163.636, unit:'g'},
     { date: "2024.02.24", number: 8801117368005, name: "오리온키위알맹이", amount: 1100, discount: 0, weight:67, unit:'g'},
     { date: "2024.02.24", number: 88011173651031, name: "오리온리찌알맹이", amount: 1000, discount: 0, weight:67, unit:'g'},
@@ -186,6 +186,10 @@ var data2 = [
     { date: "2024.03.23", number: 201245, name: "아스파라거스(수입)", amount: 3980, discount: 0, weight:4, unit:'개'},
     { date: "2024.03.23", number: 201261, name: "양송이버섯(국산)", amount: 4980, discount: 0, weight:0, unit:'개'},
     { date: "2024.03.23", number: 22000200, name: "깐마늘(국산)", amount: 2480, discount: 0, weight:200, unit:'g'},
+
+    { date: "2024.04.13", number: 22004994, name: "양파(벌크/국산)", amount: 2000, discount: 0, weight:2, unit:'개'},
+    { date: "2024.04.13", number: 22002990, name: "달래(국산)", amount: 2500, discount: 0, weight:1, unit:'단'},
+    { date: "2024.04.13", number: 22001757, name: "무순(소/국산)", amount: 590, discount: 0, weight:0, unit:'단'},
 ]
 
 // 개봉역
@@ -202,6 +206,12 @@ var data4 = [
     { date: "2024.03.30", number: 'supermanMart3', name: "찍먹나초(오리온)", amount: 2950, discount: 0, weight:168, unit:'g'},
     { date: "2024.03.30", number: 'supermanMart4', name: "몽쉘 제주돌카룽(롯데 12봉)", amount: 4300, discount: 0, weight:186, unit:'g'},
     { date: "2024.03.30", number: 'supermanMart5', name: "빈츠 끼리크림치즈(롯데 12봉)", amount: 2500, discount: 0, weight:102, unit:'g'},
+
+    { date: "2024.04.13", number: 'supermanMart6', name: "명가담백구운김", amount: 1450, discount: 0, weight:0, unit:'개'},
+    { date: "2024.04.13", number: 'supermanMart7', name: "한입 인절미스낵", amount: 1000, discount: 0, weight:115, unit:'g'},
+    { date: "2024.04.13", number: 'supermanMart8', name: "알뜰소세지(롯데)", amount: 2100, discount: 0, weight:350, unit:'g'},
+    { date: "2024.04.13", number: 'supermanMart9', name: "닭다리(농심)", amount: 1450, discount: 0, weight:66, unit:'g'},
+    { date: "2024.04.13", number: 'supermanMart10', name: "빈츠 끼리크림치즈(롯데 24봉)", amount: 4950, discount: 0, weight:204, unit:'g'},
 ]
 
 // 날짜와 넘버로 그룹화하고 소팅하는 함수
@@ -335,6 +345,9 @@ function renderData(data, container, sort) {
                     break;
                 case '개' :
                     listByUnit = '1개 당 ' + addCommasToAmount(price / item.weight) + '원';
+                    break;
+                case '단' :
+                    listByUnit = '1단 당 ' + addCommasToAmount(price / item.weight) + '원';
                     break;
             }
 
@@ -478,7 +491,11 @@ renderDataInit();
 
 // ℓ ㎖ g kg 병 개
 var test = [
-    { date: "2024.03.30", number: 0, name: "청양고추", amount: 3500, discount: 0, weight:0, unit:'개'},
+    { date: "2024.04.13", number: 'supermanMart6', name: "명가담백구운김", amount: 1450, discount: 0, weight:0, unit:'개'},
+    { date: "2024.04.13", number: 'supermanMart7', name: "한입 인절미스낵", amount: 1000, discount: 0, weight:0, unit:'개'},
+    { date: "2024.04.13", number: 'supermanMart8', name: "롯데)알뜰소세지", amount: 2100, discount: 0, weight:0, unit:'개'},
+    { date: "2024.04.13", number: 'supermanMart9', name: "농심)닭다리", amount: 1450, discount: 0, weight:0, unit:'개'},
+    { date: "2024.04.13", number: 'supermanMart10', name: "롯데)빈츠끼리", amount: 4950, discount: 0, weight:0, unit:'개'},
 ]
 </script>
 
