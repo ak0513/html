@@ -1,59 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Multiple Objects Resizing</title>
-<style>
-    /* 예시용 스타일 */
-    .object {
-        height: 100px; /* 높이는 예시 */
-        background-color: blue; /* 색상은 예시 */
-        margin-bottom: 10px; /* 여러 오브젝트를 구분하기 위한 간격 */
-        transition: width 0.3s ease; /* 부드러운 애니메이션 효과를 위한 CSS transition */
-    }
-</style>
+<title>만원 추가</title>
 </head>
 <body>
 
-<!-- 여러 개의 오브젝트 -->
-<div class="object" data-initial-width="300"></div>
-<div class="object" data-initial-width="62.5"></div>
-<div class="object" data-initial-width="37.5"></div>
+<input type="text" id="inputNumber" placeholder="숫자를 입력하세요">
 
 <script>
-// 모든 오브젝트 요소 선택
-var objects = document.querySelectorAll('.object');
+// 입력란에 포커스가 맞추어지면 '만원'을 제거하여 숫자만 입력하도록 함
+document.getElementById("inputNumber").addEventListener("focus", function() {
+    var value = this.value.replace("만원", "");
+    this.value = value;
+});
 
-// resize 이벤트 핸들러 함수
-function handleResize() {
-    // 현재 브라우저 너비 가져오기
-    var browserWidth = window.innerWidth;
+// 입력란을 빠져나오면 '만원'을 붙여줌
+document.getElementById("inputNumber").addEventListener("blur", function() {
+    var value = this.value.trim();
+    if (value !== "" && !isNaN(value)) {
+        this.value = value + "만원";
+    }
+});
 
-    // 각 오브젝트에 대해 가로 사이즈 계산 및 적용
-    objects.forEach(function(object) {
-        // 초기 가로 비율값 가져오기
-        var initialRatio = parseFloat(object.getAttribute('data-initial-width')) / 100;
-
-        // 초기 가로값과 현재 브라우저의 가로크기 사이의 비율 계산
-        var targetWidth = Math.max(360, Math.round(browserWidth * initialRatio));
-
-        // 오브젝트에 가로 사이즈 적용
-        object.style.width = targetWidth + 'px';
-        object.style.height = `${1 + 1 + 100}px`
-    });
-}
-
-// 초기화 함수 (페이지 로드시와 resize 이벤트 발생 시에 호출)
-function init() {
-    handleResize(); // 초기 사이즈 설정
-
-    // resize 이벤트에 핸들러 함수 연결
-    window.addEventListener('resize', handleResize);
-}
-
-// 페이지 로드시 초기화 함수 호출
-window.onload = init;
+// 입력값이 변경될 때마다 호출되는 함수
+document.getElementById("inputNumber").addEventListener("input", function() {
+    var value = this.value.replace("만원", "");
+    if (value !== "" && !isNaN(value)) {
+        this.value = value + "만원";
+    }
+});
 </script>
 
 </body>

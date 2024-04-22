@@ -173,6 +173,10 @@ var data = [
     { date: "2024.04.13", number: '647983', name: "체리토마토", amount: 16490, discount: 0, weight:2, unit:'kg'},
     { date: "2024.04.13", number: '667144', name: "유기농샐러드", amount: 7490, discount: 0, weight:540, unit:'g'},
 
+    { date: "2024.04.21", number: '647983', name: "체리토마토", amount: 16490, discount: 0, weight:2, unit:'kg'},
+    { date: "2024.04.21", number: '668703', name: "떡볶이 오리지날(6인분)", amount: 10990, discount: 0, weight:1080, unit:'g'},
+    { date: "2024.04.21", number: '301904', name: "KS M.쇼비뇽블랑", amount: 10790, discount: 0, weight:1, unit:'병'},
+
 ];
 
 // 맘스
@@ -199,6 +203,12 @@ var data2 = [
     { date: "2024.04.13", number: 22004994, name: "양파(벌크/국산)", amount: 2000, discount: 0, weight:2, unit:'개'},
     { date: "2024.04.13", number: 22002990, name: "달래(국산)", amount: 2500, discount: 0, weight:1, unit:'단'},
     { date: "2024.04.13", number: 22001757, name: "무순(소/국산)", amount: 590, discount: 0, weight:0, unit:'단'},
+
+    { date: "2024.04.20", number: 8801121020968, name: "매일)엣지우유 기획", amount: 4880, discount: 0, weight:1800, unit:'㎖'},
+    { date: "2024.04.20", number: 8801066801134, name: "대림알뜰김밥세트", amount: 5980, discount: 0, weight:510, unit:'g'},
+    { date: "2024.04.20", number: 22001269, name: "금산깻잎", amount: 1500, discount: 0, weight:30, unit:'장'},
+    { date: "2024.04.20", number: 8801253122349, name: "일가양념우엉", amount: 3800, discount: 0, weight:150, unit:'g'},
+    { date: "2024.04.20", number: 201416, name: "흙당근(국산)", amount: 2890, discount: 0, weight:386, unit:'g'},
 ]
 
 // 개봉역
@@ -358,6 +368,9 @@ function renderData(data, container, sort) {
                 case '단' :
                     listByUnit = '1단 당 ' + addCommasToAmount(price / item.weight) + '원';
                     break;
+                case '장' :
+                    listByUnit = '1장 당 ' + addCommasToAmount(price / item.weight) + '원';
+                    break;
             }
 
           
@@ -500,14 +513,11 @@ renderDataInit();
 
 // ℓ ㎖ g kg 병 개
 var test = [
-    { date: "2024.04.13", number: '003379', name: "CHOCMOD 트러플", amount: 22990, discount: 3500, weight:0, unit:'개'},
-    { date: "2024.04.13", number: '660472', name: "트롤리 미니버거", amount: 19990, discount: 5300, weight:0, unit:'개'},
-    { date: "2024.04.13", number: '669023', name: "나탈레베르가바롤", amount: 22990, discount: 6000, weight:0, unit:'개'},
-    { date: "2024.04.13", number: '030669', name: "델몬트 바나나", amount: 3190, discount: 0, weight:0, unit:'개'},
-    { date: "2024.04.13", number: '571300', name: "연어", amount: 58170, discount: 0, weight:0, unit:'개'},
-    { date: "2024.04.13", number: '515819', name: "어니언크림드레싱", amount: 8490, discount: 0, weight:0, unit:'개'},
-    { date: "2024.04.13", number: '647983', name: "체리토마토", amount: 16490, discount: 0, weight:2, unit:'kg'},
-    { date: "2024.04.13", number: '667144', name: "유기농샐러드", amount: 7490, discount: 0, weight:540, unit:'g'},
+{ date: "2024.04.20", number: 8801121020968, name: "매일)엣지우유 기획", amount: 4880, discount: 0, weight:1800, unit:'㎖'},
+{ date: "2024.04.20", number: 8801066801134, name: "대림알뜰김밥세트", amount: 5980, discount: 0, weight:510, unit:'g'},
+{ date: "2024.04.20", number: 22001269, name: "금산깻잎", amount: 1500, discount: 0, weight:30, unit:'개'},
+{ date: "2024.04.20", number: 8801253122349, name: "일가양념우엉", amount: 3800, discount: 0, weight:150, unit:'g'},
+{ date: "2024.04.20", number: 201416, name: "흙당근(국산)", amount: 2890, discount: 0, weight:386, unit:'g'},
 ]
 </script>
 
