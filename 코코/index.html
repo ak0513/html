@@ -446,6 +446,10 @@ document.addEventListener("DOMContentLoaded", function () {
 	document.querySelector('.input-wrap button').addEventListener('click', function() {
 		this.previousElementSibling.value = '';
 		renderProductList(sortByDateDescending(data));
+		sortBtns.forEach(function (btn) {
+			btn.classList.remove('active');
+		});
+		sortBtns[0].classList.add('active');
 	})
 });
 
