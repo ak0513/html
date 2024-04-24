@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 		}
 
-		document.querySelectorAll('.copyDiv').forEach(function(div) {
+		/* document.querySelectorAll('.copyDiv').forEach(function(div) {
 			div.addEventListener('click', function() {
 				// div 내부의 텍스트 선택
 				var text = this.innerText;
@@ -238,8 +238,29 @@ document.addEventListener("DOMContentLoaded", function () {
 						console.error('텍스트 복사 실패: ', err);
 					});
 			});
-		})
+		}) */
+
+		// .copyDiv 클릭 이벤트 리스너 추가
+		var copyDivs = document.querySelectorAll('.copyDiv')
+		copyDivs.forEach(function (div) {
+			div.addEventListener('click', function () {
+				// div 내부의 텍스트 가져오기
+				var text = this.innerText;
+
+				// 텍스트를 searchInput에 설정
+				searchInput.value = text;
+
+				// 검색 실행
+				var companyFilter = document.querySelector('.sort-btn.active').getAttribute('data-company');
+				filterProducts(text, companyFilter);
+
+				// 입력값이 있는 경우 body에 'search' 클래스 추가
+				addBodySearchClass(text)
+			});
+		});
 	}
+
+	
 
 	function filterProducts(searchTerm, companyFilter) {
 		var filteredProducts;
@@ -271,14 +292,17 @@ document.addEventListener("DOMContentLoaded", function () {
 		var searchTerm = event.target.value.trim();
 		var companyFilter = document.querySelector('.active').getAttribute('data-company');
 		filterProducts(searchTerm, companyFilter);
+		addBodySearchClass(searchTerm);
+	});
 
-		// 입력값이 있는 경우 body에 'input-has-value' 클래스 추가
-		if (searchTerm) {
+	// 입력값이 있는 경우 body에 'input-has-value' 클래스 추가
+	function addBodySearchClass(txt) {
+		if (txt) {
 			document.body.classList.add('search');
 		} else {
 			document.body.classList.remove('search');
 		}
-	});
+	}
 
 	// 회사 버튼 클릭 이벤트 리스너
 	var sortBtns = document.querySelectorAll('.sort-btn');
