@@ -39,7 +39,7 @@
 
 	.input-wrap {display:flex;background-color:#f2f2f2;border-bottom:1px solid #ddd;}
 	.input-wrap input {width:100%;height:44px;padding-left:12px;font-size:16px;border:none;background-color:#f2f2f2;border-radius:0;}
-	.input-wrap button {position:absolute;top:0;right:0;display:block;width:44px;height:44px; background:url('./img/icon-close.svg') no-repeat center;}
+	.input-wrap button {display:none;position:fixed;bottom:0;left:0;right:0;height:44px;background-color:#ddd;}
 
 	.h-tit2 {font-weight:700;font-size:16px;margin-bottom:12px;}
 	.h-tit2 small {font-size:14px;font-weight:400;color:#666;}
@@ -73,14 +73,16 @@
 	.modal-content {display: block;margin: auto;}
 
 	/* 검색중 */
+	.search #wrap {padding-bottom:50px;}
 	.search .list-total {display:none;}
+	.search .input-wrap button {display: block;}
 </style>
 
 <div id="wrap">
     <header id="header">
         <div class="input-wrap">
             <input type="text" id="searchInput" placeholder="검색어 입력">
-            <button type="button"></button>
+            <button type="button">이전으로</button>
         </div>
         <div class="sort">
             <button type="button" class="sort-btn active" data-company="">전체</button>
