@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>코코</title>
+</head>
+<body>
+
+<div id="wrap">
+    <header id="header">
+        <div class="input-wrap">
+            <input type="text" id="search" placeholder="검색어 입력">
+            <button type="button"></button>
+        </div>
+        <div class="sort">
+            <button type="button" class="sort-btn active" data-id="data-container">코코(날짜)</button>
+            <button type="button" class="sort-btn" data-id="data-container2">코코(번호)</button>
+            <button type="button" class="sort-btn" data-id="data-container3">맘스</button>
+            <button type="button" class="sort-btn" data-id="data-container4">개봉역</button>
+            <button type="button" class="sort-btn" data-id="data-container5">슈퍼맨</button>
+        </div>
+    </header>
+    <main id="main">
+        <div id="data-container" class="list-wrap active"></div>
+        <div id="data-container2" class="list-wrap"></div>
+        <div id="data-container3" class="list-wrap"></div>
+        <div id="data-container4" class="list-wrap"></div>
+        <div id="data-container5" class="list-wrap"></div>
+    </main>
+</div>
+
+<!-- 모달 이미지 -->
+<div id="myModal" class="modal" onclick="hideImage()">
+    <!-- <span class="close">&times;</span> -->
+    <img class="modal-content" id="modalImg">
+  </div>
+
+<style>
+    /* reset */
+    *, *::before, *::after {box-sizing:border-box;}
+    body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button{margin:0;padding:0}
+    fieldset,img{border:0 none}
+    dl,ul,ol,menu,li {list-style:none}
+    blockquote, q {quotes: none}
+    blockquote:before, blockquote:after,q:before, q:after {content:'';content:none}
+    input,select,textarea,button {vertical-align:middle;outline:none}
+    input::-ms-clear {display:none}
+    button {border:0 none;background-color:transparent;cursor:pointer}
+    body,th,td,input,select,textarea,button {font-size:14px;line-height:1.5;font-family:-apple-system, BlinkMacSystemFont, Pretendard, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell,'Noto Sans KR', 'Spoqa Han Sans', "Helvetica Neue", sans-serif;}
+    a {color:#333;text-decoration:none} 
+    a:active, a:hover {text-decoration:underline}
+    a:active {background-color:transparent}
+    address,caption,cite,code,dfn,em,var {font-style:normal;font-weight:normal}
+    img {max-width:100%;height:auto;}
+    
+    html,body {height:100%;}
+    body {-webkit-text-size-adjust:none;color:#111;}
+    #header{position:fixed;top:0;left:0;right:0;z-index:1;background-color:#fff;}
+    .page-title {color:#fff;}
+    .sort {display:flex;margin-top:4px;padding:0 16px;}
+    .sort-btn {padding:8px; color:#666;}
+    .sort-btn.active {color:#000;text-decoration:underline;}
+    .sort-btn + .sort-btn {margin-left:8px;}
+
+    .input-wrap {display:flex;background-color:#f2f2f2;border-bottom:1px solid #ddd;}
+    .input-wrap input {width:100%;height:44px;padding-left:12px;font-size:16px;border:none;background-color:#f2f2f2;border-radius:0;}
+    .input-wrap button {position:absolute;top:0;right:0;display:block;width:44px;height:44px; background:url('./img/icon-close.svg') no-repeat center;}
+
+    .h-tit2 {position:relative; font-weight:700;font-size:16px;margin-bottom:12px;}
+    .total-amount-container + .h-tit2 {margin-top:24px;padding-top:36px;}
+    .total-amount-container + .h-tit2::before {content:'';display:block;position:absolute;top:0;left:-24px;right:-24px;height:12px;background-color:#ddd;}
+
+    #main {padding:86px 24px 40px;}
+    .list-wrap {display:none;margin-top:20px;}
+    .list-wrap.active {display:block;}
+
+    .list {display:flex;align-items:center;}
+    .list + .list {margin-top:36px;}
+    .list-left {margin-right:auto;}
+    .list-right {flex-shrink:0;margin-left:8px;text-align:right;}
+    .list-img {width:48px;flex-shrink:0;margin-right:8px;}
+    .list-img img {display:block;border-radius:4px;}
+    .list-date,
+    .list-number {font-size:12px;color:#666;}
+    .list-name {font-size:16px;font-weight:600;}
+    .list-event {font-size:12px;font-weight:400;color:#da251c;}
+    .list-weight {font-size:14px;color:#666;font-weight:400;}
+    .list-by-unit {font-size:14px;color:#666;}
+    .list-amount-group {font-size:12px;}
+    .list-amount {color:#999;text-decoration:line-through;font-size:14px;font-weight:400;}
+    .list-price {font-weight:600;font-size:16px;}
+
+    .total-amount {display:flex;justify-content:flex-end;margin-top:30px;padding-top:16px;border-top:2px dashed #ddd;text-align:right;font-size:16px;}
+
+    .no-discount .list-amount,
+    .no-discount .list-discount {display:none;}
+
+    .no-weight .list-weight,
+    .no-weight .list-by-unit {display:none;}
+
+    .no-img .list-img {display:none;}
+
+
+    #data-container .list-date,
+    #data-container3 .list-date,
+    #data-container4 .list-date,
+    #data-container5 .list-date {display:none;}
+    #data-container2 .list-number {display:none;}
+    #data-container2 .total-amount {display:none;}
+
+    .modal {display: none;position: fixed;z-index: 1;left: 0;top: 0;right:0;bottom:0;overflow: auto;background-color: rgba(0, 0, 0, 0.9);padding:12px;}
+    .modal-content {display: block;margin: auto;}
+</style>
+
+<script>
+// 객체 배열 생성
+// 코코
+var data = [
+    // ℓ ㎖ g kg 병 
+    { date: "2024.02.17", number: 623559, name: "진로소주360", amount: 24190, discount: 0, weight:20, unit:'병'},
+    { date: "2024.02.17", number: 643733, name: "카스473ML 24캔", amount: 37990, discount: 0, weight:11352, unit:'㎖'},
+    { date: "2024.02.17", number: 639952, name: "백진주쌀", amount: 36990, discount: 3000, weight:10, unit:'kg'},
+    { date: "2024.02.17", number: 647983, name: "체리토마토", amount: 16990, discount: 0, weight:2, unit:'kg'},
+    { date: "2024.02.17", number: 647019, name: "친환경양파망", amount: 14990, discount: 0, weight:4, unit:'kg', img:true},
+    { date: "2024.02.17", number: 659969, name: "청경채", amount: 7290, discount: 0, weight:700, unit:'g'},
+    { date: "2024.02.17", number: 507154, name: "햄스빌베이컨", amount: 16890, discount: 0, weight:205, unit:'g'},
+    { date: "2024.02.17", number: 612635, name: "찌개부침두부", amount: 5690, discount: 0, weight:840, unit:'g'},
+    { date: "2024.02.17", number: 530318, name: "친환경양배추", amount: 5990, discount: 0, weight:4, unit:'kg', img:true},
+    
+    { date: "2024.02.19", number: 647983, name: "체리토마토", amount: 16990, discount: 0, weight:2, unit:'kg'},
+    { date: "2024.02.19", number: 520440, name: "국산검은콩두유", amount: 16990, discount: 3400, weight:0, unit:'kg'},
+    { date: "2024.02.19", number: 637146, name: "동물복지란", amount: 15890, discount: 0, weight:60, unit:'개'},
+    { date: "2024.02.19", number: 585284, name: "백설굴소스350GX3", amount: 10790, discount: 0, weight:1050, unit:'g'},
+    { date: "2024.02.19", number: 600523, name: "EPA 참치 150G X 10", amount: 22190, discount: 2400, weight:1500, unit:'g'},
+    { date: "2024.02.19", number: 664370, name: "GALILEO MINI PIZ", amount: 15990, discount: 3200, weight:0, unit:'kg'},
+
+    { date: "2024.02.28", number: 647983, name: "체리토마토", amount: 17490, discount: 0, weight:2, unit:'kg'},
+    { date: "2024.02.28", number: 605698, name: "아보카도", amount: 13990, discount: 0, weight:6, unit:'개'},
+
+    { date: "2024.03.01", number: 660472, name: "트롤리미니버거", amount: 19990, discount: 0, weight:100, unit:'개'},
+    { date: "2024.03.01", number: '030669', name: "델몬트 바나나", amount: 3190, discount: 0, weight:7, unit:'개'},
+    { date: "2024.03.01", number: 664924, name: "데일리샐러드믹스", amount: 9490, discount: 0, weight:1, unit:'kg'},
+    { date: "2024.03.01", number: 656361, name: "BBQ 닭강정", amount: 16990, discount: 2700, weight:1.2, unit:'kg'},
+    { date: "2024.03.01", number: 565617, name: "호밀빵", amount: 7490, discount: 0, weight:860, unit:'g'},
+
+    { date: "2024.03.03", number: 651894, name: "고메탕수육", amount: 12990, discount: 2200, weight:1, unit:'kg'},
+    { date: "2024.03.03", number: 647983, name: "체리토마토", amount: 17490, discount: 0, weight:2, unit:'kg'},
+
+    { date: "2024.03.17", number: 647983, name: "체리토마토", amount: 15990, discount: 0, weight:2, unit:'kg'},
+    { date: "2024.03.17", number: 663778, name: "클라우디베이 펠로루스", amount: 45990, discount: 12000, weight:0, unit:'g'},
+    // { date: "2024.03.17", number: 663778, name: "클라우디베이 펠로루스", amount: 45990, discount: 12000, weight:0, unit:'g'}, 2병 구매
+
+    { date: "2024.03.23", number: 635469, name: "LOTTE 스낵모음(20개)", amount: 15790, discount: 0, weight:1384, unit:'g'},
+    { date: "2024.03.23", number: 630807, name: "크랜베리 그래놀라", amount: 17990, discount: 3000, weight:1.5, unit:'kg'},
+    { date: "2024.03.23", number: 657241, name: "소스락 즉석국(20개)", amount: 15490, discount: 3000, weight:200, unit:'g'},
+    { date: "2024.03.23", number: 667290, name: "햇반쿡반 주먹밥(12개)", amount: 14490, discount: 2500, weight:1.2, unit:'kg'},
+    { date: "2024.03.23", number: 672163, name: "대저토마토", amount: 20990, discount: 0, weight:2.5, unit:'kg'},
+    { date: "2024.03.23", number: 520767, name: "미국냉장살치살팩", amount: 74910, discount: 6000, weight:1.6, unit:'kg'}, // 2.5kg에서 지방 제거 후 1.6kg
+    { date: "2024.03.23", number: 667609, name: "아보카도 샐러드", amount: 14300, discount: 0, weight:0, unit:'kg'},
+
+    { date: "2024.04.01", number: 622945, name: "콜게이트치약(5개)", amount: 21990, discount: 0, weight:0, unit:'g'},
+    { date: "2024.04.01", number: 672163, name: "대저토마토", amount: 20490, discount: 0, weight:2.5, unit:'kg'},
+    { date: "2024.04.01", number: 574199, name: "딸기1박스", amount: 12290, discount: 0, weight:1, unit:'kg'},
+
+    { date: "2024.04.13", number: '003379', name: "프렌치 트러플", amount: 22990, discount: 3500, weight:2, unit:'kg'},
+    { date: "2024.04.13", number: '660472', name: "트롤리 미니버거", amount: 19990, discount: 5300, weight:0, unit:'개'},
+    { date: "2024.04.13", number: '669023', name: "Natale Verga Barolo", amount: 29990, discount: 6000, weight:1, unit:'병'},
+    { date: "2024.04.13", number: '030669', name: "델몬트 바나나", amount: 3190, discount: 0, weight:9, unit:'개'},
+    { date: "2024.04.13", number: '571300', name: "연어", amount: 58170, discount: 0, weight:1492, unit:'g'},
+    { date: "2024.04.13", number: '515819', name: "어니언크림드레싱", amount: 8490, discount: 0, weight:1, unit:'kg'},
+    { date: "2024.04.13", number: '647983', name: "체리토마토", amount: 16490, discount: 0, weight:2, unit:'kg'},
+    { date: "2024.04.13", number: '667144', name: "유기농샐러드", amount: 7490, discount: 0, weight:540, unit:'g'},
+
+    { date: "2024.04.21", number: '647983', name: "체리토마토", amount: 16490, discount: 0, weight:2, unit:'kg'},
+    { date: "2024.04.21", number: '668703', name: "떡볶이 오리지날(6인분)", amount: 10990, discount: 0, weight:1080, unit:'g'},
+    { date: "2024.04.21", number: '301904', name: "KS M.쇼비뇽블랑", amount: 10790, discount: 0, weight:1, unit:'병'},
+
+];
+
+// 맘스
+var data2 = [
+    { date: "2024.02.17", number: 8809605750219, name: "참한입인절미", amount: 2500, discount: 0, weight:235, unit:'g'},
+    { date: "2024.02.17", number: 8801039000953, name: "해표광천도시락김 5g*24번들", amount: 7980, discount: 0, weight:120, unit:'g'},
+    { date: "2024.02.17", number: 8809052116576, name: "뉴 월남쌈", amount: 4050, discount: 0, weight:300, unit:'g'},
+    { date: "2024.02.17", number: 8801121020968, name: "매일)엣지우유 기획", amount: 5650, discount: 0, weight:1800, unit:'㎖'},
+    { date: "2024.02.17", number: 201328, name: "청양고추", amount: 3750, discount: 0, weight:20, unit:'kg'},
+
+    { date: "2024.02.24", number: 22001382, name: "쪽파(국산)", amount: 4980, discount: 0, weight:1, unit:'단'},
+    { date: "2024.02.24", number: 201382, name: "표고버섯(국산)", amount: 3240, discount: 0, weight:163.636, unit:'g'},
+    { date: "2024.02.24", number: 8801117368005, name: "오리온키위알맹이", amount: 1100, discount: 0, weight:67, unit:'g'},
+    { date: "2024.02.24", number: 88011173651031, name: "오리온리찌알맹이", amount: 1000, discount: 0, weight:67, unit:'g'},
+    
+    { date: "2024.03.01", number: 8801052012919, name: "청성원부마토 스파게티소스", amount: 4180, discount: 0, weight:600, unit:'g'},
+    { date: "2024.03.01", number: 22001290, name: "찰가지(국산) 3개", amount: 3980, discount: 0, weight:448, unit:'g'},
+    { date: "2024.03.01", number: 22001276, name: "인큐애호박(특)(국산)", amount: 1980, discount: 0, weight:0, unit:'kg'},
+
+    { date: "2024.03.23", number: 201245, name: "아스파라거스(수입)", amount: 3980, discount: 0, weight:4, unit:'개'},
+    { date: "2024.03.23", number: 201261, name: "양송이버섯(국산)", amount: 4980, discount: 0, weight:0, unit:'개'},
+    { date: "2024.03.23", number: 22000200, name: "깐마늘(국산)", amount: 2480, discount: 0, weight:200, unit:'g'},
+
+    { date: "2024.04.13", number: 22004994, name: "양파(벌크/국산)", amount: 2000, discount: 0, weight:2, unit:'개'},
+    { date: "2024.04.13", number: 22002990, name: "달래(국산)", amount: 2500, discount: 0, weight:1, unit:'단'},
+    { date: "2024.04.13", number: 22001757, name: "무순(소/국산)", amount: 590, discount: 0, weight:0, unit:'단'},
+
+    { date: "2024.04.20", number: 8801121020968, name: "매일)엣지우유 기획", amount: 4880, discount: 0, weight:1800, unit:'㎖', event:'행사'},
+    { date: "2024.04.20", number: 8801066801134, name: "대림알뜰김밥세트", amount: 5980, discount: 0, weight:510, unit:'g'},
+    { date: "2024.04.20", number: 22001269, name: "금산깻잎(퀄리티 나쁨)", amount: 1500, discount: 0, weight:30, unit:'장', img:true},
+    { date: "2024.04.20", number: 8801253122349, name: "일가양념우엉", amount: 3800, discount: 0, weight:150, unit:'g'},
+    { date: "2024.04.20", number: 201416, name: "흙당근(국산)", amount: 2890, discount: 0, weight:386, unit:'g'},
+]
+
+// 개봉역
+var data3 = [
+    { date: "2024.02.29", number: 8801121020968, name: "매일우유오리지널", amount: 5150, discount: 0, weight:1800, unit:'㎖'},
+    { date: "2024.03.20", number: 8801121020968, name: "매일우유오리지널", amount: 3980, discount: 0, weight:1800, unit:'㎖', event:'행사'},
+    { date: "2024.04.08", number: 8801121020968, name: "매일우유오리지널", amount: 5150, discount: 0, weight:1800, unit:'㎖'},
+]
+
+// 슈퍼맨
+var data4 = [
+    { date: "2024.03.30", number: 'supermanMart1', name: "추부깻잎 1봉", amount: 1000, discount: 0, weight:0, unit:'g', img:true},
+    { date: "2024.03.30", number: 'supermanMart2', name: "청양고추 1팩", amount: 3500, discount: 0, weight:25, unit:'개', img:true},
+    { date: "2024.03.30", number: 'supermanMart3', name: "찍먹나초(오리온)", amount: 2950, discount: 0, weight:168, unit:'g'},
+    { date: "2024.03.30", number: 'supermanMart4', name: "몽쉘 제주돌카룽(롯데 12봉)", amount: 4300, discount: 0, weight:186, unit:'g'},
+    { date: "2024.03.30", number: 'supermanMart5', name: "빈츠 끼리크림치즈(롯데 12봉)", amount: 2500, discount: 0, weight:102, unit:'g'},
+
+    { date: "2024.04.13", number: 'supermanMart6', name: "명가담백구운김", amount: 1450, discount: 0, weight:0, unit:'개'},
+    { date: "2024.04.13", number: 'supermanMart7', name: "한입 인절미스낵", amount: 1000, discount: 0, weight:115, unit:'g'},
+    { date: "2024.04.13", number: 'supermanMart8', name: "알뜰소세지(롯데)", amount: 2100, discount: 0, weight:350, unit:'g'},
+    { date: "2024.04.13", number: 'supermanMart9', name: "닭다리(농심)", amount: 1450, discount: 0, weight:66, unit:'g'},
+    { date: "2024.04.13", number: 'supermanMart10', name: "빈츠 끼리크림치즈(롯데 24봉)", amount: 4950, discount: 0, weight:204, unit:'g'},
+]
+
+// 날짜와 넘버로 그룹화하고 소팅하는 함수
+function groupAndSortByDateAndNumber(data, sort) {
+    var groupedData = {};
+    data.forEach(function(item) {
+        var key = null;
+        if(sort === 'date') {
+            key = item.date;
+        } else if(sort === 'number') {
+            key = item.number;
+        }
+        if (!groupedData[key]) {
+            groupedData[key] = [];
+        }
+        groupedData[key].push(item);
+    });
+    return groupedData;
+}
+
+// amount에 쉼표 추가하는 함수
+/* function addCommasToAmount(amount) {
+    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+} */
+
+// amount에 쉼표 추가하는 함수
+function addCommasToAmount(amount) {
+    // 입력된 값이 문자열인지 확인합니다.
+    if (typeof amount !== 'string') {
+        amount = amount.toString();
+    }
+    
+    // 소수점을 찾습니다.
+    const decimalIndex = amount.indexOf(".");
+    if (decimalIndex !== -1) {
+        // 소수점 이하 1자리까지만 유지합니다.
+        amount = parseFloat(amount).toFixed(1);
+        // 소수점 이하의 0을 모두 제거합니다.
+        amount = amount.replace(/\.?0*$/, "");
+    }
+    // 쉼표 추가
+    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+// 날짜별 토탈 금액 합계를 계산하는 함수
+function calculateTotalAmountByDate(data) {
+    var totalAmountByDate = {};
+    data.forEach(function(item) {
+        if (!totalAmountByDate[item.date]) {
+            totalAmountByDate[item.date] = 0;
+        }
+        totalAmountByDate[item.date] += item.amount - item.discount;
+    });
+    return totalAmountByDate;
+}
+
+// 날짜별 토탈 금액을 DOM에 표시하는 함수
+function renderTotalAmountByDate(data, container) {
+    var totalAmountByDate = calculateTotalAmountByDate(data);
+
+    // 각 날짜별 토탈 금액을 DOM에 추가
+    for (var date in totalAmountByDate) {
+        var totalDiv = document.createElement("div");
+        totalDiv.classList.add('total-amount');
+        totalDiv.innerHTML = `<b>${addCommasToAmount(totalAmountByDate[date])}</b>원`;
+        container.appendChild(totalDiv);
+    }
+}
+
+
+// 데이터를 DOM에 표시하는 함수
+function renderData(data, container, sort) {
+    // 기존 내용 비우기
+    container.innerHTML = "";
+
+    // 날짜별로 그룹화하고 넘버별로 소팅
+    var groupedData = groupAndSortByDateAndNumber(data, sort);
+
+    // 날짜순으로 소팅
+    // var dates = Object.keys(groupedData).sort();
+    var dates = Object.keys(groupedData).sort().reverse();
+
+    // 날짜별로 데이터 표시
+    dates.forEach(function(date) {
+        var dateDiv = document.createElement("div");
+        dateDiv.classList.add('h-tit2')
+        dateDiv.textContent = `${date}`;
+        container.appendChild(dateDiv);
+
+        groupedData[date].forEach(function(item) {
+            var div = document.createElement("div");
+            div.classList.add('list');
+            var price = item.amount - item.discount;
+            var formattedPrice = addCommasToAmount(price);
+            var formattedAmount = addCommasToAmount(item.amount);
+            var formattedDiscount = addCommasToAmount(item.discount);
+
+            // 할인이 없는 경우 금액만 노출
+            if(item.discount === 0) {
+                div.classList.add('no-discount')
+            }
+            // 무게가 없는 경우 노출 제외
+            if(item.weight === 0) {
+                div.classList.add('no-weight')
+            }
+            // 이미지가 없는 경우 노출 제외
+            if(item.img !== true) {
+                div.classList.add('no-img')
+            }
+            // 이벤트가 있는 경우 노출
+            if(item.event === undefined) {
+                item.event = ''
+            }
+            // 단위 당 금액
+            var listByUnit = null;
+            switch(item.unit) {
+                case 'g' :
+                    listByUnit = '100g 당 ' + addCommasToAmount(price / item.weight * 100) + '원';
+                    break;
+                case 'kg' :
+                    listByUnit = '100g 당 ' + addCommasToAmount(price / item.weight / 10) + '원';
+                    break;
+                case '㎖' :
+                    listByUnit = '100㎖ 당 ' + addCommasToAmount(price / item.weight * 100) + '원';
+                    break;
+                case 'ℓ' :
+                    listByUnit = '100㎖ 당 ' + addCommasToAmount(price / item.weight / 10) + '원';
+                    break;
+                case '병' :
+                    listByUnit = '1병 당 ' + addCommasToAmount(price / item.weight) + '원';
+                    break;
+                case '개' :
+                    listByUnit = '1개 당 ' + addCommasToAmount(price / item.weight) + '원';
+                    break;
+                case '단' :
+                    listByUnit = '1단 당 ' + addCommasToAmount(price / item.weight) + '원';
+                    break;
+                case '장' :
+                    listByUnit = '1장 당 ' + addCommasToAmount(price / item.weight) + '원';
+                    break;
+            }
+
+          
+            div.innerHTML = `
+                <div class="list-img"><img src="./img/${item.number}.jpg" alt="" onclick="showImage('./img/${item.number}.jpg')"></div>
+                <div class="list-left">
+                    <div class="list-date">${item.date}</div>
+                    <div class="list-number copyDiv">${item.number}</div>
+                    <div class="list-name">
+                        ${item.name}
+                        <span class="list-weight">${addCommasToAmount(item.weight)}${item.unit}</span>
+                    </div>
+                </div>
+                <div class="list-right">
+                    <div class="list-discount">${formattedDiscount}원 할인</div>
+                    <div class="list-price">
+                        <span class="list-amount">(${formattedAmount})</span>
+                        <span class="list-event">${item.event}</span>
+                        ${formattedPrice}원
+                        </div>
+                    <div class="list-by-unit">${listByUnit}</div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+
+        // 각 날짜별 토탈 금액을 해당 날짜의 리스트 하단에 추가
+        var totalAmountContainer = document.createElement("div");
+        totalAmountContainer.classList.add('total-amount-container');
+        container.appendChild(totalAmountContainer);
+        renderTotalAmountByDate(groupedData[date], totalAmountContainer);
+    },
+    // 모든 copyDiv 클래스를 가진 요소에 대해 반복
+    document.querySelectorAll('.copyDiv').forEach(function(div) {
+        div.addEventListener('click', function() {
+            // div 내부의 텍스트 선택
+            var text = this.innerText;
+
+            // 텍스트를 클립보드에 복사
+            navigator.clipboard.writeText(text)
+                .then(function() {
+                    console.log('텍스트가 성공적으로 복사되었습니다: ' + text);
+                })
+                .catch(function(err) {
+                    console.error('텍스트 복사 실패: ', err);
+                });
+        });
+    })
+    );
+}
+
+// 이미지 확대하기
+function showImage(imageSrc) {
+    var modal = document.getElementById('myModal');
+    var modalImg = document.getElementById("modalImg");
+    
+    modal.style.display = "flex";
+    modalImg.src = imageSrc;
+  }
+
+  // 이미지 닫기
+  function hideImage() {
+    var modal = document.getElementById('myModal');
+    modal.style.display = "none";
+  }
+
+// 검색 기능 구현
+document.getElementById("search").addEventListener("input", function() {
+    var searchTerm = this.value.trim().toLowerCase();
+    var filteredData = data.filter(function(item) {
+        // item.name 또는 item.number에서 검색을 수행합니다.
+        return item.name.toString().includes(searchTerm) || item.number.toString().includes(searchTerm);
+    });
+    var filteredData2 = data2.filter(function(item) {
+        // item.name 또는 item.number에서 검색을 수행합니다.
+        return item.name.toString().includes(searchTerm) || item.number.toString().includes(searchTerm);
+    });
+    var filteredData3 = data3.filter(function(item) {
+        // item.name 또는 item.number에서 검색을 수행합니다.
+        return item.name.toString().includes(searchTerm) || item.number.toString().includes(searchTerm);
+    });
+    var filteredData4 = data4.filter(function(item) {
+        // item.name 또는 item.number에서 검색을 수행합니다.
+        return item.name.toString().includes(searchTerm) || item.number.toString().includes(searchTerm);
+    });
+    renderData(filteredData, document.getElementById('data-container'), 'date');
+    renderData(filteredData, document.getElementById('data-container2'), 'number');
+    renderData(filteredData2, document.getElementById('data-container3'), 'date');
+    renderData(filteredData3, document.getElementById('data-container4'), 'date');
+    renderData(filteredData4, document.getElementById('data-container5'), 'date');
+});
+
+document.querySelector('.input-wrap button').addEventListener('click', function() {
+    console.log(this.previousElementSibling)
+    this.previousElementSibling.value = ''
+    renderDataInit();
+})
+
+function siblings(ele) {
+    if(typeof(ele) === 'string') {
+        ele = document.querySelector(ele)
+    }
+    var siblings = [...ele.parentNode.children].filter((child) =>
+        child !== ele
+    )
+    return siblings
+}
+
+
+// 탭
+var sort = document.querySelectorAll('.sort-btn');
+var listWrap = document.querySelectorAll('.list-wrap');
+
+sort.forEach(function(item) {
+    item.addEventListener('click', function() {
+        var si = siblings(item)
+        si.forEach(function(item) {
+            item.classList.remove('active');
+        });
+        item.classList.add('active');
+
+        listWrap.forEach(function(item) {
+            item.classList.remove('active')
+        });
+        var tarId = document.getElementById(item.dataset.id);
+        tarId.classList.add('active')
+    })
+})
+
+// 초기 데이터를 DOM에 렌더링
+function renderDataInit() {
+    renderData(data, document.getElementById('data-container'), 'date');
+    renderData(data, document.getElementById('data-container2'), 'number');
+    renderData(data2, document.getElementById('data-container3'), 'date');
+    renderData(data3, document.getElementById('data-container4'), 'date');
+    renderData(data4, document.getElementById('data-container5'), 'date');
+}
+renderDataInit();
+
+
+// ℓ ㎖ g kg 병 개
+var test = [
+{ date: "2024.04.20", number: 8801121020968, name: "매일)엣지우유 기획", amount: 4880, discount: 0, weight:1800, unit:'㎖'},
+{ date: "2024.04.20", number: 8801066801134, name: "대림알뜰김밥세트", amount: 5980, discount: 0, weight:510, unit:'g'},
+{ date: "2024.04.20", number: 22001269, name: "금산깻잎", amount: 1500, discount: 0, weight:30, unit:'개'},
+{ date: "2024.04.20", number: 8801253122349, name: "일가양념우엉", amount: 3800, discount: 0, weight:150, unit:'g'},
+{ date: "2024.04.20", number: 201416, name: "흙당근(국산)", amount: 2890, discount: 0, weight:386, unit:'g'},
+]
+</script>
+
+</body>
+</html>
