@@ -41,6 +41,10 @@
 
 	.h-tit2 {font-weight:700;font-size:16px;margin-bottom:12px;}
 	.h-tit2 small {font-size:14px;font-weight:400;color:#666;}
+	.h-tit2 small.코코 {color:#E31A36;}
+	.h-tit2 small.맘스 {color:#F79D72;}
+	.h-tit2 small.개봉역 {color:#253C96;}
+	.h-tit2 small.슈퍼맨 {color:#B14D5E;}
 	.product-item {margin-top:20px;}
 	.product-item + .product-item {position:relative;margin-top:24px;margin-bottom:12px;padding-top:36px;}
 	.product-item + .product-item::before {content:'';display:block;position:absolute;top:0;left:-24px;right:-24px;height:12px;background-color:#ddd;}
@@ -251,7 +255,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 				var heading = document.createElement("h2");
 				heading.classList.add('h-tit2')
-				heading.innerHTML = `${productGroup[0].date} <small> - ${productGroup[0].company}</small>`;
+				heading.innerHTML = `${productGroup[0].date} <small class="${productGroup[0].company}"> - ${productGroup[0].company}</small>`;
 				productItem.appendChild(heading);
 
 				var productList = document.createElement("div");
