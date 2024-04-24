@@ -104,6 +104,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 	var data = [
     // ℓ ㎖ g kg 병 
+	// 코코
 	{ company: "코코", date: "2024.04.21", number: '647983', name: "체리토마토", amount: 16490, discount: 0, weight:2, unit:'kg'},
     { company: "코코", date: "2024.04.21", number: '668703', name: "떡볶이 오리지날(6인분)", amount: 10990, discount: 0, weight:1080, unit:'g'},
     { company: "코코", date: "2024.04.21", number: '301904', name: "KS M.쇼비뇽블랑", amount: 10790, discount: 0, weight:1, unit:'병'},
@@ -270,32 +271,36 @@ document.addEventListener("DOMContentLoaded", function () {
 					var price = product.amount - product.discount;
 
 					// 단위 당 금액
+					function calculateUnitPrice(price, unit, weight) {
+						switch(unit) {
+							case 'g':
+							case '㎖':
+								return price / weight * 100;
+							case 'kg':
+							case 'ℓ':
+								return price / weight / 10;
+							case '병':
+							case '개':
+							case '단':
+							case '장':
+								return price / weight;
+							default:
+								return null;
+						}
+					}
+
+					function formatUnitPrice(unitPrice, unit) {
+						if (unit === 'g' || unit === '㎖') {
+							return '100' + unit + ' 당 ' + addCommasToAmount(unitPrice) + '원';
+						} else {
+							return '1' + unit + ' 당 ' + addCommasToAmount(unitPrice) + '원';
+						}
+					}
+
 					var listByUnit = null;
-					switch(product.unit) {
-						case 'g' :
-							listByUnit = '100g 당 ' + addCommasToAmount(price / product.weight * 100) + '원';
-							break;
-						case 'kg' :
-							listByUnit = '100g 당 ' + addCommasToAmount(price / product.weight / 10) + '원';
-							break;
-						case '㎖' :
-							listByUnit = '100㎖ 당 ' + addCommasToAmount(price / product.weight * 100) + '원';
-							break;
-						case 'ℓ' :
-							listByUnit = '100㎖ 당 ' + addCommasToAmount(price / product.weight / 10) + '원';
-							break;
-						case '병' :
-							listByUnit = '1병 당 ' + addCommasToAmount(price / product.weight) + '원';
-							break;
-						case '개' :
-							listByUnit = '1개 당 ' + addCommasToAmount(price / product.weight) + '원';
-							break;
-						case '단' :
-							listByUnit = '1단 당 ' + addCommasToAmount(price / product.weight) + '원';
-							break;
-						case '장' :
-							listByUnit = '1장 당 ' + addCommasToAmount(price / product.weight) + '원';
-							break;
+					var unitPrice = calculateUnitPrice(price, product.unit, product.weight);
+					if (unitPrice !== null) {
+						listByUnit = formatUnitPrice(unitPrice, product.unit);
 					}
 					
 					if(product.img) {
