@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product List</title>
+<style>
+  .companyButton {
+    margin-right: 10px;
+  }
+  .product-item {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h2>Product List</h2>
+
+<input type="text" id="searchInput" placeholder="Search by product name">
+
+<div>
+  <button class="companyButton active" data-company="">전체</button>
+  <button class="companyButton" data-company="회사1">회사1</button>
+  <button class="companyButton" data-company="회사3">회사3</button>
+  <button class="companyButton" data-company="회사4">회사4</button>
+</div>
+
+<div id="product"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  var data = [
+    { date: "2024.04.08", number: 8801121020968, name: "제품명1", amount: 5150, discount: 0, weight: 1800, unit: '㎖', company: "회사1" },
+    { date: "2024.04.10", number: 8801121020969, name: "제품명2", amount: 5200, discount: 0, weight: 2000, unit: '㎖', company: "회사1" },
+    { date: "2024.04.09", number: 8801121020970, name: "제품명3", amount: 5300, discount: 0, weight: 1900, unit: '㎖', company: "회사3" },
+    { date: "2024.04.09", number: 8801121020971, name: "제품명4", amount: 5400, discount: 0, weight: 1700, unit: '㎖', company: "회사4" }
+  ];
+
+  // 데이터 정렬 함수: 최신 날짜순으로 정렬
+  function sortByDateDescending(data) {
+    return data.sort(function(a, b) {
+      return new Date(b.date) - new Date(a.date);
+    });
+  }
+
+  var productListContainer = document.getElementById("product");
+
+  function renderProductList(products) {
+    productListContainer.innerHTML = ''; // 기존 목록 초기화
+
+    products.forEach(function(product) {
+      var productItem = document.createElement("div");
+      productItem.classList.add('product-item');
+      
+      var heading = document.createElement("h3");
+      heading.textContent = "Date: " + product.date + ", Company: " + product.company;
+      productItem.appendChild(heading);
+
+      var productList = document.createElement("ul");
+
+      var totalAmount = 0;
+
+      var listItem = document.createElement("li");
+      listItem.textContent = "Number: " + product.number + ", Name: " + product.name + ", Amount: " + product.amount + ", Discount: " + product.discount + ", Weight: " + product.weight + product.unit;
+      productList.appendChild(listItem);
+
+      totalAmount += product.amount;
+
+      var totalAmountItem = document.createElement("li");
+      totalAmountItem.textContent = "Total Amount: " + totalAmount;
+      productList.appendChild(totalAmountItem);
+
+      productItem.appendChild(productList);
+
+      productListContainer.appendChild(productItem);
+    });
+  }
+
+  function filterProducts(searchTerm, companyFilter) {
+    var filteredProducts;
+    if (companyFilter === '') {
+      filteredProducts = data.filter(function(item) {
+        return item.name.toLowerCase().includes(searchTerm.toLowerCase());
+      });
+    } else {
+      filteredProducts = data.filter(function(item) {
+        return item.name.toLowerCase().includes(searchTerm.toLowerCase()) && item.company === companyFilter;
+      });
+    }
+    renderProductList(sortByDateDescending(filteredProducts));
+  }
+
+  // 초기 목록 렌더링
+  renderProductList(sortByDateDescending(data));
+
+  // 검색 입력 이벤트 리스너
+  var searchInput = document.getElementById("searchInput");
+  searchInput.addEventListener("input", function(event) {
+    var searchTerm = event.target.value.trim();
+    var companyFilter = document.querySelector('.active').getAttribute('data-company');
+    filterProducts(searchTerm, companyFilter);
+  });
+
+  // 회사 버튼 클릭 이벤트 리스너
+  var companyButtons = document.querySelectorAll('.companyButton');
+  companyButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      companyButtons.forEach(function(btn) {
+        btn.classList.remove('active');
+      });
+      this.classList.add('active');
+      var searchTerm = searchInput.value.trim();
+      var companyFilter = this.getAttribute('data-company');
+      filterProducts(searchTerm, companyFilter);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

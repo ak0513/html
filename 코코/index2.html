@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Product List</title>
+
+</head>
+
+<body>
+
+<style>
+	/* reset */
+	*, *::before, *::after {box-sizing:border-box;}
+	body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button{margin:0;padding:0}
+	fieldset,img{border:0 none}
+	dl,ul,ol,menu,li {list-style:none}
+	blockquote, q {quotes: none}
+	blockquote:before, blockquote:after,q:before, q:after {content:'';content:none}
+	input,select,textarea,button {vertical-align:middle;outline:none}
+	input::-ms-clear {display:none}
+	button {border:0 none;background-color:transparent;cursor:pointer}
+	body,th,td,input,select,textarea,button {font-size:14px;line-height:1.5;font-family:-apple-system, BlinkMacSystemFont, Pretendard, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell,'Noto Sans KR', 'Spoqa Han Sans', "Helvetica Neue", sans-serif;}
+	a {color:#333;text-decoration:none} 
+	a:active, a:hover {text-decoration:underline}
+	a:active {background-color:transparent}
+	address,caption,cite,code,dfn,em,var {font-style:normal;font-weight:normal}
+	img {max-width:100%;height:auto;}
+	
+	html,body {height:100%;}
+	body {-webkit-text-size-adjust:none;color:#111;}
+	#header{position:fixed;top:0;left:0;right:0;z-index:1;background-color:#fff;}
+	.page-title {color:#fff;}
+	.sort {display:flex;margin-top:4px;padding:0 16px;}
+	.sort-btn {padding:8px; color:#666;}
+	.sort-btn.active {color:#000;text-decoration:underline;}
+	.sort-btn + .sort-btn {margin-left:8px;}
+
+	.input-wrap {display:flex;background-color:#f2f2f2;border-bottom:1px solid #ddd;}
+	.input-wrap input {width:100%;height:44px;padding-left:12px;font-size:16px;border:none;background-color:#f2f2f2;border-radius:0;}
+	.input-wrap button {position:absolute;top:0;right:0;display:block;width:44px;height:44px; background:url('./img/icon-close.svg') no-repeat center;}
+
+	.h-tit2 {font-weight:700;font-size:16px;margin-bottom:12px;}
+	.h-tit2 small {font-size:14px;font-weight:400;color:#666;}
+	.product-item {margin-top:20px;}
+	.product-item + .product-item {position:relative;margin-top:24px;margin-bottom:12px;padding-top:36px;}
+	.product-item + .product-item::before {content:'';display:block;position:absolute;top:0;left:-24px;right:-24px;height:12px;background-color:#ddd;}
+
+	#main {padding:86px 24px 40px;}
+	.list-wrap {display:none;margin-top:20px;}
+	.list-wrap.active {display:block;}
+
+	.list-item {display:flex;align-items:center;}
+	.list-item + .list-item {margin-top:36px;}
+	.list-item-left {margin-right:auto;}
+	.list-item-right {flex-shrink:0;margin-left:8px;text-align:right;}
+	.list-img {width:48px;flex-shrink:0;margin-right:8px;}
+	.list-img img {display:block;border-radius:4px;}
+	.list-date,
+	.list-number {font-size:12px;color:#666;}
+	.list-name {font-size:16px;font-weight:600;}
+	.list-event {margin-right:5px;font-size:12px;font-weight:400;color:#da251c;}
+	.list-weight {margin-left:5px;font-size:14px;color:#666;font-weight:400;}
+	.list-by-unit {font-size:14px;color:#666;}
+	.list-amount {margin-right:5px;color:#999;text-decoration:line-through;font-size:14px;font-weight:400;}
+	.list-price {font-weight:600;font-size:16px;}
+
+	.list-total {display:flex;justify-content:flex-end;margin-top:30px;padding-top:16px;border-top:2px dashed #ddd;text-align:right;font-size:16px;}
+
+	/* 모달 */
+	.modal {display: none;position: fixed;z-index: 1;left: 0;top: 0;right:0;bottom:0;overflow: auto;background-color: rgba(0, 0, 0, 0.9);padding:12px;}
+	.modal-content {display: block;margin: auto;}
+
+	/* 검색중 */
+	.search .list-total {display:none;}
+</style>
+
+<div id="wrap">
+    <header id="header">
+        <div class="input-wrap">
+            <input type="text" id="searchInput" placeholder="검색어 입력">
+            <button type="button"></button>
+        </div>
+        <div class="sort">
+            <button type="button" class="sort-btn active" data-company="">전체</button>
+            <button type="button" class="sort-btn" data-company="코코">코코</button>
+            <button type="button" class="sort-btn" data-company="맘스">맘스</button>
+            <button type="button" class="sort-btn" data-company="개봉역">개봉역</button>
+            <button type="button" class="sort-btn"  data-company="슈퍼맨">슈퍼맨</button>
+        </div>
+    </header>
+
+	<main id="main">
+		<div id="product"></div>
+	</main>
+</div>
+<!-- 모달 이미지 -->
+<div id="myModal" class="modal" onclick="hideImage()">
+    <img class="modal-content" id="modalImg">
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	var data = [
+		{ date: "2024.04.08", number: 8801121020968, name: "제품명1-1", amount: 5150, discount: 100, weight: 1800, unit: '㎖', company: "코코", img: '647019'},
+		{ date: "2024.04.08", number: 8801121020968, name: "제품명1-2", amount: 5150, discount: 0, weight: 1800, unit: '㎖', company: "코코" , event:'행사'},
+		{ date: "2024.04.10", number: 8801121020969, name: "제품명2", amount: 5200, discount: 500, weight: 2000, unit: '㎖', company: "코코" },
+		{ date: "2024.04.09", number: 8801121020970, name: "제품명3", amount: 5300, discount: 0, weight: 1900, unit: '㎖', company: "개봉역" },
+		{ date: "2024.04.09", number: 8801121020971, name: "제품명4", amount: 5400, discount: 0, weight: 1700, unit: '㎖', company: "슈퍼맨" }
+	];
+
+	// 데이터 정렬 함수: 최신 날짜순으로 정렬
+	const sortByDateDescending = (data) => [...data].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+	var productListContainer = document.getElementById("product");
+
+	function renderProductList(products) {
+		productListContainer.innerHTML = ''; // 기존 목록 초기화
+
+		// 날짜와 회사를 기준으로 제품을 그룹화
+		var groupedProducts = {};
+		products.forEach(function (product) {
+			var key = product.date + product.company;
+			if (!groupedProducts[key]) {
+				groupedProducts[key] = [];
+			}
+			groupedProducts[key].push(product);
+		});
+
+		// 각 그룹별로 .product-item을 생성하고 제품들을 추가
+		for (var key in groupedProducts) {
+			if (groupedProducts.hasOwnProperty(key)) {
+				var productGroup = groupedProducts[key];
+				var productItem = document.createElement("div");
+				productItem.classList.add('product-item');
+
+				var heading = document.createElement("h2");
+				heading.classList.add('h-tit2')
+				heading.innerHTML = `${productGroup[0].date} <small> - ${productGroup[0].company}</small>`;
+				productItem.appendChild(heading);
+
+				var productList = document.createElement("div");
+				productList.classList.add('list')
+
+				var totalAmount = 0;
+
+				// 각 제품을 리스트에 추가
+				productGroup.forEach(function (product) {
+					var listItem = document.createElement("div");
+					listItem.classList.add('list-item')
+
+					var html = [];
+
+					var price = product.amount - product.discount;
+
+					// 단위 당 금액
+					var listByUnit = null;
+					switch(product.unit) {
+						case 'g' :
+							listByUnit = '100g 당 ' + addCommasToAmount(price / product.weight * 100) + '원';
+							break;
+						case 'kg' :
+							listByUnit = '100g 당 ' + addCommasToAmount(price / product.weight / 10) + '원';
+							break;
+						case '㎖' :
+							listByUnit = '100㎖ 당 ' + addCommasToAmount(price / product.weight * 100) + '원';
+							break;
+						case 'ℓ' :
+							listByUnit = '100㎖ 당 ' + addCommasToAmount(price / product.weight / 10) + '원';
+							break;
+						case '병' :
+							listByUnit = '1병 당 ' + addCommasToAmount(price / product.weight) + '원';
+							break;
+						case '개' :
+							listByUnit = '1개 당 ' + addCommasToAmount(price / product.weight) + '원';
+							break;
+						case '단' :
+							listByUnit = '1단 당 ' + addCommasToAmount(price / product.weight) + '원';
+							break;
+						case '장' :
+							listByUnit = '1장 당 ' + addCommasToAmount(price / product.weight) + '원';
+							break;
+					}
+					
+					if(product.img) {
+						html.push(`<div class="list-img"><img src="./img/${product.img}.jpg" alt="" onclick="showImage('./img/${product.img}.jpg')"></div>`)
+					}
+					html.push(`<div class="list-item-left">`)
+						html.push(`<div class="list-number copyDiv">${product.number}</div>`)
+						html.push(`<div class="list-name">`)
+							html.push(`<span class="copyDiv">${product.name}</span>`)
+							html.push(`<span class="list-weight">${addCommasToAmount(product.weight)}${product.unit}</span>`)
+						html.push(`</div>`)
+					html.push(`</div>`)
+
+					html.push(`<div class="list-item-right">`)
+						if(product.discount > 0) {
+							html.push(`<div class="list-discount">${addCommasToAmount(product.discount)}원 할인</div>`)
+						}
+						html.push(`<div class="list-price">`)
+							if(product.discount > 0) {
+								html.push(`<span class="list-amount">(${addCommasToAmount(product.discount)})</span>`)
+							}
+							if(product.event) {
+								html.push(`<span class="list-event">${product.event}</span>`)
+							}
+							html.push(`${addCommasToAmount(price)}원`)
+						html.push(`</div>`)
+						html.push(`<div class="list-by-unit">${listByUnit}</div>`)
+					html.push(`</div>`)
+					productList.appendChild(listItem);
+					listItem.innerHTML = html.join('');
+					totalAmount += product.amount;
+				});
+				// 총 금액을 리스트에 추가
+				var totalAmountItem = document.createElement("div");
+				totalAmountItem.classList.add('list-total')
+				totalAmountItem.innerHTML = `<b>${addCommasToAmount(totalAmount)}</b>원`;
+				productList.appendChild(totalAmountItem);
+
+				productItem.appendChild(productList);
+				productListContainer.appendChild(productItem);
+			}
+		}
+
+		document.querySelectorAll('.copyDiv').forEach(function(div) {
+			div.addEventListener('click', function() {
+				// div 내부의 텍스트 선택
+				var text = this.innerText;
+
+				// 텍스트를 클립보드에 복사
+				navigator.clipboard.writeText(text)
+					.then(function() {
+						console.log('텍스트가 성공적으로 복사되었습니다: ' + text);
+					})
+					.catch(function(err) {
+						console.error('텍스트 복사 실패: ', err);
+					});
+			});
+		})
+	}
+
+	function filterProducts(searchTerm, companyFilter) {
+		var filteredProducts;
+		if (companyFilter === '') {
+			filteredProducts = data.filter(function (item) {
+				return (
+					item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					item.number.toString().includes(searchTerm)
+				);
+			});
+		} else {
+			filteredProducts = data.filter(function (item) {
+				return (
+					(item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					item.number.toString().includes(searchTerm)) &&
+					item.company === companyFilter
+				);
+			});
+		}
+		renderProductList(sortByDateDescending(filteredProducts));
+	}
+
+	// 초기 목록 렌더링
+	renderProductList(sortByDateDescending(data));
+
+	// 검색 입력 이벤트 리스너
+	var searchInput = document.getElementById("searchInput");
+	searchInput.addEventListener("input", function (event) {
+		var searchTerm = event.target.value.trim();
+		var companyFilter = document.querySelector('.active').getAttribute('data-company');
+		filterProducts(searchTerm, companyFilter);
+
+		// 입력값이 있는 경우 body에 'input-has-value' 클래스 추가
+		if (searchTerm) {
+			document.body.classList.add('search');
+		} else {
+			document.body.classList.remove('search');
+		}
+	});
+
+	// 회사 버튼 클릭 이벤트 리스너
+	var sortBtns = document.querySelectorAll('.sort-btn');
+	sortBtns.forEach(function (button) {
+		button.addEventListener('click', function () {
+			sortBtns.forEach(function (btn) {
+				btn.classList.remove('active');
+			});
+			this.classList.add('active');
+			var searchTerm = searchInput.value.trim();
+			var companyFilter = this.getAttribute('data-company');
+			filterProducts(searchTerm, companyFilter);
+		});
+	});
+
+	// 검색 초기화
+	document.querySelector('.input-wrap button').addEventListener('click', function() {
+		this.previousElementSibling.value = '';
+		renderProductList(sortByDateDescending(data));
+	})
+});
+
+// amount에 쉼표 추가하는 함수
+function addCommasToAmount(amount) {
+	// 입력된 값이 문자열인지 확인합니다.
+	if (typeof amount !== 'string') {
+		amount = amount.toString();
+	}
+
+	// 소수점을 찾습니다.
+	const decimalIndex = amount.indexOf(".");
+	if (decimalIndex !== -1) {
+		// 소수점 이하 1자리까지만 유지합니다.
+		amount = parseFloat(amount).toFixed(1);
+		// 소수점 이하의 0을 모두 제거합니다.
+		amount = amount.replace(/\.?0*$/, "");
+	}
+	// 쉼표 추가
+	return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+// 이미지 확대하기
+function showImage(imageSrc) {
+    var modal = document.getElementById('myModal');
+    var modalImg = document.getElementById("modalImg");
+    
+    modal.style.display = "flex";
+    modalImg.src = imageSrc;
+  }
+
+// 이미지 닫기
+function hideImage() {
+    var modal = document.getElementById('myModal');
+    modal.style.display = "none";
+}
+
+
+</script>
+
+</body>
+
+</html>
