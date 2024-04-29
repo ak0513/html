@@ -60,7 +60,8 @@
 	.list-img {width:48px;flex-shrink:0;margin-right:8px;}
 	.list-img img {display:block;border-radius:4px;}
 	.list-date,
-	.list-number {font-size:12px;color:#666;}
+	.list-number-group {font-size:12px;color:#666;}
+	.list-number-group {display:flex;gap:4px;}
 	.list-name {font-size:16px;font-weight:600;}
 	.list-event {margin-right:5px;font-size:12px;font-weight:400;color:#da251c;}
 	.list-weight {margin-left:5px;font-size:14px;color:#666;font-weight:400;}
@@ -111,12 +112,12 @@ document.addEventListener("DOMContentLoaded", function () {
     { company: "코코", date: "2024.04.21", number: '668703', category:'떡볶이', name: "떡볶이 오리지날(6인분)", amount: 10990, discount: 0, weight:1080, unit:'g'},
     { company: "코코", date: "2024.04.21", number: '301904', category:'와인', name: "KS M.쇼비뇽블랑", amount: 10790, discount: 0, weight:1, unit:'병'},
 
-    { company: "코코", date: "2024.04.13", number: '003379', category:'', name: "프렌치 트러플", amount: 22990, discount: 3500, weight:2, unit:'kg'},
+    { company: "코코", date: "2024.04.13", number: '003379', category:'초콜릿', name: "프렌치 트러플", amount: 22990, discount: 3500, weight:2, unit:'kg'},
     { company: "코코", date: "2024.04.13", number: '660472', category:'젤리', name: "트롤리 미니버거", amount: 19990, discount: 5300, weight:90, unit:'개'},
-    { company: "코코", date: "2024.04.13", number: '669023', category:'', name: "Natale Verga Barolo", amount: 29990, discount: 6000, weight:1, unit:'병'},
+    { company: "코코", date: "2024.04.13", number: '669023', category:'와인', name: "Natale Verga Barolo", amount: 29990, discount: 6000, weight:1, unit:'병'},
     { company: "코코", date: "2024.04.13", number: '030669', category:'바나나', name: "델몬트 바나나", amount: 3190, discount: 0, weight:9, unit:'개'},
     { company: "코코", date: "2024.04.13", number: '571300', category:'연어', name: "연어", amount: 58170, discount: 0, weight:1492, unit:'g'},
-    { company: "코코", date: "2024.04.13", number: '515819', category:'', name: "어니언크림드레싱", amount: 8490, discount: 0, weight:1, unit:'kg'},
+    { company: "코코", date: "2024.04.13", number: '515819', category:'소스', name: "어니언크림드레싱", amount: 8490, discount: 0, weight:1, unit:'kg'},
     { company: "코코", date: "2024.04.13", number: '647983', category:'토마토', name: "체리토마토", amount: 16490, discount: 0, weight:2, unit:'kg'},
     { company: "코코", date: "2024.04.13", number: '667144', category:'샐러드', name: "유기농샐러드", amount: 7490, discount: 0, weight:540, unit:'g'},
 
@@ -125,9 +126,9 @@ document.addEventListener("DOMContentLoaded", function () {
     { company: "코코", date: "2024.04.01", number: 574199, category:'딸기', name: "딸기1박스", amount: 12290, discount: 0, weight:1, unit:'kg'},
 
     { company: "코코", date: "2024.03.23", number: 635469, category:'과자', name: "LOTTE 스낵모음(20개)", amount: 15790, discount: 0, weight:1384, unit:'g'},
-    { company: "코코", date: "2024.03.23", number: 630807, category:'', name: "크랜베리 그래놀라", amount: 17990, discount: 3000, weight:1.5, unit:'kg'},
-    { company: "코코", date: "2024.03.23", number: 657241, category:'', name: "소스락 즉석국(20개)", amount: 15490, discount: 3000, weight:200, unit:'g'},
-    { company: "코코", date: "2024.03.23", number: 667290, category:'', name: "햇반쿡반 주먹밥(12개)", amount: 14490, discount: 2500, weight:1.2, unit:'kg'},
+    { company: "코코", date: "2024.03.23", number: 630807, category:'시저', name: "크랜베리 그래놀라", amount: 17990, discount: 3000, weight:1.5, unit:'kg'},
+    { company: "코코", date: "2024.03.23", number: 657241, category:'즉석국', name: "소스락 즉석국(20개)", amount: 15490, discount: 3000, weight:200, unit:'g'},
+    { company: "코코", date: "2024.03.23", number: 667290, category:'주먹밥', name: "햇반쿡반 주먹밥(12개)", amount: 14490, discount: 2500, weight:1.2, unit:'kg'},
     { company: "코코", date: "2024.03.23", number: 672163, category:'토마토', name: "대저토마토", amount: 20990, discount: 0, weight:2.5, unit:'kg'},
     { company: "코코", date: "2024.03.23", number: 520767, category:'고기', name: "미국냉장살치살팩", amount: 74910, discount: 6000, weight:1.6, unit:'kg'}, // 2.5kg에서 지방 제거 후 1.6kg
     { company: "코코", date: "2024.03.23", number: 667609, category:'아보카도', name: "아보카도 샐러드", amount: 14300, discount: 0, weight:0, unit:'kg'},
@@ -309,7 +310,10 @@ document.addEventListener("DOMContentLoaded", function () {
 						html.push(`<div class="list-img"><img src="./img/${product.img}.jpg" alt="" onclick="showImage('./img/${product.img}.jpg')"></div>`)
 					}
 					html.push(`<div class="list-item-left">`)
-						html.push(`<div class="list-number copyDiv">${product.number}</div>`)
+						html.push(`<div class="list-number-group">`)
+							html.push(`<div class="list-category">[<span class="copyDiv">${product.category}</span>]</div>`)
+							html.push(`<div class="list-number copyDiv">${product.number}</div>`)
+						html.push(`</div>`)
 						html.push(`<div class="list-name">`)
 							html.push(`<span class="copyDiv">${product.name}</span>`)
 							html.push(`<span class="list-weight">${addCommasToAmount(product.weight)}${product.unit}</span>`)
