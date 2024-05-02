@@ -432,7 +432,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			filteredProducts = data.filter(function (item) {
 				return (
 					(item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-					item.number.toString().includes(searchTerm)) &&
+					item.number.toString().includes(searchTerm) || item.category.toString().includes(searchTerm)) &&
 					item.company === companyFilter
 				);
 			});
