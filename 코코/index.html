@@ -83,7 +83,8 @@
 	.search .list-total {display:none;}
 	.search .h-tit2 {font-size:14px;}
 	.search .product-item + .product-item {margin-top: 12px;margin-bottom: 0px;padding-top: 12px;}
-	.search .product-item + .product-item::before {height:1px;}
+	.search .product-item + .product-item::before {height:1px;background-color:#eee;}
+	.search .list-item + .list-item {margin-top:12px;}
 
 	/* 개별 커스텀 */
 	.코코 .h-tit2 small {background-color:var(--코코);}
@@ -342,7 +343,9 @@ document.addEventListener("DOMContentLoaded", function () {
 						html.push(`</div>`)
 						html.push(`<div class="list-name">`)
 							html.push(`<span class="copyDiv">${product.name}</span>`)
-							html.push(`<span class="list-weight">${addCommasToAmount(product.weight)}${product.unit}</span>`)
+							if(`${addCommasToAmount(product.weight)}` > 0) {
+								html.push(`<span class="list-weight">${addCommasToAmount(product.weight)}${product.unit}</span>`)
+							}
 						html.push(`</div>`)
 					html.push(`</div>`)
 
@@ -359,7 +362,9 @@ document.addEventListener("DOMContentLoaded", function () {
 							}
 							html.push(`${addCommasToAmount(price)}원`)
 						html.push(`</div>`)
-						html.push(`<div class="list-by-unit">${listByUnit}</div>`)
+						if(`${addCommasToAmount(product.weight)}` > 0) {
+							html.push(`<div class="list-by-unit">${listByUnit}</div>`)
+						}
 					html.push(`</div>`)
 					productList.appendChild(listItem);
 					listItem.innerHTML = html.join('');
