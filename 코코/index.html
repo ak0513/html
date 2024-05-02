@@ -9,6 +9,13 @@
 
 <body>
 <style>
+	:root {
+		--코코: #E31A36;
+		--맘스: #F79D72;
+		--개봉역: #253C96;
+		--슈퍼맨: #B14D5E;
+		--자유마트: #0a7c4a;
+	}
 	/* reset */
 	*, *::before, *::after {box-sizing:border-box;}
 	body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button{margin:0;padding:0}
@@ -30,9 +37,9 @@
 	body {-webkit-text-size-adjust:none;color:#111;}
 	#header{position:fixed;top:0;left:0;right:0;z-index:1;background-color:#fff;}
 	.page-title {color:#fff;}
-	.sort {display:flex;margin-top:4px;padding:0 16px;}
-	.sort-btn {padding:8px; color:#666;}
-	.sort-btn.active {color:#000;text-decoration:underline;}
+	.sort {display:flex;margin-top:12px;padding:0 16px;}
+	.sort-btn {padding:2px 4px; color:#fff;border-radius:2px;background-color:#333;}
+	.sort-btn.active {text-decoration: underline;}
 	.sort-btn + .sort-btn {margin-left:8px;}
 
 	.input-wrap {display:flex;background-color:#f2f2f2;border-bottom:1px solid #ddd;}
@@ -40,7 +47,7 @@
 	.input-wrap button {position:absolute;top:0;right:0;display:block;width:44px;height:44px; background:url('./img/icon-close.svg') no-repeat center;}
 
 	.h-tit2 {font-weight:700;font-size:16px;margin-bottom:12px;}
-	.h-tit2 small {font-size:14px;font-weight:400;color:#666;}
+	.h-tit2 small {display: inline-flex;align-items: center;justify-content: center; padding:0px 4px;font-size:14px;font-weight:400;color:#fff;border-radius:2px;}
 
 	.product-item {margin-top:20px;}
 	.product-item + .product-item {position:relative;margin-top:24px;margin-bottom:12px;padding-top:36px;}
@@ -79,10 +86,17 @@
 	.search .product-item + .product-item::before {height:1px;}
 
 	/* 개별 커스텀 */
-	.코코 .h-tit2 small {color:#E31A36;}
-	.맘스 .h-tit2 small {color:#F79D72;}
-	.개봉역 .h-tit2 small {color:#253C96;}
-	.슈퍼맨 .h-tit2 small {color:#B14D5E;}
+	.코코 .h-tit2 small {background-color:var(--코코);}
+	.맘스 .h-tit2 small {background-color:var(--맘스);}
+	.개봉역 .h-tit2 small {background-color:var(--개봉역);}
+	.슈퍼맨 .h-tit2 small {background-color:var(--슈퍼맨);}
+	.자유마트 .h-tit2 small {background-color:var(--자유마트);}
+
+	[data-company='코코'] {background-color:var(--코코)}
+	[data-company='맘스'] {background-color:var(--맘스)}
+	[data-company='개봉역'] {background-color:var(--개봉역)}
+	[data-company='슈퍼맨'] {background-color:var(--슈퍼맨)}
+	[data-company='자유마트'] {background-color:var(--자유마트)}
 </style>
 
 <div id="wrap">
@@ -267,7 +281,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 				var heading = document.createElement("h2");
 				heading.classList.add('h-tit2')
-				heading.innerHTML = `${productGroup[0].date} <small> - ${productGroup[0].company}</small>`;
+				heading.innerHTML = `${productGroup[0].date} <small>${productGroup[0].company}</small>`;
 				productItem.appendChild(heading);
 
 				var productList = document.createElement("div");
