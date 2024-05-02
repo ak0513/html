@@ -41,10 +41,7 @@
 
 	.h-tit2 {font-weight:700;font-size:16px;margin-bottom:12px;}
 	.h-tit2 small {font-size:14px;font-weight:400;color:#666;}
-	.h-tit2 small.코코 {color:#E31A36;}
-	.h-tit2 small.맘스 {color:#F79D72;}
-	.h-tit2 small.개봉역 {color:#253C96;}
-	.h-tit2 small.슈퍼맨 {color:#B14D5E;}
+
 	.product-item {margin-top:20px;}
 	.product-item + .product-item {position:relative;margin-top:24px;margin-bottom:12px;padding-top:36px;}
 	.product-item + .product-item::before {content:'';display:block;position:absolute;top:0;left:-24px;right:-24px;height:12px;background-color:#ddd;}
@@ -77,6 +74,15 @@
 
 	/* 검색중 */
 	.search .list-total {display:none;}
+	.search .h-tit2 {font-size:14px;}
+	.search .product-item + .product-item {margin-top: 12px;margin-bottom: 0px;padding-top: 12px;}
+	.search .product-item + .product-item::before {height:1px;}
+
+	/* 개별 커스텀 */
+	.코코 .h-tit2 small {color:#E31A36;}
+	.맘스 .h-tit2 small {color:#F79D72;}
+	.개봉역 .h-tit2 small {color:#253C96;}
+	.슈퍼맨 .h-tit2 small {color:#B14D5E;}
 </style>
 
 <div id="wrap">
@@ -91,6 +97,7 @@
             <button type="button" class="sort-btn" data-company="맘스">맘스</button>
             <button type="button" class="sort-btn" data-company="개봉역">개봉역</button>
             <button type="button" class="sort-btn"  data-company="슈퍼맨">슈퍼맨</button>
+            <button type="button" class="sort-btn"  data-company="자유마트">자유마트</button>
         </div>
     </header>
 
@@ -200,6 +207,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+	// 자유마트
+    { company: "자유마트", date: "2024.04.27", number: 8301045522265, category:'라면', name: "진라면 매운맛", amount: 3250, discount: 400, weight:5, unit:'봉'},
+
 	// 개봉역
     { company: "개봉역", date: "2024.04.08", number: 8801121020968, category:'우유', name: "매일 우유오리지널", amount: 5150, discount: 0, weight:1800, unit:'㎖'},
     { company: "개봉역", date: "2024.03.20", number: 8801121020968, category:'우유', name: "매일 우유오리지널", amount: 3980, discount: 0, weight:1800, unit:'㎖', event:'행사'},
@@ -253,10 +263,11 @@ document.addEventListener("DOMContentLoaded", function () {
 				var productGroup = groupedProducts[key];
 				var productItem = document.createElement("div");
 				productItem.classList.add('product-item');
+				productItem.classList.add(`${productGroup[0].company}`);
 
 				var heading = document.createElement("h2");
 				heading.classList.add('h-tit2')
-				heading.innerHTML = `${productGroup[0].date} <small class="${productGroup[0].company}"> - ${productGroup[0].company}</small>`;
+				heading.innerHTML = `${productGroup[0].date} <small> - ${productGroup[0].company}</small>`;
 				productItem.appendChild(heading);
 
 				var productList = document.createElement("div");
@@ -286,6 +297,7 @@ document.addEventListener("DOMContentLoaded", function () {
 							case '개':
 							case '단':
 							case '장':
+							case '봉':
 								return price / weight;
 							default:
 								return null;
