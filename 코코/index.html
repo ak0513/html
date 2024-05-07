@@ -130,15 +130,24 @@ document.addEventListener("DOMContentLoaded", function () {
 	var data = [
     // ℓ ㎖ g kg 병 
 	// 코코
+	{ company: "코코", date: "2024.05.05", number: '690902', category:'돈까스', name: "동원돈까스", amount: 14990, discount: 2500, weight:1.040, unit:'kg'},
+	{ company: "코코", date: "2024.05.05", number: '1276922', category:'과자', name: "케틀 핑크솔트 감자칩", amount: 9990, discount: 0, weight:907, unit:'g'},
+	{ company: "코코", date: "2024.05.05", number: '525619', category:'냉동식품', name: "치킨텐더", amount: 17490, discount: 3500, weight:1.5, unit:'kg'},
+	// { company: "코코", date: "2024.05.05", number: '525619', category:'냉동식품', name: "치킨텐더", amount: 17490, discount: 3500, weight:0, unit:'g'},
+	{ company: "코코", date: "2024.05.05", number: '1100690', category:'치즈', name: "하바티 고다치즈", amount: 15790, discount: 2500, weight:0, unit:'g'},
+	{ company: "코코", date: "2024.05.05", number: '647983', category:'토마토', name: "체리토마토", amount: 15490, discount: 0, weight:2, unit:'kg'},
+	{ company: "코코", date: "2024.05.05", number: '584629', category:'망고스틴', name: "망고스틴", amount: 20890, discount: 0, weight:1.8, unit:'kg'},
+	{ company: "코코", date: "2024.05.05", number: '505325', category:'참외', name: "고당도참외", amount: 19990, discount: 0, weight:7, unit:'개'},
+
 	{ company: "코코", date: "2024.04.21", number: '647983', category:'토마토', name: "체리토마토", amount: 16490, discount: 0, weight:2, unit:'kg'},
-    { company: "코코", date: "2024.04.21", number: '668703', category:'떡볶이', name: "떡볶이 오리지날(6인분)", amount: 10990, discount: 0, weight:1080, unit:'g'},
+    { company: "코코", date: "2024.04.21", number: '668703', category:'떡볶이', name: "떡볶이 오리지날(6인분)", amount: 10990, discount: 0, weight:1.080, unit:'kg'},
     { company: "코코", date: "2024.04.21", number: '301904', category:'와인', name: "KS M.쇼비뇽블랑", amount: 10790, discount: 0, weight:1, unit:'병'},
 
     { company: "코코", date: "2024.04.13", number: '003379', category:'초콜릿', name: "프렌치 트러플", amount: 22990, discount: 3500, weight:2, unit:'kg'},
     { company: "코코", date: "2024.04.13", number: '660472', category:'젤리', name: "트롤리 미니버거", amount: 19990, discount: 5300, weight:90, unit:'개'},
     { company: "코코", date: "2024.04.13", number: '669023', category:'와인', name: "Natale Verga Barolo", amount: 29990, discount: 6000, weight:1, unit:'병'},
     { company: "코코", date: "2024.04.13", number: '030669', category:'바나나', name: "델몬트 바나나", amount: 3190, discount: 0, weight:9, unit:'개'},
-    { company: "코코", date: "2024.04.13", number: '571300', category:'연어', name: "연어", amount: 58170, discount: 0, weight:1492, unit:'g'},
+    { company: "코코", date: "2024.04.13", number: '571300', category:'연어', name: "연어", amount: 58170, discount: 0, weight:1.492, unit:'kg'},
     { company: "코코", date: "2024.04.13", number: '515819', category:'소스', name: "어니언크림드레싱", amount: 8490, discount: 0, weight:1, unit:'kg'},
     { company: "코코", date: "2024.04.13", number: '647983', category:'토마토', name: "체리토마토", amount: 16490, discount: 0, weight:2, unit:'kg'},
     { company: "코코", date: "2024.04.13", number: '667144', category:'샐러드', name: "유기농샐러드", amount: 7490, discount: 0, weight:540, unit:'g'},
@@ -147,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
     { company: "코코", date: "2024.04.01", number: 672163, category:'토마토', name: "대저토마토", amount: 20490, discount: 0, weight:2.5, unit:'kg'},
     { company: "코코", date: "2024.04.01", number: 574199, category:'딸기', name: "딸기1박스", amount: 12290, discount: 0, weight:1, unit:'kg'},
 
-    { company: "코코", date: "2024.03.23", number: 635469, category:'과자', name: "LOTTE 스낵모음(20개)", amount: 15790, discount: 0, weight:1384, unit:'g'},
+    { company: "코코", date: "2024.03.23", number: 635469, category:'과자', name: "LOTTE 스낵모음(20개)", amount: 15790, discount: 0, weight:1.384, unit:'kg'},
     { company: "코코", date: "2024.03.23", number: 630807, category:'시저', name: "크랜베리 그래놀라", amount: 17990, discount: 3000, weight:1.5, unit:'kg'},
     { company: "코코", date: "2024.03.23", number: 657241, category:'즉석국', name: "소스락 즉석국(20개)", amount: 15490, discount: 3000, weight:200, unit:'g'},
     { company: "코코", date: "2024.03.23", number: 667290, category:'주먹밥', name: "햇반쿡반 주먹밥(12개)", amount: 14490, discount: 2500, weight:1.2, unit:'kg'},
@@ -174,8 +183,8 @@ document.addEventListener("DOMContentLoaded", function () {
     { company: "코코", date: "2024.02.19", number: 647983, category:'토마토', name: "체리토마토", amount: 16990, discount: 0, weight:2, unit:'kg'},
     { company: "코코", date: "2024.02.19", number: 520440, category:'두유', name: "국산검은콩두유", amount: 16990, discount: 3400, weight:0, unit:'kg'},
     { company: "코코", date: "2024.02.19", number: 637146, category:'계란', name: "동물복지란", amount: 15890, discount: 0, weight:60, unit:'개'},
-    { company: "코코", date: "2024.02.19", number: 585284, category:'굴소스', name: "백설굴소스350GX3", amount: 10790, discount: 0, weight:1050, unit:'g'},
-    { company: "코코", date: "2024.02.19", number: 600523, category:'참치', name: "EPA 참치 150G X 10", amount: 22190, discount: 2400, weight:1500, unit:'g'},
+    { company: "코코", date: "2024.02.19", number: 585284, category:'굴소스', name: "백설굴소스350GX3", amount: 10790, discount: 0, weight:1.050, unit:'kg'},
+    { company: "코코", date: "2024.02.19", number: 600523, category:'참치', name: "EPA 참치 150G X 10", amount: 22190, discount: 2400, weight:1.5, unit:'kg'},
     { company: "코코", date: "2024.02.19", number: 664370, category:'피자', name: "GALILEO MINI PIZ", amount: 15990, discount: 3200, weight:0, unit:'kg'},
 
     { company: "코코", date: "2024.02.17", number: 623559, category:'소주', name: "진로소주360", amount: 24190, discount: 0, weight:20, unit:'병'},
@@ -212,7 +221,7 @@ document.addEventListener("DOMContentLoaded", function () {
     { company: "맘스", date: "2024.03.01", number: 22001276, category:'애호박', name: "인큐애호박(특)(국산)", amount: 1980, discount: 0, weight:0, unit:'kg'},
 	
 	{ company: "맘스", date: "2024.02.24", number: 22001382, category:'쪽파', name: "쪽파(국산)", amount: 4980, discount: 0, weight:1, unit:'단'},
-    { company: "맘스", date: "2024.02.24", number: 201382, category:'버섯', name: "표고버섯(국산)", amount: 3240, discount: 0, weight:163.636, unit:'g'},
+    { company: "맘스", date: "2024.02.24", number: 201382, category:'버섯', name: "표고버섯(국산)", amount: 3240, discount: 0, weight:0, unit:'g'},
     { company: "맘스", date: "2024.02.24", number: 8801117368005, category:'젤리', name: "오리온키위알맹이", amount: 1100, discount: 0, weight:67, unit:'g'},
     { company: "맘스", date: "2024.02.24", number: 88011173651031, category:'젤리', name: "오리온리찌알맹이", amount: 1000, discount: 0, weight:67, unit:'g'},
 
@@ -370,7 +379,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					html.push(`</div>`)
 					productList.appendChild(listItem);
 					listItem.innerHTML = html.join('');
-					totalAmount += product.amount;
+					totalAmount += price;
 				});
 				// 총 금액을 리스트에 추가
 				var totalAmountItem = document.createElement("div");
