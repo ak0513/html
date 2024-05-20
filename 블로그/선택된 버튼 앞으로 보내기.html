@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Reorder</title>
+    <style>
+        .button-container {
+            display: flex;
+        }
+        .button-container button {
+            margin-right: 5px;
+        }
+        button.on {background-color: aquamarine;}
+    </style>
+</head>
+<body>
+    <div class="button-container" id="buttonContainer">
+        <button>Button 1</button>
+        <button>Button 2</button>
+        <button>Button 3</button>
+        <button>Button 4</button>
+        <button>Button 5</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            var orderValue = -9999; // 전역 변수로 초기 order 값을 설정합니다.
+            var btns = document.querySelectorAll('button');
+            
+            function getOnButtonCount() {
+                return document.querySelectorAll('button.on').length;
+            }
+
+            btns.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    if(btn.classList.contains('on')) {
+                        btn.classList.remove('on');
+                        this.removeAttribute('style')
+                    } else {
+                        if(getOnButtonCount() < 3) {
+                            orderValue += 1;
+                            btn.classList.add('on');
+                            this.style.order = orderValue;
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

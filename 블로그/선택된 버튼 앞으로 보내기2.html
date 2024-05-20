@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>버튼 제어</title>
+<style>
+    .wrap {display: flex;gap:5px;margin-top:5px;}
+  .button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    width:90px;
+    cursor: pointer;
+  }
+  .button.on {background-color: red;}
+</style>
+</head>
+<body>
+
+<div class="wrap btns">
+    <button class="button" onclick="moveToFront(this, 0)">버튼 1</button>
+    <button class="button" onclick="moveToFront(this, 1)">버튼 2</button>
+    <button class="button" onclick="moveToFront(this, 2)">버튼 3</button>
+    <button class="button" onclick="moveToFront(this, 3)">버튼 4</button>
+    <button class="button" onclick="moveToFront(this, 4)">버튼 5</button>
+    <button class="button" onclick="moveToFront(this, 5)">버튼 6</button>
+    <button class="button" onclick="moveToFront(this, 6)">버튼 7</button>
+    <button class="button" onclick="moveToFront(this, 7)">버튼 8</button>
+</div>
+<script>
+var btns = document.querySelectorAll('.btns .button')
+
+function countButtonsWithOnClass(buttons) {
+    var onCount = 0;
+    for (var i = 0; i < buttons.length; i++) {
+        if (buttons[i].classList.contains("on")) {
+            onCount++;
+        }
+    }
+    return onCount;
+}
+var num = 0;
+function moveToFront(button, index) {
+    var siblingButtons = button.parentNode.children;
+    var buttons = document.querySelectorAll('.wrap .button.on');
+    var count = 0;
+    
+    for (var i = 0; i < buttons.length; i++) {
+        var buttonIndex = parseInt(buttons[i].getAttribute('onclick').match(/\d+/)[0]);
+        if (buttonIndex < index) {
+            count++;
+        }
+    }
+    
+    if(button.classList.contains('on')) {
+        button.parentNode.insertBefore(button, siblingButtons[index + num - count]);
+        button.classList.remove('on');
+        num = num - 1;
+    } else {
+        button.parentNode.insertBefore(button, siblingButtons[num]);
+        button.classList.add('on');
+        num = num + 1;
+    }
+
+    setTimeout(function() {
+        button.focus();
+    },300)
+    
+}
+</script>
+
+</body>
+</html>
