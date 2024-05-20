@@ -35,17 +35,6 @@
     <button class="button" onclick="moveToFront(this, 7)">버튼 8</button>
 </div>
 <script>
-var btns = document.querySelectorAll('.btns .button')
-
-function countButtonsWithOnClass(buttons) {
-    var onCount = 0;
-    for (var i = 0; i < buttons.length; i++) {
-        if (buttons[i].classList.contains("on")) {
-            onCount++;
-        }
-    }
-    return onCount;
-}
 var num = 0;
 function moveToFront(button, index) {
     var siblingButtons = button.parentNode.children;
@@ -54,6 +43,7 @@ function moveToFront(button, index) {
     
     for (var i = 0; i < buttons.length; i++) {
         var buttonIndex = parseInt(buttons[i].getAttribute('onclick').match(/\d+/)[0]);
+        console.log(buttons[i].getAttribute('onclick').match(/\d+/))
         if (buttonIndex < index) {
             count++;
         }
