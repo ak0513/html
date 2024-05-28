@@ -130,7 +130,17 @@ document.addEventListener("DOMContentLoaded", function () {
 	var data = [
     // ℓ ㎖ g kg 병 
 	// 코코
-	
+	{ company: "코코", date: "2024.05.25", number: '629052', category:'콩', name: "병아리콩", amount: 14990, discount: 0, weight:6, unit:'kg'},
+	{ company: "코코", date: "2024.05.25", number: '639952', category:'쌀', name: "백진주쌀", amount: 36990, discount: 3000, weight:10, unit:'kg'},
+	{ company: "코코", date: "2024.05.25", number: '608881', category:'수박', name: "수박", amount: 24990, discount: 3200, weight:9, unit:'kg'},
+	{ company: "코코", date: "2024.05.25", number: '661892', category:'로메인', name: "무농약 로메인", amount: 8990, discount: 2000, weight:0, unit:'g'},
+	{ company: "코코", date: "2024.05.25", number: '579887', category:'양상추', name: "친환경 양상추", amount: 6490, discount: 0, weight:2, unit:'통'},
+	{ company: "코코", date: "2024.05.25", number: '523376', category:'토마토', name: "미니 대추토마토", amount: 17990, discount: 2000, weight:2.2, unit:'kg'},
+	{ company: "코코", date: "2024.05.25", number: '655475', category:'닭', name: "하림 스파이시 닭가슴살", amount: 14990, discount: 2000, weight:1.2, unit:'kg'},
+	{ company: "코코", date: "2024.05.25", number: '669606', category:'핫도그', name: "풀무원 포테이토 핫도그(8개)", amount: 11490, discount: 0, weight:720, unit:'g'},
+	{ company: "코코", date: "2024.05.25", number: '507154', category:'베이컨', name: "햄스빌 베이컨", amount: 16890, discount: 2600, weight:205, unit:'g'},
+	{ company: "코코", date: "2024.05.25", number: '601208', category:'단백질', name: "웨이더플러스", amount: 28990, discount: 5000, weight:1020, unit:'g'},
+	{ company: "코코", date: "2024.05.25", number: '643893', category:'체중계', name: "무아스 체중계", amount: 16990, discount: 3000, weight:0, unit:'g'},
 
 	{ company: "코코", date: "2024.05.18", number: '634767', category:'닥터유', name: "닥터유 프로틴바(44개)", amount: 10990, discount: 1500, weight:564, unit:'g'},
 	// { company: "코코", date: "2024.05.18", number: '634767', category:'닥터유', name: "닥터유 프로틴바", amount: 10990, discount: 1500, weight:0, unit:'kg'},
@@ -203,13 +213,18 @@ document.addEventListener("DOMContentLoaded", function () {
     { company: "코코", date: "2024.02.17", number: 647983, category:'토마토', name: "체리토마토", amount: 16990, discount: 0, weight:2, unit:'kg'},
     { company: "코코", date: "2024.02.17", number: 647019, category:'양파', name: "친환경양파망", amount: 14990, discount: 0, weight:4, unit:'kg', img:647019},
     { company: "코코", date: "2024.02.17", number: 659969, category:'청경채', name: "청경채", amount: 7290, discount: 0, weight:700, unit:'g'},
-    { company: "코코", date: "2024.02.17", number: 507154, category:'베이컨', name: "햄스빌베이컨", amount: 16890, discount: 0, weight:205, unit:'g'},
+    { company: "코코", date: "2024.02.17", number: 507154, category:'베이컨', name: "햄스빌 베이컨", amount: 16890, discount: 0, weight:205, unit:'g'},
     { company: "코코", date: "2024.02.17", number: 612635, category:'두부', name: "찌개부침두부", amount: 5690, discount: 0, weight:840, unit:'g'},
     { company: "코코", date: "2024.02.17", number: 530318, category:'양배추', name: "친환경양배추", amount: 5990, discount: 0, weight:4, unit:'kg', img:530318},
 
 
 
 	// 맘스
+	{ company: "맘스", date: "2024.05.25", number: 8807004802485, category:'김', name: "성경 올리브녹차 4gx16단", amount: 8200, discount: 0, weight:64, unit:'g',},
+	{ company: "맘스", date: "2024.05.25", number: 8801022023082, category:'맥주', name: "크러시 470㎖", amount: 15600, discount: 0, weight:8, unit:'캔',},
+	{ company: "맘스", date: "2024.05.25", number: 22001306, category:'오이', name: "백오이", amount: 2980, discount: 0, weight:6, unit:'개',},
+	{ company: "맘스", date: "2024.05.25", number: 8801043036955, category:'라면', name: "농심라면사리", amount: 1400, discount: 0, weight:5, unit:'개',},
+	
 	{ company: "맘스", date: "2024.05.02", number: 22000231, category:'양파', name: "양파(중망 7개)", amount: 4980, discount: 0, weight:1.5, unit:'kg',},
 
 	{ company: "맘스", date: "2024.04.20", number: 8801121020968, category:'우유', name: "매일 우유오리지널", amount: 4880, discount: 0, weight:1800, unit:'㎖', event:'행사'},
@@ -275,6 +290,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	var data2 = [
 
+		
 	];
 
 	// 데이터 정렬 함수: 최신 날짜순으로 정렬
@@ -337,6 +353,7 @@ document.addEventListener("DOMContentLoaded", function () {
 							case '장':
 							case '봉':
 							case '캔':
+							case '통':
 								return price / weight;
 							default:
 								return null;
