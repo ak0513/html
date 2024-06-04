@@ -5,6 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="../basic/js/common.js"></script>
+	<script src="./js/운동.js"></script>
 	<link rel="stylesheet" href="../basic/css/common.css">
 	<link rel="stylesheet" href="../basic/css/style.css">
 	<title>운동</title>
@@ -25,450 +26,66 @@
             <h2 class="h-tit1"><span>부위별 운동</span></h2>
             <div class="tab">
                 <ul class="tab-group" role="tablist">
-                    <li class="tab-item current" role="presentation"><button type="button" id="tab01_01" class="tab-btn" role="tab" aria-controls="section01_01" aria-selected="true">어깨</button></li>
-                    <li class="tab-item" role="presentation"><button type="button" id="tab01_02" class="tab-btn" role="tab" aria-controls="section01_02" aria-selected="false">가슴</button></li>
-                    <li class="tab-item" role="presentation"><button type="button" id="tab01_03" class="tab-btn" role="tab" aria-controls="section01_03" aria-selected="false">등</button></li>
-                    <li class="tab-item" role="presentation"><button type="button" id="tab01_04" class="tab-btn" role="tab" aria-controls="section01_04" aria-selected="false">이두</button></li>
-                    <li class="tab-item" role="presentation"><button type="button" id="tab01_05" class="tab-btn" role="tab" aria-controls="section01_05" aria-selected="false">하체</button></li>
-                    <li class="tab-item" role="presentation"><button type="button" id="tab01_06" class="tab-btn" role="tab" aria-controls="section01_06" aria-selected="false">코어</button></li>
-                    <li class="tab-item" role="presentation"><button type="button" id="tab01_07" class="tab-btn" role="tab" aria-controls="section01_07" aria-selected="false">루틴</button></li>
+                    <li class="tab-item current" role="presentation"><button type="button" id="tab01" class="tab-btn" role="tab" aria-controls="section01" aria-selected="true">어깨</button></li>
+                    <li class="tab-item" role="presentation"><button type="button" id="tab02" class="tab-btn" role="tab" aria-controls="section02" aria-selected="false">가슴</button></li>
+                    <li class="tab-item" role="presentation"><button type="button" id="tab03" class="tab-btn" role="tab" aria-controls="section03" aria-selected="false">등</button></li>
+                    <li class="tab-item" role="presentation"><button type="button" id="tab04" class="tab-btn" role="tab" aria-controls="section04" aria-selected="false">이두</button></li>
+                    <li class="tab-item" role="presentation"><button type="button" id="tab05" class="tab-btn" role="tab" aria-controls="section05" aria-selected="false">삼두</button></li>
+                    <li class="tab-item" role="presentation"><button type="button" id="tab06" class="tab-btn" role="tab" aria-controls="section06" aria-selected="false">하체</button></li>
+                    <li class="tab-item" role="presentation"><button type="button" id="tab07" class="tab-btn" role="tab" aria-controls="section07" aria-selected="false">코어</button></li>
+                    <li class="tab-item" role="presentation"><button type="button" id="tab08" class="tab-btn" role="tab" aria-controls="section08" aria-selected="false">루틴</button></li>
                 </ul>
 
                 <div class="tab-content">
                     <!-- 어깨 -->
-                    <div class="tab-panel current" id="section01_01" role="tabpanel" aria-labelledby="tab01_01">
-                        <h3 class="h-tit2" id="어깨 운동루틴"><span>어깨 운동루틴</span></h3>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/wlbfitness3/223449765710" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/bonanza0917/223448634903" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h3 class="h-tit2" id="스미스 숄더 프레스"><span>스미스 숄더 프레스(머신)</span></h3>
-                        <p><span class="badge small">전면 삼각근</span></p>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/kimie1129/223346397388" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/huntfitness1/223406577374" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-            
-                        <h3 class="h-tit2" id="숄더프레스"><span>숄더 프레스(머신)</span></h3>
-                        <p><span class="badge small">전면 삼각근</span><span class="badge small">측면 삼각근</span></p>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/kimie1129/223341148038" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/ptjh91/223295641808" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/uonfit_1/223399561935" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h3 class="h-tit2" id="덤벨 숄더프레스"><span>덤벨 숄더프레스</span></h3>
-                        <p><span class="badge small">전면 삼각근</span><span class="badge small">측면 삼각근</span></p>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/smk6155/223438575328" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/gkdid99/223412174833" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/jodongjin4128/223392954587" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h3 class="h-tit2" id="사이드 래터럴 레이즈"><span>사이드 래터럴 레이즈</span></h3>
-                        <p><span class="badge small">측면 삼각근</span></p>
-                        <p class="breath">호흡: 내쉬면서 들어 올린다.</p>
-                        <ol class="bullet-num">
-                            <li>시선은 정면을 본다.</li>
-                            <li>상체를 들고 배에 힘을 준다.</li>
-                            <li>팔을 올려다가 45도까지만 내린다.</li>
-                            <li>팔을 살짝 구부린다</li>
-                            <li>무거운 중량보단 가벼운 중량으로 측면 어깨 근육에 집중</li>
-                        </ol>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/kimie1129/223453419086" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/dbwns2486/223170707319" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/effectgym/223258522183" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/kkh9638/223361197989" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-            
-                        <h3 class="h-tit2" id="리버스 펙 덱 플라이"><span>리버스 펙 덱 플라이(머신)</span></h3>
-                        <p><span class="badge small">후면 삼각근</span></p>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/kimie1129/223336873274" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h3 class="h-tit2" id="인클라인 벤트오버 래터럴 레이즈"><span>인클라인 벤트오버 래터럴 레이즈(머신)</span></h3>
-                        <p><span class="badge small">후면 삼각근</span></p>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/kimie1129/223464706291" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-                        <h3 class="h-tit4">세팅</h3>
-                        <ol class="bullet-num">
-                            <li>벤치 각도: 약 45˚(각도 조절기 제일 아래에서 3~4칸 위)</li>
-                            <li>턱이 벤치 끝에 오도록 올라오기</li>
-                            <li>하체를 몸 쪽으로 당겨 상체 지지</li>
-                            <li>팔은 지면과 수직</li>
-                            <li>덤벨은 손바닥이 마주 보게 파지</li>
-                        </ol>
-            
-                        <h3 class="h-tit2" id="벤트오버 래터럴 레이즈"><span>벤트오버 래터럴 레이즈</span></h3>
-                        <p><span class="badge small">후면 삼각근</span></p>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/new_sky31/223423635216" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
+                    <div class="tab-panel current" id="section01" role="tabpanel" aria-labelledby="tab01">
+                        
                     </div>
                     <!--// 어께-->
 
                     <!-- 가슴 -->
-                    <div class="tab-panel" id="section01_02" role="tabpanel" aria-labelledby="tab01_02">
-                        <h3 class="h-tit2" id="가슴 운동루틴"><span>가슴 운동루틴</span></h3>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/go3110887/223441531038" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/ak0817ak/223445685019" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://dr-allthings.com/가슴-운동-루틴-대흉근-만드는-방법/" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
+                    <div class="tab-panel" id="section02" role="tabpanel" aria-labelledby="tab02">
                         
-
-                        <h3 class="h-tit2" id="펙 덱 플라이"><span>펙 덱 플라이</span></h3>
-                        <p>가슴을 모아주는 기능 / <span class="badge small">대흉근을 자극</span> / 가슴 운동 전 워밍업이나 마무리에 펌핑감을 유도</p>
-                        <h3 class="h-tit4">머신 세팅</h3>
-                        <ol class="bullet-num">
-                            <li>손잡이 레버는 맨 앞(초보) 또는 두 번째</li>
-                            <li>손잡이는 모았을 때 쇄골 명치 사이 / 벌렸을 때 겨드랑이 부근</li>
-                        </ol>
-
-                        <h3 class="h-tit4">자세 세팅</h3>
-                        <ol class="bullet-num">
-                            <li>손목 일직선(엄지가 위로)</li>
-                            <li>팔꿈치 살짝 굽혀주기</li>
-                            <li>가슴 들어주기</li>
-                            <li>엉덩이 밀착하기</li>
-                        </ol>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/kimie1129/223466258369" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/skyboy210/223443577894" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/kimie1129/223439868498" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h3 class="h-tit2" id="시티드 체스트 프레스 머신"><span>시티드 체스트 프레스 머신</span></h3>
-                        <p><span class="badge small">대흉근</span> / 초보자 적합 / 벤치 프레스 하기 전 운동</p>
-                        <p class="breath">호흡: 내쉬면서 민다.</p>
-                        <h3 class="h-tit4">자세 세팅</h3>
-                        <ol class="bullet-num">
-                            <li>그립이 가슴 높이에 오도록 의자 높이 조절</li>
-                            <li>바를 잡을 때 손등이 위를 향하게하고, 손바닥이 아닌 손목뼈(손바닥 아래)를 대고 감싸쥔다.</li>
-                            <li>가슴을 들고 엉덩이와 등/어깨는 붙인다.</li>
-                            <li>가슴을 들면 등이 모인다.</li>
-                            <li>바를 손목뼈로 민다는 느낌으로 손목은 꺽이지 않게 한다.</li>
-                            <li>바를 밀었을 때 손목 팔꿈치는 일직선 / 팔꿈치를 과하게 펴지 않는다.</li>
-                            <li>원위치로 올 때 팔꿈치는 손목보다 살짝 아래 위치 / 팔꿈치를 너무 아래로 떨구지 않는다.</li>
-                        </ol>
-                        <h3 class="h-tit4">틀린 세팅</h3>
-                        <ol class="bullet-num">
-                            <li>팔꿈치가 어깨와 일직선이거나 위로 올라가면 안된다.</li>
-                            <li>팔꿈치가 손목보다 너무 아래에 있으면 안된다.</li>
-                            <li>바를 밀었을 때 어깨가 앞으로 나오면 안된다.(가슴을 오픈시키면 어깨가 안나온다.)</li>
-                        </ol>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/igtrainer/223437129470" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/smk6155/223456698244" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/ytcrew7919/220862709285" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-
-                        <h3 class="h-tit2" id="인클라인 체스트 프레스 머신"><span>인클라인 체스트 프레스 머신</span></h3>
-                        <p><span class="badge small">가슴 윗부분</span><span class="badge small">대흉근을 자극</span></p>
-                        <p class="breath">호흡: 내쉬면서 민다.</p>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/lms5259111/221983041454ㄴ" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/heanber12/223424238918" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/jodongjin4128/223452970503" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h3 class="h-tit2" id="벤치프레스"><span>벤치 프레스</span></h3>
-                        <p><span class="badge small">가슴 전체</span></p>
-                        <div class="btn-wrap">
-                            <a href="" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h3 class="h-tit2" id="인클라인 벤치프레스"><span>인클라인 벤치 프레스</span></h3>
-                        <p><span class="badge small">가슴 윗부분</span><span class="badge small">가슴 전체</span></p>
-                        <div class="btn-wrap">
-                            <a href="" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h3 class="h-tit2" id="딥스"><span>딥스</span></h3>
-                        <p><span class="badge small">가슴 아래부분</span><span class="badge small">삼두</span></p>
-                        <p>상체를 꼿꼿하게 수직으로 세울 수록 삼두근에 자극이 가기 때문에 상체를 앞으로 의도적으로 기울여서 가슴 근육이 쓰일 수 있는 각을 만들어 줘야 한다.</p>
-                        <div class="btn-wrap">
-                            <a href="" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h3 class="h-tit2" id="푸쉬업"><span>푸쉬업</span></h3>
-                        <p class="breath">호흡: 내쉬면서 올라온다</p>
-                        <div class="btn-wrap">
-                            <a href="https://m.post.naver.com/viewer/postView.naver?volumeNo=17943075&memberNo=24635978" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/formyesme/223451429139" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/smk6155/223448036968" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
                     </div>
                     <!--// 가슴-->
 
                     <!-- 등 -->
-                    <div class="tab-panel" id="section01_03" role="tabpanel" aria-labelledby="tab01_03">
-                        <h3 class="h-tit2" id="등 운동루틴"><span>등 운동루틴</span></h3>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/2014bravehill/223445710319" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-                        <p>수평운동은 등의 두께를 키워줌</p>
+                    <div class="tab-panel" id="section03" role="tabpanel" aria-labelledby="tab03">
 
-                        <h3 class="h-tit2" id="T바 로우"><span>T바 로우(=바벨 로우)</span></h3>
-                        <p><span class="badge small">중하부 발달</span> / 넓이보다는 두깨를 채워주는 운동</p>
-                        <p class="breath">호흡: 내쉬면서 광배근과 척추기립근 상부가 수축하도록 당긴다</p>
-                        <div class="btn-wrap">
-                            <a href="https://health.tali.kr/티바로우-머신-자세-광배근-채우기-효과-근육자극-해" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h3 class="h-tit2" id="랫 풀 다운"><span>랫 풀 다운</span></h3>
-                        <p><span class="badge small">광배근</span><span class="badge small">상완이두근</span></p>
-                        <p class="breath">호흡: 내쉬면서 당기기</p>
-                        <p>등의 넓이를 키워줌 수직운동</p>
-                        <ol class="bullet-num">
-                            <li>가슴을 들고 손목이 꺽이지 않도록 그립을 잡는다.</li>
-                            <li>케이블과 머리가 일치하도록 앉는다.</li>
-                            <li>발은 엉덩이 뒤쪽으로 보낸 후 뒤꿈치를 들어 패드를 강하게 밀어 몸을 고정한다.</li>
-                            <li>전완이 수직으로 내려오도록 당긴다.</li>
-                            <li></li>
-                        </ol>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/ptjh91/223296271486" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/fithubpila/223451836338" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/smk6155/223453200779" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h3 class="h-tit2" id="어시스트 풀업"><span>어시스트 풀업</span></h3>
-                        <p class="breath">호흡: </p>
-                        <div class="btn-wrap">
-                            <a href="" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h3 class="h-tit2" id="시티드 로우"><span>시티드 로우</span></h3>
-                        <p class="breath">호흡: </p>
-                        <div class="btn-wrap">
-                            <a href="" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
                     </div>
                     <!--// 등 -->
 
-                    <!-- 이두 삼두 -->
-                    <div class="tab-panel" id="section01_05" role="tabpanel" aria-labelledby="tab01_05">
-                        <h3 class="h-tit2" id="이두 종류"><span>이두 종류</span></h3>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/jaeho103/223427661061" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h3 class="h-tit2" id="덤벨 컬"><span>덤벨 컬</span></h3>
-                        <p class="breath">호흡: </p>
-                        <div class="btn-wrap">
-                            <a href="" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h3 class="h-tit2" id="해머 컬"><span>해머 컬</span></h3>
-                        <p class="breath">호흡: </p>
-                        <div class="btn-wrap">
-                            <a href="" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
+                    <!-- 이두 -->
+                    <div class="tab-panel" id="section04" role="tabpanel" aria-labelledby="tab04">
                         
-                        <h3 class="h-tit2" id="바벨 컬"><span>바벨 컬</span></h3>
-                        <p class="breath">호흡: </p>
-                        <div class="btn-wrap">
-                            <a href="" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-                        
-                        <h3 class="h-tit2" id="컨센트레이션 컬"><span>컨센트레이션 컬</span></h3>
-                        <p class="breath">호흡: </p>
-                        <div class="btn-wrap">
-                            <a href="" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
                     </div>
-                    <!--// 이두 삼두 -->
+                    <!--// 이두 -->
+
+                    <!-- 삼두 -->
+                    <div class="tab-panel" id="section05" role="tabpanel" aria-labelledby="tab05">
+                        
+                    </div>
+                    <!--// 삼두 -->
 
                     <!-- 하체 -->
-                    <div class="tab-panel" id="section01_05" role="tabpanel" aria-labelledby="tab01_05">
-                        <h3 class="h-tit2" id="스쿼트"><span>스쿼트</span></h3>
-                        <p class="breath">호흡: 내쉬면서 올라온다.</p>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/ptjh91/223242609406?isInf=true&trackingCode=nx" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
+                    <div class="tab-panel" id="section06" role="tabpanel" aria-labelledby="tab06">
+                        
                     </div>
                     <!--// 하체 -->
 
                     <!-- 코어 -->
-                    <div class="tab-panel" id="section01_06" role="tabpanel" aria-labelledby="tab01_06">
-                        <h3 class="h-tit2" id="마운트 클라이밍"><span>마운트 클라이밍</span></h3>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/jwr0825/222648377561" class="btn primary round small" target="_blank">바로가기</a>
-                            <a href="https://blog.naver.com/shaka_shaka_/223418362015" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-                        <h3 class="h-tit2" id="에어 바이크"><span>에어 바이크</span></h3>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/ptjey/223045025798" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
+                    <div class="tab-panel" id="section07" role="tabpanel" aria-labelledby="tab07">
+                        
                     </div>
                     <!--// 코어 -->
 
                     <!-- 루틴 -->
-                    <div class="tab-panel" id="section01_07" role="tabpanel" aria-labelledby="tab01_07">
-                        <!-- 3분할 루틴 -->
-                        <h3 class="h-tit2"><span>3분할 루틴</span></h3>
-                        <p>3분할 운동 루틴의 경우 대근육 하나와 소근육 하나를 묶는 것이 일반적이다.</p>
-                        <h4 class="h-tit3"><span>정석</span></h4>
-                        <p>가슴 / 삼두<br>등 / 이두<br>하체 / 어깨</p>
-                        <h4 class="h-tit3"><span>내 루틴</span></h4>
-                        <p>가슴 / 어깨, 이두<br>등 / 어깨, 삼두<br>하체 / 가슴 / 등</p>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/hd2320333/223384215244" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-                        <!--// 3분할 루틴 -->
+                    <div class="tab-panel" id="section08" role="tabpanel" aria-labelledby="tab08">
                         
-                        <!-- 가슴 루틴 -->
-                        <h3 class="h-tit2" id="가슴 루틴"><span>가슴 루틴</span></h3>
-                        <h4 class="h-tit3" id="가슴1"><span>가슴1</span></h4>
-                        <ol class="bullet-num">
-                            <li>벤치 프레스</li>
-                            <li>인클라인 덤벨 프레스</li>
-                            <li>인클라인 체스트 프레스 <span class="machine">머신</span></li>
-                            <li>펙 덱 플라이 <span class="machine">머신</span></li>
-                        </ol>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/gym-youngbin/223461528689" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h4 class="h-tit3" id="가슴2"><span>가슴2</span></h4>
-                        <ol class="bullet-num">
-                            <li>펙 덱 플라이 <span class="machine">머신</span></li>
-                            <li>벤치 프레스</li>
-                            <li>인클라인 덤벨 프레스</li>
-                            <li>딥스 <span class="machine">머신</span></li>
-                        </ol>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/a2pfitness/223427138431" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h4 class="h-tit3" id="가슴3"><span>가슴3</span></h4>
-                        <ol class="bullet-num">
-                            <li>체스트 프레스 <span class="machine">머신</span></li>
-                            <li>펙 덱 플라이 <span class="machine">머신</span></li>
-                            <li>인클라인 덤벨 프레스</li>
-                            <li>딥스</li>
-                        </ol>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/go3110887/223441531038" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h4 class="h-tit3" id="가슴4"><span>가슴4</span></h4>
-                        <ol class="bullet-num">
-                            <li>인클라인 벤치 프레스 <span class="machine">머신</span></li>
-                            <li>덤벨 프레스</li>
-                            <li>펙 덱 플라이 <span class="machine">머신</span></li>
-                            <li>시티드 체스트 프레스 <span class="machine">머신</span></li>
-                        </ol>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/im_pt/223102287456" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-                        <!--// 가슴 루틴 -->
-
-                        <!-- 어깨 루틴 -->
-                        <h3 class="h-tit2" id="어깨 루틴"><span>어깨 루틴</span></h3>
-                        <h4 class="h-tit3" id="어깨1"><span>어깨1</span></h4>
-                        <ol class="bullet-num">
-                            <li>사이드 레터럴 레이즈(측면)</li>
-                            <li>숄더 프레스<span class="machine">머신</span>(측면과 전면)</li>
-                            <li>벤트오버 레터럴 레이즈(후면)</li>
-                            <li>리버스 펙 덱 플라이<span class="machine">머신</span>(후면)</li>
-                            <li>프론트 레이즈(전면)</li>
-                        </ol>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/ablegym39/223457456407" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h4 class="h-tit3" id="어깨2"><span>어깨2</span></h4>
-                        <ol class="bullet-num">
-                            <li>프론트 레이즈(전면) 15회 3~5세트</li>
-                            <li>사이드 레터럴 레이즈(측면) 15~20회 3세트</li>
-                            <li>벤트오버 레터럴 레이즈(후면) 15회 3~5세트</li>
-                            <li>리버스 펙 덱 플라이<span class="machine">머신</span>(후면)</li>
-                        </ol>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/artmxn/223466382976" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-                        <!--// 어깨 루틴 -->
-
-                        <!-- 등 루틴 -->
-                        <h3 class="h-tit2" id="등 루틴"><span>등 루틴</span></h3>
-                        <h4 class="h-tit3" id="등1"><span>등1</span></h4>
-                        <ol class="bullet-num">
-                            <li>랫 풀 다운 <span class="machine">머신</span>(광배근)</li>
-                            <li>시티드 <span class="cable">케이블</span> 로우 <span class="machine">머신</span></li>
-                        </ol>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/all_people/223468018452" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h4 class="h-tit3" id="등2"><span>등2</span></h4>
-                        <ol class="bullet-num">
-                            <li><span class="cable">케이블</span> 암 풀 다운</li>
-                            <li>암 풀 다운 <span class="machine">머신</span></li>
-                            <li>시티드 <span class="cable">케이블</span> 로우 <span class="machine">머신</span></li>
-                            <li>랫 풀 다운 <span class="machine">머신</span>(광배근)</li>
-                            <li>어시스트 풀업 <span class="machine">머신</span></li>
-                        </ol>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/leesy3113/223412945109" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h4 class="h-tit3" id="등3"><span>등3</span></h4>
-                        <ol class="bullet-num">
-                            <li>랫 풀 다운 <span class="machine">머신</span>(광배근)</li>
-                            <li>벤트 로우 <span class="machine">머신</span></li>
-                            <li>프론트 로우 <span class="machine">머신</span></li>
-                            <li>바벨 로우</li>
-                        </ol>
-                        <div class="btn-wrap">
-                            <a href="" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-
-                        <h3 class="h-tit2" id="등 루틴"><span>등 루틴</span></h3>
-                        <h4 class="h-tit3" id="등3"><span>등3</span></h4>
-                        <ol class="bullet-num">
-                            <li>풀업 = 랫 풀 다운 <span class="machine">머신</span>(광배근)</li>
-                            <li>시티드 <span class="cable">케이블</span> 로우 <span class="machine">머신</span></li>
-                            <li>암 풀 다운 <span class="machine">머신</span></li>
-                            <li>바벨 로우 = 티바 로우 <span class="machine">머신</span></li>
-                        </ol>
-                        <div class="btn-wrap">
-                            <a href="https://blog.naver.com/igtrainer/223362286714" class="btn primary round small" target="_blank">바로가기</a>
-                        </div>
-                        <!--// 등 루틴 -->
                     </div>
                     <!--// 루틴 -->
                 </div>
             </div>
-
-
-
-            
-
-
-
-
-            
-            
-
-
-
-
-            
-
-
-
-            
-
-            
-            
-            
 
 
             <h2 class="h-tit1"><span>단백질 파우더 종류</span></h2>
