@@ -130,6 +130,13 @@ document.addEventListener("DOMContentLoaded", function () {
 	var data = [
     // ℓ ㎖ g kg 병 
 	// 코코
+	{ company: "코코", date: "2024.06.01", number: '653669', category:'들깨', name: "들깨가루", amount: 15990, discount: 0, weight:400, unit:'g'},
+	{ company: "코코", date: "2024.06.01", number: '588825', category:'우유', name: "비타민우유", amount: 4590, discount: 0, weight:2.3, unit:'ℓ'},
+	{ company: "코코", date: "2024.06.01", number: '605698', category:'아보카도', name: "아보카도", amount: 14990, discount: 0, weight:6, unit:'개'},
+	{ company: "코코", date: "2024.06.01", number: '605698', category:'빵', name: "호밀빵", amount: 7490, discount: 0, weight:860, unit:'g'},
+	{ company: "코코", date: "2024.06.01", number: '565617', category:'아몬드', name: "아몬드", amount: 13490, discount: 0, weight:1.36, unit:'kg'},
+	{ company: "코코", date: "2024.06.01", number: '7771398', category:'의류', name: "라운드바지", amount: 12970, discount: 0, weight:0, unit:'kg'},
+
 	{ company: "코코", date: "2024.05.25", number: '629052', category:'콩', name: "병아리콩", amount: 14990, discount: 0, weight:6, unit:'kg'},
 	{ company: "코코", date: "2024.05.25", number: '639952', category:'쌀', name: "백진주쌀", amount: 36990, discount: 3000, weight:10, unit:'kg'},
 	{ company: "코코", date: "2024.05.25", number: '608881', category:'수박', name: "수박", amount: 24990, discount: 3200, weight:9, unit:'kg'},
@@ -227,7 +234,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	
 	{ company: "맘스", date: "2024.05.02", number: '22000231', category:'양파', name: "양파(중망 7개)", amount: 4980, discount: 0, weight:1.5, unit:'kg',},
 
-	{ company: "맘스", date: "2024.04.20", number: '8801121020968', category:'우유', name: "매일 우유오리지널", amount: 4880, discount: 0, weight:1800, unit:'㎖', event:'행사'},
+	{ company: "맘스", date: "2024.04.20", number: '8801121020968', category:'우유', name: "매일 우유오리지널", amount: 4880, discount: 0, weight:1.8, unit:'ℓ', event:'행사'},
     { company: "맘스", date: "2024.04.20", number: '8801066801134', category:'김밥', name: "대림알뜰김밥세트", amount: 5980, discount: 0, weight:510, unit:'g'},
     { company: "맘스", date: "2024.04.20", number: '22001269', category:'깻잎', name: "금산깻잎(퀄리티 나쁨)", amount: 1500, discount: 0, weight:30, unit:'장', img:22001269},
     { company: "맘스", date: "2024.04.20", number: '8801253122349', category:'우엉', name: "일가양념우엉", amount: 3800, discount: 0, weight:150, unit:'g'},
@@ -253,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	{ company: "맘스", date: "2024.02.17", number: '8809605750219', category:'과자', name: "참한입인절미", amount: 2500, discount: 0, weight:235, unit:'g'},
     { company: "맘스", date: "2024.02.17", number: '8801039000953', category:'김', name: "해표광천도시락김 5g*24번들", amount: 7980, discount: 0, weight:120, unit:'g'},
     { company: "맘스", date: "2024.02.17", number: '8809052116576', category:'월남쌈', name: "뉴 월남쌈", amount: 4050, discount: 0, weight:300, unit:'g'},
-    { company: "맘스", date: "2024.02.17", number: '8801121020968', category:'우유', name: "매일 우유오리지널", amount: 5650, discount: 0, weight:1800, unit:'㎖'},
+    { company: "맘스", date: "2024.02.17", number: '8801121020968', category:'우유', name: "매일 우유오리지널", amount: 5650, discount: 0, weight:1.8, unit:'ℓ'},
     { company: "맘스", date: "2024.02.17", number: '201328', category:'고추', name: "청양고추", amount: 3750, discount: 0, weight:20, unit:'kg'},
 
 
@@ -262,9 +269,9 @@ document.addEventListener("DOMContentLoaded", function () {
     { company: "자유마트", date: "2024.04.27", number: '8301045522265', category:'라면', name: "진라면 매운맛", amount: 3250, discount: 400, weight:5, unit:'봉'},
 
 	// 개봉역
-    { company: "개봉역", date: "2024.04.08", number: '8801121020968', category:'우유', name: "매일 우유오리지널", amount: 5150, discount: 0, weight:1800, unit:'㎖'},
-    { company: "개봉역", date: "2024.03.20", number: '8801121020968', category:'우유', name: "매일 우유오리지널", amount: 3980, discount: 0, weight:1800, unit:'㎖', event:'행사'},
-    { company: "개봉역", date: "2024.02.29", number: '8801121020968', category:'우유', name: "매일 우유오리지널", amount: 5150, discount: 0, weight:1800, unit:'㎖'},
+    { company: "개봉역", date: "2024.04.08", number: '8801121020968', category:'우유', name: "매일 우유오리지널", amount: 5150, discount: 0, weight:1.8, unit:'ℓ'},
+    { company: "개봉역", date: "2024.03.20", number: '8801121020968', category:'우유', name: "매일 우유오리지널", amount: 3980, discount: 0, weight:1.8, unit:'ℓ', event:'행사'},
+    { company: "개봉역", date: "2024.02.29", number: '8801121020968', category:'우유', name: "매일 우유오리지널", amount: 5150, discount: 0, weight:1.8, unit:'ℓ'},
 
 	
 
@@ -289,8 +296,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 	var data2 = [
+// ℓ ㎖ g kg 병 
 
-		
 	];
 
 	// 데이터 정렬 함수: 최신 날짜순으로 정렬
@@ -346,7 +353,7 @@ document.addEventListener("DOMContentLoaded", function () {
 								return price / weight * 100;
 							case 'kg':
 							case 'ℓ':
-								return price / weight / 10;
+								return price / weight / 1;
 							case '병':
 							case '개':
 							case '단':
