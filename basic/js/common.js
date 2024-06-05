@@ -346,8 +346,10 @@ var ui = (function() {
 				}
 				var tab = tabBtnsEle.closest('.tab');
 				var tabBtn = tab.querySelectorAll('.tab-btn');
-				var tabItem = tab.querySelectorAll('.tab-item');
-				var tabPannel = tab.querySelectorAll('.tab-panel');
+				// var tabItem = tab.querySelectorAll('.tab-item');
+				// var tabPannel = tab.querySelectorAll('.tab-panel');
+				var tabItem = siblings(tabBtnsEle.parentElement);
+				var tabPannel = tabBtnsEle.closest('.tab-group').nextElementSibling.children;
 				var controls = this.getAttribute('aria-controls');
 				// 초기화
 				ui.removeClass(tabItem, 'current');
