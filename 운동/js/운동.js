@@ -13,7 +13,6 @@ var section0803 = './등 루틴.html';
 var section0804 = './이두 루틴.html';
 var section0805 = './삼두 루틴.html';
 var section0806 = './하체 루틴.html';
-var section0807 = './코어 루틴.html';
 
 function loadData(url, targetElementId, callback) {
     fetch(url)
@@ -58,4 +57,3 @@ loadData(section0803, 'section0803', callback);
 loadData(section0804, 'section0804', callback);
 loadData(section0805, 'section0805', callback);
 loadData(section0806, 'section0806', callback);
-loadData(section0807, 'section0807', callback);

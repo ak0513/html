@@ -16,7 +16,8 @@
     <style>
         .machine {color:red;}
         .cable {color:#00ac46;}
-        .tab-btn {padding: 10px 15px;}
+        .tab-btn {padding: 10px 15px;height:100%;}
+        .h-tit1 {margin-bottom:20px;}
         /* .h-tit2 {color:var(--primary);} */
         .badge {font-size:1.4rem;font-weight:700;background-color:#00ac46;color:#fff;border-radius:4px;padding:4px 12px;margin:0 4px 0 0;}
         .breath {background-color:#f8f8f8;font-size:1.6rem;padding:6px 16px;border-radius:4px;}
@@ -61,13 +62,24 @@
 
                     <!-- 루틴 -->
                     <div class="tab-panel" id="section08" role="tabpanel" aria-labelledby="tab08">
-                        <div id="section0801"></div>
-                        <div id="section0802"></div>
-                        <div id="section0803"></div>
-                        <div id="section0804"></div>
-                        <div id="section0805"></div>
-                        <div id="section0806"></div>
-                        <div id="section0807"></div>
+                        <div class="tab">
+                            <ul class="tab-group" role="tablist">
+                                <li class="tab-item current" role="presentation"><button type="button" id="tab0801" class="tab-btn" role="tab" aria-controls="section0801" aria-selected="true">어깨</button></li>
+                                <li class="tab-item" role="presentation"><button type="button" id="tab0802" class="tab-btn" role="tab" aria-controls="section0802" aria-selected="false">가슴</button></li>
+                                <li class="tab-item" role="presentation"><button type="button" id="tab0803" class="tab-btn" role="tab" aria-controls="section0803" aria-selected="false">등</button></li>
+                                <li class="tab-item" role="presentation"><button type="button" id="tab0804" class="tab-btn" role="tab" aria-controls="section0804" aria-selected="false">이두</button></li>
+                                <li class="tab-item" role="presentation"><button type="button" id="tab0805" class="tab-btn" role="tab" aria-controls="section0805" aria-selected="false">삼두</button></li>
+                                <li class="tab-item" role="presentation"><button type="button" id="tab0806" class="tab-btn" role="tab" aria-controls="section0806" aria-selected="false">하체</button></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-panel current" id="section0801" role="tabpanel" aria-labelledby="tab0801"></div>
+                                <div class="tab-panel" id="section0802" role="tabpanel" aria-labelledby="tab0802"></div>
+                                <div class="tab-panel" id="section0803" role="tabpanel" aria-labelledby="tab0803"></div>
+                                <div class="tab-panel" id="section0804" role="tabpanel" aria-labelledby="tab0804"></div>
+                                <div class="tab-panel" id="section0805" role="tabpanel" aria-labelledby="tab0805"></div>
+                                <div class="tab-panel" id="section0806" role="tabpanel" aria-labelledby="tab0806"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
