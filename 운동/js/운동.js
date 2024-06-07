@@ -5,6 +5,7 @@ var Low = './등.html';
 var Curl = './팔.html';
 var Leg = './하체.html';
 var Core = './코어.html';
+var Stretching = './스트레칭.html';
 // var section08 = './루틴.html';
 var RoutineSplit = './분할 루틴.html';
 var RoutineShoulder = './어깨 루틴.html';
@@ -47,6 +48,7 @@ loadData(Low, 'Low', callback);
 loadData(Curl, 'Curl', callback);
 loadData(Leg, 'Leg', callback);
 loadData(Core, 'Core', callback);
+loadData(Stretching, 'Stretching', callback);
 // loadData(section08, 'section08', callback);
 
 loadData(RoutineSplit, 'RoutineSplit', callback);
