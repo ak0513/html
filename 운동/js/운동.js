@@ -1,18 +1,17 @@
 // 불러올 컨텐츠가 들어있는 URL
-var section01 = './어깨.html';
-var section02 = './가슴.html';
-var section03 = './등.html';
-var section04 = './이두.html';
-var section05 = './삼두.html';
-var section06 = './하체.html';
-var section07 = './코어.html';
+var Shoulder = './어깨.html';
+var Chest = './가슴.html';
+var Low = './등.html';
+var Curl = './팔.html';
+var Leg = './하체.html';
+var Core = './코어.html';
 // var section08 = './루틴.html';
-var section0801 = './어깨 루틴.html';
-var section0802 = './가슴 루틴.html';
-var section0803 = './등 루틴.html';
-var section0804 = './이두 루틴.html';
-var section0805 = './삼두 루틴.html';
-var section0806 = './하체 루틴.html';
+var RoutineSplit = './분할 루틴.html';
+var RoutineShoulder = './어깨 루틴.html';
+var RoutineChest = './가슴 루틴.html';
+var RoutineLow = './등 루틴.html';
+var RoutineCurl = './팔 루틴.html';
+var RoutineLeg = './하체 루틴.html';
 
 function loadData(url, targetElementId, callback) {
     fetch(url)
@@ -42,18 +41,17 @@ function callback() {
     
 }
 
-loadData(section01, 'section01', callback);
-loadData(section02, 'section02', callback);
-loadData(section03, 'section03', callback);
-loadData(section04, 'section04', callback);
-loadData(section05, 'section05', callback);
-loadData(section06, 'section06', callback);
-loadData(section07, 'section07', callback);
+loadData(Shoulder, 'Shoulder', callback);
+loadData(Chest, 'Chest', callback);
+loadData(Low, 'Low', callback);
+loadData(Curl, 'Curl', callback);
+loadData(Leg, 'Leg', callback);
+loadData(Core, 'Core', callback);
 // loadData(section08, 'section08', callback);
 
-loadData(section0801, 'section0801', callback);
-loadData(section0802, 'section0802', callback);
-loadData(section0803, 'section0803', callback);
-loadData(section0804, 'section0804', callback);
-loadData(section0805, 'section0805', callback);
-loadData(section0806, 'section0806', callback);
+loadData(RoutineSplit, 'RoutineSplit', callback);
+loadData(RoutineShoulder, 'RoutineShoulder', callback);
+loadData(RoutineChest, 'RoutineChest', callback);
+loadData(RoutineLow, 'RoutineLow', callback);
+loadData(RoutineCurl, 'RoutineCurl', callback);
+loadData(RoutineLeg, 'RoutineLeg', callback);

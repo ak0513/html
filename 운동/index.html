@@ -22,62 +22,66 @@
         .badge {font-size:1.4rem;font-weight:700;background-color:#00ac46;color:#fff;border-radius:4px;padding:4px 12px;margin:0 4px 0 0;}
         .breath {background-color:#f8f8f8;font-size:1.6rem;padding:6px 16px;border-radius:4px;}
         ul[class*='bullet'] li + li, ol[class*='bullet'] li + li {margin-top:4px;}
+
+        .tab1 .tab-item + .tab-item {margin-left:0;}
+        .tab1 .tab-btn {border:none;padding:9px 16px 7px;font-size:16px;border-radius:4px;}
+        .tab1 .tab-item.current .tab-btn {background-color: var(--primary);color:#fff;}
+
+        .tab2 .tab-item + .tab-item {margin-left:0;}
+        .tab2 .tab-btn {border:none;padding:9px 16px 7px;font-size:16px;border-radius:50px;}
+        .tab2 .tab-item.current .tab-btn {background-color: var(--secondary);color:#fff;}
     </style>
     <section id="container">
         <div class="container-inner">
             <h2 class="h-tit1"><span>부위별 운동</span></h2>
             <div class="tab">
-                <ul class="tab-group" role="tablist">
-                    <li class="tab-item current" role="presentation"><button type="button" id="tab01" class="tab-btn" role="tab" aria-controls="section01" aria-selected="true">어깨</button></li>
-                    <li class="tab-item" role="presentation"><button type="button" id="tab02" class="tab-btn" role="tab" aria-controls="section02" aria-selected="false">가슴</button></li>
-                    <li class="tab-item" role="presentation"><button type="button" id="tab03" class="tab-btn" role="tab" aria-controls="section03" aria-selected="false">등</button></li>
-                    <li class="tab-item" role="presentation"><button type="button" id="tab04" class="tab-btn" role="tab" aria-controls="section04" aria-selected="false">이두</button></li>
-                    <li class="tab-item" role="presentation"><button type="button" id="tab05" class="tab-btn" role="tab" aria-controls="section05" aria-selected="false">삼두</button></li>
-                    <li class="tab-item" role="presentation"><button type="button" id="tab06" class="tab-btn" role="tab" aria-controls="section06" aria-selected="false">하체</button></li>
-                    <li class="tab-item" role="presentation"><button type="button" id="tab07" class="tab-btn" role="tab" aria-controls="section07" aria-selected="false">코어</button></li>
-                    <li class="tab-item" role="presentation"><button type="button" id="tab08" class="tab-btn" role="tab" aria-controls="section08" aria-selected="false">루틴</button></li>
+                <ul class="tab-group tab1" role="tablist">
+                    <li class="tab-item current" role="presentation"><button type="button" id="ShoulderTab" class="tab-btn" role="tab" aria-controls="Shoulder" aria-selected="true">어깨</button></li>
+                    <li class="tab-item" role="presentation"><button type="button" id="ChestTab" class="tab-btn" role="tab" aria-controls="Chest" aria-selected="false">가슴</button></li>
+                    <li class="tab-item" role="presentation"><button type="button" id="LowTab" class="tab-btn" role="tab" aria-controls="Low" aria-selected="false">등</button></li>
+                    <li class="tab-item" role="presentation"><button type="button" id="CurlTab" class="tab-btn" role="tab" aria-controls="Curl" aria-selected="false">팔</button></li>
+                    <li class="tab-item" role="presentation"><button type="button" id="LegTab" class="tab-btn" role="tab" aria-controls="Leg" aria-selected="false">하체</button></li>
+                    <li class="tab-item" role="presentation"><button type="button" id="CoreTab" class="tab-btn" role="tab" aria-controls="Core" aria-selected="false">코어</button></li>
+                    <li class="tab-item" role="presentation"><button type="button" id="RoutineTab" class="tab-btn" role="tab" aria-controls="Routine" aria-selected="false">루틴</button></li>
                 </ul>
 
                 <div class="tab-content">
                     <!-- 어깨 -->
-                    <div class="tab-panel current" id="section01" role="tabpanel" aria-labelledby="tab01"></div>
+                    <div class="tab-panel current" id="Shoulder" role="tabpanel" aria-labelledby="ShoulderTab"></div>
 
                     <!-- 가슴 -->
-                    <div class="tab-panel" id="section02" role="tabpanel" aria-labelledby="tab02"></div>
+                    <div class="tab-panel" id="Chest" role="tabpanel" aria-labelledby="ChestTab"></div>
 
                     <!-- 등 -->
-                    <div class="tab-panel" id="section03" role="tabpanel" aria-labelledby="tab03"></div>
+                    <div class="tab-panel" id="Low" role="tabpanel" aria-labelledby="LowTab"></div>
 
-                    <!-- 이두 -->
-                    <div class="tab-panel" id="section04" role="tabpanel" aria-labelledby="tab04"></div>
-
-                    <!-- 삼두 -->
-                    <div class="tab-panel" id="section05" role="tabpanel" aria-labelledby="tab05"></div>
+                    <!-- 팔 -->
+                    <div class="tab-panel" id="Curl" role="tabpanel" aria-labelledby="CurlTab"></div>
 
                     <!-- 하체 -->
-                    <div class="tab-panel" id="section06" role="tabpanel" aria-labelledby="tab06"></div>
+                    <div class="tab-panel" id="Leg" role="tabpanel" aria-labelledby="LegTab"></div>
 
                     <!-- 코어 -->
-                    <div class="tab-panel" id="section07" role="tabpanel" aria-labelledby="tab07"></div>
+                    <div class="tab-panel" id="Core" role="tabpanel" aria-labelledby="CoreTab"></div>
 
                     <!-- 루틴 -->
-                    <div class="tab-panel" id="section08" role="tabpanel" aria-labelledby="tab08">
+                    <div class="tab-panel" id="Routine" role="tabpanel" aria-labelledby="RoutineTab">
                         <div class="tab">
-                            <ul class="tab-group" role="tablist">
-                                <li class="tab-item current" role="presentation"><button type="button" id="tab0801" class="tab-btn" role="tab" aria-controls="section0801" aria-selected="true">어깨</button></li>
-                                <li class="tab-item" role="presentation"><button type="button" id="tab0802" class="tab-btn" role="tab" aria-controls="section0802" aria-selected="false">가슴</button></li>
-                                <li class="tab-item" role="presentation"><button type="button" id="tab0803" class="tab-btn" role="tab" aria-controls="section0803" aria-selected="false">등</button></li>
-                                <li class="tab-item" role="presentation"><button type="button" id="tab0804" class="tab-btn" role="tab" aria-controls="section0804" aria-selected="false">이두</button></li>
-                                <li class="tab-item" role="presentation"><button type="button" id="tab0805" class="tab-btn" role="tab" aria-controls="section0805" aria-selected="false">삼두</button></li>
-                                <li class="tab-item" role="presentation"><button type="button" id="tab0806" class="tab-btn" role="tab" aria-controls="section0806" aria-selected="false">하체</button></li>
+                            <ul class="tab-group tab2" role="tablist">
+                                <li class="tab-item current" role="presentation"><button type="button" id="RoutineSplitTab" class="tab-btn" role="tab" aria-controls="RoutineSplit" aria-selected="true">분할</button></li>
+                                <li class="tab-item" role="presentation"><button type="button" id="RoutineShoulderTab" class="tab-btn" role="tab" aria-controls="RoutineShoulder" aria-selected="true">어깨</button></li>
+                                <li class="tab-item" role="presentation"><button type="button" id="RoutineChestTab" class="tab-btn" role="tab" aria-controls="RoutineChest" aria-selected="false">가슴</button></li>
+                                <li class="tab-item" role="presentation"><button type="button" id="RoutineLowTab" class="tab-btn" role="tab" aria-controls="RoutineLow" aria-selected="false">등</button></li>
+                                <li class="tab-item" role="presentation"><button type="button" id="RoutineCurlTab" class="tab-btn" role="tab" aria-controls="RoutineCurl" aria-selected="false">팔</button></li>
+                                <li class="tab-item" role="presentation"><button type="button" id="RoutineLegTab" class="tab-btn" role="tab" aria-controls="RoutineLeg" aria-selected="false">하체</button></li>
                             </ul>
                             <div class="tab-content">
-                                <div class="tab-panel current" id="section0801" role="tabpanel" aria-labelledby="tab0801"></div>
-                                <div class="tab-panel" id="section0802" role="tabpanel" aria-labelledby="tab0802"></div>
-                                <div class="tab-panel" id="section0803" role="tabpanel" aria-labelledby="tab0803"></div>
-                                <div class="tab-panel" id="section0804" role="tabpanel" aria-labelledby="tab0804"></div>
-                                <div class="tab-panel" id="section0805" role="tabpanel" aria-labelledby="tab0805"></div>
-                                <div class="tab-panel" id="section0806" role="tabpanel" aria-labelledby="tab0806"></div>
+                                <div class="tab-panel current" id="RoutineSplit" role="tabpanel" aria-labelledby="RoutineSplitTab"></div>
+                                <div class="tab-panel" id="RoutineShoulder" role="tabpanel" aria-labelledby="RoutineShoulderTab"></div>
+                                <div class="tab-panel" id="RoutineChest" role="tabpanel" aria-labelledby="RoutineChestTab"></div>
+                                <div class="tab-panel" id="RoutineLow" role="tabpanel" aria-labelledby="RoutineLowTab"></div>
+                                <div class="tab-panel" id="RoutineCurl" role="tabpanel" aria-labelledby="RoutineCurlTab"></div>
+                                <div class="tab-panel" id="RoutineLeg" role="tabpanel" aria-labelledby="RoutineLegTab"></div>
                             </div>
                         </div>
                     </div>
