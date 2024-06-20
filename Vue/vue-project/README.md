@@ -27,3 +27,7 @@ npm run dev
 ```sh
 npm run build
 ```
+
+
+### 시작하기
+npm run serve
