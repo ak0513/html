@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="data-container"></div>
+    <script>
+        var data = [
+            {date:'2024.06.28', kind:'A', set:[{number:'20', weight:'3kg'},{number:'10', weight:'4kg'}] },
+            {date:'2024.06.26', kind:'B', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}] },
+            {date:'2024.06.26', kind:'A', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}] },
+        ]
+
+        var container = document.getElementById('data-container');
+
+        // 날짜별로 정렬
+        function sortByDate() {
+            data.sort((a, b) => new Date(a.date) - new Date(b.date));
+            data.forEach(function(item,index) {
+                // console.log(item)
+            })
+        }
+
+        // kind별로 정렬
+        function sortKind() {
+            var groupedData = data.reduce((acc, item) => {
+                if (!acc[item.kind]) {
+                    acc[item.kind] = [];
+                }
+                acc[item.kind].push(item);
+                return acc;
+            }, {});
+            
+            Object.keys(groupedData).sort().forEach(kind => {
+                // kind 제목을 추가
+                var kindTitle = document.createElement('h2');
+                kindTitle.textContent = `Kind: ${kind}`;
+                container.appendChild(kindTitle);
+
+                // 각 kind에 해당하는 아이템들을 추가
+                groupedData[kind].forEach(item => {
+                    var itemDiv = document.createElement('div');
+                    itemDiv.innerHTML = `<strong>Date:</strong> ${item.date}`;
+
+                    var setList = document.createElement('ul');
+                    item.set.forEach(setItem => {
+                        var listItem = document.createElement('li');
+                        listItem.innerHTML = `Number: ${setItem.number}, Weight: ${setItem.weight}`;
+                        setList.appendChild(listItem);
+                    });
+
+                    itemDiv.appendChild(setList);
+                    container.appendChild(itemDiv);
+                });
+            });
+        }
+        sortKind();
+    </script>
+</body>
+</html>
