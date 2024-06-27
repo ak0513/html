@@ -27,10 +27,14 @@
         html,body {height:100%;}
         body {-webkit-text-size-adjust:none;background-color:#f8f8f8;color:#111;}
 
-        h2 {margin-top:40px;}
-        .item {margin-top:8px;background-color:#fff;border-radius:4px;padding:20px;}
+        #container {padding:20px;}
+        h2 {margin-top:40px;font-weight:700;}
+        h3 {font-weight:700;}
+        .item {margin-top:8px;background-color:#fff;border-radius:4px;padding:16px 20px;}
         .item + .item {margin-top:8px;}
-        #container {padding:16px 20px;}
+        .set {margin-top:8px;padding-top:8px;border-top:1px solid #eee;}
+        .set-item {display:flex;}
+        .set-item li {flex:1;color:#423f33}
     </style>
     <button type="button" onclick="sortData('date')">날짜</button>
     <button type="button" onclick="sortData('kind')">종류</button>
@@ -79,12 +83,13 @@
                     var itemDiv = document.createElement('div');
                     itemDiv.classList.add('item')
                     // itemDiv.innerHTML = `${item.date}`;
-                    itemDiv.innerHTML = `${criterion === 'date' ? `${item.kind}` : `${item.date}`}`;
+                    itemDiv.innerHTML = `${criterion === 'date' ? `<h3>${item.kind}</h3>` : `<h3>${item.date}</h3>`}`;
 
                     var setList = document.createElement('ul');
+                    setList.classList.add('set')
                     item.set.forEach(function(setItem, index) {
                         var listItem = document.createElement('li');
-                        listItem.innerHTML = `${index + 1}세트 ${setItem.weight} ${setItem.number}회`;
+                        listItem.innerHTML = `<ul class="set-item"><li>${index + 1}세트</li><li>${setItem.weight}</li><li>${setItem.number}회</li>`;
                         setList.appendChild(listItem);
                     });
 
