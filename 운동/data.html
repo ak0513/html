@@ -6,49 +6,85 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="data-container"></div>
+    <style>
+        /* reset */
+        *, *::before, *::after {box-sizing:border-box;}
+        body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button{margin:0;padding:0}
+        fieldset,img{border:0 none}
+        dl,ul,ol,menu,li {list-style:none}
+        blockquote, q {quotes: none}
+        blockquote:before, blockquote:after,q:before, q:after {content:'';content:none}
+        input,select,textarea,button {vertical-align:middle;outline:none}
+        input::-ms-clear {display:none}
+        button {border:0 none;background-color:transparent;cursor:pointer}
+        body,th,td,input,select,textarea,button {font-size:14px;line-height:1.5;font-family:-apple-system, BlinkMacSystemFont, Pretendard, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell,'Noto Sans KR', 'Spoqa Han Sans', "Helvetica Neue", sans-serif;}
+        a {color:#333;text-decoration:none} 
+        a:active, a:hover {text-decoration:underline}
+        a:active {background-color:transparent}
+        address,caption,cite,code,dfn,em,var {font-style:normal;font-weight:normal}
+        img {max-width:100%;height:auto;}
+        
+        html,body {height:100%;}
+        body {-webkit-text-size-adjust:none;background-color:#f8f8f8;color:#111;}
+
+        h2 {margin-top:40px;}
+        .item {margin-top:8px;background-color:#fff;border-radius:4px;padding:20px;}
+        .item + .item {margin-top:8px;}
+        #container {padding:16px 20px;}
+    </style>
+    <button type="button" onclick="sortData('date')">날짜</button>
+    <button type="button" onclick="sortData('kind')">종류</button>
+    <div id="container"></div>
     <script>
         var data = [
             {date:'2024.06.28', kind:'A', set:[{number:'20', weight:'3kg'},{number:'10', weight:'4kg'}] },
             {date:'2024.06.26', kind:'B', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}] },
             {date:'2024.06.26', kind:'A', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}] },
+            {date:'2024.06.24', kind:'C', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}] },
         ]
 
-        var container = document.getElementById('data-container');
+        var container = document.getElementById('container');
 
-        // 날짜별로 정렬
-        function sortByDate() {
-            data.sort((a, b) => new Date(a.date) - new Date(b.date));
-            data.forEach(function(item,index) {
-                // console.log(item)
-            })
-        }
-
-        // kind별로 정렬
-        function sortKind() {
+        // 데이터를 정렬하고 DOM에 추가하는 함수
+        function sortData(criterion) {
             var groupedData = data.reduce((acc, item) => {
-                if (!acc[item.kind]) {
-                    acc[item.kind] = [];
+                var key = item[criterion];
+                if (!acc[key]) {
+                    acc[key] = [];
                 }
-                acc[item.kind].push(item);
+                acc[key].push(item);
                 return acc;
             }, {});
             
-            Object.keys(groupedData).sort().forEach(kind => {
-                // kind 제목을 추가
-                var kindTitle = document.createElement('h2');
-                kindTitle.textContent = `Kind: ${kind}`;
-                container.appendChild(kindTitle);
+            container.innerHTML = '';
 
-                // 각 kind에 해당하는 아이템들을 추가
-                groupedData[kind].forEach(item => {
+            // 키를 정렬
+            var sortedKeys = Object.keys(groupedData).sort((a, b) => {
+                if (criterion === 'date') {
+                    return new Date(b) - new Date(a); // 날짜별 내림차순 정렬
+                } else {
+                    return a.localeCompare(b); // kind별 알파벳 순 정렬
+                }
+            });
+
+            // 정렬된 키를 순회하며 데이터를 DOM에 추가
+            sortedKeys.forEach(key => {
+                var title = document.createElement('h2');
+                title.textContent = `${key}`;
+                // title.textContent = `${criterion === 'date' ? 'Date' : 'Kind'}: ${key}`;
+                container.appendChild(title);
+
+                groupedData[key].forEach(item => {
+                    console.log(item)
                     var itemDiv = document.createElement('div');
-                    itemDiv.innerHTML = `<strong>Date:</strong> ${item.date}`;
+                    itemDiv.classList.add('item')
+                    // itemDiv.innerHTML = `${item.date}`;
+                    itemDiv.innerHTML = `${criterion === 'date' ? `${item.kind}` : `${item.date}`}`;
 
                     var setList = document.createElement('ul');
-                    item.set.forEach(setItem => {
+                    item.set.forEach(function(setItem, index) {
                         var listItem = document.createElement('li');
-                        listItem.innerHTML = `Number: ${setItem.number}, Weight: ${setItem.weight}`;
+                        listItem.innerHTML = `${index + 1}세트 ${setItem.weight} ${setItem.number}회`;
                         setList.appendChild(listItem);
                     });
 
@@ -57,7 +93,9 @@
                 });
             });
         }
-        sortKind();
+
+        // 페이지 로드 시 기본적으로 날짜별로 정렬하여 표시
+        sortData('date');
     </script>
 </body>
 </html>
