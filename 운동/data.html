@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-</head>
-<body>
     <style>
         /* reset */
         *, *::before, *::after {box-sizing:border-box;}
@@ -27,8 +25,15 @@
         html,body {height:100%;}
         body {-webkit-text-size-adjust:none;background-color:#f8f8f8;color:#111;}
 
-        #container {padding:20px;}
+        #wrap {padding:20px;}
+        #container {margin-top:20px;}
+        #btnTop {margin-bottom:8px;}
+        #btnKind {display:flex;gap:4px;}
+        button {padding:4px 12px;background-color:#fff;border-radius:4px;font-size:14px;}
+        #btnKind button {background-color:#f0f0f0;}
+
         h2 {margin-top:40px;font-weight:700;}
+        h2:first-child {margin-top:0;}
         h3 {font-weight:700;}
         .item {margin-top:8px;background-color:#fff;border-radius:4px;padding:16px 20px;border:1px solid #f0f0f0;}
         .item + .item {margin-top:8px;}
@@ -36,9 +41,16 @@
         .set-item {display:flex;}
         .set-item li {flex:1;color:#423f33}
     </style>
-    <button type="button" onclick="sortData('date')">날짜</button>
-    <button type="button" onclick="sortData('kind')">종류</button>
-    <div id="container"></div>
+</head>
+<body>
+    <div id="wrap">
+        <div id="btnTop">
+            <button type="button" onclick="sortData('date')">날짜</button>
+            <button type="button" onclick="sortData('kind')">종류</button>
+        </div>
+        <div id="btnKind"></div>
+        <div id="container"></div>
+    </div>
     <script>
         var data = [
             {date:'2024.06.28', kind:'A', set:[{number:'20', weight:'3kg'},{number:'10', weight:'4kg'}] },
@@ -47,46 +59,100 @@
             {date:'2024.06.24', kind:'C', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}] },
         ]
 
+        var buttonContainer = document.getElementById('btnKind');
         var container = document.getElementById('container');
 
         // 데이터를 정렬하고 DOM에 추가하는 함수
         function sortData(criterion) {
+            if (criterion === 'kind') {
+                // kind별로 버튼 생성
+                var kinds = [...new Set(data.map(item => item.kind))].sort();
+                buttonContainer.innerHTML = '';
+                kinds.forEach(kind => {
+                    var button = document.createElement('button');
+                    button.setAttribute('type', 'button')
+                    button.textContent = kind;
+                    button.onclick = function() { showKind(kind); };
+                    buttonContainer.appendChild(button);
+                });
+                // 처음에 모든 kind 데이터를 보여줌
+                showAllKinds();
+            } else {
+                // 날짜별로 정렬 및 데이터 표시
+                var groupedData = data.reduce((acc, item) => {
+                    var key = item[criterion];
+                    if (!acc[key]) {
+                        acc[key] = [];
+                    }
+                    acc[key].push(item);
+                    return acc;
+                }, {});
+                
+                container.innerHTML = '';
+                if(criterion === 'date') {
+                    buttonContainer.innerHTML = '';
+                }
+
+
+                // 키를 정렬
+                var sortedKeys = Object.keys(groupedData).sort((a, b) => {
+                    if (criterion === 'date') {
+                        return new Date(b) - new Date(a); // 날짜별 내림차순 정렬
+                    } else {
+                        return a.localeCompare(b); // kind별 알파벳 순 정렬
+                    }
+                });
+
+                // 정렬된 키를 순회하며 데이터를 DOM에 추가
+                sortedKeys.forEach(key => {
+                    var title = document.createElement('h2');
+                    title.textContent = `${key}`;
+                    container.appendChild(title);
+
+                    groupedData[key].forEach(item => {
+                        var itemDiv = document.createElement('div');
+                        itemDiv.classList.add('item');
+                        itemDiv.innerHTML = `${criterion === 'date' ? `<h3>${item.kind}</h3>` : `<h3>${item.date}</h3>`}`;
+
+                        var setList = document.createElement('ul');
+                        setList.classList.add('set');
+                        item.set.forEach(function(setItem, index) {
+                            var listItem = document.createElement('li');
+                            listItem.innerHTML = `<ul class="set-item"><li>${index + 1}세트</li><li>${setItem.weight}</li><li>${setItem.number}회</li>`;
+                            setList.appendChild(listItem);
+                        });
+
+                        itemDiv.appendChild(setList);
+                        container.appendChild(itemDiv);
+                    });
+                });
+            }
+        }
+
+        // 모든 kind의 데이터를 표시하는 함수
+        function showAllKinds() {
+            container.innerHTML = '';
             var groupedData = data.reduce((acc, item) => {
-                var key = item[criterion];
+                var key = item.kind;
                 if (!acc[key]) {
                     acc[key] = [];
                 }
                 acc[key].push(item);
                 return acc;
             }, {});
-            
-            container.innerHTML = '';
 
-            // 키를 정렬
-            var sortedKeys = Object.keys(groupedData).sort((a, b) => {
-                if (criterion === 'date') {
-                    return new Date(b) - new Date(a); // 날짜별 내림차순 정렬
-                } else {
-                    return a.localeCompare(b); // kind별 알파벳 순 정렬
-                }
-            });
-
-            // 정렬된 키를 순회하며 데이터를 DOM에 추가
-            sortedKeys.forEach(key => {
+            Object.keys(groupedData).forEach(kind => {
                 var title = document.createElement('h2');
-                title.textContent = `${key}`;
-                // title.textContent = `${criterion === 'date' ? 'Date' : 'Kind'}: ${key}`;
+                title.textContent = `Kind: ${kind}`;
                 container.appendChild(title);
 
-                groupedData[key].forEach(item => {
-                    console.log(item)
+                groupedData[kind].forEach(item => {
                     var itemDiv = document.createElement('div');
-                    itemDiv.classList.add('item')
-                    // itemDiv.innerHTML = `${item.date}`;
-                    itemDiv.innerHTML = `${criterion === 'date' ? `<h3>${item.kind}</h3>` : `<h3>${item.date}</h3>`}`;
+                    itemDiv.classList.add('item');
+                    itemDiv.innerHTML = `<h3>${item.date}</h3>`;
 
                     var setList = document.createElement('ul');
-                    setList.classList.add('set')
+                    setList.classList.add('set');
                     item.set.forEach(function(setItem, index) {
                         var listItem = document.createElement('li');
                         listItem.innerHTML = `<ul class="set-item"><li>${index + 1}세트</li><li>${setItem.weight}</li><li>${setItem.number}회</li>`;
@@ -96,6 +162,33 @@
                     itemDiv.appendChild(setList);
                     container.appendChild(itemDiv);
                 });
+            });
+        }
+
+        // 특정 kind의 데이터를 표시하는 함수
+        function showKind(kind) {
+            var kindData = data.filter(item => item.kind === kind);
+            container.innerHTML = '';
+            
+            var title = document.createElement('h2');
+            title.textContent = `Kind: ${kind}`;
+            container.appendChild(title);
+
+            kindData.forEach(item => {
+                var itemDiv = document.createElement('div');
+                itemDiv.classList.add('item');
+                itemDiv.innerHTML = `<h3>${item.date}</h3>`;
+
+                var setList = document.createElement('ul');
+                setList.classList.add('set');
+                item.set.forEach(function(setItem, index) {
+                    var listItem = document.createElement('li');
+                    listItem.innerHTML = `<ul class="set-item"><li>${index + 1}세트</li><li>${setItem.weight}</li><li>${setItem.number}회</li>`;
+                    setList.appendChild(listItem);
+                });
+
+                itemDiv.appendChild(setList);
+                container.appendChild(itemDiv);
             });
         }
 
