@@ -40,6 +40,9 @@
         .set {margin-top:8px;padding-top:8px;border-top:1px solid #eee;}
         .set-item {display:flex;}
         .set-item li {flex:1;color:#423f33}
+
+        .link {display:flex;gap:8px;margin-top:4px;}
+        .link a {text-decoration:underline;}
     </style>
 </head>
 <body>
@@ -53,10 +56,10 @@
     </div>
     <script>
         var data = [
-            {date:'2024.06.28', kind:'A', set:[{number:'20', weight:'3kg'},{number:'10', weight:'4kg'}] },
-            {date:'2024.06.26', kind:'B', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}] },
-            {date:'2024.06.26', kind:'A', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}] },
-            {date:'2024.06.24', kind:'C', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}] },
+            {date:'2024.06.28', kind:'A', set:[{number:'20', weight:'3kg'},{number:'10', weight:'4kg'}], url:['http://www.naver/com','http://www.naver/com'] },
+            {date:'2024.06.26', kind:'B', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}], url:['http://www.naver/com'] },
+            {date:'2024.06.26', kind:'A', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}], url:[] },
+            {date:'2024.06.24', kind:'C', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}], url:[] },
         ]
 
         var buttonContainer = document.getElementById('btnKind');
@@ -122,7 +125,18 @@
                             setList.appendChild(listItem);
                         });
 
+                        var setList2 = document.createElement('ul');
+                        setList2.classList.add('link');
+                        // console.log(item.url)
+                        item.url.forEach(function(setItem2, index) {
+                            var listItem = document.createElement('li');
+                            console.log(setItem2)
+                            listItem.innerHTML = `<a href="${setItem2}" class="">바로가기</a>`;
+                            setList2.appendChild(listItem);
+                        });
+
                         itemDiv.appendChild(setList);
+                        itemDiv.appendChild(setList2);
                         container.appendChild(itemDiv);
                     });
                 });
