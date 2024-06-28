@@ -35,7 +35,9 @@
 
         h2 {margin-top:40px;font-weight:700;font-size:18px;}
         h2:first-child {margin-top:0;}
+        h2 span {font-size:14px;font-weight:400;color:#666;margin-left:4px;}
         h3 {font-weight:700;}
+        h3 span {font-size:14px;font-weight:400;color:#666;margin-left:4px;}
         .item {margin-top:8px;background-color:#fff;border-radius:4px;padding:16px 20px;border:1px solid #f0f0f0;}
         .item + .item {margin-top:8px;}
         .set {margin-top:8px;padding-top:8px;border-top:1px solid #eee;}
@@ -61,10 +63,13 @@
     <script>
         var data = [
             // 가슴
-            {date:'2024.06.24', link:'펙 덱 플라이', kind:'펙 덱 플라이', set:[{number:'20', weight:'2kg'},]},
-            {date:'2024.06.24', link:'체스트 프레스 머신', kind:'체스트 프레스 머신', set:[{number:'20', weight:'2kg'},]},
+            {date:'2024.06.29', part:'가슴',kind:'펙 덱 플라이', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
+            {date:'2024.06.29', part:'가슴',kind:'체스트 프레스 머신', set:[{number:'20', weight:'20'},{number:'20', weight:'2200kg'},{number:'20', weight:'20'},]},
+            {date:'2024.06.29', part:'가슴',kind:'딥스', set:[{number:'20', weight:'0'},{number:'20', weight:'0'},{number:'20', weight:'0'},]},
 
             // 등
+            {date:'2024.06.29', part:'등', kind:'랫 풀 다운', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
+            {date:'2024.06.29', part:'등', kind:'시티드 로우', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
 
             // 어깨
 
@@ -126,17 +131,16 @@
                 // 정렬된 키를 순회하며 데이터를 DOM에 추가
                 sortedKeys.forEach(key => {
                     setTitle(key);
-
                     groupedData[key].forEach(item => {
                         var itemDiv = document.createElement('div');
                         itemDiv.classList.add('item');
-                        itemDiv.innerHTML = `${criterion === 'date' ? `<h3>${item.kind}</h3>` : `<h3>${item.date}</h3>`}`;
+                        itemDiv.innerHTML = `${criterion === 'date' ? `<h3>${item.kind}<span>(${item.part})</span></h3>` : `<h3>${item.date}</h3>`}`;
 
                         var setList = document.createElement('ul');
                         setList.classList.add('set');
                         item.set.forEach(function(setItem, index) {
                             var listItem = document.createElement('li');
-                            listItem.innerHTML = `<ul class="set-item"><li>${index + 1}세트</li><li>${setItem.weight}</li><li>${setItem.number}회</li>`;
+                            listItem.innerHTML = `<ul class="set-item"><li>${index + 1}세트</li><li> ${setItem.weight}kg</li><li>${setItem.number}회</li>`;
                             setList.appendChild(listItem);
                         });
 
@@ -160,7 +164,7 @@
             }, {});
 
             Object.keys(groupedData).forEach(kind => {
-                setTitle(kind);
+                setTitle(kind, groupedData[kind][0].part);
 
                 groupedData[kind].forEach(item => {
                     setKind(item);
@@ -172,8 +176,8 @@
         function showKind(kind) {
             var kindData = data.filter(item => item.kind === kind);
             container.innerHTML = '';
-            
-            setTitle(kind);
+            console.log(kindData[0].part)
+            setTitle(kind, kindData[0].part);
 
             kindData.forEach(item => {
                 setKind(item);
@@ -181,9 +185,11 @@
         }
 
         // 타이틀 세팅
-        function setTitle(text) {
+        function setTitle(text, part) {
+            // console.log(text)
             var title = document.createElement('h2');
-            title.textContent = `${text}`;
+            if(part === undefined) {part = ''}
+            title.innerHTML = `${text}<span>${part}</span>`;
             container.appendChild(title);
         }
 
