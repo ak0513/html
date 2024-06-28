@@ -28,7 +28,8 @@
         #wrap {padding:20px;}
         #container {margin-top:20px;}
         #btnTop {margin-bottom:8px;}
-        #btnKind {display:flex;gap:4px;}
+        #btnKindWrap {overflow-x:auto;}
+        #btnKind {display:flex;gap:4px;white-space:nowrap;}
         button {padding:4px 12px;background-color:#fff;border-radius:4px;font-size:14px;}
         #btnKind button {background-color:#f0f0f0;}
 
@@ -38,7 +39,7 @@
         .item {margin-top:8px;background-color:#fff;border-radius:4px;padding:16px 20px;border:1px solid #f0f0f0;}
         .item + .item {margin-top:8px;}
         .set {margin-top:8px;padding-top:8px;border-top:1px solid #eee;}
-        .set-item {display:flex;flex-wrap:wrap;}
+        .set-item {display:flex;}
         .set-item li {flex:1;color:#423f33}
         .set-item li + li {margin-top:4px;}
 
@@ -52,7 +53,9 @@
             <button type="button" onclick="sortData('date')">날짜</button>
             <button type="button" onclick="sortData('kind')">종류</button>
         </div>
-        <div id="btnKind"></div>
+        <div id="btnKindWrap">
+            <div id="btnKind"></div>
+        </div>
         <div id="container"></div>
     </div>
     <script>
