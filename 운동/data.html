@@ -28,7 +28,7 @@
         #wrap {padding:20px;}
         #container {margin-top:20px;}
         #btnTop {margin-bottom:8px;}
-        #btnKindWrap {overflow-x:auto;}
+        #btnKindWrap {overflow-x:auto;padding-bottom:3px;}
         #btnKind {display:flex;gap:4px;white-space:nowrap;}
         button {padding:4px 12px;background-color:#fff;border-radius:4px;font-size:14px;}
         #btnKind button {background-color:#f0f0f0;}
@@ -78,25 +78,6 @@
             {date:'2024.06.26', link:'a', kind:'랫 풀 다운', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}]},
             {date:'2024.06.21', link:'c', kind:'가', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}]},
         ]
-
-        var linkMapping = {
-            // 가슴
-            '펙 덱 플라이': ['https://blog.naver.com/kimie1129/223466258369', 'https://blog.naver.com/kimie1129/223439868498', 'https://blog.naver.com/skyboy210/223443577894'],
-            '체스트 프레스 머신': ['https://blog.naver.com/kimie1129/223484500680', 'https://blog.naver.com/gwangsol/223466288523', 'https://blog.naver.com/igtrainer/223437129470', 'https://blog.naver.com/smk6155/223456698244', 'https://blog.naver.com/ytcrew7919/220862709285'],
-
-            // 등
-
-            // 어깨
-
-            // 하체
-
-            // 팔
-
-            // 코어
-            'a': ['http://www.naver.com', 'http://www.naver.com'],
-            'b': ['http://www.example.com', 'http://www.example.com'],
-            'c': ['http://www.test.com', 'http://www.test.com']
-        };
 
         var buttonContainer = document.getElementById('btnKind');
         var container = document.getElementById('container');
@@ -160,22 +141,7 @@
                             setList.appendChild(listItem);
                         });
 
-                        
-                        var setLink = document.createElement('ul');
-                        setLink.classList.add('link');
-                        data.forEach(item => {
-                            if (linkMapping[item.link]) {
-                                item.link = linkMapping[item.link];
-                            }
-                        });
-                        item.link.forEach(function(setItem2, index) {
-                            var listItem = document.createElement('li');
-                            listItem.innerHTML = `<a href="${setItem2}" class="" target="_blank">바로가기</a>`;
-                            setLink.appendChild(listItem);
-                        });
-                        
                         itemDiv.appendChild(setList);
-                        itemDiv.appendChild(setLink);
                         container.appendChild(itemDiv);
                     });
                 });
