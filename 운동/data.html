@@ -40,8 +40,9 @@
         .set {margin-top:8px;padding-top:8px;border-top:1px solid #eee;}
         .set-item {display:flex;}
         .set-item li {flex:1;color:#423f33}
+        .set-item li + li {margin-top:4px;}
 
-        .link {display:flex;gap:8px;margin-top:4px;}
+        .link {display:flex;gap:8px;margin-top:12px;}
         .link a {text-decoration:underline;}
     </style>
 </head>
@@ -132,8 +133,8 @@
                         });
 
                         
-                        var setList2 = document.createElement('ul');
-                        setList2.classList.add('link');
+                        var setLink = document.createElement('ul');
+                        setLink.classList.add('link');
                         data.forEach(item => {
                             if (linkMapping[item.link]) {
                                 item.link = linkMapping[item.link];
@@ -143,12 +144,12 @@
                             var listItem = document.createElement('li');
                             console.log(setItem2)
                             listItem.innerHTML = `<a href="${setItem2}" class="">바로가기</a>`;
-                            setList2.appendChild(listItem);
+                            setLink.appendChild(listItem);
                         });
                         
 
                         itemDiv.appendChild(setList);
-                        itemDiv.appendChild(setList2);
+                        itemDiv.appendChild(setLink);
                         container.appendChild(itemDiv);
                     });
                 });
