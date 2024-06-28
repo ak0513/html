@@ -56,11 +56,17 @@
     </div>
     <script>
         var data = [
-            {date:'2024.06.28', kind:'A', set:[{number:'20', weight:'3kg'},{number:'10', weight:'4kg'}], url:['http://www.naver/com','http://www.naver/com'] },
-            {date:'2024.06.26', kind:'B', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}], url:['http://www.naver/com'] },
-            {date:'2024.06.26', kind:'A', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}], url:[] },
-            {date:'2024.06.24', kind:'C', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}], url:[] },
+            {date:'2024.06.28', link:'a', kind:'A', set:[{number:'20', weight:'3kg'},{number:'10', weight:'4kg'}] },
+            {date:'2024.06.26', link:'b', kind:'B', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}]},
+            {date:'2024.06.26', link:'a', kind:'A', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}]},
+            {date:'2024.06.24', link:'c', kind:'C', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}]},
         ]
+
+        var linkMapping = {
+            'a': ['http://www.naver.com', 'http://www.naver.com'],
+            'b': ['http://www.example.com', 'http://www.example.com'],
+            'c': ['http://www.test.com', 'http://www.test.com']
+        };
 
         var buttonContainer = document.getElementById('btnKind');
         var container = document.getElementById('container');
@@ -125,15 +131,21 @@
                             setList.appendChild(listItem);
                         });
 
+                        
                         var setList2 = document.createElement('ul');
                         setList2.classList.add('link');
-                        // console.log(item.url)
-                        item.url.forEach(function(setItem2, index) {
+                        data.forEach(item => {
+                            if (linkMapping[item.link]) {
+                                item.link = linkMapping[item.link];
+                            }
+                        });
+                        item.link.forEach(function(setItem2, index) {
                             var listItem = document.createElement('li');
                             console.log(setItem2)
                             listItem.innerHTML = `<a href="${setItem2}" class="">바로가기</a>`;
                             setList2.appendChild(listItem);
                         });
+                        
 
                         itemDiv.appendChild(setList);
                         itemDiv.appendChild(setList2);
