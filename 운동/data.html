@@ -63,13 +63,13 @@
     <script>
         var data = [
             // 가슴
-            {date:'2024.06.29', part:'가슴',kind:'펙 덱 플라이', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
+            {date:'2024.06.29', part:'가슴(대흉근 안쪽)',kind:'펙 덱 플라이', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
             {date:'2024.06.29', part:'가슴',kind:'체스트 프레스 머신', set:[{number:'20', weight:'20'},{number:'20', weight:'2200kg'},{number:'20', weight:'20'},]},
             {date:'2024.06.29', part:'가슴',kind:'딥스', set:[{number:'20', weight:'0'},{number:'20', weight:'0'},{number:'20', weight:'0'},]},
 
             // 등
-            {date:'2024.06.29', part:'등', kind:'랫 풀 다운', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
-            {date:'2024.06.29', part:'등', kind:'시티드 로우', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
+            {date:'2024.06.29', part:'등(광배근)', kind:'랫 풀 다운', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
+            {date:'2024.06.29', part:'등(능형근)', kind:'시티드 로우', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
 
             // 어깨
 
@@ -78,7 +78,7 @@
             // 팔
 
             // 코어
-            {date:'2024.06.26', link:'a', kind:'랫 풀 다운', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}]},
+            {date:'2024.06.26', part:'등(광배근)', kind:'랫 풀 다운', set:[{number:'20', weight:'2kg'},{number:'20', weight:'4kg'},{number:'10', weight:'5kg'}]},
         ]
 
         var buttonContainer = document.getElementById('btnKind');
@@ -131,7 +131,7 @@
                     groupedData[key].forEach(item => {
                         var itemDiv = document.createElement('div');
                         itemDiv.classList.add('item');
-                        itemDiv.innerHTML = `${criterion === 'date' ? `<h3>${item.kind}<span>(${item.part})</span></h3>` : `<h3>${item.date}</h3>`}`;
+                        itemDiv.innerHTML = `${criterion === 'date' ? `<h3>${item.kind}<span>${item.part}</span></h3>` : `<h3>${item.date}</h3>`}`;
 
                         var setList = document.createElement('ul');
                         setList.classList.add('set');
