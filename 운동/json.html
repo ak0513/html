@@ -8,35 +8,43 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="../basic/css/style.css">
 </head>
 <body>
+    <style>
+        input,select,button {display:flex;align-items:center;width:100%;height:40px;margin-top:4px; font-size:16px;padding:0 8px;;border:1px solid #ddd;border-radius:4px;color:#333;box-sizing:border-box;}
+        pre {white-space: inherit;}
+    </style>
     <form id="userForm">
-        <label for="date">날짜:</label>
-        <input type="text" id="date" name="date" autocomplete="off"><br><br>
+        <input type="text" id="date" name="date" autocomplete="off" placeholder="날짜">
 
-        <label for="part">운동 부위:</label>
         <select id="part" name="part">
+            <option value="">운동 부위</option>
             <option value="가슴(대흉근 안쪽)">가슴(대흉근 안쪽)</option>
             <option value="등(광배근)">등(광배근)</option>
             <option value="어깨(삼각근)">어깨(삼각근)</option>
             <option value="팔(이두근)">팔(이두근)</option>
-            <option value="다리(대퇴근)">다리(대퇴근)</option>
-        </select><br><br>
+            <option value="하체(대퇴근)">하체(대퇴근)</option>
+        </select>
 
-        <label for="kind">운동 종류:</label>
+
         <select id="kind" name="kind">
+            <option value="">운동종류</option>
+            <option value="">### 가슴 ###</option>
+            <option value="">### 등 ###</option>
+            <option value="">### 어깨 ###</option>
+            <option value="">### 하체 ###</option>
+            <option value="">### 팔 ###</option>
             <option value="펙 덱 플라이">펙 덱 플라이</option>
-            <option value="랫 풀다운">랫 풀다운</option>
+            <option value="랫 풀다운">랫 풀 다운</option>
             <option value="숄더 프레스">숄더 프레스</option>
             <option value="바벨 컬">바벨 컬</option>
             <option value="스쿼트">스쿼트</option>
-        </select><br><br>
+        </select>
 
-        <label for="number">세트 반복 횟수:</label>
-        <input type="tel" id="number" name="number" autocomplete="off"><br><br>
+        <input type="tel" id="number" name="number" autocomplete="off" placeholder="횟수">
 
-        <label for="weight">무게:</label>
-        <input type="tel" id="weight" name="weight" autocomplete="off"><br><br>
+        <input type="tel" id="weight" name="weight" autocomplete="off" placeholder="무게">
 
         <button type="button" onclick="convertToJSON()">Submit</button>
     </form>
