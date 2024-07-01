@@ -9,12 +9,33 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="../basic/css/style.css">
+    <style>
+        input, select, button {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 40px;
+            margin-top: 4px;
+            font-size: 16px;
+            padding: 0 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        pre {
+            white-space: inherit;
+            cursor: pointer; /* 마우스 커서를 포인터로 변경하여 클릭 가능한 상태로 만듦 */
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-    <style>
-        input,select,button {display:flex;align-items:center;width:100%;height:40px;margin-top:4px; font-size:16px;padding:0 8px;;border:1px solid #ddd;border-radius:4px;color:#333;box-sizing:border-box;}
-        pre {white-space: inherit;}
-    </style>
     <form id="userForm">
         <input type="text" id="date" name="date" autocomplete="off" placeholder="날짜">
 
@@ -26,7 +47,6 @@
             <option value="팔(이두근)">팔(이두근)</option>
             <option value="하체(대퇴근)">하체(대퇴근)</option>
         </select>
-
 
         <select id="kind" name="kind">
             <option value="">운동종류</option>
@@ -69,7 +89,7 @@
         <button type="button" onclick="convertToJSON()">Submit</button>
     </form>
 
-    <pre id="result"></pre>
+    <pre id="result" onclick="copyText()">클릭해서 내용 복사하기</pre>
     <button id="downloadButton" style="display:none;" onclick="downloadJSON()">Download JSON</button>
 
     <script>
@@ -151,6 +171,17 @@
 
             // URL 객체 해제
             URL.revokeObjectURL(url);
+        }
+
+        function copyText() {
+            const resultElement = document.getElementById('result');
+            const range = document.createRange();
+            range.selectNode(resultElement);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            alert('복사되었습니다.');
         }
     </script>
 </body>
