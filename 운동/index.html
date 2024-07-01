@@ -21,9 +21,12 @@
         .h-tit2 {margin-bottom:20px;padding-bottom:8px;border-bottom:1px solid #ddd;}
         .h-tit2 span {position: relative;}
         .h-tit2 span::before {content:'';position:absolute;left:0;bottom:-16px;width:100%;height:2px;background-color:var(--primary);}
-        .h-tit2.me span::after {content:'*';color:red;margin-left:4px;}
+        
 
         .h-tit3 {color:#333}
+
+        .h-tit2.active span::after,
+        .h-tit3.active span::after {content:'*';color:red;margin-left:4px;}
 
         .h-tit4 {font-size:16px;}
         .h-tit4 span {padding:7px 16px 6px;background-color: var(--secondary);color:#fff;border-radius: 50px;}
