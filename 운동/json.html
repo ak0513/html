@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input to JSON</title>
+    <!-- jQuery와 jQuery UI CSS 포함 -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+    <form id="userForm">
+        <label for="date">날짜:</label>
+        <input type="text" id="date" name="date" autocomplete="off"><br><br>
+
+        <label for="part">운동 부위:</label>
+        <select id="part" name="part">
+            <option value="가슴(대흉근 안쪽)">가슴(대흉근 안쪽)</option>
+            <option value="등(광배근)">등(광배근)</option>
+            <option value="어깨(삼각근)">어깨(삼각근)</option>
+            <option value="팔(이두근)">팔(이두근)</option>
+            <option value="다리(대퇴근)">다리(대퇴근)</option>
+        </select><br><br>
+
+        <label for="kind">운동 종류:</label>
+        <select id="kind" name="kind">
+            <option value="펙 덱 플라이">펙 덱 플라이</option>
+            <option value="랫 풀다운">랫 풀다운</option>
+            <option value="숄더 프레스">숄더 프레스</option>
+            <option value="바벨 컬">바벨 컬</option>
+            <option value="스쿼트">스쿼트</option>
+        </select><br><br>
+
+        <label for="number">세트 반복 횟수:</label>
+        <input type="tel" id="number" name="number" autocomplete="off"><br><br>
+
+        <label for="weight">무게:</label>
+        <input type="tel" id="weight" name="weight" autocomplete="off"><br><br>
+
+        <button type="button" onclick="convertToJSON()">Submit</button>
+    </form>
+
+    <pre id="result"></pre>
+    <button id="downloadButton" style="display:none;" onclick="downloadJSON()">Download JSON</button>
+
+    <script>
+        $(function() {
+            // jQuery UI 달력 위젯 적용
+            $("#date").datepicker({
+                dateFormat: 'yy.mm.dd' // 날짜 형식 설정
+            });
+        });
+
+        // 기존 데이터를 저장할 변수
+        let accumulatedData = [];
+
+        function convertToJSON() {
+            // 폼 요소 가져오기
+            const form = document.getElementById('userForm');
+
+            // 폼 데이터를 JSON 형식으로 변환
+            const formData = new FormData(form);
+            const date = formData.get('date');
+            const part = formData.get('part');
+            const kind = formData.get('kind');
+            const number = formData.get('number');
+            const weight = formData.get('weight');
+
+            // 새로운 세트 객체 생성
+            const newSet = { number: number, weight: weight };
+
+            // 기존 데이터에서 날짜와 운동 종류가 같은 항목 찾기
+            let existingEntry = accumulatedData.find(entry => entry.date === date && entry.kind === kind);
+
+            if (existingEntry) {
+                // 기존 항목에 세트 추가
+                existingEntry.set.push(newSet);
+            } else {
+                // 새로운 항목 생성
+                const newEntry = {
+                    date: date,
+                    part: part,
+                    kind: kind,
+                    set: [newSet]
+                };
+                accumulatedData.push(newEntry);
+            }
+
+            // 결과를 JSON 유사 문자열로 변환
+            const jsonString = toCustomJSONString(accumulatedData);
+
+            // 결과를 화면에 표시
+            document.getElementById('result').textContent = jsonString;
+
+            // 다운로드 버튼 표시
+            document.getElementById('downloadButton').style.display = 'block';
+        }
+
+        function toCustomJSONString(obj) {
+            if (Array.isArray(obj)) {
+                return '[' + obj.map(toCustomJSONString).join(', ') + ']';
+            } else if (typeof obj === 'object' && obj !== null) {
+                return '{' + Object.keys(obj).map(key => `${key}: ${toCustomJSONString(obj[key])}`).join(', ') + '}';
+            } else {
+                return JSON.stringify(obj);
+            }
+        }
+
+        function downloadJSON() {
+            // 누적된 데이터를 JSON 유사 문자열로 변환
+            const jsonString = toCustomJSONString(accumulatedData);
+
+            // JSON 문자열을 Blob으로 변환
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            // 다운로드 링크 생성 및 클릭
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = 'data.json';
+            downloadLink.click();
+
+            // URL 객체 해제
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
