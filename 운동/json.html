@@ -38,54 +38,19 @@
 <body>
     <form id="userForm">
         <input type="text" id="date" name="date" autocomplete="off" placeholder="날짜" onclick="resetInput(this)">
-
-        <select id="part" name="part">
+        <select id="part" name="part" onchange="updateExerciseOptions()">
             <option value="">운동 부위</option>
-            <option value="가슴(대흉근 안쪽)">가슴(대흉근 안쪽)</option>
-            <option value="등(광배근)">등(광배근)</option>
-            <option value="어깨(삼각근)">어깨(삼각근)</option>
-            <option value="팔(이두근)">팔(이두근)</option>
-            <option value="하체(대퇴근)">하체(대퇴근)</option>
+            <option value="가슴">가슴</option>
+            <option value="등">등</option>
+            <option value="어깨">어깨</option>
+            <option value="하체">하체</option>
+            <option value="팔">팔</option>
         </select>
-
         <select id="kind" name="kind">
             <option value="">운동종류</option>
-            <option value=""></option>
-            <option value="">### 가슴 ###</option>
-            <option value="시티드 체스트 프레스">시티드 체스트 프레스</option>
-            <option value="인클라인 덤벨 체스트 프레스">인클라인 덤벨 체스트 프레스</option>
-            <option value="펙 덱 플라이">펙 덱 플라이</option>
-            <option value="딥스">딥스</option>
-            <option value=""></option>
-
-            <option value="">### 등 ###</option>
-            <option value="케이블 암 풀 다운">케이블 암 풀 다운</option>
-            <option value="랫 풀 다운">랫 풀 다운</option>
-            <option value="시티드 로우">시티드 로우</option>
-            <option value=""></option>
-
-            <option value="">### 어깨 ###</option>
-            <option value="사이드 레터럴 레이즈">사이드 레터럴 레이즈</option>
-            <option value="인클라인 숄더 프레스">인클라인 숄더 프레스</option>
-            <option value="시티드 숄더 프레스">시티드 숄더 프레스</option>
-            <option value="리버스 펙 덱 플라이">리버스 펙 덱 플라이</option>
-            <option value=""></option>
-
-            <option value="">### 하체 ###</option>
-            <option value="레그 익스텐션">레그 익스텐션</option>
-            <option value="레그 컬">레그 컬</option>
-            <option value="레그 프레스">레그 프레스</option>
-            <option value="스쿼트">스쿼트</option>
-            <option value=""></option>
-
-            <option value="">### 팔 ###</option>
-            <option value="바벨 컬">바벨 컬</option>
         </select>
-
         <input type="tel" id="number" name="number" autocomplete="off" placeholder="횟수" onclick="resetInput(this)">
-
         <input type="tel" id="weight" name="weight" autocomplete="off" placeholder="무게" onclick="resetInput(this)">
-
         <button type="button" onclick="convertToJSON()">Submit</button>
     </form>
 
@@ -106,6 +71,46 @@
         // 입력 필드 클릭 시 값 초기화
         function resetInput(input) {
             input.value = '';
+        }
+
+        // 운동 종류 옵션 업데이트
+        function updateExerciseOptions() {
+            const partSelect = document.getElementById('part');
+            const kindSelect = document.getElementById('kind');
+
+            // 기존 옵션 제거
+            kindSelect.innerHTML = '<option value="">운동종류</option>';
+
+            // 선택된 운동 부위에 따라 옵션 추가
+            switch (partSelect.value) {
+                case '가슴':
+                    addOptions(kindSelect, ['시티드 체스트 프레스', '인클라인 덤벨 체스트 프레스', '펙 덱 플라이', '딥스']);
+                    break;
+                case '등':
+                    addOptions(kindSelect, ['케이블 암 풀 다운', '랫 풀 다운', '시티드 로우']);
+                    break;
+                case '어깨':
+                    addOptions(kindSelect, ['사이드 레터럴 레이즈', '인클라인 숄더 프레스', '시티드 숄더 프레스', '리버스 펙 덱 플라이']);
+                    break;
+                case '하체':
+                    addOptions(kindSelect, ['레그 익스텐션', '레그 컬', '레그 프레스', '스쿼트']);
+                    break;
+                case '팔':
+                    addOptions(kindSelect, ['바벨 컬']);
+                    break;
+                default:
+                    // 기본 옵션 유지
+                    break;
+            }
+        }
+
+        // 새로운 옵션 추가
+        function addOptions(selectElement, optionsArray) {
+            optionsArray.forEach(optionValue => {
+                const option = document.createElement('option');
+                option.value = option.textContent = optionValue;
+                selectElement.appendChild(option);
+            });
         }
 
         function convertToJSON() {
