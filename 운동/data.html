@@ -40,8 +40,9 @@
         h3 span {font-size:14px;font-weight:400;color:#666;margin-left:4px;}
         .item {margin-top:8px;background-color:#fff;border-radius:4px;padding:12px 16px;border:1px solid #f0f0f0;}
         .item + .item {margin-top:8px;}
-        .set {margin-top:8px;padding-top:8px;border-top:1px solid #eee;}
-        .set > li + li {margin-top:4px;}
+        .set {display:flex;flex-wrap:wrap; margin-top:8px;padding-top:8px;border-top:1px solid #eee;gap:8px;}
+        .set > li {flex:0 0 calc(50% - 8px);}
+        /* .set > li + li {margin-top:4px;} */
         .set-item {display:flex;}
         .set-item li {flex:1;color:#423f33;text-align:right;}
         .set-item li:first-child {text-align: left;}
@@ -215,7 +216,8 @@
             setList.classList.add('set');
             item.set.forEach(function(setItem, index) {
                 var listItem = document.createElement('li');
-                listItem.innerHTML = `<ul class="set-item"><li>${index + 1}세트</li><li>${setItem.weight}<small>kg</small></li><li>${setItem.number}<small>회</small></li>`;
+                listItem.innerHTML = `<ul class="set-item"><li>${setItem.weight}<small>kg</small></li><li>${setItem.number}<small>회</small></li>`;
+                // listItem.innerHTML = `<ul class="set-item"><li>${index + 1}세트</li><li>${setItem.weight}<small>kg</small></li><li>${setItem.number}<small>회</small></li>`;
                 setList.appendChild(listItem);
             });
 
