@@ -129,7 +129,7 @@
                 kinds.forEach(kind => {
                     var button = document.createElement('button');
                     button.setAttribute('type', 'button');
-                    button.textContent = `${kind} (${kindCounts[kind]})`; // Optional: show count next to kind
+                    button.textContent = `${kind}(${kindCounts[kind]})`; // Optional: show count next to kind
                     button.onclick = function() { showKind(kind); };
                     buttonContainer.appendChild(button);
                 });
@@ -219,7 +219,8 @@
             setList.classList.add('set');
             item.set.forEach(function(setItem, index) {
                 var listItem = document.createElement('li');
-                listItem.innerHTML = `<ul class="set-item"><li>${index + 1}세트</li><li>${setItem.weight}<small>kg</small></li><li>${setItem.number}<small>회</small></li>`;
+                // listItem.innerHTML = `<ul class="set-item"><li>${index + 1}세트</li><li>${setItem.weight}<small>kg</small></li><li>${setItem.number}<small>회</small></li>`;
+                listItem.innerHTML = `<ul class="set-item"><li>${index + 1}세트</li>${setItem.weight > 0 ? `<li>${setItem.weight}<small>kg</small></li>` : ''}<li>${setItem.number}<small>회</small></li>`;
                 setList.appendChild(listItem);
             });
 
