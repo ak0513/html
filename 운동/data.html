@@ -43,7 +43,9 @@
         .set {margin-top:8px;padding-top:8px;border-top:1px solid #eee;}
         .set > li + li {margin-top:4px;}
         .set-item {display:flex;}
-        .set-item li {flex:1;color:#423f33}
+        .set-item li {flex:1;color:#423f33;text-align:right;}
+        .set-item li:first-child {text-align: left;}
+        .set-item li small {color:#999;}
 
         .link {display:flex;gap:8px;margin-top:12px;}
         .link a {text-decoration:underline;}
@@ -64,32 +66,49 @@
     </div>
     <script>
         var data = [
-            // 가슴
-            {date:'2024.06.29', part:'가슴(대흉근 안쪽)',kind:'펙 덱 플라이', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},], desc:'간략설명'},
-            {date:'2024.06.21', part:'가슴(대흉근 안쪽)',kind:'펙 덱 플라이', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
-            {date:'2024.06.29', part:'가슴',kind:'체스트 프레스', set:[{number:'20', weight:'20'},{number:'20', weight:'25'},{number:'20', weight:'20'},]},
-            {date:'2024.06.29', part:'가슴',kind:'딥스', set:[{number:'20', weight:'0'},{number:'20', weight:'0'},{number:'20', weight:'0'},]},
+            {date:'2024.06.24', part:'어깨', kind:'밀리터리 프레스', set:[{weight:'9.5', number:'20'},{weight:'9.5', number:'20'},{weight:'9.5', number:'20'},]},
+            {date:'2024.06.24', part:'어깨', kind:'인클라인 덤벨 숄더 프레스', set:[{weight:'3', number:'20'},{weight:'1.5', number:'20'},{weight:'1.5', number:'20'},]},
+            {date:'2024.06.24', part:'어깨', kind:'사이드 레터럴 레이즈', set:[{weight:'3', number:'20'},{weight:'3', number:'20'},{weight:'3', number:'20'},]},
+            {date:'2024.06.24', part:'등', kind:'벤트 오버 레터럴 레이즈', set:[{weight:'3', number:'20'},{weight:'3', number:'20'},{weight:'3', number:'20'},]},
+            {date:'2024.06.24', part:'하체', kind:'레그 프레스', set:[{weight:'0', number:'20'},{weight:'20', number:'20'},{weight:'20', number:'20'},{weight:'20', number:'20'},]},
+            {date:'2024.06.24', part:'코어', kind:'버피', set:[{weight:'0', number:'20'},{weight:'0', number:'20'},{weight:'0', number:'20'},{weight:'0', number:'20'},]},
 
-            // 등
-            {date:'2024.06.29', part:'등(척추기립근)', kind:'데드리프트', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
-            {date:'2024.06.29', part:'등(광배근)', kind:'랫 풀 다운', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
-            {date:'2024.06.29', part:'등(능형근)', kind:'시티드 로우', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
-            {date:'2024.06.29', part:'등(척추기립근)', kind:'백 익스텐션', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
+            {date:'2024.06.20', part:'가슴', kind:'벤치 프레스', set:[{weight:'15', number:'20'},{weight:'15', number:'20'},{weight:'20', number:'15'},{weight:'20', number:'15'},]},
+            {date:'2024.06.20', part:'가슴', kind:'인클라인 덤벨 체스트 프레스', set:[{weight:'4', number:'20'},{weight:'5', number:'20'},{weight:'6', number:'20'},]},
+            {date:'2024.06.20', part:'가슴', kind:'딥스', set:[{weight:'0', number:'20'},{weight:'0', number:'20'},{weight:'0', number:'20'},]},
+            {date:'2024.06.20', part:'등', kind:'랫 풀 다운', set:[{weight:'20', number:'20'},{weight:'25', number:'20'},{weight:'30', number:'15'},]},
+            {date:'2024.06.20', part:'등', kind:'바벨 벤트 오버 로우', set:[{weight:'15', number:'20'},{weight:'15', number:'20'},{weight:'9.5', number:'20'},]},
+            {date:'2024.06.20', part:'코어', kind:'마운틴 클라이머', set:[{weight:'0', number:'20'}],desc:'30초씩 3세트 추가'},
+
+            {date:'2024.06.17', part:'하체', kind:'스쿼트', set:[{weight:'20', number:'20'},{weight:'25', number:'15'},{weight:'30', number:'12'},{weight:'35', number:'10'},]},
+            {date:'2024.06.17', part:'하체', kind:'스플릿 스쿼트', set:[{weight:'0', number:'20'},{weight:'0', number:'20'},{weight:'0', number:'20'}],desc:'5초 버티기'},
+            {date:'2024.06.17', part:'하체', kind:'힙 스터스트', set:[{weight:'0', number:'20'},{weight:'0', number:'20'},{weight:'0', number:'20'},],desc:'밴드 끼고'},
+            {date:'2024.06.17', part:'어깨', kind:'사이드 레터럴 레이즈', set:[{weight:'1.5', number:'20'},{weight:'3', number:'20'}]},
+            {date:'2024.06.17', part:'어깨', kind:'써클 레이즈', set:[{weight:'1', number:'20'},{weight:'1', number:'20'}]},
+
+            {date:'2024.06.13', part:'등', kind:'데드 리프트', set:[{weight:'20', number:'20'},{weight:'20', number:'20'},{weight:'20', number:'20'},], desc:'루마니안 데드 리프트'},
+            {date:'2024.06.13', part:'등', kind:'랫 풀 다운', set:[{weight:'20', number:'20'},{weight:'30', number:'20'},{weight:'35', number:'15'},]},
+            {date:'2024.06.13', part:'등', kind:'케이블 로우', set:[{weight:'20', number:'20'},{weight:'25', number:'20'},{weight:'30', number:'20'},]},
+            {date:'2024.06.13', part:'가슴', kind:'벤치 프레스', set:[{weight:'20', number:'20'},{weight:'20', number:'20'},{weight:'20', number:'20'},]},
+            {date:'2024.06.13', part:'가슴', kind:'딥스', set:[{weight:'0', number:'20'},{weight:'0', number:'15'}]},
+
+            {date:'2024.06.10', part:'코어', kind:'힙 브릿지', set:[{weight:'0', number:'20'},{weight:'0', number:'20'},{weight:'0', number:'20'},], desc:'10초 버티기'},
+            {date:'2024.06.10', part:'하체', kind:'스쿼트', set:[{weight:'20', number:'20'},{weight:'25', number:'20'},{weight:'30', number:'20'},{weight:'0', number:'20'},]},
+            {date:'2024.06.10', part:'하체', kind:'레그 컬', set:[{weight:'8', number:'20'},{weight:'12', number:'20'},{weight:'16', number:'20'},]},
+            {date:'2024.06.10', part:'어깨', kind:'밀리터리 프레스', set:[{weight:'9.5', number:'20'},{weight:'9.5', number:'20'},{weight:'9.5', number:'20'},]},
+            {date:'2024.06.10', part:'어깨', kind:'인클라인 덤벨 숄더 프레스', set:[{weight:'3', number:'12'},{weight:'3', number:'12'}]},
+            {date:'2024.06.10', part:'어깨', kind:'사이드 레터럴 레이즈', set:[{weight:'1.5', number:'20'},{weight:'1.5', number:'20'},{weight:'1.5', number:'20'},]},
+
+            {date:'2024.06.07', part:'등', kind:'랫 풀 다운', set:[{ weight:'20', number:'20'},{weight:'25', number:'20'},{weight:'30', number:'20'},]},
+            {date:'2024.06.07', part:'가슴', kind:'벤치 프레스', set:[{weight:'15', number:'20'},{weight:'20', number:'20'},{weight:'20', number:'20'},]},
+            {date:'2024.06.07', part:'등', kind:'티 바 로우', set:[{weight:'0', number:'20'},{weight:'5', number:'20'},{weight:'5', number:'20'},{weight:'5', number:'20'},]},
+            {date:'2024.06.07', part:'가슴', kind:'인클라인 덤벨 체스트 프레스', set:[{weight:'5', number:'20'},{ weight:'5', number:'20',},{ weight:'5', number:'20',},]},
+            {date:'2024.06.07', part:'등', kind:'백 익스텐션', set:[{weight:'0', number:'15'},{weight:'0', number:'15'},{weight:'0', number:'15'},],desc:'5초 버티기'},
             
-            // 어깨
-            {date:'2024.06.29', part:'어깨(측면)', kind:'사이드 레터럴 레이즈', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
-            {date:'2024.06.29', part:'어깨(측면과 전면)', kind:'숄더 프레스', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
-            {date:'2024.06.29', part:'어깨(후면)', kind:'리버스 펙 덱 플라이', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
-            
-            // 하체
-            {date:'2024.06.29', part:'하체(대퇴직근)', kind:'레그 익스텐션', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
-            {date:'2024.06.29', part:'하체(슬굴곡근)', kind:'레그 컬', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
-            {date:'2024.06.29', part:'하체(대퇴사두근)', kind:'레그 프레스', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
-
-            // 팔
-
-            // 코어
-            {date:'2024.06.26', part:'코어', kind:'플랭크', set:[{number:'20', weight:'0'},{number:'20', weight:'0'},{number:'10', weight:'0'}]},
+            {date:'2024.06.04', part:'하체', kind:'스쿼트', set:[{number:'20', weight:'15'},{number:'20', weight:'20'},]},
+            {date:'2024.06.04', part:'하체', kind:'레그 프레스', set:[{weight:'0', number:'20'},{weight:'0', number:'20'},{ weight:'0', number:'20',},],desc:'5초 버티기'},
+            {date:'2024.06.04', part:'어깨', kind:'밀리터리 프레스', set:[{weight:'9', number:'20'},{weight:'9', number:'20'},{weight:'9', number:'20'},]},
+            {date:'2024.06.04', part:'어깨', kind:'사이드 레터럴 레이즈', set:[{weight:'1', number:'20'},{weight:'1.5', number:'20'},]},
         ]
 
         var buttonContainer = document.getElementById('btnKind');
@@ -196,7 +215,7 @@
             setList.classList.add('set');
             item.set.forEach(function(setItem, index) {
                 var listItem = document.createElement('li');
-                listItem.innerHTML = `<ul class="set-item"><li>${index + 1}세트</li><li>${setItem.weight}kg</li><li>${setItem.number}회</li>`;
+                listItem.innerHTML = `<ul class="set-item"><li>${index + 1}세트</li><li>${setItem.weight}<small>kg</small></li><li>${setItem.number}<small>회</small></li>`;
                 setList.appendChild(listItem);
             });
 

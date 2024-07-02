@@ -50,8 +50,8 @@
         <select id="kind" name="kind">
             <option value="">종류</option>
         </select>
-        <input type="tel" id="number" name="number" autocomplete="off" placeholder="횟수" onclick="resetInput(this)">
         <input type="tel" id="weight" name="weight" autocomplete="off" placeholder="무게" onclick="resetInput(this)">
+        <input type="tel" id="number" name="number" autocomplete="off" placeholder="횟수" onclick="resetInput(this)">
         <input type="text" id="desc" name="desc" autocomplete="off" placeholder="간략설명" onclick="resetInput(this)">
         <button type="button" onclick="convertToJSON()">Submit</button>
     </form>
@@ -89,7 +89,7 @@
                     addOptions(kindSelect, ['체스트 프레스', '인클라인 덤벨 체스트 프레스', '펙 덱 플라이', '딥스']);
                     break;
                 case '등':
-                    addOptions(kindSelect, ['케이블 암 풀 다운', '랫 풀 다운', '시티드 로우', '덤벨 데드 리프트']);
+                    addOptions(kindSelect, ['케이블 암 풀 다운', '랫 풀 다운', '시티드 로우', '덤벨 데드 리프트', '백 익스텐션']);
                     break;
                 case '어깨':
                     addOptions(kindSelect, ['익스터널 로테이션', '사이드 레터럴 레이즈', '인클라인 덤벨 숄더 프레스', '숄더 프레스', '리버스 펙 덱 플라이']);
@@ -127,12 +127,12 @@
             const date = formData.get('date');
             const part = formData.get('part');
             const kind = formData.get('kind');
-            const number = formData.get('number');
             const weight = formData.get('weight');
+            const number = formData.get('number');
             const desc = formData.get('desc');
 
             // 새로운 세트 객체 생성
-            const newSet = { number: number, weight: weight };
+            const newSet = { weight: weight, number: number };
 
             // 기존 데이터에서 날짜와 운동 종류가 같은 항목 찾기
             let existingEntry = accumulatedData.find(entry => entry.date === date && entry.kind === kind);
