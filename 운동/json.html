@@ -39,18 +39,20 @@
     <form id="userForm">
         <input type="text" id="date" name="date" autocomplete="off" placeholder="날짜" onclick="resetInput(this)">
         <select id="part" name="part" onchange="updateExerciseOptions()">
-            <option value="">운동 부위</option>
+            <option value="">부위</option>
             <option value="가슴">가슴</option>
             <option value="등">등</option>
             <option value="어깨">어깨</option>
             <option value="하체">하체</option>
             <option value="팔">팔</option>
+            <option value="코어">코어</option>
         </select>
         <select id="kind" name="kind">
-            <option value="">운동종류</option>
+            <option value="">종류</option>
         </select>
         <input type="tel" id="number" name="number" autocomplete="off" placeholder="횟수" onclick="resetInput(this)">
         <input type="tel" id="weight" name="weight" autocomplete="off" placeholder="무게" onclick="resetInput(this)">
+        <input type="text" id="desc" name="desc" autocomplete="off" placeholder="간략설명" onclick="resetInput(this)">
         <button type="button" onclick="convertToJSON()">Submit</button>
     </form>
 
@@ -79,24 +81,27 @@
             const kindSelect = document.getElementById('kind');
 
             // 기존 옵션 제거
-            kindSelect.innerHTML = '<option value="">운동종류</option>';
+            kindSelect.innerHTML = '<option value="">종류</option>';
 
             // 선택된 운동 부위에 따라 옵션 추가
             switch (partSelect.value) {
                 case '가슴':
-                    addOptions(kindSelect, ['시티드 체스트 프레스', '인클라인 덤벨 체스트 프레스', '펙 덱 플라이', '딥스']);
+                    addOptions(kindSelect, ['체스트 프레스', '인클라인 덤벨 체스트 프레스', '펙 덱 플라이', '딥스']);
                     break;
                 case '등':
-                    addOptions(kindSelect, ['케이블 암 풀 다운', '랫 풀 다운', '시티드 로우']);
+                    addOptions(kindSelect, ['케이블 암 풀 다운', '랫 풀 다운', '시티드 로우', '덤벨 데드 리프트']);
                     break;
                 case '어깨':
-                    addOptions(kindSelect, ['사이드 레터럴 레이즈', '인클라인 숄더 프레스', '시티드 숄더 프레스', '리버스 펙 덱 플라이']);
+                    addOptions(kindSelect, ['익스터널 로테이션', '사이드 레터럴 레이즈', '인클라인 덤벨 숄더 프레스', '숄더 프레스', '리버스 펙 덱 플라이']);
                     break;
                 case '하체':
-                    addOptions(kindSelect, ['레그 익스텐션', '레그 컬', '레그 프레스', '스쿼트']);
+                    addOptions(kindSelect, ['레그 익스텐션', '레그 컬', '레그 프레스', '스쿼트', '런지']);
                     break;
                 case '팔':
                     addOptions(kindSelect, ['바벨 컬']);
+                    break;
+                case '코어':
+                    addOptions(kindSelect, ['플랭크']);
                     break;
                 default:
                     // 기본 옵션 유지
@@ -124,6 +129,7 @@
             const kind = formData.get('kind');
             const number = formData.get('number');
             const weight = formData.get('weight');
+            const desc = formData.get('desc');
 
             // 새로운 세트 객체 생성
             const newSet = { number: number, weight: weight };
@@ -140,7 +146,8 @@
                     date: date,
                     part: part,
                     kind: kind,
-                    set: [newSet]
+                    set: [newSet],
+                    desc: desc
                 };
                 accumulatedData.push(newEntry);
             }

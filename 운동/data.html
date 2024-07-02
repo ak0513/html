@@ -47,6 +47,8 @@
 
         .link {display:flex;gap:8px;margin-top:12px;}
         .link a {text-decoration:underline;}
+
+        .desc {color:#666;margin-top:2px;}
     </style>
 </head>
 <body>
@@ -63,7 +65,7 @@
     <script>
         var data = [
             // 가슴
-            {date:'2024.06.29', part:'가슴(대흉근 안쪽)',kind:'펙 덱 플라이', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
+            {date:'2024.06.29', part:'가슴(대흉근 안쪽)',kind:'펙 덱 플라이', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},], desc:'간략설명'},
             {date:'2024.06.21', part:'가슴(대흉근 안쪽)',kind:'펙 덱 플라이', set:[{number:'20', weight:'25'},{number:'20', weight:'25'},{number:'20', weight:'25'},]},
             {date:'2024.06.29', part:'가슴',kind:'체스트 프레스', set:[{number:'20', weight:'20'},{number:'20', weight:'25'},{number:'20', weight:'20'},]},
             {date:'2024.06.29', part:'가슴',kind:'딥스', set:[{number:'20', weight:'0'},{number:'20', weight:'0'},{number:'20', weight:'0'},]},
@@ -188,8 +190,7 @@
         function setKind(item, criterion) {
             var itemDiv = document.createElement('div');
             itemDiv.classList.add('item');
-            // itemDiv.innerHTML = `<h3>${item.date}</h3>`;
-            itemDiv.innerHTML = `${criterion === 'date' ? `<h3>${item.kind}<span>${item.part}</span></h3>` : `<h3>${item.date}</h3>`}`;
+            itemDiv.innerHTML = `${criterion === 'date' ? `<h3>${item.kind}<span>${item.part}</span></h3>` : `<h3>${item.date}</h3>`} ${item.desc === undefined ? `` : `<div class="desc">${item.desc}</div>`}`;
 
             var setList = document.createElement('ul');
             setList.classList.add('set');
