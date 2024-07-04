@@ -52,12 +52,18 @@
 
         .desc {color:#666;margin-top:4px;}
 
-        .item.가슴 h3 span {color:#ED6545;}
-        .item.등 h3 span {color:#A54B2A;}
-        .item.어깨 h3 span {color:#D58C2D;}
-        .item.하체 h3 span {color:#678262;}
-        .item.팔 h3 span {color:#A19C52;}
-        .item.코어 h3 span {color:#424531;}
+        .item.가슴 h3 span,
+        h2.가슴 span {color:#ED6545;}
+        .item.등 h3 span,
+        h2.등 span {color:#A54B2A;}
+        .item.어깨 h3 span,
+        h2.어깨 span {color:#D58C2D;}
+        .item.하체 h3 span,
+        h2.하체 span {color:#678262;}
+        .item.팔 h3 span,
+        h2.팔 span {color:#A19C52;}
+        .item.코어 h3 span,
+        h2.코어 span {color:#424531;}
     </style>
 </head>
 <body>
@@ -223,6 +229,7 @@
         // 타이틀 세팅
         function setTitle(text, part) {
             var title = document.createElement('h2');
+            title.classList.add(`${part}`);
             if (part === undefined) { part = ''; }
             title.innerHTML = `${text}${part.length > 0 ? `<span>[${part}]</span>` : ``}`;
         // console.log('title', part.length)
