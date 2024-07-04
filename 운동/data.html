@@ -217,7 +217,8 @@
         function setTitle(text, part) {
             var title = document.createElement('h2');
             if (part === undefined) { part = ''; }
-            title.innerHTML = `${text}<span>${part}</span>`;
+            title.innerHTML = `${text}${part.length > 0 ? `<span>[${part}]</span>` : ``}`;
+        // console.log('title', part.length)
             container.appendChild(title);
         }
 
@@ -225,7 +226,7 @@
         function setKind(item, criterion) {
             var itemDiv = document.createElement('div');
             itemDiv.classList.add('item');
-            itemDiv.innerHTML = `${criterion === 'date' ? `<h3>${item.kind}<span>${item.part}</span></h3>` : `<h3>${item.date}</h3>`} ${item.desc === undefined || item.desc === "" ? `` : `<div class="desc">${item.desc}</div>`}`;
+            itemDiv.innerHTML = `${criterion === 'date' ? `<h3>${item.kind}<span>[${item.part}]</span></h3>` : `<h3>${item.date}</h3>`} ${item.desc === undefined || item.desc === "" ? `` : `<div class="desc">${item.desc}</div>`}`;
             var setList = document.createElement('ul');
             setList.classList.add('set');
             item.set.forEach(function(setItem, index) {
