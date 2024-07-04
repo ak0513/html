@@ -126,10 +126,17 @@
                 var button = document.createElement('button');
                 button.setAttribute('type', 'button');
                 button.textContent = `${part}(${partCounts[part]})`;
-                button.onclick = function() { showPart(part); };
+                button.onclick = function() { 
+                    showPart(part);
+                    // 버튼 클릭 시 active 클래스 관리
+                    var activeButton = buttonPartContainer.querySelector('button.active');
+                    if (activeButton) {
+                        activeButton.classList.remove('active');
+                    }
+                    button.classList.add('active');
+                };
                 buttonPartContainer.appendChild(button);
             });
-                
         }
 
         // 모든 part의 데이터를 표시하는 함수
@@ -168,9 +175,18 @@
                 var button = document.createElement('button');
                 button.setAttribute('type', 'button');
                 button.textContent = `${kind}(${kindCounts[kind]})`;
-                button.onclick = function() { showKind(kind); };
+                button.onclick = function() { 
+                    showKind(kind);
+                    // 버튼 클릭 시 active 클래스 관리
+                    var activeButton = buttonKindContainer.querySelector('button.active');
+                    if (activeButton) {
+                        activeButton.classList.remove('active');
+                    }
+                    button.classList.add('active');
+                };
                 buttonKindContainer.appendChild(button);
             });
+
 
             // part 데이터를 모두 보여줌
             container.innerHTML = '';

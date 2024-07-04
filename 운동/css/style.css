@@ -25,8 +25,8 @@ body {-webkit-text-size-adjust:none;background-color:#f8f8f8;color:#111;}
 #btnKind {display:flex;gap:4px;white-space:nowrap;}
 button {padding:4px 12px;background-color:#fff;border-radius:4px;font-size:14px;color:#111;}
 #btnKind button {background-color:#f0f0f0;}
-
-.btn-date {background-color: #464646;color:#fff;}
+button.active {background-color: #464646;color: #fff;}
+#btnKind button.active {background-color: #ddd;color:#111;}
 
 #btnPart {display: inline-flex;gap:4px;}
 
