@@ -51,6 +51,13 @@
         .link a {text-decoration:underline;}
 
         .desc {color:#666;margin-top:4px;}
+
+        .item.가슴 h3 span {color:#ED6545;}
+        .item.등 h3 span {color:#A54B2A;}
+        .item.어깨 h3 span {color:#D58C2D;}
+        .item.하체 h3 span {color:#678262;}
+        .item.팔 h3 span {color:#A19C52;}
+        .item.코어 h3 span {color:#424531;}
     </style>
 </head>
 <body>
@@ -226,6 +233,7 @@
         function setKind(item, criterion) {
             var itemDiv = document.createElement('div');
             itemDiv.classList.add('item');
+            itemDiv.classList.add(item.part);
             itemDiv.innerHTML = `${criterion === 'date' ? `<h3>${item.kind}<span>[${item.part}]</span></h3>` : `<h3>${item.date}</h3>`} ${item.desc === undefined || item.desc === "" ? `` : `<div class="desc">${item.desc}</div>`}`;
             var setList = document.createElement('ul');
             setList.classList.add('set');
