@@ -1,0 +1,63 @@
+/* reset */
+*, *::before, *::after {box-sizing:border-box;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button{margin:0;padding:0}
+fieldset,img{border:0 none}
+dl,ul,ol,menu,li {list-style:none}
+blockquote, q {quotes: none}
+blockquote:before, blockquote:after,q:before, q:after {content:'';content:none}
+input,select,textarea,button {vertical-align:middle;outline:none}
+input::-ms-clear {display:none}
+button {border:0 none;background-color:transparent;cursor:pointer}
+body,th,td,input,select,textarea,button {font-size:14px;line-height:1.5;font-family:-apple-system, BlinkMacSystemFont, Pretendard, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell,'Noto Sans KR', 'Spoqa Han Sans', "Helvetica Neue", sans-serif;}
+a {color:#333;text-decoration:none} 
+a:active, a:hover {text-decoration:underline}
+a:active {background-color:transparent}
+address,caption,cite,code,dfn,em,var {font-style:normal;font-weight:normal}
+img {max-width:100%;height:auto;}
+
+html,body {height:100%;}
+body {-webkit-text-size-adjust:none;background-color:#f8f8f8;color:#111;}
+
+#wrap {padding:16px;}
+#container {margin-top:16px;}
+#btnTop {display:flex;align-items:center;margin-bottom:8px;gap:4px;}
+#btnKindWrap {overflow-x:auto;padding-bottom:3px;}
+#btnKind {display:flex;gap:4px;white-space:nowrap;}
+button {padding:4px 12px;background-color:#fff;border-radius:4px;font-size:14px;color:#111;}
+#btnKind button {background-color:#f0f0f0;}
+
+.btn-date {background-color: #464646;color:#fff;}
+
+#btnPart {display: inline-flex;gap:4px;}
+
+h2 {display:flex;align-items:center;margin-top:40px;font-weight:700;font-size:16px;}
+h2:first-child {margin-top:0;}
+h2 span {font-size:14px;font-weight:400;color:#666;margin-left:4px;}
+h3 {display:flex;align-items:center;font-weight:700;}
+h3 span {font-size:14px;font-weight:400;color:#666;margin-left:4px;}
+.item {margin-top:8px;background-color:#fff;border-radius:4px;padding:12px 16px;border:1px solid #f0f0f0;}
+.item + .item {margin-top:8px;}
+.set {margin-top:8px;padding-top:8px;border-top:1px solid #eee;}
+.set > li + li {margin-top:4px;}
+.set-item {display:flex;}
+.set-item li {flex:1;color:#423f33;text-align:right;}
+.set-item li:first-child {text-align: left;}
+.set-item li small {color:#999;}
+
+.link {display:flex;gap:8px;margin-top:12px;}
+.link a {text-decoration:underline;}
+
+.desc {color:#666;margin-top:4px;}
+
+.item.가슴 h3 span,
+h2.가슴 span {color:#ED6545;}
+.item.등 h3 span,
+h2.등 span {color:#A54B2A;}
+.item.어깨 h3 span,
+h2.어깨 span {color:#D58C2D;}
+.item.하체 h3 span,
+h2.하체 span {color:#678262;}
+.item.팔 h3 span,
+h2.팔 span {color:#A19C52;}
+.item.코어 h3 span,
+h2.코어 span {color:#424531;}

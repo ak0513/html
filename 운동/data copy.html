@@ -210,7 +210,7 @@
             setTitle(kind, kindData[0].part);
 
             kindData.forEach(item => {
-                setKind(item, 'kindDate');
+                setKind(item, 'date');
             });
         }
 
@@ -219,7 +219,7 @@
             var title = document.createElement('h2');
             title.classList.add(`${part}`);
             if (part === undefined) { part = ''; }
-            title.innerHTML = `${text}${part.length > 0 && part !== text ? `<span>[${part}]</span>` : ``}`;
+            title.innerHTML = `${text}${part.length > 0 ? `<span>[${part}]</span>` : ``}`;
             container.appendChild(title);
         }
 
@@ -228,8 +228,7 @@
             var itemDiv = document.createElement('div');
             itemDiv.classList.add('item');
             itemDiv.classList.add(item.part);
-            console.log(criterion, item.date, item.kind)
-            itemDiv.innerHTML = `${criterion === 'kindDate' ? `<h3>${item.date}</h3>` : `<h3>${item.kind}<span>[${item.part}]</span></h3>`} ${item.desc === undefined || item.desc === "" ? `` : `<div class="desc">${item.desc}</div>`}`;
+            itemDiv.innerHTML = `${criterion === 'date' ? `<h3>${item.date}</h3>` : `<h3>${item.kind}<span>[${item.part}]</span></h3>`} ${item.desc === undefined || item.desc === "" ? `` : `<div class="desc">${item.desc}</div>`}`;
             var setList = document.createElement('ul');
             setList.classList.add('set');
             item.set.forEach(function(setItem, index) {
@@ -245,6 +244,7 @@
             if (criterion === 'date') {
                 var h3Tag = itemDiv.querySelector('h3');
                 h3Tag.addEventListener('click', function() {
+                    sortData('kind'); // 종류 탭으로 변경
                     setTimeout(function() {
                         var kindButton = Array.from(buttonKindContainer.children).find(button => button.textContent.includes(item.kind));
                         if (kindButton) {
