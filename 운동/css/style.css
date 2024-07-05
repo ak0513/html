@@ -20,10 +20,11 @@ body {-webkit-text-size-adjust:none;background-color:#f8f8f8;color:#111;}
 
 #wrap {padding:16px;}
 #container {margin-top:16px;}
-#btnTop {display:flex;align-items:center;margin-bottom:8px;gap:4px;}
+#btnTop {margin-bottom:8px;}
+.btnTop-inner {display:flex;align-items:center;overflow-y:auto;gap:4px;flex-wrap:nowrap;}
 #btnKindWrap {overflow-x:auto;padding-bottom:3px;}
 #btnKind {display:flex;gap:4px;white-space:nowrap;}
-button {padding:4px 12px;background-color:#fff;border-radius:4px;font-size:14px;color:#111;}
+button {padding:4px 12px;background-color:#fff;border-radius:4px;font-size:14px;color:#111;flex-shrink:0;}
 #btnKind button {background-color:#f0f0f0;}
 button.active {background-color: #464646;color: #fff;}
 #btnKind button.active {background-color: #ddd;color:#111;}
