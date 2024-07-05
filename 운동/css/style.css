@@ -21,7 +21,7 @@ body {-webkit-text-size-adjust:none;background-color:#f8f8f8;color:#111;}
 #wrap {padding:16px;}
 #container {margin-top:16px;}
 #btnTop {margin-bottom:8px;}
-.btnTop-inner {display:flex;align-items:center;overflow-y:auto;gap:4px;flex-wrap:nowrap;}
+.btnTop-inner {display:flex;align-items:center;overflow-x:auto;gap:4px;flex-wrap:nowrap;padding-bottom:3px;}
 #btnKindWrap {overflow-x:auto;padding-bottom:3px;}
 #btnKind {display:flex;gap:4px;white-space:nowrap;}
 button {padding:4px 12px;background-color:#fff;border-radius:4px;font-size:14px;color:#111;flex-shrink:0;}
