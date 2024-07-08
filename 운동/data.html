@@ -8,6 +8,9 @@
 </head>
 <body>
     <div id="wrap">
+        <div id="searchBar">
+            <input type="text" id="searchInput" placeholder="검색어 입력" oninput="searchData()">
+        </div>
         <div id="btnTop">
             <div class="btnTop-inner">
                 <button type="button" onclick="sortData('date')" class="btn-date">날짜</button>
@@ -18,12 +21,13 @@
             <div id="btnKind"></div>
         </div>
         <div id="container"></div>
+        <!-- https://myhappybody.net/tests/1rm -->
     </div>
     <script>
         var data = [
             {date: "2024.07.05", part: "하체", kind: "레그 컬", set: [{weight: "12", number: "20"}, {weight: "16", number: "20"}, {weight: "20", number: "20"},{weight: "24", number: "20"}]},
             {date: "2024.07.05", part: "하체", kind: "스쿼트", set: [{weight: "15", number: "20"}, {weight: "15", number: "20"}, {weight: "15", number: "20"}], desc: "와이드 스쿼트"},
-            {date: "2024.07.05", part: "하체", kind: "스쿼트", set: [{weight: "0", number: "20"}, {weight: "0", number: "15"}, {weight: "0", number: "12"}], desc: "불가리안 스쿼트 5초 버티기"},
+            {date: "2024.07.05", part: "하체", kind: "스쿼트", set: [{weight: "0", number: "20"}, {weight: "0", number: "15"}, {weight: "0", number: "12"}], desc: "불가리안 스플릿 스쿼트/5초 버티기"},
             {date: "2024.07.05", part: "어깨", kind: "밀리터리 프레스", set: [{weight:"9.5", number:"20"},{weight:"11.5", number:"20"},{weight:"11.5", number:"5"},], desc:'마지막 세트 도움받아 15개'},
             {date: "2024.07.05", part: "어깨", kind: "프론트 레이즈", set: [{weight:"5", number:"20"},{weight:"5", number:"20"},{weight:"5", number:"20"},], desc:'원판 들고'},
             {date: "2024.07.05", part: "어깨", kind: "암 풀 다운", set: [{weight:"0", number:"20"},{weight:"0", number:"20"},{weight:"0", number:"20"},], desc:'파란색 밴드'},
@@ -89,8 +93,6 @@
         var buttonPartContainer = document.getElementById('btnPart');
         var buttonKindContainer = document.getElementById('btnKind');
         var container = document.getElementById('container');
-
-
 
         // 데이터를 정렬하고 DOM에 추가하는 함수
         function sortData(criterion) {
@@ -195,7 +197,6 @@
                 buttonKindContainer.appendChild(button);
             });
 
-
             // part 데이터를 모두 보여줌
             container.innerHTML = '';
             setTitle(part, part);
@@ -215,6 +216,56 @@
                 setKind(item, 'kindDate');
             });
         }
+
+        // 검색 기능 추가
+        function searchData() {
+            var searchInput = document.getElementById('searchInput').value.trim();
+            if (searchInput === '') {
+                // 검색어가 없으면 전체 데이터 초기화 (원하는 경우)
+                buttonKindContainer.innerHTML = '';
+                container.innerHTML = '';
+                setTitle('검색 결과 없음');
+                return;
+            }
+
+            var searchResults = data.filter(item => item.kind.includes(searchInput));
+            buttonKindContainer.innerHTML = '';
+            container.innerHTML = '';
+
+            if (searchResults.length === 0) {
+                setTitle('검색 결과 없음');
+                return;
+            }
+
+            var kindCounts = searchResults.reduce((acc, item) => {
+                acc[item.kind] = (acc[item.kind] || 0) + 1;
+                return acc;
+            }, {});
+
+            var kinds = Object.keys(kindCounts).sort((a, b) => kindCounts[b] - kindCounts[a]);
+
+            kinds.forEach(kind => {
+                var button = document.createElement('button');
+                button.setAttribute('type', 'button');
+                button.textContent = `${kind}(${kindCounts[kind]})`;
+                button.onclick = function() { 
+                    showKind(kind);
+                    // 버튼 클릭 시 active 클래스 관리
+                    var activeButton = buttonKindContainer.querySelector('button.active');
+                    if (activeButton) {
+                        activeButton.classList.remove('active');
+                    }
+                    button.classList.add('active');
+                };
+                buttonKindContainer.appendChild(button);
+            });
+
+            setTitle('검색 결과');
+            searchResults.forEach(item => {
+                setKind(item, 'kind');
+            });
+        }
+
 
         // 타이틀 세팅
         function setTitle(text, part) {

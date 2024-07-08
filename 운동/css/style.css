@@ -18,9 +18,9 @@ img {max-width:100%;height:auto;}
 html,body {height:100%;}
 body {-webkit-text-size-adjust:none;background-color:#f8f8f8;color:#111;}
 
-#wrap {padding:16px;}
+#wrap {padding:56px 16px 16px;}
 #container {margin-top:16px;}
-#btnTop {margin-bottom:8px;}
+#btnTop {margin-top:8px;margin-bottom:8px;}
 .btnTop-inner {display:flex;align-items:center;overflow-x:auto;gap:4px;flex-wrap:nowrap;padding-bottom:3px;}
 #btnKindWrap {overflow-x:auto;padding-bottom:3px;}
 #btnKind {display:flex;gap:4px;white-space:nowrap;}
@@ -30,6 +30,8 @@ button.active {background-color: #464646;color: #fff;}
 #btnKind button.active {background-color: #ddd;color:#111;}
 
 #btnPart {display: inline-flex;gap:4px;}
+
+#searchInput {position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:center;width:100%;height:48px;padding:0 12px;border:none;border-bottom:1px solid #ddd;font-size:16px;}
 
 h2 {display:flex;align-items:center;margin-top:40px;font-weight:700;font-size:16px;}
 h2:first-child {margin-top:0;}
