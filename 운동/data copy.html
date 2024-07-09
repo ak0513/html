@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>운동 기록</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div id="wrap">
+        <div id="searchBar">
+            <input type="text" id="searchInput" placeholder="검색어 입력" oninput="searchData()">
+        </div>
+        <div id="btnTop">
+            <div class="btnTop-inner">
+                <button type="button" onclick="sortData('date')" class="btn-date">날짜</button>
+                <div id="btnPart"></div>
+            </div>
+        </div>
+        <div id="btnKindWrap">
+            <div id="btnKind"></div>
+        </div>
+        <div id="container"></div>
+    </div>
+    <script>
+        var data = [
+            {date: "2024.07.08", part: "하체", kind: "데드 리프트", set: [{weight: "0", number: "20"}, {weight: "10", number: "20"}, {weight: "20", number: "20"},{weight: "30", number: "20"}]},
+            {date: "2024.07.08", part: "등", kind: "케이블 암 풀 다운", set: [{weight: "5", number: "20"}, {weight: "10", number: "20"}, {weight: "10", number: "20"}]},
+            {date: "2024.07.08", part: "등", kind: "랫 풀 다운", set: [{weight: "20", number: "20"}, {weight: "25", number: "20"}, {weight: "30", number: "20"}], desc:"언더 그립/언더 그립이 무게를 더 친다."},
+            {date: "2024.07.08", part: "등", kind: "티 바 로우", set: [{weight: "0", number: "20"}, {weight: "5", number: "20"}, {weight: "5", number: "20"}], desc:"머신 말고 바로 진행"},
+            {date: "2024.07.08", part: "가슴", kind: "딥스", set: [{weight: "0", number: "20"}, {weight: "0", number: "20"}, {weight: "0", number: "20"}], desc:"점프해서 버티고 내려오기"},
+            // Add other data entries here...
+        ];
+
+        var buttonPartContainer = document.getElementById('btnPart');
+        var buttonKindContainer = document.getElementById('btnKind');
+        var container = document.getElementById('container');
+
+        // Attach event listener to container for event delegation
+        container.addEventListener('click', function(event) {
+            if (event.target.tagName === 'H3') {
+                var kind = event.target.textContent.trim();
+                var item = data.find(d => d.kind === kind || (d.date === kind && d.part === event.target.querySelector('span').textContent.replace(/\[|\]/g, '')));
+                if (item) {
+                    var kindButton = Array.from(buttonKindContainer.children).find(button => button.textContent.includes(item.kind));
+                    if (kindButton) {
+                        kindButton.click();
+                    }
+                }
+            }
+        });
+
+        function sortData(criterion) {
+            var groupedData = groupDataByCriterion(criterion);
+
+            container.innerHTML = '';
+
+            var sortedKeys = Object.keys(groupedData).sort((a, b) => {
+                return criterion === 'date' ? new Date(b) - new Date(a) : a.localeCompare(b);
+            });
+
+            sortedKeys.forEach(key => {
+                setTitle(key);
+                groupedData[key].forEach(item => {
+                    setKind(item, criterion);
+                });
+            });
+
+            setPartButtons();
+        }
+
+        function groupDataByCriterion(criterion) {
+            return data.reduce((acc, item) => {
+                var key = item[criterion];
+                if (!acc[key]) {
+                    acc[key] = [];
+                }
+                acc[key].push(item);
+                return acc;
+            }, {});
+        }
+
+        function setPartButtons() {
+            var partCounts = data.reduce((acc, item) => {
+                acc[item.part] = (acc[item.part] || 0) + 1;
+                return acc;
+            }, {});
+
+            var parts = Object.keys(partCounts).sort((a, b) => partCounts[b] - partCounts[a]);
+
+            buttonPartContainer.innerHTML = '';
+            parts.forEach(part => {
+                var button = document.createElement('button');
+                button.setAttribute('type', 'button');
+                button.textContent = `${part}(${partCounts[part]})`;
+                button.onclick = function() { 
+                    showPart(part);
+                    manageActiveButton(buttonPartContainer, button);
+                };
+                buttonPartContainer.appendChild(button);
+            });
+        }
+
+        function showPart(part) {
+            var partData = data.filter(item => item.part === part);
+            var kindCounts = partData.reduce((acc, item) => {
+                acc[item.kind] = (acc[item.kind] || 0) + 1;
+                return acc;
+            }, {});
+
+            var kinds = Object.keys(kindCounts).sort((a, b) => kindCounts[b] - kindCounts[a]);
+
+            buttonKindContainer.innerHTML = '';
+            kinds.forEach(kind => {
+                var button = document.createElement('button');
+                button.setAttribute('type', 'button');
+                button.textContent = `${kind}(${kindCounts[kind]})`;
+                button.onclick = function() { 
+                    showKind(kind);
+                    manageActiveButton(buttonKindContainer, button);
+                };
+                buttonKindContainer.appendChild(button);
+            });
+
+            displayPartData(partData, part);
+        }
+
+        function displayPartData(partData, part) {
+            container.innerHTML = '';
+            setTitle(part, part);
+            partData.forEach(item => {
+                setKind(item, 'kind');
+            });
+        }
+
+        function showKind(kind) {
+            var kindData = data.filter(item => item.kind === kind);
+            container.innerHTML = '';
+            setTitle(kind, kindData[0].part);
+            kindData.forEach(item => {
+                setKind(item, 'kindDate');
+            });
+        }
+
+        function searchData() {
+            var searchInput = document.getElementById('searchInput').value.trim();
+            if (searchInput === '') {
+                resetSearchResults();
+                return;
+            }
+
+            var searchResults = data.filter(item => item.kind.includes(searchInput));
+            displaySearchResults(searchResults);
+        }
+
+        function resetSearchResults() {
+            buttonKindContainer.innerHTML = '';
+            container.innerHTML = '';
+            setTitle('검색 결과 없음');
+        }
+
+        function displaySearchResults(searchResults) {
+            buttonKindContainer.innerHTML = '';
+            container.innerHTML = '';
+
+            if (searchResults.length === 0) {
+                setTitle('검색 결과 없음');
+                return;
+            }
+
+            var kindCounts = searchResults.reduce((acc, item) => {
+                acc[item.kind] = (acc[item.kind] || 0) + 1;
+                return acc;
+            }, {});
+
+            var kinds = Object.keys(kindCounts).sort((a, b) => kindCounts[b] - kindCounts[a]);
+
+            kinds.forEach(kind => {
+                var button = document.createElement('button');
+                button.setAttribute('type', 'button');
+                button.textContent = `${kind}(${kindCounts[kind]})`;
+                button.onclick = function() { 
+                    showKind(kind);
+                    manageActiveButton(buttonKindContainer, button);
+                };
+                buttonKindContainer.appendChild(button);
+            });
+
+            setTitle('검색 결과');
+            searchResults.forEach(item => {
+                setKind(item, 'kind');
+            });
+        }
+
+        function setTitle(text, part) {
+            var title = document.createElement('h2');
+            title.classList.add(`${part}`);
+            title.innerHTML = `${text}${part && part !== text ? `<span>[${part}]</span>` : ``}`;
+            container.appendChild(title);
+        }
+
+        function setKind(item, criterion) {
+            var itemDiv = document.createElement('div');
+            itemDiv.classList.add('item');
+            itemDiv.classList.add(item.part);
+            itemDiv.innerHTML = `${criterion === 'kindDate' ? `<h3>${item.date}</h3>` : `<h3>${item.kind}<span>[${item.part}]</span></h3>`}`;
+            var setList = document.createElement('ul');
+            setList.classList.add('set');
+            item.set.forEach(function(setItem) {
+                var listItem = document.createElement('li');
+                listItem.textContent = `${setItem.weight}kg ${setItem.number}회`;
+                setList.appendChild(listItem);
+            });
+            if (item.desc) {
+                var desc = document.createElement('p');
+                desc.textContent = item.desc;
+                setList.appendChild(desc);
+            }
+            itemDiv.appendChild(setList);
+            container.appendChild(itemDiv);
+        }
+
+        function manageActiveButton(parent, button) {
+            var activeButton = parent.querySelector('.active');
+            if (activeButton) {
+                activeButton.classList.remove('active');
+            }
+            button.classList.add('active');
+        }
+
+        // Initialize the app
+        sortData('date');
+    </script>
+</body>
+</html>
