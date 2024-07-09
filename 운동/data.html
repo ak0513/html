@@ -102,26 +102,14 @@
 
         // 데이터를 정렬하고 DOM에 추가하는 함수
         function sortData(criterion) {
-            var groupedData = data.reduce((acc, item) => {
-                var key = item[criterion];
-                if (!acc[key]) {
-                    acc[key] = [];
-                }
-                acc[key].push(item);
-                return acc;
-            }, {});
+            var groupedData = groupDataByCriterion(criterion);
 
             container.innerHTML = '';
 
             var sortedKeys = Object.keys(groupedData).sort((a, b) => {
-                if (criterion === 'date') {
-                    return new Date(b) - new Date(a); // 날짜별 내림차순 정렬
-                } else {
-                    return a.localeCompare(b);
-                }
+                return criterion === 'date' ? new Date(b) - new Date(a) : a.localeCompare(b);
             });
 
-            // 정렬된 키를 순회하며 데이터를 DOM에 추가
             sortedKeys.forEach(key => {
                 setTitle(key);
                 groupedData[key].forEach(item => {
@@ -129,7 +117,23 @@
                 });
             });
 
-            // 추가: part 버튼 설정
+            setPartButtons();
+        }
+
+        // 데이터를 기준에 따라 그룹화하는 함수
+        function groupDataByCriterion(criterion) {
+            return data.reduce((acc, item) => {
+                var key = item[criterion];
+                if (!acc[key]) {
+                    acc[key] = [];
+                }
+                acc[key].push(item);
+                return acc;
+            }, {});
+        }
+
+        // part 버튼 설정
+        function setPartButtons() {
             var partCounts = data.reduce((acc, item) => {
                 acc[item.part] = (acc[item.part] || 0) + 1;
                 return acc;
@@ -144,35 +148,9 @@
                 button.textContent = `${part}(${partCounts[part]})`;
                 button.onclick = function() { 
                     showPart(part);
-                    // 버튼 클릭 시 active 클래스 관리
-                    var activeButton = buttonPartContainer.querySelector('button.active');
-                    if (activeButton) {
-                        activeButton.classList.remove('active');
-                    }
-                    button.classList.add('active');
+                    manageActiveButton(buttonPartContainer, button);
                 };
                 buttonPartContainer.appendChild(button);
-            });
-        }
-
-        // 모든 part의 데이터를 표시하는 함수
-        function showAllParts() {
-            container.innerHTML = '';
-            var groupedData = data.reduce((acc, item) => {
-                var key = item.part;
-                if (!acc[key]) {
-                    acc[key] = [];
-                }
-                acc[key].push(item);
-                return acc;
-            }, {});
-
-            Object.keys(groupedData).forEach(part => {
-                setTitle(part, part);
-
-                groupedData[part].forEach(item => {
-                    setKind(item);
-                });
             });
         }
 
@@ -193,20 +171,18 @@
                 button.textContent = `${kind}(${kindCounts[kind]})`;
                 button.onclick = function() { 
                     showKind(kind);
-                    // 버튼 클릭 시 active 클래스 관리
-                    var activeButton = buttonKindContainer.querySelector('button.active');
-                    if (activeButton) {
-                        activeButton.classList.remove('active');
-                    }
-                    button.classList.add('active');
+                    manageActiveButton(buttonKindContainer, button);
                 };
                 buttonKindContainer.appendChild(button);
             });
 
-            // part 데이터를 모두 보여줌
+            displayPartData(partData, part);
+        }
+
+        // part 데이터를 표시하는 함수
+        function displayPartData(partData, part) {
             container.innerHTML = '';
             setTitle(part, part);
-
             partData.forEach(item => {
                 setKind(item, 'kind');
             });
@@ -217,7 +193,6 @@
             var kindData = data.filter(item => item.kind === kind);
             container.innerHTML = '';
             setTitle(kind, kindData[0].part);
-
             kindData.forEach(item => {
                 setKind(item, 'kindDate');
             });
@@ -227,14 +202,21 @@
         function searchData() {
             var searchInput = document.getElementById('searchInput').value.trim();
             if (searchInput === '') {
-                // 검색어가 없으면 전체 데이터 초기화 (원하는 경우)
-                buttonKindContainer.innerHTML = '';
-                container.innerHTML = '';
-                setTitle('검색 결과 없음');
+                resetSearchResults();
                 return;
             }
 
             var searchResults = data.filter(item => item.kind.includes(searchInput));
+            displaySearchResults(searchResults);
+        }
+
+        function resetSearchResults() {
+            buttonKindContainer.innerHTML = '';
+            container.innerHTML = '';
+            setTitle('검색 결과 없음');
+        }
+
+        function displaySearchResults(searchResults) {
             buttonKindContainer.innerHTML = '';
             container.innerHTML = '';
 
@@ -256,12 +238,7 @@
                 button.textContent = `${kind}(${kindCounts[kind]})`;
                 button.onclick = function() { 
                     showKind(kind);
-                    // 버튼 클릭 시 active 클래스 관리
-                    var activeButton = buttonKindContainer.querySelector('button.active');
-                    if (activeButton) {
-                        activeButton.classList.remove('active');
-                    }
-                    button.classList.add('active');
+                    manageActiveButton(buttonKindContainer, button);
                 };
                 buttonKindContainer.appendChild(button);
             });
@@ -272,13 +249,11 @@
             });
         }
 
-
         // 타이틀 세팅
         function setTitle(text, part) {
             var title = document.createElement('h2');
             title.classList.add(`${part}`);
-            if (part === undefined) { part = ''; }
-            title.innerHTML = `${text}${part.length > 0 && part !== text ? `<span>[${part}]</span>` : ``}`;
+            title.innerHTML = `${text}${part && part !== text ? `<span>[${part}]</span>` : ``}`;
             container.appendChild(title);
         }
 
@@ -287,7 +262,7 @@
             var itemDiv = document.createElement('div');
             itemDiv.classList.add('item');
             itemDiv.classList.add(item.part);
-            itemDiv.innerHTML = `${criterion === 'kindDate' ? `<h3>${item.date}</h3>` : `<h3>${item.kind}<span>[${item.part}]</span></h3>`} ${item.desc === undefined || item.desc === "" ? `` : `<div class="desc">${item.desc}</div>`}`;
+            itemDiv.innerHTML = `${criterion === 'kindDate' ? `<h3>${item.date}</h3>` : `<h3>${item.kind}<span>[${item.part}]</span></h3>`}`;
             var setList = document.createElement('ul');
             setList.classList.add('set');
             item.set.forEach(function(setItem, index) {
@@ -299,18 +274,31 @@
             itemDiv.appendChild(setList);
             container.appendChild(itemDiv);
 
-            // h3 태그에 클릭 이벤트 추가
-            if (criterion === 'date') {
-                var h3Tag = itemDiv.querySelector('h3');
-                h3Tag.addEventListener('click', function() {
-                    setTimeout(function() {
-                        var kindButton = Array.from(buttonKindContainer.children).find(button => button.textContent.includes(item.kind));
-                        if (kindButton) {
-                            kindButton.click();
-                        }
-                    }, 0); // 비동기적으로 처리하여 클릭 이벤트 처리
-                });
+            // if (criterion === 'date') {
+                addClickEventToTitle(itemDiv, item);
+            // }
+        }
+
+        // h3 태그에 클릭 이벤트 추가
+        function addClickEventToTitle(itemDiv, item) {
+            var h3Tag = itemDiv.querySelector('h3');
+            h3Tag.addEventListener('click', function() {
+                setTimeout(function() {
+                    var kindButton = Array.from(buttonKindContainer.children).find(button => button.textContent.includes(item.kind));
+                    if (kindButton) {
+                        kindButton.click();
+                    }
+                }, 0);
+            });
+        }
+
+        // active 클래스 관리
+        function manageActiveButton(container, button) {
+            var activeButton = container.querySelector('button.active');
+            if (activeButton) {
+                activeButton.classList.remove('active');
             }
+            button.classList.add('active');
         }
 
         // 페이지 로드 시 날짜 정렬 디폴트
