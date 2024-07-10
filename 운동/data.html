@@ -43,7 +43,7 @@
 
             {date: "2024.07.02", part: "등", kind: "랫 풀 다운", set: [{weight: "20", number: "20"}, {weight: "25", number: "20"}, {weight: "30", number: "20"}]},
             {date: "2024.07.02", part: "등", kind: "티 바 로우", set: [{weight:"0", number:"20"},{weight:"10", number:"20"},{weight:"10", number:"20"}]},
-            {date: "2024.07.02", part: "가슴", kind: "인클라인 푸시업", set: [{weight:"0", number:"20"},{weight:"0", number:"20"},{weight:"0", number:"20"}]},
+            {date: "2024.07.02", part: "가슴", kind: "푸시업", set: [{weight:"0", number:"20"},{weight:"0", number:"20"},{weight:"0", number:"20"}],desc:"인클라인 푸시업"},
             {date: "2024.07.02", part: "등", kind: "백 익스텐션", set: [{weight: "0", number: "15"}, {weight: "0", number: "15"}, {weight: "0", number: "15"}]},
             {date: "2024.07.02", part: "가슴", kind: "딥스", set: [{weight: "0", number: "15"}, {weight: "0", number: "15"}, {weight: "0", number: "20"}]},
 
@@ -283,7 +283,6 @@
                     ${setItem.number.indexOf('초') > -1 ? `<li>${setItem.number.substring(0, setItem.number.length - 1)}<small class="sec">초</small></li>` : `<li>${setItem.number}<small>회</small></li>`}
                 </ul>`;
                 setList.appendChild(listItem);
-                console.log(setItem.number.substring(0, setItem.number.length - 1))
             });
             
             itemDiv.appendChild(setList);
