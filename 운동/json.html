@@ -51,6 +51,7 @@
         </select>
         <input type="tel" id="weight" name="weight" autocomplete="off" placeholder="무게" onclick="resetInput(this)">
         <input type="tel" id="number" name="number" autocomplete="off" placeholder="횟수" onclick="resetInput(this)">
+        <input type="text" id="method" name="method" autocomplete="off" placeholder="도구" onclick="resetInput(this)">
         <input type="text" id="desc" name="desc" autocomplete="off" placeholder="간략설명" onclick="resetInput(this)">
         <button type="button" onclick="convertToJSON()">Submit</button>
     </form>
@@ -128,6 +129,7 @@
             const kind = formData.get('kind');
             const weight = formData.get('weight');
             const number = formData.get('number');
+            const method = formData.get('method');
             const desc = formData.get('desc');
 
             // 새로운 세트 객체 생성
@@ -146,6 +148,7 @@
                     part: part,
                     kind: kind,
                     set: [newSet],
+                    method: method,
                     desc: desc
                 };
                 accumulatedData.push(newEntry);
