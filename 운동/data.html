@@ -288,20 +288,17 @@
             itemDiv.appendChild(setList);
             container.appendChild(itemDiv);
 
-            // if (criterion === 'date') {
-                addClickEventToTitle(itemDiv, item);
-            // }
+            addClickEventToTitle(itemDiv, item);
         }
         
         // h3 태그에 클릭 이벤트 추가
         function addClickEventToTitle(itemDiv, item) {
             var h3Tag = itemDiv.querySelector('h3');
             h3Tag.addEventListener('click', function() {
-                var kindButton = Array.from(buttonKindContainer.children).find(button => button.textContent.includes(item.kind));
-                if (kindButton) {
-                    kindButton.click();
-                }
+                document.getElementById('searchInput').value = item.kind
+                searchData();
             });
+            
         }
 
         // active 클래스 관리
