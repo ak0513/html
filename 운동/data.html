@@ -38,11 +38,11 @@
             {date: "2024.07.05", part: "하체", kind: "스쿼트", set: [{weight: "0", number: "20"}, {weight: "0", number: "15"}, {weight: "0", number: "12"}], desc: "5초 버티기", method: "불가리안 스플릿"},
             {date: "2024.07.05", part: "어깨", kind: "밀리터리 프레스", set: [{weight:"9.5", number:"20"},{weight:"11.5", number:"20"},{weight:"11.5", number:"5"},], desc:'마지막 세트 도움받아 15개'},
             {date: "2024.07.05", part: "어깨", kind: "프론트 레이즈", set: [{weight:"5", number:"20"},{weight:"5", number:"20"},{weight:"5", number:"20"},], method:'원판 들고'},
-            {date: "2024.07.05", part: "어깨", kind: "암 풀 다운", set: [{weight:"0", number:"20"},{weight:"0", number:"20"},{weight:"0", number:"20"},], method:'파란색 밴드'},
+            {date: "2024.07.05", part: "등", kind: "암 풀 다운", set: [{weight:"0", number:"20"},{weight:"0", number:"20"},{weight:"0", number:"20"},], method:'파란색 밴드'},
 
             {date: "2024.07.02", part: "등", kind: "랫 풀 다운", set: [{weight: "20", number: "20"}, {weight: "25", number: "20"}, {weight: "30", number: "20"}]},
             {date: "2024.07.02", part: "등", kind: "티 바 로우", set: [{weight:"0", number:"20"},{weight:"10", number:"20"},{weight:"10", number:"20"}]},
-            {date: "2024.07.02", part: "가슴", kind: "푸시업", set: [{weight:"0", number:"20"},{weight:"0", number:"20"},{weight:"0", number:"20"}],desc:"인클라인"},
+            {date: "2024.07.02", part: "가슴", kind: "푸시업", set: [{weight:"0", number:"20"},{weight:"0", number:"20"},{weight:"0", number:"20"}],method:"인클라인"},
             {date: "2024.07.02", part: "등", kind: "백 익스텐션", set: [{weight: "0", number: "15"}, {weight: "0", number: "15"}, {weight: "0", number: "15"}]},
             {date: "2024.07.02", part: "가슴", kind: "딥스", set: [{weight: "0", number: "15"}, {weight: "0", number: "15"}, {weight: "0", number: "20"}]},
 
@@ -297,6 +297,7 @@
             h3Tag.addEventListener('click', function() {
                 document.getElementById('searchInput').value = item.kind
                 searchData();
+                document.querySelector('#btnKind button').click();
             });
             
         }
