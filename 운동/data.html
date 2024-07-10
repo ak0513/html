@@ -195,10 +195,7 @@
             container.innerHTML = '';
             setTitle(kind, kindData[0].part);
             kindData.forEach((item, index) => {
-                // var dateInterval = kindData.length > index + 1 ? getDate(kindData[index+1].date, kindData[index].date) : '';
-                if(kindData.length > index + 1) {
-                    var dateInterval = getDate(kindData[index+1].date, kindData[index].date)
-                }
+                var dateInterval = kindData.length > index + 1 ? getDate(kindData[index+1].date, kindData[index].date) : undefined;
                 setKind(item, 'kindDate', dateInterval);
             });
         }
@@ -267,7 +264,7 @@
             var itemDiv = document.createElement('div');
             itemDiv.classList.add('item');
             itemDiv.classList.add(item.part);
-            itemDiv.innerHTML = `${criterion === 'kindDate' ? `<h3>${item.date} ${item.method !== undefined ? '[' + item.method + ']' : ''} ${dateInterval !== '' ? '<span class="dateInterval">' + dateInterval + '일전</span>' : ''}</h3>` : `<h3>${item.method !== undefined ? item.method : ''} ${item.kind}<span>[${item.part}]</span></h3>`}`;
+            itemDiv.innerHTML = `${criterion === 'kindDate' ? `<h3>${item.date} ${item.method !== undefined ? '[' + item.method + ']' : ''} ${dateInterval !== undefined ? '<span class="dateInterval">' + dateInterval + '일전</span>' : ''}</h3>` : `<h3>${item.method !== undefined ? item.method : ''} ${item.kind}<span>[${item.part}]</span></h3>`}`;
 
             if (item.desc) {
                 var desc = document.createElement('p');
