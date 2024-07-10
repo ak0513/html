@@ -46,6 +46,7 @@ h3 span {font-size:14px;font-weight:400;color:#666;margin-left:4px;}
 .set-item li {flex:1;color:#423f33;text-align:right;}
 .set-item li:first-child {text-align: left;}
 .set-item li small {color:#999;}
+.set-item li small.sec {color:rgb(40, 164, 38);}
 
 .link {display:flex;gap:8px;margin-top:12px;}
 .link a {text-decoration:underline;}
