@@ -198,8 +198,6 @@
                 // var dateInterval = kindData.length > index + 1 ? getDate(kindData[index+1].date, kindData[index].date) : '';
                 if(kindData.length > index + 1) {
                     var dateInterval = getDate(kindData[index+1].date, kindData[index].date)
-                    console.log(kindData[index].date - kindData[index+1].date)
-                    console.log(typeof(kindData[index].date), typeof(kindData[index+1].date))
                 }
                 setKind(item, 'kindDate', dateInterval);
             });
