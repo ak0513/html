@@ -195,7 +195,12 @@
             container.innerHTML = '';
             setTitle(kind, kindData[0].part);
             kindData.forEach((item, index) => {
-                var dateInterval = kindData.length > index + 1 ? getDate(kindData[index+1].date, kindData[index].date) : '';
+                // var dateInterval = kindData.length > index + 1 ? getDate(kindData[index+1].date, kindData[index].date) : '';
+                if(kindData.length > index + 1) {
+                    var dateInterval = getDate(kindData[index+1].date, kindData[index].date)
+                    console.log(kindData[index].date - kindData[index+1].date)
+                    console.log(typeof(kindData[index].date), typeof(kindData[index+1].date))
+                }
                 setKind(item, 'kindDate', dateInterval);
             });
         }
@@ -313,9 +318,18 @@
         }
 
         function getDate(date1, date2) {
-            var date1 = new Date(date1);
-            var date2 = new Date(date2);
-            return (date2 - date1) / (1000 * 60 * 60 * 24)
+            // 날짜 형식을 "YYYY-MM-DD"로 변환
+            function convertDateFormat(dateStr) {
+                var parts = dateStr.split('.');
+                return parts[0] + '-' + parts[1].padStart(2, '0') + '-' + parts[2].padStart(2, '0') + 'T00:00:00';
+            }
+            var date1Formatted = convertDateFormat(date1);
+            var date2Formatted = convertDateFormat(date2);
+
+            var date1Obj = new Date(date1Formatted);
+            var date2Obj = new Date(date2Formatted);
+
+            return (date2Obj - date1Obj) / (1000 * 60 * 60 * 24);
         }
 
         // 페이지 로드 시 날짜 정렬 디폴트
