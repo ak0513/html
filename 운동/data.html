@@ -23,6 +23,7 @@
         <div id="container"></div>
         <!-- https://myhappybody.net/tests/1rm -->
     </div>
+    <!-- 제일 높은 무게 무게가 없다면 횟수 구하기 -->
     <script>
         var data = [
             {date: "2024.07.13", part: "등", kind: "랫 풀 다운", set: [{weight: "20", number: "20"}, {weight: "25", number: "20"}, {weight: "25", number: "20"}, {weight: "30", number: "20"}, {weight: "30", number: "20"}], desc: "다음은 25kg로 시작해서 힘이 되면 35kg"},
@@ -289,6 +290,11 @@
 
             var setList = document.createElement('ul');
             setList.classList.add('set');
+
+            var maxWeight = Math.max(...item.set.map(setItem => parseFloat(setItem.weight)));
+
+
+
             item.set.forEach(function(setItem, index) {
                 var listItem = document.createElement('li');
                 listItem.innerHTML = `
@@ -297,6 +303,11 @@
                     ${setItem.weight > 0 ? `<li>${setItem.weight}<small>kg</small></li>` : ''}<li>
                     ${setItem.number.indexOf('초') > -1 ? `<li>${setItem.number.substring(0, setItem.number.length - 1)}<small class="sec">초</small></li>` : `<li>${setItem.number}<small>회</small></li>`}
                 </ul>`;
+
+                // Add class to the element with the maximum weight
+        if (parseFloat(setItem.weight) === maxWeight) {
+            listItem.classList.add('max-weight');
+        }
                 setList.appendChild(listItem);
             });
             
