@@ -292,22 +292,27 @@
             setList.classList.add('set');
 
             var maxWeight = Math.max(...item.set.map(setItem => parseFloat(setItem.weight)));
-
-
-
+            var maxNumber = Math.max(...item.set.map(setItem => parseFloat(setItem.number)));
+            
             item.set.forEach(function(setItem, index) {
                 var listItem = document.createElement('li');
                 listItem.innerHTML = `
                 <ul class="set-item">
                     <li>${index + 1}세트</li>
-                    ${setItem.weight > 0 ? `<li>${setItem.weight}<small>kg</small></li>` : ''}<li>
-                    ${setItem.number.indexOf('초') > -1 ? `<li>${setItem.number.substring(0, setItem.number.length - 1)}<small class="sec">초</small></li>` : `<li>${setItem.number}<small>회</small></li>`}
+                    ${setItem.weight > 0 ? `<li class="weight">${setItem.weight}<small>kg</small></li>` : ''}<li>
+                    ${setItem.number.indexOf('초') > -1 ? `<li>${setItem.number.substring(0, setItem.number.length - 1)}<small class="sec">초</small></li>` : `<li class="number">${setItem.number}<small>회</small></li>`}
                 </ul>`;
 
                 // Add class to the element with the maximum weight
-        if (parseFloat(setItem.weight) === maxWeight) {
-            listItem.classList.add('max-weight');
-        }
+                if (parseFloat(setItem.weight) === maxWeight) {
+                    listItem.classList.add('maxWeight');
+                }
+                if(parseFloat(setItem.weight) === 0 || parseFloat(setItem.weight) === NaN) {
+                    if (parseFloat(setItem.number) === maxNumber) {
+                        listItem.classList.add('maxNumber');
+                    }
+                }
+                
                 setList.appendChild(listItem);
             });
             

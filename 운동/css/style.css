@@ -42,6 +42,10 @@ h3 span {font-size:14px;font-weight:400;color:#666;margin-left:4px;}
 .item + .item {margin-top:8px;}
 .set {margin-top:8px;padding-top:8px;border-top:1px solid #eee;}
 .set > li + li {margin-top:4px;}
+.set > li.maxWeight .weight,
+.set > li.maxWeight .weight small,
+.set > li.maxNumber .number,
+.set > li.maxNumber .number small {color:rgb(210, 129, 22);}
 .set-item {display:flex;}
 .set-item li {flex:1;color:#423f33;text-align:right;}
 .set-item li:first-child {text-align: left;}
