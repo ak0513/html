@@ -14,6 +14,7 @@
 	
 <div id="wrap">
     <style>
+        #container {padding-top:70px;}
         .machine {color:red;}
         .cable {color:#1db4b1;}
         .tab-btn {padding: 10px 15px;height:100%;}
@@ -39,7 +40,7 @@
         .breath {background-color:#f8f8f8;font-size:1.6rem;padding:6px 16px;border-radius:4px;}
         ul[class*='bullet'] li + li, ol[class*='bullet'] li + li {margin-top:4px;}
 
-        .tab1.tab-group {flex-wrap: nowrap;overflow-x: auto;}
+        .tab1.tab-group {position:fixed;top:0;z-index:10; width:960px;margin:0 auto;padding:20px 0; flex-wrap: nowrap;overflow-x: auto;background-color: #fff;}
         .tab1 .tab-item {flex-shrink:0;}
         .tab1 .tab-item + .tab-item {margin-left:0;}
         .tab1 .tab-btn {border:none;padding:9px 16px 7px;font-size:16px;border-radius:4px;}
@@ -152,4 +153,13 @@
             
         </div>
     </section>
+
+    <script>
+        var tabBtn = document.querySelectorAll('.tab-btn');
+        tabBtn.forEach(function(item) {
+            item.addEventListener('click', function() {
+                scrollTo(0, 0)
+            })
+        })
+    </script>
 </div>
