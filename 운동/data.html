@@ -25,15 +25,15 @@
     </div>
     <script>
         var data = [
-            {date: "2024.07.17", part: "등", kind: "암 풀 다운", set: [{weight: "15", number: "20"}, {weight: "20", number: "20"}, {weight: "25", number: "20"}], method: "케이블"},
+            {date: "2024.07.17", part: "등", kind: "암 풀다운", set: [{weight: "15", number: "20"}, {weight: "20", number: "20"}, {weight: "25", number: "20"}], method: "케이블"},
             {date: "2024.07.17", part: "등", kind: "풀업", set: [{weight: "", number: "15"}, {weight: "", number: "12"}, {weight: "", number: "10"}], method: "밴드"},
             {date: "2024.07.17", part: "등", kind: "벤트 오버 바벨 로우", set: [{weight: "20", number: "20"}, {weight: "15", number: "20"}, {weight: "15", number: "20"}]},
             {date: "2024.07.17", part: "등", kind: "시티드 로우", set: [{weight: "20", number: "20"}, {weight: "30", number: "20"}, {weight: "30", number: "20"}]},
-            {date: "2024.07.17", part: "가슴", kind: "벤치 프레스", set: [{weight:"20", number:"20"},{weight:"25", number:"20"},{weight:"25", number:"15"}]},
+            {date: "2024.07.17", part: "가슴", kind: "벤치 프레스", set: [{weight:"20", number:"20"},{weight:"25", number:"20"},{weight:"30", number:"15"}]},
             {date: "2024.07.17", part: "가슴", kind: "체스트 플라이", set: [{weight:"5", number:"20"},{weight:"10", number:"20"},{weight:"10", number:"15"}], method: "케이블"},
 
-            {date: "2024.07.13", part: "등", kind: "랫 풀 다운", set: [{weight: "20", number: "20"}, {weight: "25", number: "20"}, {weight: "25", number: "20"}, {weight: "30", number: "20"}, {weight: "30", number: "20"}], desc: "다음은 25kg로 시작해서 힘이 되면 35kg"},
-            {date: "2024.07.13", part: "등", kind: "암 풀 다운", set: [{weight: "15", number: "20"}, {weight: "15", number: "20"}, {weight: "20", number: "20"}], desc: "다음은 15kg로 시작", method: "케이블"},
+            {date: "2024.07.13", part: "등", kind: "랫 풀다운", set: [{weight: "20", number: "20"}, {weight: "25", number: "20"}, {weight: "25", number: "20"}, {weight: "30", number: "20"}, {weight: "30", number: "20"}], desc: "다음은 25kg로 시작해서 힘이 되면 35kg"},
+            {date: "2024.07.13", part: "등", kind: "암 풀다운", set: [{weight: "15", number: "20"}, {weight: "15", number: "20"}, {weight: "20", number: "20"}], desc: "다음은 15kg로 시작", method: "케이블"},
             {date: "2024.07.13", part: "등", kind: "티 바 로우", set: [{weight: "0", number: "20"}, {weight: "5", number: "20"}, {weight: "10", number: "20"}], desc: "다음은 5kg으로 시작"},
             {date: "2024.07.13", part: "등", kind: "백 익스텐션", set: [{weight: "", number: "15"}, {weight: "", number: "15"}, {weight: "", number: "15"}]},
             {date: "2024.07.13", part: "가슴", kind: "딥스", set: [{weight: "", number: "15"}, {weight: "", number: "15"}, {weight: "", number: "20"}], desc: "점프해서 버티며 내려오기"},
@@ -44,13 +44,13 @@
             {date: "2024.07.10", part: "어깨", kind: "숄더 프레스", set: [{weight:"5", number:"20"},{weight:"6", number:"20"},{weight:"6", number:"15"},]},
             {date: "2024.07.10", part: "어깨", kind: "사이드 레터럴 레이즈", set: [{weight:"3", number:"20"},{weight:"4", number:"20"},{weight:"4", number:"20"},]},
             {date: "2024.07.10", part: "어깨", kind: "페이스 풀", set: [{weight:"5", number:"20"},{weight:"5", number:"20"},{weight:"5", number:"20"},], method: "케이블"},
-            {date: "2024.07.10", part: "가슴", kind: "푸시업", set: [{weight: "", number: "20"}, {weight: "", number: "20"}, {weight: "", number: "20"}], method:"인클라인"},
+            {date: "2024.07.10", part: "가슴", kind: "푸쉬업", set: [{weight: "", number: "20"}, {weight: "", number: "20"}, {weight: "", number: "20"}], method:"인클라인"},
 
-            {date: "2024.07.09", part: "가슴", kind: "푸시업", set: [{weight: "", number: "20"}, {weight: "", number: "15"}, {weight: "", number: "10"}], method:"니"},
+            {date: "2024.07.09", part: "가슴", kind: "푸쉬업", set: [{weight: "", number: "20"}, {weight: "", number: "15"}, {weight: "", number: "10"}], method:"니"},
 
             {date: "2024.07.08", part: "등", kind: "데드 리프트", set: [{weight: "0", number: "20"}, {weight: "10", number: "20"}, {weight: "20", number: "20"},{weight: "30", number: "20"}], method: "스미스 머신 컨벤셔널"},
-            {date: "2024.07.08", part: "등", kind: "암 풀 다운", set: [{weight: "5", number: "20"}, {weight: "10", number: "20"}, {weight: "10", number: "20"}], method: "케이블"},
-            {date: "2024.07.08", part: "등", kind: "랫 풀 다운", set: [{weight: "20", number: "20"}, {weight: "25", number: "20"}, {weight: "30", number: "20"}], desc:"언더 그립이 무게를 더 친다.", method: "언더 그립"},
+            {date: "2024.07.08", part: "등", kind: "암 풀다운", set: [{weight: "5", number: "20"}, {weight: "10", number: "20"}, {weight: "10", number: "20"}], method: "케이블"},
+            {date: "2024.07.08", part: "등", kind: "랫 풀다운", set: [{weight: "20", number: "20"}, {weight: "25", number: "20"}, {weight: "30", number: "20"}], desc:"언더 그립이 무게를 더 친다.", method: "언더 그립"},
             {date: "2024.07.08", part: "등", kind: "티 바 로우", set: [{weight: "0", number: "20"}, {weight: "5", number: "20"}, {weight: "5", number: "20"}], method:"바벨봉"},
             {date: "2024.07.08", part: "가슴", kind: "딥스", set: [{weight: "", number: "20"}, {weight: "", number: "20"}, {weight: "", number: "20"}], desc:"점프해서 버티고 내려오기"},
 
@@ -59,11 +59,11 @@
             {date: "2024.07.05", part: "하체", kind: "스쿼트", set: [{weight: "", number: "20"}, {weight: "", number: "15"}, {weight: "", number: "12"}], desc: "5초 버티기", method: "불가리안 스플릿"},
             {date: "2024.07.05", part: "어깨", kind: "밀리터리 프레스", set: [{weight:"9.5", number:"20"},{weight:"11.5", number:"20"},{weight:"11.5", number:"5"},], desc:'마지막 세트 도움받아 15개'},
             {date: "2024.07.05", part: "어깨", kind: "프론트 레이즈", set: [{weight:"5", number:"20"},{weight:"5", number:"20"},{weight:"5", number:"20"},], method:'원판 들고'},
-            {date: "2024.07.05", part: "등", kind: "암 풀 다운", set: [{weight:"0", number:"20"},{weight:"0", number:"20"},{weight:"0", number:"20"},], method:'파란색 밴드'},
+            {date: "2024.07.05", part: "등", kind: "암 풀다운", set: [{weight:"0", number:"20"},{weight:"0", number:"20"},{weight:"0", number:"20"},], method:'파란색 밴드'},
 
-            {date: "2024.07.02", part: "등", kind: "랫 풀 다운", set: [{weight: "20", number: "20"}, {weight: "25", number: "20"}, {weight: "30", number: "20"}]},
+            {date: "2024.07.02", part: "등", kind: "랫 풀다운", set: [{weight: "20", number: "20"}, {weight: "25", number: "20"}, {weight: "30", number: "20"}]},
             {date: "2024.07.02", part: "등", kind: "티 바 로우", set: [{weight:"0", number:"20"},{weight:"10", number:"20"},{weight:"10", number:"20"}]},
-            {date: "2024.07.02", part: "가슴", kind: "푸시업", set: [{weight:"", number:"20"},{weight:"", number:"20"},{weight:"", number:"20"}],method:"인클라인"},
+            {date: "2024.07.02", part: "가슴", kind: "푸쉬업", set: [{weight:"", number:"20"},{weight:"", number:"20"},{weight:"", number:"20"}],method:"인클라인"},
             {date: "2024.07.02", part: "등", kind: "백 익스텐션", set: [{weight: "", number: "15"}, {weight: "", number: "15"}, {weight: "", number: "15"}]},
             {date: "2024.07.02", part: "가슴", kind: "딥스", set: [{weight: "", number: "15"}, {weight: "", number: "15"}, {weight: "", number: "20"}]},
 
@@ -83,7 +83,7 @@
             {date: "2024.06.20", part: "가슴", kind: "벤치 프레스", set: [{weight:"15", number:"20"},{weight:"15", number:"20"},{weight:"20", number:"15"},{weight:"20", number:"15"},]},
             {date: "2024.06.20", part: "가슴", kind: "체스트 프레스", set: [{weight:"4", number:"20"},{weight:"5", number:"20"},{weight:"6", number:"20"},], method: "인클라인 덤벨"},
             {date: "2024.06.20", part: "가슴", kind: "딥스", set: [{weight:"", number:"20"},{weight:"", number:"20"},{weight:"", number:"20"},]},
-            {date: "2024.06.20", part: "등", kind: "랫 풀 다운", set: [{weight:"20", number:"20"},{weight:"25", number:"20"},{weight:"30", number:"15"},]},
+            {date: "2024.06.20", part: "등", kind: "랫 풀다운", set: [{weight:"20", number:"20"},{weight:"25", number:"20"},{weight:"30", number:"15"},]},
             {date: "2024.06.20", part: "등", kind: "벤트 오버 로우", set: [{weight:"15", number:"20"},{weight:"15", number:"20"},{weight:"9.5", number:"20"},], method: "바벨"},
             {date: "2024.06.20", part: "코어", kind: "마운틴 클라이머", set: [{weight:"", number:"20"},{weight:"", number:"30초"},{weight:"", number:"30초"},{weight:"", number:"30초"}]},
 
@@ -94,7 +94,7 @@
             {date: "2024.06.17", part: "어깨", kind: "써클 레이즈", set: [{weight:"1", number:"20"},{weight:"1", number:"20"}]},
 
             {date: "2024.06.13", part: "등", kind: "데드 리프트", set: [{weight:"20", number:"20"},{weight:"20", number:"20"},{weight:"20", number:"20"},], method: "루마니안"},
-            {date: "2024.06.13", part: "등", kind: "랫 풀 다운", set: [{weight:"20", number:"20"},{weight:"30", number:"20"},{weight:"35", number:"15"},]},
+            {date: "2024.06.13", part: "등", kind: "랫 풀다운", set: [{weight:"20", number:"20"},{weight:"30", number:"20"},{weight:"35", number:"15"},]},
             {date: "2024.06.13", part: "등", kind: "시티드 로우", set: [{weight:"20", number:"20"},{weight:"25", number:"20"},{weight:"30", number:"20"},], method: "케이블"},
             {date: "2024.06.13", part: "가슴", kind: "벤치 프레스", set: [{weight:"20", number:"20"},{weight:"20", number:"20"},{weight:"20", number:"20"},]},
             {date: "2024.06.13", part: "가슴", kind: "딥스", set: [{weight:"", number:"20"},{weight:"", number:"15"}]},
@@ -106,7 +106,7 @@
             {date: "2024.06.10", part: "어깨", kind: "숄더 프레스", set: [{weight:"3", number:"12"},{weight:"3", number:"12"}], method: "인클라인 덤벨"},
             {date: "2024.06.10", part: "어깨", kind: "사이드 레터럴 레이즈", set: [{weight:"1.5", number:"20"},{weight:"1.5", number:"20"},{weight:"1.5", number:"20"},]},
 
-            {date: "2024.06.07", part: "등", kind: "랫 풀 다운", set: [{ weight:"20", number:"20"},{weight:"25", number:"20"},{weight:"30", number:"20"},]},
+            {date: "2024.06.07", part: "등", kind: "랫 풀다운", set: [{ weight:"20", number:"20"},{weight:"25", number:"20"},{weight:"30", number:"20"},]},
             {date: "2024.06.07", part: "가슴", kind: "벤치 프레스", set: [{weight:"15", number:"20"},{weight:"20", number:"20"},{weight:"20", number:"20"},]},
             {date: "2024.06.07", part: "등", kind: "티 바 로우", set: [{weight:"0", number:"20"},{weight:"5", number:"20"},{weight:"5", number:"20"},{weight:"5", number:"20"},]},
             {date: "2024.06.07", part: "가슴", kind: "체스트 프레스", set: [{weight:"5", number:"20"},{ weight:"5", number:"20",},{ weight:"5", number:"20",},], method: "인클라인 덤벨"},
