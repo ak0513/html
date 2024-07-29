@@ -313,7 +313,7 @@
         function setTitle(text, part) {
             var title = document.createElement('h2');
             title.classList.add(`${part}`);
-            title.innerHTML = `<div>${text}${part && part !== text ? `<span>[${part}]</span>` : ``}</div>${part && part !== text ? `<button type="button" onclick="playVideo('${text}')">Video1</button>` : ``}`;
+            title.innerHTML = `<button type="button" onclick="playVideo('${text}')">${text}</button>${part && part !== text ? `<span>[${part}]</span>` : ``}`;
             container.appendChild(title);
         }
 
