@@ -57,3 +57,10 @@ loadData(RoutineChest, 'RoutineChest', callback);
 loadData(RoutineLow, 'RoutineLow', callback);
 loadData(RoutineCurl, 'RoutineCurl', callback);
 loadData(RoutineLeg, 'RoutineLeg', callback);
+
+
+function playVideo(videoEle) {
+    const video = document.getElementById(videoEle);
+    video.removeAttribute('hidden');
+    video.play();
+}
