@@ -19,12 +19,11 @@ html,body {height:100%;}
 body {-webkit-text-size-adjust:none;background-color:#f8f8f8;color:#111;}
 
 #wrap {padding:100px 16px 16px;}
-#wrap.show-part {padding-top:140px;}
+#wrap.showdepth2 {padding-top:130px;}
 #container {margin-top:16px;}
-#btnTop {position:fixed;top:56px;}
+#btnTop {position:fixed;top:48px;left:0;right:0;background-color:#f8f8f8;padding:8px 0 8px 16px;}
 .btnTop-inner {display:flex;align-items:center;overflow-x:auto;gap:4px;flex-wrap:nowrap;padding-bottom:3px;}
-#btnTop button {border:1px solid #ddd;}
-#btnKindWrap {position:fixed;top:94px; overflow-x:auto;padding-bottom:3px;}
+#btnKindWrap {position:fixed;top:85px;left:0;overflow-x:auto;padding:8px 3px 8px 16px;background-color:#f8f8f8;}
 #btnKind {display:flex;gap:4px;white-space:nowrap;}
 button {padding:4px 12px;background-color:#fff;border-radius:4px;font-size:14px;color:#111;flex-shrink:0;}
 #btnKind button {background-color:#f0f0f0;}

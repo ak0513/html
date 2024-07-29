@@ -205,7 +205,7 @@
                 return acc;
             }, {});
 
-            wrap.classList.add('show-part')
+            wrap.classList.add('showdepth2')
 
             var kinds = Object.keys(kindCounts).sort((a, b) => kindCounts[b] - kindCounts[a]);
 
@@ -252,6 +252,7 @@
                 resetSearchResults();
                 return;
             }
+            wrap.classList.add('showdepth2')
 
             var searchResults = data.filter(item => item.kind.includes(searchInput));
             displaySearchResults(searchResults);
