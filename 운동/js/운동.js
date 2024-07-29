@@ -62,5 +62,7 @@ loadData(RoutineLeg, 'RoutineLeg', callback);
 function playVideo(videoEle) {
     const video = document.getElementById(videoEle);
     video.classList.remove('hidden')
-    video.play();
+    setTimeout(function() {
+        video.play();
+    },300)
 }
