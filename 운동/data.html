@@ -10,6 +10,7 @@
     <div id="wrap">
         <div id="searchBar">
             <input type="text" id="searchInput" placeholder="검색어 입력" oninput="searchData()">
+            <button type="button" id="btnDelete" onclick="deleteSearch()"><img src="./img/icon-close.svg" alt="닫기"></button>
         </div>
         <div id="btnTop">
             <div class="btnTop-inner">
@@ -251,6 +252,13 @@
 
             var searchResults = data.filter(item => item.kind.includes(searchInput));
             displaySearchResults(searchResults);
+        }
+
+        function deleteSearch() {
+            var deleteBtn = document.getElementById('btnDelete');
+            console.log(deleteBtn)
+            deleteBtn.previousElementSibling.value = '';
+            deleteBtn.previousElementSibling.focus();
         }
 
         function resetSearchResults() {
