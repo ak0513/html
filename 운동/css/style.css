@@ -72,3 +72,5 @@ h2.하체 span {color:#678262;}
 h2.팔 span {color:#A19C52;}
 .item.코어 h3 span,
 h2.코어 span {color:#424531;}
+
+video {width:100%;height:100%;object-fit: cover;}
