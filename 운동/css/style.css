@@ -37,7 +37,7 @@ button.active {background-color: #464646;color: #fff;}
 #btnDelete {position:fixed;top:1px;right:0;width:46px;height:46px;}
 
 h2 {display:flex;align-items:center;margin-top:40px;font-weight:700;font-size:16px;}
-h2 button {font-size:16px;font-weight:700;}
+h2 button {font-size:16px;font-weight:700;color:#111;}
 h2:first-child {margin-top:0;}
 h2 span {font-size:14px;font-weight:400;color:#666;margin-left:4px;}
 h3 {display:flex;align-items:center;font-weight:500;font-size:16px;}
