@@ -23,7 +23,7 @@ body {-webkit-text-size-adjust:none;background-color:#f8f8f8;color:#111;}
 #container {margin-top:16px;}
 #btnTop {position:fixed;top:48px;left:0;right:0;background-color:#f8f8f8;padding:8px 0 8px 16px;}
 .btnTop-inner {display:flex;align-items:center;overflow-x:auto;gap:4px;flex-wrap:nowrap;padding-bottom:3px;}
-#btnKindWrap {position:fixed;top:85px;left:0;overflow-x:auto;padding:8px 3px 8px 16px;background-color:#f8f8f8;}
+#btnKindWrap {position:fixed;top:85px;left:0;overflow-x:auto;padding:8px 3px 8px 16px;background-color:#f8f8f8;white-space:nowrap;}
 #btnKind {display:flex;gap:4px;white-space:nowrap;}
 button {padding:4px 12px;background-color:#fff;border-radius:4px;font-size:14px;color:#111;flex-shrink:0;}
 #btnKind button {background-color:#f0f0f0;}
@@ -72,3 +72,6 @@ h2.하체 span {color:#678262;}
 h2.팔 span {color:#A19C52;}
 .item.코어 h3 span,
 h2.코어 span {color:#424531;}
+
+
+video {position:absolute;top:-9999px;left:-9999px;}

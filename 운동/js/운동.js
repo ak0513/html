@@ -62,5 +62,4 @@ loadData(RoutineLeg, 'RoutineLeg', callback);
 function playVideo(videoEle) {
     const video = document.getElementById(videoEle);
     video.play();
-
 }
