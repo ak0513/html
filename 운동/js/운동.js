@@ -63,3 +63,9 @@ function playVideo(videoEle) {
     const video = document.getElementById(videoEle);
     video.play();
 }
+
+function getUrlParam(param) {
+    var urlParams = new URL(location.href).searchParams;
+    var name = urlParams.get(param);
+    return name;
+}
