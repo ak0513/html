@@ -69,3 +69,72 @@ function getUrlParam(param) {
     var name = urlParams.get(param);
     return name;
 }
+
+
+function popup() {
+    var popWrap = document.querySelectorAll('.modal')
+    var btnPopOpen = document.querySelectorAll('[data-modal-open');
+    var btnPopClose = document.querySelectorAll('[data-modal-close');
+
+    console.log(popWrap)
+    popWrap.forEach(function(item) {
+        item.setAttribute('aria-modal', 'true');
+        item.setAttribute('role', 'dialog');
+        item.setAttribute('tabindex', 0);
+        document.querySelector('#' + item.getAttribute('aria-labelledby'));
+        item.addEventListener('keydown', function(e) {
+            if(e.keyCode === 27) {
+                popClose(item);
+            }
+        });
+    })
+
+    btnPopOpen.forEach(function(item, i) {
+        item.setAttribute('aria-haspopup', 'dialog');
+        btnPopOpens(i);
+    })
+    
+    btnPopClose.forEach(function(item, i) {
+        btnPopCloses(item, i); 
+    })
+
+    function btnPopOpens(i) {
+        btnPopOpen[i].addEventListener('click', popOpen);
+    }
+
+    function btnPopCloses(ele, i) {
+        btnPopClose[i].addEventListener('click', function() {
+            popClose(ele);
+        });
+    }
+
+    function popOpen(e) {
+        ele = e.target;
+        var controls = ele.dataset.modalOpen;
+        var target = document.querySelector(controls);
+        setTimeout(function() {target.focus()},1);
+        target.classList.add('visible');
+        setTimeout(function() {target.classList.add('active')},100);
+        target.setAttribute('aria-modal', 'true');
+        // 포커스 회귀하기 위해 클래스 추가
+        ele.classList.add(controls.slice(1));
+        // 접근성 소스
+        // accessDisable(prevAll(target), 'modal');
+    }
+
+    function popClose(ele) {
+        var target = ele.closest('.modal')
+        var openedBtn = document.querySelector('[data-modal-open].'+ target.getAttribute('id'));
+        target.classList.remove('active')
+        setTimeout(function() {target.classList.remove('visible')},100);
+        // 포커스 회귀
+        openedBtn.focus();
+        openedBtn.classList.remove(target.getAttribute('id'));
+        // 접근성 소스
+        // accessEnable(prevAll(target), 'modal');
+    }
+}
+
+setTimeout(function() {
+    popup();
+},1000)
