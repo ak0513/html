@@ -52,8 +52,10 @@
         .tab2 .tab-btn {border:none;padding:9px 16px 7px;font-size:16px;border-radius:50px;}
         .tab2 .tab-item.current .tab-btn {background-color: var(--secondary);color:#fff;}
 
-        video.hidden {display:none;}
-        video {position: absolute;top:-9999px;left:-9999px;}
+        .video {margin:16px -24px 0;}
+        .video video {width:100%;height:100%;object-fit: cover;}
+        
+        .hidden_video {position: absolute;top:-9999px;left:-9999px;}
 
         .img-wrap {margin:16px -24px 0;}
         .img-wrap .img {display:flex;flex-direction:column;justify-content:center;}
