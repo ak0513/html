@@ -26,6 +26,21 @@
         <video id="펙 덱 플라이" controls loop><source src="./video/pecDecFly.mp4" type="video/mp4"></video>
         <!-- https://myhappybody.net/tests/1rm -->
     </div>
+
+    <!-- 팝업 -->
+    <button type="button" class="btn primary" title="팝업 열기" data-modal-open="#modal1">팝업 열기</button>
+    <div id="modal1" class="modal bottom" aria-labelledby="modal-title">
+        <div class="modal-inner">
+            <div class="modal-header">
+                <h2 id="modal-title">팝업</h2>
+                <button class="btn-modal-close" aria-label="팝업 닫기" data-modal-close="#modal1"></button>
+            </div>
+            <div class="modal-body">
+                팝업 내용
+            </div>
+        </div>
+    </div>
+    <!-- //팝업 -->
     <script>
         var data = [
             // 덤벨은 개당 무게로, 원판은 양쪽 무게로, 머신 기본 무게는 제외
@@ -417,6 +432,72 @@
             var video = document.getElementById(videoEle);
             video.play();
         }
+
+
+        function popup() {
+            var popWrap = document.querySelectorAll('.modal')
+            var btnPopOpen = document.querySelectorAll('[data-modal-open');
+            var btnPopClose = document.querySelectorAll('[data-modal-close');
+
+            console.log(popWrap)
+            popWrap.forEach(function(item) {
+                item.setAttribute('aria-modal', 'true');
+                item.setAttribute('role', 'dialog');
+                item.setAttribute('tabindex', 0);
+                document.querySelector('#' + item.getAttribute('aria-labelledby'));
+                item.addEventListener('keydown', function(e) {
+                    if(e.keyCode === 27) {
+                        popClose(item);
+                    }
+                });
+            })
+
+            btnPopOpen.forEach(function(item, i) {
+                item.setAttribute('aria-haspopup', 'dialog');
+                btnPopOpens(i);
+            })
+            
+            btnPopClose.forEach(function(item, i) {
+                btnPopCloses(item, i); 
+            })
+
+            function btnPopOpens(i) {
+                btnPopOpen[i].addEventListener('click', popOpen);
+            }
+
+            function btnPopCloses(ele, i) {
+                btnPopClose[i].addEventListener('click', function() {
+                    popClose(ele);
+                });
+            }
+
+            // 팝업
+            function popOpen(e) {
+                ele = e.target;
+                var controls = ele.dataset.modalOpen;
+                var target = document.querySelector(controls);
+                setTimeout(function() {target.focus()},1);
+                target.classList.add('visible');
+                setTimeout(function() {target.classList.add('active')},100);
+                target.setAttribute('aria-modal', 'true');
+                // 포커스 회귀하기 위해 클래스 추가
+                ele.classList.add(controls.slice(1));
+            }
+
+            function popClose(ele) {
+                var target = ele.closest('.modal')
+                var openedBtn = document.querySelector('[data-modal-open].'+ target.getAttribute('id'));
+                target.classList.remove('active')
+                setTimeout(function() {target.classList.remove('visible')},100);
+                // 포커스 회귀
+                openedBtn.focus();
+                openedBtn.classList.remove(target.getAttribute('id'));
+            }
+        }
+
+        setTimeout(function() {
+            popup();
+        },1000)
 
         // 페이지 로드 시 날짜 정렬 디폴트
         sortData('date');

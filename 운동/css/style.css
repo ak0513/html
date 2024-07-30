@@ -76,3 +76,88 @@ h2.팔 span {color:#A19C52;}
 h2.코어 span {color:#424531;}
 
 video {position:absolute;top:-9999px;left:-9999px;}
+
+
+/* popup */
+.modal {
+    display: none;
+    opacity: 0;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+	z-index: 100;
+    background-color: rgba(0,0,0,0.5);
+    transition: all 0.4s;
+}
+
+.modal.visible {
+    display: flex;
+}
+
+.modal.active {
+    opacity: 1;
+    bottom: 0;
+}
+
+.modal .modal-inner {
+	position: relative;
+    min-width:64px;
+    border:1px solid #ced4da;
+    background-color :#fff;
+	border-radius:0px;
+}
+
+.modal-header {
+	padding:14px;
+	border-bottom:1px solid #ced4da;
+}
+
+.btn-modal-close {
+	position: absolute;
+	top:18px;
+	right:14px;
+	width: 36px;
+	height: 36px;
+	background: url('../img/btn-close.svg') no-repeat center / 100%;
+}
+
+.modal-body {
+	padding:14px;
+}
+
+.modal-footer {
+	padding:14px;
+	border-top:1px solid #ced4da;
+}
+
+
+@media (max-width: 768px) {
+
+	.modal {padding: 24px;}
+	.modal .modal-inner {
+		min-width: 90%;
+	}
+
+	/* 하단에서 노출 */
+	.modal.bottom {
+		align-items: flex-end;
+		padding:0;
+	}
+
+	.modal.bottom .modal-inner {
+		min-width: 100%;
+		border-radius: 8px 8px 0 0;
+		transform: translateY(100%);
+		transition: all 0.4s;
+	}
+	.modal.bottom.active .modal-inner {
+		transform: translateY(0);
+	}
+
+
+
+}
