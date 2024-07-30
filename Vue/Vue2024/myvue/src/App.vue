@@ -1,7 +1,26 @@
 <template>
 	<h1>{{ name }}</h1>
 
-	<h2>함수 실행</h2>
+	<h2>템플릿 문법</h2>
+
+	<h3>HTML 출력</h3>
+	<ol>
+		<li>텍스트 보간법: {{ rawHtml }}</li>
+		<li>v-html 디렉티브: <span v-html="rawHtml"></span></li>
+	</ol>
+
+
+	<h3>속성 바인딩</h3>
+	<ol>
+		<li v-bind:id="dynamicId">myDynamicId</li>
+		<li :id="dynamicId">단축 문법: myDynamicId</li>
+	</ol>
+
+
+
+
+
+	<h2>함수</h2>
 	<p>변수로 받기 {{ greeting(name) }}</p>
 	<p>스트링으로 받기 {{ greeting('Hellow Vue') }}</p>
 
@@ -28,7 +47,16 @@ import { ref } from 'vue';
 import { reactive } from 'vue';
 
 export default {
+	
 	setup() {
+		// HTML 출력
+		const rawHtml = '메시지';
+		// 속성 바인딩
+		const dynamicId = 'myDynamicId';
+
+
+
+
 		const name = 'Hello World';
 		// ref & reactive 반응형
 		const name2 = ref('Hello World'); // ref를 사용하여 반응형으로 정의
@@ -56,6 +84,13 @@ export default {
 		
 		
 		return {
+			rawHtml,
+			dynamicId,
+
+
+
+
+
 			name,
 			name2,
 			name3,
@@ -75,7 +110,9 @@ export default {
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	text-align: center;
+	padding: 24px;
+	width:800px;
+	margin:0 auto;
 	color: #2c3e50;
 }
 h1 {margin-top:40px;}
