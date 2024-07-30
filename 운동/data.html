@@ -35,8 +35,8 @@
                 <h2 id="modal-title">팝업</h2>
                 <button class="btn-modal-close" aria-label="팝업 닫기" data-modal-close="#modal1"></button>
             </div>
-            <div class="modal-body">
-                팝업 내용
+            <div class="modal-body" id="modalBody">
+                
             </div>
         </div>
     </div>
@@ -498,6 +498,46 @@
         setTimeout(function() {
             popup();
         },1000)
+
+
+        function loadData(url, targetElementId, selector, callback) {
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const selectedElement = doc.querySelector(selector);
+                    const targetElement = document.getElementById(targetElementId);
+
+                    if (targetElement) {
+                        if (selectedElement) {
+                            targetElement.innerHTML = selectedElement.innerHTML;
+                        } else {
+                            console.error(`Selector '${selector}' did not match any elements.`);
+                        }
+
+                        if (callback && typeof callback === 'function') {
+                            callback(); // 콜백 함수 호출
+                        }
+                    } else {
+                        console.error(`Target element with ID '${targetElementId}' not found.`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+
+
+        var Chest = './가슴.html';
+        loadData(Chest, 'modalBody', '#dips01');
+
+
 
         // 페이지 로드 시 날짜 정렬 디폴트
         sortData('date');
