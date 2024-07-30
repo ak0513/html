@@ -13,7 +13,9 @@
 	<h3>속성 바인딩</h3>
 	<ol>
 		<li v-bind:id="dynamicId">myDynamicId</li>
-		<li :id="dynamicId">단축 문법: myDynamicId</li>
+		<li :id="dynamicId">단축 문법: id myDynamicId</li>
+		<li :class="dynamicId">단축 문법: class myDynamicId</li>
+		<li :그외="dynamicId">단축 문법: 그외 myDynamicId</li>
 	</ol>
 
 
@@ -57,7 +59,7 @@ export default {
 
 
 
-		const name = 'Hello World';
+		const name = 'Vue3';
 		// ref & reactive 반응형
 		const name2 = ref('Hello World'); // ref를 사용하여 반응형으로 정의
 		let name3 = reactive(1); // reactive는 숫자나 스트링은 사용하지 못함
