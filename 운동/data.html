@@ -45,6 +45,16 @@
         var data = [
             // 덤벨은 개당 무게로, 원판은 양쪽 무게로, 머신 기본 무게는 제외
             // 리어 델토이드
+            // 힘듬의 정도 1: 할만함(20개 가능) / 2: 적당함(15개 가능) / 3: 힘듬(10개 가능) / 4: 아주 힘듬(10개 이하 가능)
+            {date: "2024.08.08", part: "가슴", kind: "펙 덱 플라이", set: [{weight: "30", number: "20"}, {weight: "30", number: "20"}, {weight: "30", number: "20"}], desc: "올바른 자세로 30kg 힘듬"},
+            {date: "2024.08.08", part: "가슴", kind: "체스트 프레스", set: [{weight: "30", number: "20"}, {weight: "30", number: "20"}, {weight: "30", number: "20"}], desc: "30kg 괜찮음 / 35kg 도전"},
+            {date: "2024.08.08", part: "가슴", kind: "푸쉬업", set: [{weight: "", number: "15"}, {weight: "", number: "15"}, {weight: "", number: "20"}, {weight: "", number: "20"}], desc: "6칸 / 15개 할만함 / 20개 조금 힘듬", method: "스미스머신 인클라인"},
+            {date: "2024.08.08", part: "가슴", kind: "딥스", set: [{weight: "50", number: "15"}, {weight: "50", number: "15"}, {weight: "50", number: "15"}, {weight: "40", number: "15"}], desc: "50kg 할만함 / 40kg 힘듬 / 다음 45kg 시작"},
+            {date: "2024.08.08", part: "등", kind: "암 풀다운", set: [{weight: "15", number: "20"}, {weight: "15", number: "20"}, {weight: "20", number: "15"}, {weight: "20", number: "15"}], desc: "15kg 할만함 / 20개는 어깨가 올라감", method: "케이블"},
+            {date: "2024.08.08", part: "등", kind: "랫 풀다운", set: [{weight: "25", number: "15"}, {weight: "25", number: "15"}, {weight: "25", number: "15"}, {weight: "25", number: "15"}], desc: "25kg 힘듬"},
+            {date: "2024.08.08", part: "등", kind: "시티드 로우", set: [{weight: "20", number: "15"}, {weight: "20", number: "15"}, {weight: "15", number: "20"}, {weight: "15", number: "20"}], desc: "20kg 어깨 올라가는 느낌 / 15kg 괜찮지만 힘듬 / 반동주면 15kg 쉬움"},
+            {date: "2024.08.08", part: "등", kind: "백 익스텐션", set: [{weight: "", number: "15"}, {weight: "", number: "15"}, {weight: "", number: "15"}]},
+
             {date: "2024.08.06", part: "하체", kind: "레그 컬", set: [{weight: "30", number: "20"}, {weight: "35", number: "20"}, {weight: "35", number: "20"}], desc: "35kg 여전히 힘듬 / 30kg 20개 또는 35kg 15개로 도전 / 머신 3번째"},
             {date: "2024.08.06", part: "하체", kind: "레그 익스텐션", set: [{weight: "30", number: "20"}, {weight: "30", number: "20"}, {weight: "35", number: "20"}, {weight: "40", number: "20"}], desc: "30kg 두세트 할만함 / 35kg 힘듬 / 40kg 10개부터 많이 힘듬 / 다음 1세트만 30kg 시작"},
             {date: "2024.08.06", part: "하체", kind: "레그 프레스", set: [{weight: "20", number: "20"}, {weight: "40", number: "20"}, {weight: "40", number: "20"}], desc: "20kg 할만함 / 40kg 힘들지만 할만함 / 다음은 30kg 또는 40kg으로 시작"},
