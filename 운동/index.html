@@ -60,6 +60,7 @@
         .img-wrap {margin:16px -24px 0;}
         .img-wrap .img {display:flex;flex-direction:column;justify-content:center;}
         .img-wrap .img + .img {margin-top:20px;}
+        .img-wrap .img > strong {margin-top:4px;text-align:center;color:#111;font-weight:500;}
         .img-wrap .img > p {margin-top:4px;text-align:center;color:#666;}
 
         @media only screen and (max-width: 640px) {
@@ -186,5 +187,16 @@
             location.replace('https://www.google.com/')
         }
 
+        // 파라미터 값에 따라 탭 보여주기
+        var paramTab = Number(getUrlParam('tab'));
+        var tabGroupTab1 = document.querySelectorAll('.tab-group.tab1 .tab-item')
+        tabGroupTab1.forEach(function(item, index) {
+            var tabNum = index + 1;
+            if(paramTab === tabNum) {
+                setTimeout(() => {
+                    item.querySelector('button').click();
+                }, 10);
+            }
+        })
     </script>
 </div>
