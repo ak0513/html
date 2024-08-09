@@ -35,6 +35,8 @@
         .h-tit4 span {padding:7px 16px 6px;background-color: var(--secondary);color:#fff;border-radius: 50px;}
         .h-tit4.point span {background-color:rgb(186, 15, 15);color:#fff;}
 
+        .h-tit4 button {padding:7px 16px 6px;background-color: var(--secondary);color:#fff;border-radius: 50px;font-size:16px;font-weight:500;}
+
         .btn-wrap {gap:8px;}
         .btn.link {padding:0;background-color: transparent;color:var(--primary);border:none;border-bottom:1px solid var(--primary);}
 
@@ -206,5 +208,9 @@
                 }, 10);
             }
         })
+
+        function toggleNext() {
+            event.currentTarget.parentElement.nextElementSibling.classList.toggle('on')
+        }
     </script>
 </div>
