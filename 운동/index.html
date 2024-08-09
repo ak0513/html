@@ -68,6 +68,9 @@
         .img-wrap .img > img + .txt {margin-top:12px;}
         .img-wrap .img > strong + .txt {margin-top:4px;}
 
+        .toggleView {display: none;}
+        .toggleView.on {display: block;}
+
         @media only screen and (max-width: 640px) {
             .tab1.tab-group {width:auto;left:0;right:0;padding:20px 24px;}
 
@@ -202,14 +205,6 @@
                     item.querySelector('button').click();
                 }, 10);
             }
-        })
-
-        var toggleBtn = document.querySelectorAll('.toggle');
-        console.log(toggleBtn)
-        toggleBtn.forEach(function(item) {
-            item.addEventListener('click', function() {
-                console.log(this)
-            })
         })
     </script>
 </div>

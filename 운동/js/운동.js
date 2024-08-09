@@ -39,7 +39,14 @@ function loadData(url, targetElementId, callback) {
 }
 
 function callback() {
-    
+    var toggleBtn = document.querySelectorAll('.toggle');
+    console.log(toggleBtn)
+    toggleBtn.forEach(function(item) {
+        item.addEventListener('click', function() {
+            this.nextElementSibling.classList.toggle('on')
+            console.log(this.nextElementSibling)
+        })
+    })
 }
 
 loadData(Shoulder, 'Shoulder', callback);
