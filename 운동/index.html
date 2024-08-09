@@ -57,11 +57,15 @@
 
         .hidden_video {position: absolute;top:-9999px;left:-9999px;}
 
-        .img-wrap {margin:16px -24px 0;}
-        .img-wrap .img {display:flex;flex-direction:column;justify-content:center;}
+        .img-wrap {margin:16px -24px 0;padding-bottom:16px;border-bottom:1px solid #ddd;}
+        .img-wrap .img {display:flex;flex-direction:column;justify-content:center;padding:16px 16px 0;border-top:1px solid #ddd;}
+        .img-wrap .img:has(img) {padding:0;border:none;}
         .img-wrap .img + .img {margin-top:20px;}
-        .img-wrap .img > strong {margin-top:4px;text-align:center;color:#111;font-weight:500;}
-        .img-wrap .img > p {margin-top:4px;text-align:center;color:#666;}
+        .img-wrap .img .num {font-size:18px;font-weight:700;text-align:center;color:#111;}
+        .img-wrap .img > strong {text-align:center;color:#111;font-weight:500;}
+        .img-wrap .img > p {margin-top:0;text-align:center;color:#666;font-size:14px;}
+        .img-wrap .img > img + .num,
+        .img-wrap .img > img + p {margin-top:12px;}
 
         @media only screen and (max-width: 640px) {
             .tab1.tab-group {width:auto;left:0;right:0;padding:20px 24px;}
