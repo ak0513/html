@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	{ company: "코코", date: "2024.05.25", number: '639952', category:'쌀', name: "백진주쌀", amount: 36990, discount: 3000, weight:10, unit:'kg'},
 	{ company: "코코", date: "2024.05.25", number: '608881', category:'수박', name: "수박", amount: 24990, discount: 3200, weight:9, unit:'kg'},
 	{ company: "코코", date: "2024.05.25", number: '661892', category:'로메인', name: "무농약 로메인(4~6입)", amount: 8990, discount: 2000, weight:0, unit:'g'},
-	{ company: "코코", date: "2024.05.25", number: '579887', category:'양상추', name: "친환경 양상추", amount: 6490, discount: 0, weight:2, unit:'통'},
+	{ company: "코코", date: "2024.05.25", number: '579887', category:'양상추', name: "친환경 양상추", amount: 6490, discount: 0, weight:2, unit:'개'},
 	{ company: "코코", date: "2024.05.25", number: '523376', category:'토마토', name: "미니 대추토마토", amount: 17990, discount: 2000, weight:2.2, unit:'kg'},
 	{ company: "코코", date: "2024.05.25", number: '655475', category:'닭', name: "하림 스파이시 닭가슴살", amount: 14990, discount: 2000, weight:1.2, unit:'kg'},
 	{ company: "코코", date: "2024.05.25", number: '669606', category:'핫도그', name: "풀무원 포테이토 핫도그(8개)", amount: 11490, discount: 0, weight:720, unit:'g'},
@@ -311,7 +311,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	{ company: "자유마트", date: "2024.06.28", number: '', category:'양파', name: "양파망(중)", amount: 3000, discount: 0, weight:7, unit:'개'},
 	{ company: "자유마트", date: "2024.06.28", number: '', category:'청양고추', name: "진라면 매운맛", amount: 1200, discount: 0, weight:15, unit:'개'},
 
-    { company: "자유마트", date: "2024.04.27", number: '8301045522265', category:'라면', name: "진라면 매운맛", amount: 3250, discount: 400, weight:5, unit:'봉'},
+    { company: "자유마트", date: "2024.04.27", number: '8301045522265', category:'라면', name: "진라면 매운맛", amount: 3250, discount: 400, weight:5, unit:'개ㅂ'},
 
 	// 개봉역
     { company: "개봉역", date: "2024.04.08", number: '8801121020968', category:'우유', name: "매일 우유오리지널", amount: 5150, discount: 0, weight:1.8, unit:'ℓ'},
@@ -406,9 +406,7 @@ document.addEventListener("DOMContentLoaded", function () {
 							case '개':
 							case '단':
 							case '장':
-							case '봉':
 							case '캔':
-							case '통':
 								return price / weight;
 							default:
 								return null;

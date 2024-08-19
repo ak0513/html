@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON 생성 폼</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label {
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        input, select {
+            margin-bottom: 20px;
+            padding: 5px;
+            width: 200px;
+        }
+        input[type="submit"] {
+            width: auto;
+            padding: 10px 20px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>JSON 생성기</h1>
+    <form id="jsonForm">
+        <label for="company">회사명:</label><br>
+        <select id="company" name="company">
+            <option value="코코">코코</option>
+            <option value="맘스">맘스</option>
+            <option value="자유마트">자유마트</option>
+            <option value="개봉역">개봉역</option>
+            <option value="슈퍼맨">슈퍼맨</option>
+        </select><br><br>
+
+        <label for="date">날짜 (YYYY.MM.DD):</label><br>
+        <input type="text" id="date" name="date"><br><br>
+
+        <label for="number">번호:</label><br>
+        <input type="text" id="number" name="number"><br><br>
+
+        <label for="category">카테고리:</label><br>
+        <input type="text" id="category" name="category"><br><br>
+
+        <label for="name">상품명:</label><br>
+        <input type="text" id="name" name="name"><br><br>
+
+        <label for="amount">금액:</label><br>
+        <input type="number" id="amount" name="amount"><br><br>
+
+        <label for="discount">할인:</label><br>
+        <input type="number" id="discount" name="discount"><br><br>
+
+        <label for="weight">무게:</label><br>
+        <input type="number" id="weight" name="weight"><br><br>
+
+        <label for="unit">단위:</label><br>
+        <select id="unit" name="unit">
+            <option value="g">g</option>
+            <option value="kg">kg</option>
+            <option value="㎖">㎖</option>
+            <option value="ℓ">ℓ</option>
+            <option value="병">병</option>
+            <option value="개">개</option>
+            <option value="단">단</option>
+            <option value="장">장</option>
+            <option value="캔">캔</option>
+        </select><br><br>
+
+        <input type="submit" value="JSON 생성">
+    </form>
+
+    <h2>생성된 JSON:</h2>
+    <pre id="output">여기에 JSON이 표시됩니다.</pre>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        $(function() {
+            $("#date").datepicker({
+                dateFormat: "yy.mm.dd"
+            });
+        });
+
+        // 디폴트 객체들
+        const defaultObjects = [
+            { company: "코코", date: "2024.07.20", number: '634767', category:'닥터유', name: "닥터유 프로틴바(564g)", amount: 10990, discount: 1700, weight:44, unit:'개'},
+
+        ];
+
+        let jsonArray = []; // JSON 객체를 누적할 배열
+
+        // 인풋 클릭 시 초기화
+        document.querySelectorAll('input, select').forEach(function(input) {
+            input.addEventListener('click', function() {
+                this.value = '';
+            });
+        });
+
+        document.getElementById('number').addEventListener('input', function() {
+            const inputNumber = this.value;
+            const matchedObject = defaultObjects.find(obj => obj.number === inputNumber);
+
+            if (matchedObject) {
+                document.getElementById('company').value = matchedObject.company;
+                document.getElementById('date').value = matchedObject.date;
+                document.getElementById('category').value = matchedObject.category;
+                document.getElementById('name').value = matchedObject.name;
+                document.getElementById('amount').value = matchedObject.amount;
+                document.getElementById('discount').value = matchedObject.discount;
+                document.getElementById('weight').value = matchedObject.weight;
+                document.getElementById('unit').value = matchedObject.unit;
+            }
+        });
+
+        document.getElementById('jsonForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+
+            const jsonOutput = {
+                company: formData.get('company'),
+                date: formData.get('date'),
+                number: formData.get('number'),
+                category: formData.get('category'),
+                name: formData.get('name'),
+                amount: parseInt(formData.get('amount')),
+                discount: parseInt(formData.get('discount')),
+                weight: parseInt(formData.get('weight')),
+                unit: formData.get('unit')
+            };
+
+            jsonArray.push(jsonOutput); // 새 JSON 객체를 배열에 추가
+
+            document.getElementById('output').textContent = JSON.stringify(jsonArray, null, 4);
+        });
+
+        document.getElementById('output').addEventListener('click', function() {
+            const jsonText = this.textContent;
+            navigator.clipboard.writeText(jsonText).then(() => {
+                alert('JSON이 클립보드에 복사되었습니다!');
+            }).catch(err => {
+                alert('복사 실패: ' + err);
+            });
+        });
+    </script>
+</body>
+</html>
