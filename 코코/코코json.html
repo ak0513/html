@@ -94,7 +94,113 @@
 
         // 디폴트 객체들
         const defaultObjects = [
-            { company: "코코", date: "", number: '634767', category:'닥터유', name: "닥터유 프로틴바(564g)", amount: 10990, discount: 1700, weight:44, unit:'개'},
+        { "company": "코코", "date": "2024.08.18", "number": "673762", "category": "빵", "name": "로만밀식빵", "amount": 9490, "discount": 0, "weight": 0, "unit": "g"},
+        { "company": "코코", "date": "2024.08.18", "number": "671079", "category": "낙지", "name": "바로바로 호롱낙지", "amount": 20990, "discount": 3000, "weight": 0, "unit": "g"},
+        { "company": "코코", "date": "2024.08.18", "number": "676661", "category": "빵", "name": "빵부장 3종", "amount": 13990, "discount": 0, "weight": 0, "unit": "g"},
+        { "company": "코코", "date": "2024.08.18", "number": "626676", "category": "토마토", "name": "칵테일 토마토", "amount": 14990, "discount": 0, "weight": 0, "unit": "g"},
+        { "company": "코코", "date": "2024.08.18", "number": "626433", "category": "날치알", "name": "날치알50gX8", "amount": 16490, "discount": 2500, "weight": 0, "unit": "g"},
+        { "company": "코코", "date": "2024.08.15", "number": "592821", "category": "장조림", "name": "본죽쇠고기장조림", "amount": 17490, "discount": 2500, "weight": 0, "unit": "kg"},
+
+        { company: "코코", date: "2024.07.20", number: '671927', category:'맥주', name: "카스464MLx24", amount: 36190, discount: 0, weight:24, unit:'캔'},
+        { company: "코코", date: "2024.07.20", number: '625176', category:'맥스봉', name: "맥스봉치즈PLUS(40g)", amount: 12790, discount: 2800, weight:27, unit:'개'},
+        { company: "코코", date: "2024.07.20", number: '833639', category:'김', name: "KS구운 재래김", amount: 12490, discount: 0, weight:0, unit:'kg'},
+        { company: "코코", date: "2024.07.20", number: '634767', category:'닥터유', name: "닥터유 프로틴바(564g)", amount: 10990, discount: 1700, weight:44, unit:'개'},
+
+        { company: "코코", date: "2024.07.13", number: '647983', category:'토마토', name: "체리토마토", amount: 12990, discount: 0, weight:2, unit:'kg'},
+
+        { company: "코코", date: "2024.07.09", number: '655475', category:'닭', name: "하림 스파이시 닭가슴살", amount: 14990, discount: 2500, weight:1.2, unit:'kg'},
+
+        { company: "코코", date: "2024.07.07", number: '701913', category:'청소포', name: "스위퍼 먼지청소포", amount: 32990, discount: 8000, weight:17, unit:'개'},
+        { company: "코코", date: "2024.07.07", number: '669210', category:'빵', name: "버터숏브레드 쿠키", amount: 16990, discount: 2200, weight:0, unit:'g'},
+
+        { company: "코코", date: "2024.07.06", number: '637146', category:'계란', name: "동물복지란", amount: 15890, discount: 0, weight:60, unit:'개'},
+        { company: "코코", date: "2024.07.06", number: '637146', category:'아보카도', name: "아보카도", amount: 11990, discount: 2500, weight:6, unit:'개'},
+        { company: "코코", date: "2024.07.06", number: '637146', category:'로메인', name: "무농약 로메인(4~6입)", amount: 8990, discount: 0, weight:0, unit:'g'},
+        { company: "코코", date: "2024.07.06", number: '637146', category:'식초', name: "발사믹식초", amount: 15990, discount: 0, weight:1, unit:'ℓ'},
+
+        { company: "코코", date: "2024.06.29", number: '656416', category:'의류', name: "리바이스 티셔츠", amount: 19990, discount: 0, weight:0, unit:'kg'},
+        { company: "코코", date: "2024.06.29", number: '662556', category:'오트', name: "OAT 바리스타", amount: 15990, discount: 2400, weight:0, unit:'kg'},
+        { company: "코코", date: "2024.06.29", number: '642173', category:'와인', name: "쿵푸걸 리슬링", amount: 15790, discount: 3200, weight:0, unit:'kg'},
+        { company: "코코", date: "2024.06.29", number: '999987', category:'호두', name: "KS 호두", amount: 12290, discount: 0, weight:1.360, unit:'kg'},
+        { company: "코코", date: "2024.06.29", number: '733591', category:'치즈', name: "하바티 슬라이스", amount: 14990, discount: 2500, weight:0, unit:'kg'},
+        { company: "코코", date: "2024.06.29", number: '674135', category:'주먹밥', name: "참치마요 주먹밥(1.2kg)", amount: 13990, discount: 2500, weight:12, unit:'개'},
+        { company: "코코", date: "2024.06.29", number: '631116', category:'치즈', name: "부라타 치즈", amount: 15690, discount: 2500, weight:0, unit:'kg'},
+        { company: "코코", date: "2024.06.29", number: '654685', category:'고기', name: "한우 안심1++", amount: 136960, discount: 0, weight:0, unit:'kg'},
+        { company: "코코", date: "2024.06.29", number: '047126', category:'체리', name: "체리(미국)", amount: 13790, discount: 0, weight:907, unit:'g'},
+
+        { company: "코코", date: "2024.06.16", number: '512905', category:'토마토', name: "토마토", amount: 14990, discount: 0, weight:4, unit:'kg'},
+        { company: "코코", date: "2024.06.16", number: '674623', category:'수박', name: "3호(10kg미만)", amount: 19990, discount: 0, weight:0, unit:'kg'},
+        { company: "코코", date: "2024.06.16", number: '656064', category:'바나나', name: "델몬트바나나", amount: 2990, discount: 0, weight:6, unit:'g'},
+
+        { company: "코코", date: "2024.06.08", number: '520440', category:'두유', name: "국산검은콩두유(24팩)", amount: 16990, discount: 3400, weight:4.560, unit:'g'},
+        { company: "코코", date: "2024.06.08", number: '663778', category:'와인', name: "클라우디베이 펠로루스", amount: 45990, discount: 11000, weight:0, unit:'g'},
+
+        { company: "코코", date: "2024.06.01", number: '653669', category:'들깨', name: "들깨가루", amount: 15990, discount: 0, weight:400, unit:'g'},
+        { company: "코코", date: "2024.06.01", number: '588825', category:'우유', name: "비타민우유", amount: 4590, discount: 0, weight:2.3, unit:'ℓ'},
+        { company: "코코", date: "2024.06.01", number: '605698', category:'빵', name: "호밀빵", amount: 7490, discount: 0, weight:860, unit:'g'},
+        { company: "코코", date: "2024.06.01", number: '565617', category:'아몬드', name: "아몬드", amount: 13490, discount: 0, weight:1.36, unit:'kg'},
+        { company: "코코", date: "2024.06.01", number: '7771398', category:'의류', name: "라운드바지", amount: 12970, discount: 0, weight:0, unit:'kg'},
+
+        { company: "코코", date: "2024.05.25", number: '629052', category:'콩', name: "병아리콩", amount: 14990, discount: 0, weight:6, unit:'kg'},
+        { company: "코코", date: "2024.05.25", number: '639952', category:'쌀', name: "백진주쌀", amount: 36990, discount: 3000, weight:10, unit:'kg'},
+        { company: "코코", date: "2024.05.25", number: '608881', category:'수박', name: "수박", amount: 24990, discount: 3200, weight:9, unit:'kg'},
+        { company: "코코", date: "2024.05.25", number: '579887', category:'양상추', name: "친환경 양상추", amount: 6490, discount: 0, weight:2, unit:'개'},
+        { company: "코코", date: "2024.05.25", number: '523376', category:'토마토', name: "미니 대추토마토", amount: 17990, discount: 2000, weight:2.2, unit:'kg'},
+        { company: "코코", date: "2024.05.25", number: '669606', category:'핫도그', name: "풀무원 포테이토 핫도그(8개)", amount: 11490, discount: 0, weight:720, unit:'g'},
+        { company: "코코", date: "2024.05.25", number: '507154', category:'베이컨', name: "햄스빌 베이컨", amount: 16890, discount: 2600, weight:820, unit:'g'},
+        { company: "코코", date: "2024.05.25", number: '601208', category:'단백질', name: "웨이더플러스", amount: 28990, discount: 5000, weight:1020, unit:'g'},
+        { company: "코코", date: "2024.05.25", number: '643893', category:'체중계', name: "무아스 체중계", amount: 16990, discount: 3000, weight:0, unit:'g'},
+
+        { company: "코코", date: "2024.05.18", number: '633336', category:'음료', name: "오렌지주스", amount: 26490, discount: 0, weight:3.54, unit:'kg'},
+        { company: "코코", date: "2024.05.18", number: '1050557', category:'과자', name: "피넛 프레첼", amount: 16590, discount: 0, weight:1.56, unit:'kg'},
+        { company: "코코", date: "2024.05.18", number: '667629', category:'과일', name: "그린키위", amount: 17990, discount: 0, weight:2.4, unit:'kg'},
+
+        { company: "코코", date: "2024.05.05", number: '690902', category:'돈까스', name: "동원돈까스", amount: 14990, discount: 2500, weight:1.040, unit:'kg'},
+        { company: "코코", date: "2024.05.05", number: '1276922', category:'과자', name: "케틀 핑크솔트 감자칩", amount: 9990, discount: 0, weight:907, unit:'g'},
+        { company: "코코", date: "2024.05.05", number: '525619', category:'냉동식품', name: "치킨텐더", amount: 17490, discount: 3500, weight:1.5, unit:'kg'},
+        { company: "코코", date: "2024.05.05", number: '1100690', category:'치즈', name: "하바티 고다치즈", amount: 15790, discount: 2500, weight:0, unit:'g'},
+        { company: "코코", date: "2024.05.05", number: '584629', category:'망고스틴', name: "망고스틴", amount: 20890, discount: 0, weight:1.8, unit:'kg'},
+        { company: "코코", date: "2024.05.05", number: '505325', category:'참외', name: "고당도참외", amount: 19990, discount: 0, weight:7, unit:'개'},
+
+        { company: "코코", date: "2024.04.21", number: '668703', category:'떡볶이', name: "떡볶이 오리지날(6인분)", amount: 10990, discount: 0, weight:1.080, unit:'kg'},
+        { company: "코코", date: "2024.04.21", number: '301904', category:'와인', name: "KS M.쇼비뇽블랑", amount: 10790, discount: 0, weight:0, unit:'병'},
+
+        { company: "코코", date: "2024.04.13", number: '003379', category:'초콜릿', name: "프렌치 트러플", amount: 22990, discount: 3500, weight:2, unit:'kg'},
+        { company: "코코", date: "2024.04.13", number: '660472', category:'젤리', name: "트롤리 미니버거", amount: 19990, discount: 5300, weight:90, unit:'개'},
+        { company: "코코", date: "2024.04.13", number: '669023', category:'와인', name: "Natale Verga Barolo", amount: 29990, discount: 6000, weight:0, unit:'병'},
+        { company: "코코", date: "2024.04.13", number: '030669', category:'바나나', name: "델몬트 바나나", amount: 3190, discount: 0, weight:9, unit:'개'},
+        { company: "코코", date: "2024.04.13", number: '571300', category:'연어', name: "연어", amount: 58170, discount: 0, weight:1.492, unit:'kg'},
+        { company: "코코", date: "2024.04.13", number: '515819', category:'소스', name: "어니언크림드레싱", amount: 8490, discount: 0, weight:1, unit:'kg'},
+        { company: "코코", date: "2024.04.13", number: '667144', category:'샐러드', name: "유기농샐러드", amount: 7490, discount: 0, weight:540, unit:'g'},
+
+        { company: "코코", date: "2024.04.01", number: '622945', category:'치약', name: "콜게이트치약(5개)", amount: 21990, discount: 0, weight:0, unit:'g'},
+        { company: "코코", date: "2024.04.01", number: '672163', category:'토마토', name: "대저토마토", amount: 20490, discount: 0, weight:2.5, unit:'kg'},
+        { company: "코코", date: "2024.04.01", number: '574199', category:'딸기', name: "딸기1박스", amount: 12290, discount: 0, weight:1, unit:'kg'},
+
+        { company: "코코", date: "2024.03.23", number: '635469', category:'과자', name: "LOTTE 스낵모음(20개)", amount: 15790, discount: 0, weight:1.384, unit:'kg'},
+        { company: "코코", date: "2024.03.23", number: '630807', category:'시저', name: "크랜베리 그래놀라", amount: 17990, discount: 3000, weight:1.5, unit:'kg'},
+        { company: "코코", date: "2024.03.23", number: '657241', category:'즉석국', name: "소스락 즉석국(20개)", amount: 15490, discount: 3000, weight:200, unit:'g'},
+        { company: "코코", date: "2024.03.23", number: '667290', category:'주먹밥', name: "햇반쿡반 주먹밥(1.2kg)", amount: 14490, discount: 2500, weight:20, unit:'개'},
+        { company: "코코", date: "2024.03.23", number: '520767', category:'고기', name: "미국냉장살치살팩", amount: 74910, discount: 6000, weight:1.6, unit:'kg'}, // 2.5kg에서 지방 제거 후 1.6kg
+        { company: "코코", date: "2024.03.23", number: '667609', category:'아보카도', name: "아보카도 샐러드", amount: 14300, discount: 0, weight:0, unit:'kg'},
+
+
+        { company: "코코", date: "2024.03.03", number: '651894', category:'탕수육', name: "고메탕수육", amount: 12990, discount: 2200, weight:1, unit:'kg'},
+
+        { company: "코코", date: "2024.03.01", number: '664924', category:'샐러드', name: "데일리샐러드믹스", amount: 9490, discount: 0, weight:1, unit:'kg'},
+        { company: "코코", date: "2024.03.01", number: '656361', category:'닭강정', name: "BBQ 닭강정", amount: 16990, discount: 2700, weight:1.2, unit:'kg'},
+
+
+        { company: "코코", date: "2024.02.19", number: '585284', category:'굴소스', name: "백설굴소스350GX3", amount: 10790, discount: 0, weight:1.050, unit:'kg'},
+        { company: "코코", date: "2024.02.19", number: '600523', category:'참치', name: "EPA 참치 150G X 10", amount: 22190, discount: 2400, weight:1.5, unit:'kg'},
+        { company: "코코", date: "2024.02.19", number: '664370', category:'피자', name: "GALILEO MINI PIZ", amount: 15990, discount: 3200, weight:0, unit:'kg'},
+
+        { company: "코코", date: "2024.02.17", number: '623559', category:'소주', name: "진로소주360", amount: 24190, discount: 0, weight:20, unit:'병'},
+        { company: "코코", date: "2024.02.17", number: '643733', category:'맥주', name: "카스473ML", amount: 37990, discount: 0, weight:24, unit:'캔'},
+        { company: "코코", date: "2024.02.17", number: '647019', category:'양파', name: "친환경양파망", amount: 14990, discount: 0, weight:4, unit:'kg', img:647019},
+        { company: "코코", date: "2024.02.17", number: '659969', category:'청경채', name: "청경채", amount: 7290, discount: 0, weight:700, unit:'g'},
+        { company: "코코", date: "2024.02.17", number: '612635', category:'두부', name: "찌개부침두부", amount: 5690, discount: 0, weight:840, unit:'g'},
+        { company: "코코", date: "2024.02.17", number: '530318', category:'양배추', name: "친환경양배추", amount: 5990, discount: 0, weight:4, unit:'kg', img:530318},
 
         ];
 
