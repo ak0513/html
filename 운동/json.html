@@ -128,10 +128,10 @@
                     addOptions(methodSelect, ['케이블', '루마니안',]);
                     break;
                 case '어깨':
-                    addOptions(methodSelect, ['머신', '케이블', '덤벨']);
+                    addOptions(methodSelect, ['스탠딩', '케이블', '덤벨', '스미스머신']);
                     break;
                 case '하체':
-                    addOptions(methodSelect, ['시티드', '파워', '바벨',]);
+                    addOptions(methodSelect, ['시티드', '파워', '바벨', '브이']);
                     break;
                 case '팔':
                     addOptions(methodSelect, []);
@@ -171,8 +171,8 @@
             // 새로운 세트 객체 생성
             const newSet = { weight: weight, number: number };
 
-            // 기존 데이터에서 날짜와 운동 종류가 같은 항목 찾기
-            let existingEntry = accumulatedData.find(entry => entry.date === date && entry.kind === kind);
+            // 기존 데이터에서 날짜와 운동 종류, 그리고 도구가 같은 항목 찾기
+            let existingEntry = accumulatedData.find(entry => entry.date === date && entry.kind === kind && entry.method === method);
 
             if (existingEntry) {
                 // 기존 항목에 세트 추가
@@ -192,7 +192,7 @@
 
             // 결과를 JSON 유사 문자열로 변환
             const jsonString = toCustomJSONString(accumulatedData);
-            console.log(accumulatedData)
+            console.log(accumulatedData);
 
             // 결과를 화면에 표시
             document.getElementById('result').textContent = jsonString;
@@ -200,6 +200,7 @@
             // 다운로드 버튼 표시
             document.getElementById('downloadButton').style.display = 'block';
         }
+
 
         function toCustomJSONString(obj) {
             if (Array.isArray(obj)) {
@@ -237,7 +238,7 @@
             window.getSelection().addRange(range);
             document.execCommand('copy');
             window.getSelection().removeAllRanges();
-            alert('복사되었습니다.');
+            // alert('복사되었습니다.');
         }
     </script>
 </body>

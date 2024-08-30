@@ -10,6 +10,7 @@
     <div id="wrap">
         <div id="searchBar">
             <input type="text" id="searchInput" placeholder="검색어 입력" oninput="searchData()">
+            <button type="button" id="btnDelete" onclick="deleteSearch()"><img src="./img/icon-close.svg" alt="닫기"></button>
         </div>
         <div id="btnTop">
             <div class="btnTop-inner">
@@ -21,215 +22,264 @@
             <div id="btnKind"></div>
         </div>
         <div id="container"></div>
+
+        <video id="펙 덱 플라이" controls loop><source src="./video/pecDecFly.mp4" type="video/mp4"></video>
+        <!-- https://myhappybody.net/tests/1rm -->
     </div>
-    <script>
-        var data = [
-            {date: "2024.07.08", part: "하체", kind: "데드 리프트", set: [{weight: "0", number: "20"}, {weight: "10", number: "20"}, {weight: "20", number: "20"},{weight: "30", number: "20"}]},
-            {date: "2024.07.08", part: "등", kind: "케이블 암 풀 다운", set: [{weight: "5", number: "20"}, {weight: "10", number: "20"}, {weight: "10", number: "20"}]},
-            {date: "2024.07.08", part: "등", kind: "랫 풀 다운", set: [{weight: "20", number: "20"}, {weight: "25", number: "20"}, {weight: "30", number: "20"}], desc:"언더 그립/언더 그립이 무게를 더 친다."},
-            {date: "2024.07.08", part: "등", kind: "티 바 로우", set: [{weight: "0", number: "20"}, {weight: "5", number: "20"}, {weight: "5", number: "20"}], desc:"머신 말고 바로 진행"},
-            {date: "2024.07.08", part: "가슴", kind: "딥스", set: [{weight: "0", number: "20"}, {weight: "0", number: "20"}, {weight: "0", number: "20"}], desc:"점프해서 버티고 내려오기"},
-            // Add other data entries here...
-        ];
 
-        var buttonPartContainer = document.getElementById('btnPart');
-        var buttonKindContainer = document.getElementById('btnKind');
-        var container = document.getElementById('container');
+    <!-- 팝업 -->
+    <button type="button" class="btn primary" title="팝업 열기" data-modal-open="#modal">팝업 열기</button>
+    <div id="modal" class="modal bottom" aria-labelledby="modal-title">
+        <div class="modal-inner">
+            <div class="modal-header">
+                <h2 id="modal-title">팝업</h2>
+                <button class="btn-modal-close" aria-label="팝업 닫기" data-modal-close="#modal"></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                
+            </div>
+        </div>
+    </div>
+    <!-- //팝업 -->
+<script>
+    var data = [
+        {date: "2024.08.24", part: "어깨", kind: "레터럴 레이즈", set: [{weight: "15", number: "10"}, {weight: "15", number: "10"}, {weight: "15", number: "10"}], desc: "", method: "머신"}, 
+        {date: "2024.08.24", part: "어깨", kind: "레터럴 레이즈", set: [{weight: "5", number: "12"}, {weight: "5", number: "12"}, {weight: "5", number: "12"}, {weight: "5", number: "12"}], desc: "", method: "케이블"}, 
+    ];
 
-        // Attach event listener to container for event delegation
-        container.addEventListener('click', function(event) {
-            if (event.target.tagName === 'H3') {
-                var kind = event.target.textContent.trim();
-                var item = data.find(d => d.kind === kind || (d.date === kind && d.part === event.target.querySelector('span').textContent.replace(/\[|\]/g, '')));
-                if (item) {
-                    var kindButton = Array.from(buttonKindContainer.children).find(button => button.textContent.includes(item.kind));
-                    if (kindButton) {
-                        kindButton.click();
-                    }
-                }
-            }
+    var buttonPartContainer = document.getElementById('btnPart');
+    var buttonKindContainer = document.getElementById('btnKind');
+    var wrap = document.getElementById('wrap');
+    var container = document.getElementById('container');
+
+    // 데이터를 정렬하고 DOM에 추가하는 함수
+    function sortData(criterion) {
+        var groupedData = groupDataByCriterion(criterion);
+
+        container.innerHTML = '';
+
+        var sortedKeys = Object.keys(groupedData).sort((a, b) => {
+            return criterion === 'date' ? new Date(b) - new Date(a) : a.localeCompare(b);
         });
 
-        function sortData(criterion) {
-            var groupedData = groupDataByCriterion(criterion);
-
-            container.innerHTML = '';
-
-            var sortedKeys = Object.keys(groupedData).sort((a, b) => {
-                return criterion === 'date' ? new Date(b) - new Date(a) : a.localeCompare(b);
+        sortedKeys.forEach(key => {
+            setTitle(key);
+            groupedData[key].forEach(item => {
+                setKind(item, criterion);
             });
+        });
 
-            sortedKeys.forEach(key => {
-                setTitle(key);
-                groupedData[key].forEach(item => {
-                    setKind(item, criterion);
-                });
-            });
+        setPartButtons();
+    }
 
-            setPartButtons();
-        }
-
-        function groupDataByCriterion(criterion) {
-            return data.reduce((acc, item) => {
-                var key = item[criterion];
-                if (!acc[key]) {
-                    acc[key] = [];
-                }
-                acc[key].push(item);
-                return acc;
-            }, {});
-        }
-
-        function setPartButtons() {
-            var partCounts = data.reduce((acc, item) => {
-                acc[item.part] = (acc[item.part] || 0) + 1;
-                return acc;
-            }, {});
-
-            var parts = Object.keys(partCounts).sort((a, b) => partCounts[b] - partCounts[a]);
-
-            buttonPartContainer.innerHTML = '';
-            parts.forEach(part => {
-                var button = document.createElement('button');
-                button.setAttribute('type', 'button');
-                button.textContent = `${part}(${partCounts[part]})`;
-                button.onclick = function() { 
-                    showPart(part);
-                    manageActiveButton(buttonPartContainer, button);
-                };
-                buttonPartContainer.appendChild(button);
-            });
-        }
-
-        function showPart(part) {
-            var partData = data.filter(item => item.part === part);
-            var kindCounts = partData.reduce((acc, item) => {
-                acc[item.kind] = (acc[item.kind] || 0) + 1;
-                return acc;
-            }, {});
-
-            var kinds = Object.keys(kindCounts).sort((a, b) => kindCounts[b] - kindCounts[a]);
-
-            buttonKindContainer.innerHTML = '';
-            kinds.forEach(kind => {
-                var button = document.createElement('button');
-                button.setAttribute('type', 'button');
-                button.textContent = `${kind}(${kindCounts[kind]})`;
-                button.onclick = function() { 
-                    showKind(kind);
-                    manageActiveButton(buttonKindContainer, button);
-                };
-                buttonKindContainer.appendChild(button);
-            });
-
-            displayPartData(partData, part);
-        }
-
-        function displayPartData(partData, part) {
-            container.innerHTML = '';
-            setTitle(part, part);
-            partData.forEach(item => {
-                setKind(item, 'kind');
-            });
-        }
-
-        function showKind(kind) {
-            var kindData = data.filter(item => item.kind === kind);
-            container.innerHTML = '';
-            setTitle(kind, kindData[0].part);
-            kindData.forEach(item => {
-                setKind(item, 'kindDate');
-            });
-        }
-
-        function searchData() {
-            var searchInput = document.getElementById('searchInput').value.trim();
-            if (searchInput === '') {
-                resetSearchResults();
-                return;
+    // 데이터를 기준에 따라 그룹화하는 함수
+    function groupDataByCriterion(criterion) {
+        return data.reduce((acc, item) => {
+            var key = criterion === 'kind' ? `${item.kind}-${item.method}` : item[criterion];
+            if (!acc[key]) {
+                acc[key] = [];
             }
+            acc[key].push(item);
+            return acc;
+        }, {});
+    }
 
-            var searchResults = data.filter(item => item.kind.includes(searchInput));
-            displaySearchResults(searchResults);
+    // part 버튼 설정
+    function setPartButtons() {
+        var partCounts = data.reduce((acc, item) => {
+            acc[item.part] = (acc[item.part] || 0) + 1;
+            return acc;
+        }, {});
+
+        var parts = Object.keys(partCounts).sort((a, b) => partCounts[b] - partCounts[a]);
+
+        buttonPartContainer.innerHTML = '';
+        parts.forEach(part => {
+            var button = document.createElement('button');
+            button.setAttribute('type', 'button');
+            button.textContent = `${part}(${partCounts[part]})`;
+            button.onclick = function() { 
+                showPart(part);
+                manageActiveButton(buttonPartContainer, button);
+            };
+            buttonPartContainer.appendChild(button);
+        });
+    }
+
+    // 특정 part의 데이터를 표시하고 kind 버튼을 모두 노출하는 함수
+    function showPart(part) {
+        var partData = data.filter(item => item.part === part);
+        var kindCounts = partData.reduce((acc, item) => {
+            var key = `${item.kind}-${item.method}`;
+            acc[key] = (acc[key] || 0) + 1;
+            return acc;
+        }, {});
+
+        wrap.classList.add('showdepth2')
+
+        var kinds = Object.keys(kindCounts).sort((a, b) => kindCounts[b] - kindCounts[a]);
+
+        buttonKindContainer.innerHTML = '';
+        kinds.forEach(kind => {
+            var button = document.createElement('button');
+            button.setAttribute('type', 'button');
+            var [exerciseKind, method] = kind.split('-');
+            button.textContent = `${exerciseKind}(${kindCounts[kind]}) - ${method}`;
+            button.onclick = function() { 
+                showKind(exerciseKind, method);
+                manageActiveButton(buttonKindContainer, button);
+            };
+            buttonKindContainer.appendChild(button);
+        });
+
+        displayPartData(partData, part);
+    }
+
+    // 특정 kind의 데이터를 표시하는 함수
+    function showKind(kind, method) {
+        var kindData = data.filter(item => item.kind === kind && item.method === method);
+        container.innerHTML = '';
+        setTitle(kind, kindData[0].part);
+        kindData.forEach((item, index) => {
+            var dateInterval = kindData.length > index + 1 ? getDate(kindData[index+1].date, kindData[index].date) : undefined;
+            setKind(item, 'kindDate', dateInterval);
+        });
+    }
+
+    // 검색 기능 추가
+    function searchData() {
+        var searchInput = document.getElementById('searchInput').value.trim();
+        if (searchInput === '') {
+            resetSearchResults();
+            return;
         }
+        wrap.classList.add('showdepth2')
 
-        function resetSearchResults() {
-            buttonKindContainer.innerHTML = '';
-            container.innerHTML = '';
+        var searchResults = data.filter(item => item.kind.includes(searchInput));
+        displaySearchResults(searchResults);
+    }
+
+    function deleteSearch() {
+        var deleteBtn = document.getElementById('btnDelete');
+        deleteBtn.previousElementSibling.value = '';
+        deleteBtn.previousElementSibling.focus();
+    }
+
+    function resetSearchResults() {
+        buttonKindContainer.innerHTML = '';
+        container.innerHTML = '';
+        setTitle('검색 결과 없음');
+    }
+
+    function displaySearchResults(searchResults) {
+        buttonKindContainer.innerHTML = '';
+        container.innerHTML = '';
+
+        if (searchResults.length === 0) {
             setTitle('검색 결과 없음');
+            return;
         }
 
-        function displaySearchResults(searchResults) {
-            buttonKindContainer.innerHTML = '';
-            container.innerHTML = '';
+        var kindCounts = searchResults.reduce((acc, item) => {
+            var key = `${item.kind}-${item.method}`;
+            acc[key] = (acc[key] || 0) + 1;
+            return acc;
+        }, {});
 
-            if (searchResults.length === 0) {
-                setTitle('검색 결과 없음');
-                return;
+        var kinds = Object.keys(kindCounts).sort((a, b) => kindCounts[b] - kindCounts[a]);
+
+        kinds.forEach(kind => {
+            var button = document.createElement('button');
+            button.setAttribute('type', 'button');
+            var [exerciseKind, method] = kind.split('-');
+            button.textContent = `${exerciseKind}(${kindCounts[kind]}) - ${method}`;
+            button.onclick = function() { 
+                showKind(exerciseKind, method);
+                manageActiveButton(buttonKindContainer, button);
+            };
+            buttonKindContainer.appendChild(button);
+        });
+
+        setTitle('검색 결과');
+        searchResults.forEach(item => {
+            setKind(item, 'kind');
+        });
+    }
+
+    // 타이틀 세팅
+    function setTitle(text, part) {
+        var title = document.createElement('h2');
+        title.classList.add(`${part}`);
+        title.innerHTML = `<button type="button" onclick="playVideo('${text}')">${text}</button>${part && part !== text ? `<span>[${part}]</span>` : ``}`;
+        container.appendChild(title);
+    }
+
+    // 종류별 세팅
+    function setKind(item, criterion, dateInterval) {
+        var itemDiv = document.createElement('div');
+        itemDiv.classList.add('item');
+        itemDiv.classList.add(item.part);
+        itemDiv.innerHTML = `${criterion === 'kindDate' ? `<h3>${item.date} ${item.method !== undefined ? '[' + item.method + ']' : ''} ${dateInterval !== undefined ? '<span class="dateInterval">' + dateInterval + '일전</span>' : ''}</h3>` : `<h3>${item.method !== undefined ? item.method : ''} ${item.kind}<span>[${item.part}]</span></h3>`}`;
+
+        if (item.desc) {
+            var desc = document.createElement('p');
+            desc.classList.add('desc')
+            desc.textContent = item.desc;
+            itemDiv.appendChild(desc);
+        }
+
+        var setList = document.createElement('ul');
+        setList.classList.add('set');
+
+        var weights = item.set.map(setItem => parseFloat(setItem.weight));
+        var maxWeight = Math.max(...weights);
+        var isSameWeight = weights.every(weight => weight === weights[0]);
+
+        var numbers = item.set.map(setItem => parseFloat(setItem.number));
+        var maxNumber = Math.max(...numbers);
+        var isSameNumber = numbers.every(number => number === numbers[0]);
+
+        item.set.forEach(function(setItem, index) {
+            var listItem = document.createElement('li');
+            listItem.innerHTML = `
+            <ul class="set-item">
+                <li>${index + 1}세트</li>
+                ${setItem.weight.length > 0 ? `<li class="weight">${setItem.weight}<small>kg</small></li>` : ''}<li>
+                ${setItem.number.indexOf('초') > -1 ? `<li>${setItem.number.substring(0, setItem.number.length - 1)}<small class="sec">초</small></li>` : `<li class="number">${setItem.number}<small>회</small></li>`}
+            </ul>`;
+
+            if (!isSameWeight && parseFloat(setItem.weight) === maxWeight) {
+                listItem.classList.add('maxWeight');
             }
-
-            var kindCounts = searchResults.reduce((acc, item) => {
-                acc[item.kind] = (acc[item.kind] || 0) + 1;
-                return acc;
-            }, {});
-
-            var kinds = Object.keys(kindCounts).sort((a, b) => kindCounts[b] - kindCounts[a]);
-
-            kinds.forEach(kind => {
-                var button = document.createElement('button');
-                button.setAttribute('type', 'button');
-                button.textContent = `${kind}(${kindCounts[kind]})`;
-                button.onclick = function() { 
-                    showKind(kind);
-                    manageActiveButton(buttonKindContainer, button);
-                };
-                buttonKindContainer.appendChild(button);
-            });
-
-            setTitle('검색 결과');
-            searchResults.forEach(item => {
-                setKind(item, 'kind');
-            });
-        }
-
-        function setTitle(text, part) {
-            var title = document.createElement('h2');
-            title.classList.add(`${part}`);
-            title.innerHTML = `${text}${part && part !== text ? `<span>[${part}]</span>` : ``}`;
-            container.appendChild(title);
-        }
-
-        function setKind(item, criterion) {
-            var itemDiv = document.createElement('div');
-            itemDiv.classList.add('item');
-            itemDiv.classList.add(item.part);
-            itemDiv.innerHTML = `${criterion === 'kindDate' ? `<h3>${item.date}</h3>` : `<h3>${item.kind}<span>[${item.part}]</span></h3>`}`;
-            var setList = document.createElement('ul');
-            setList.classList.add('set');
-            item.set.forEach(function(setItem) {
-                var listItem = document.createElement('li');
-                listItem.textContent = `${setItem.weight}kg ${setItem.number}회`;
-                setList.appendChild(listItem);
-            });
-            if (item.desc) {
-                var desc = document.createElement('p');
-                desc.textContent = item.desc;
-                setList.appendChild(desc);
+            if(!isSameNumber && parseFloat(setItem.weight.length) === 0 && parseFloat(setItem.number) === maxNumber) {
+                listItem.classList.add('maxNumber');
             }
-            itemDiv.appendChild(setList);
-            container.appendChild(itemDiv);
-        }
+            
+            setList.appendChild(listItem);
+        });
+        itemDiv.appendChild(setList);
+        container.appendChild(itemDiv);
+    }
 
-        function manageActiveButton(parent, button) {
-            var activeButton = parent.querySelector('.active');
-            if (activeButton) {
-                activeButton.classList.remove('active');
-            }
-            button.classList.add('active');
-        }
+    function getDate(currentDate, prevDate) {
+        const current = new Date(currentDate);
+        const prev = new Date(prevDate);
+        return (Math.floor((current - prev) / (1000 * 60 * 60 * 24)));
+    }
 
-        // Initialize the app
-        sortData('date');
-    </script>
+    function manageActiveButton(container, activeButton) {
+        const buttons = container.querySelectorAll('button');
+        buttons.forEach(button => button.classList.remove('active'));
+        activeButton.classList.add('active');
+    }
+
+    // 초기 정렬: 날짜별 정렬
+    sortData('date');
+</script>
+
 </body>
 </html>
+
+
+현재 소스 상태 유지하면서 추가로 아래 기능만 넣어줘
+같은 종류('kind')의 운동이지만 도구('method')가 다르다면 다른 객체로 만들고 싶어
