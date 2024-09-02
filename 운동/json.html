@@ -9,6 +9,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="../basic/css/style.css">
     <style>
+        #userForm {width:300px;margin:0 auto;}
         input, select, button {
             display: flex;
             align-items: center;
@@ -122,7 +123,7 @@
             // 선택된 운동 부위에 따라 옵션 추가
             switch (partSelect.value) {
                 case '가슴':
-                    addOptions(methodSelect, ['인클라인 머신']);
+                    addOptions(methodSelect, ['인클라인 머신', '인클라인 덤벨']);
                     break;
                 case '등':
                     addOptions(methodSelect, ['케이블', '루마니안',]);
