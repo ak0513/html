@@ -102,18 +102,18 @@
 
 <div id="wrap">
     <header id="header">
-        <div class="input-wrap">
-            <input type="text" id="searchInput" placeholder="검색어 입력">
-            <button type="button"></button>
-        </div>
-        <div class="sort">
-            <button type="button" class="sort-btn active" data-company="">전체</button>
-            <button type="button" class="sort-btn" data-company="코코">코코</button>
-            <button type="button" class="sort-btn" data-company="맘스">맘스</button>
-            <button type="button" class="sort-btn" data-company="개봉역">개봉역</button>
-            <button type="button" class="sort-btn"  data-company="슈퍼맨">슈퍼맨</button>
-            <button type="button" class="sort-btn"  data-company="자유마트">자유마트</button>
-        </div>
+<div class="input-wrap">
+    <input type="text" id="searchInput" placeholder="검색어 입력">
+    <button type="button"></button>
+</div>
+<div class="sort">
+    <button type="button" class="sort-btn active" data-company="">전체</button>
+    <button type="button" class="sort-btn" data-company="코코">코코</button>
+    <button type="button" class="sort-btn" data-company="맘스">맘스</button>
+    <button type="button" class="sort-btn" data-company="개봉역">개봉역</button>
+    <button type="button" class="sort-btn"  data-company="슈퍼맨">슈퍼맨</button>
+    <button type="button" class="sort-btn"  data-company="자유마트">자유마트</button>
+</div>
     </header>
 
 	<main id="main">
@@ -130,6 +130,17 @@ document.addEventListener("DOMContentLoaded", function () {
 	var data = [
     // ℓ ㎖ g kg 병 
 	// 코코
+    {"company": "코코","date": "2024.08.31","number": "671283","category": "막걸리","name": "느린마을막걸리","amount": 9990,"discount": 0,"weight": 4,"unit": "병"},
+    {"company": "코코","date": "2024.08.31","number": "664841","category": "회","name": "물회","amount": 29990,"discount": 4000,"weight": 0,"unit": "병"},
+	{"company": "코코","date": "2024.08.31","number": "673269","category": "바나나","name": "델몬트바나나","amount": 2990,"discount": 0,"weight": 0,"unit": "병"},
+
+    {"company": "코코","date": "2024.08.24","number": "1083867","category": "휴지","name": "KS프리미엄화장지","amount": 23490,"discount": 2600,"weight": 0,"unit": "g"},
+    {"company": "코코","date": "2024.08.24","number": "588825","category": "우유","name": "비타민우유","amount": 4590,"discount": 0,"weight": 2.3,"unit": "ℓ"},
+    {"company": "코코","date": "2024.08.24","number": "584629","category": "망고스틴","name": "망고스틴","amount": 20990,"discount": 0,"weight": 1.8,"unit": "kg"},
+    {"company": "코코","date": "2024.08.24","number": "644358","category": "","name": "포스트마크파소","amount": 31990,"discount": 6400,"weight": 0,"unit": "kg"},
+    {"company": "코코","date": "2024.08.24","number": "667290","category": "주먹밥","name": "햇반쿡반 주먹밥(1.2kg)","amount": 13990,"discount": 2500,"weight": 20,"unit": "개"},
+    {"company": "코코","date": "2024.08.24","number": "663613","category": "젖갈","name": "씨앗젖","amount": 17990,"discount": 2500,"weight": 1,"unit": "kg"},
+
     { "company": "코코", "date": "2024.08.18", "number": "673762", "category": "빵", "name": "로만밀식빵", "amount": 9490, "discount": 0, "weight": 1.720, "unit": "kg"},
     { "company": "코코", "date": "2024.08.18", "number": "671079", "category": "낙지", "name": "바로바로 호롱낙지", "amount": 20990, "discount": 3000, "weight": 16, "unit": "개"},
     { "company": "코코", "date": "2024.08.18", "number": "676661", "category": "빵", "name": "빵부장 3종", "amount": 13990, "discount": 0, "weight": 12, "unit": "개"},

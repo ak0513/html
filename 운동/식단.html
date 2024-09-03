@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>식단</title>
+    <link rel="stylesheet" href="../basic/css/common.css">
+	<link rel="stylesheet" href="../basic/css/style.css">
+</head>
+<body>
+    <div id="nutrient"></div>
+
+    <script>
+        function formatNumber(num) {
+            return parseFloat(num.toFixed(2)).toString();
+        }
+
+        function displayNutrientInfo(data) {  // data 매개변수를 추가
+            var nutrientDiv = document.getElementById('nutrient');
+
+            data.forEach(function(item) {
+                // 기준이 되는 중량을 결정
+                var baseWeight = item.exception ? parseFloat(item.exception) : 100;
+                var unitWeight = 1;
+                // unitWeight가 있으면 이를 기준으로 계산
+                if (item.unitWeight) {
+                    unitWeight = item.unitWeight
+                }
+                console.log('unitWeight', item.name, unitWeight)
+
+                // 1g 기준으로 계산
+                var caloriePerGram = formatNumber(item.calorie / baseWeight * unitWeight);
+                var carbohydratePerGram = formatNumber(item.carbohydrate / baseWeight * unitWeight);
+                var proteinPerGram = formatNumber(item.protein / baseWeight * unitWeight);
+                var fatPerGram = formatNumber(item.fat / baseWeight * unitWeight);
+
+                var nutrientContent = `
+                    <h3>${item.name}</h3>
+                    <ul>
+                        <li>단위 중량(g): ${item.unitWeight}</li>
+                        <li>칼로리: ${caloriePerGram}g</li>
+                        <li>탄수화물: ${carbohydratePerGram}g</li>
+                        <li>단백질: ${proteinPerGram}g</li>
+                        <li>지방: ${fatPerGram}g</li>
+                    </ul>
+                `;
+                nutrientDiv.innerHTML += nutrientContent;
+            });
+        }
+
+        fetch('./nutrient.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json(); // JSON 데이터를 JavaScript 객체로 변환
+            })
+            .then(data => {
+                console.log('data', data); // JSON 데이터를 처리
+                displayNutrientInfo(data);  // 데이터가 로드된 후에 displayNutrientInfo 함수를 호출
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+
+    </script>
+</body>
+</html>

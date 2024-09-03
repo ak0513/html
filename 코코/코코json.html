@@ -44,25 +44,25 @@
         </select><br><br>
 
         <label for="date">날짜 (YYYY.MM.DD):</label><br>
-        <input type="text" id="date" name="date"><br><br>
+        <input type="text" id="date" name="date" autocomplete="off"><br><br>
 
         <label for="number">번호:</label><br>
-        <input type="text" id="number" name="number"><br><br>
+        <input type="text" id="number" name="number" autocomplete="off"><br><br>
 
         <label for="category">카테고리:</label><br>
-        <input type="text" id="category" name="category"><br><br>
+        <input type="text" id="category" name="category" autocomplete="off"><br><br>
 
         <label for="name">상품명:</label><br>
-        <input type="text" id="name" name="name"><br><br>
+        <input type="text" id="name" name="name" autocomplete="off"><br><br>
 
         <label for="amount">금액:</label><br>
-        <input type="number" id="amount" name="amount"><br><br>
+        <input type="text" id="amount" name="amount" autocomplete="off"><br><br>
 
         <label for="discount">할인:</label><br>
-        <input type="number" id="discount" name="discount"><br><br>
+        <input type="text" id="discount" name="discount" autocomplete="off"><br><br>
 
         <label for="weight">무게:</label><br>
-        <input type="number" id="weight" name="weight"><br><br>
+        <input type="text" id="weight" name="weight" autocomplete="off"><br><br>
 
         <label for="unit">단위:</label><br>
         <select id="unit" name="unit">
@@ -94,6 +94,10 @@
 
         // 디폴트 객체들
         const defaultObjects = [
+        {"company": "코코","date": "2024.08.24","number": "1083867","category": "휴지","name": "KS프리미엄화장지","amount": 23490,"discount": 2600,"weight": 0,"unit": "g"},
+        {"company": "코코","date": "2024.08.24","number": "644358","category": "","name": "포스트마크파소","amount": 31990,"discount": 6400,"weight": 0,"unit": "kg"},
+        {"company": "코코","date": "2024.08.24","number": "663613","category": "젖갈","name": "씨앗젖","amount": 17990,"discount": 2500,"weight": 1,"unit": "kg"},
+
         { "company": "코코", "date": "2024.08.18", "number": "673762", "category": "빵", "name": "로만밀식빵", "amount": 9490, "discount": 0, "weight": 0, "unit": "g"},
         { "company": "코코", "date": "2024.08.18", "number": "671079", "category": "낙지", "name": "바로바로 호롱낙지", "amount": 20990, "discount": 3000, "weight": 0, "unit": "g"},
         { "company": "코코", "date": "2024.08.18", "number": "676661", "category": "빵", "name": "빵부장 3종", "amount": 13990, "discount": 0, "weight": 0, "unit": "g"},
@@ -219,7 +223,7 @@
 
             if (matchedObject) {
                 document.getElementById('company').value = matchedObject.company;
-                document.getElementById('date').value = matchedObject.date;
+                // document.getElementById('date').value = matchedObject.date;
                 document.getElementById('category').value = matchedObject.category;
                 document.getElementById('name').value = matchedObject.name;
                 document.getElementById('amount').value = matchedObject.amount;
@@ -254,7 +258,7 @@
         document.getElementById('output').addEventListener('click', function() {
             const jsonText = this.textContent;
             navigator.clipboard.writeText(jsonText).then(() => {
-                alert('JSON이 클립보드에 복사되었습니다!');
+                // alert('JSON이 클립보드에 복사되었습니다!');
             }).catch(err => {
                 alert('복사 실패: ' + err);
             });

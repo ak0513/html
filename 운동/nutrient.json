@@ -1,0 +1,4 @@
+[
+    {"name": "아몬드", "exception":"100", "unit":"개", "unitWeight": "4", "calorie": "575", "carbohydrate": "28", "protein": "26", "fat": "40"},
+    {"name": "아몬드", "exception":"100", "unit":"개", "unitWeight": "", "calorie": "575", "carbohydrate": "28", "protein": "26", "fat": "40"}
+]
