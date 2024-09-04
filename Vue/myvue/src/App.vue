@@ -42,14 +42,20 @@
 		<button class="btn btn-primary" @click="count++">직접 증가 {{ count }}</button>
 		<button class="btn btn-primary" @click="increment">함수 증가 {{ count }}</button>
 	</div>
+
 </template>
 
 <script>
+// import ChildComponent from './components/ChildComponent.vue';
+
+
 import { ref } from 'vue';
 import { reactive } from 'vue';
 
 export default {
-	
+	components: {
+		// ChildComponent,
+	},
 	setup() {
 		// HTML 출력
 		const rawHtml = '메시지';
@@ -84,12 +90,11 @@ export default {
 		}
 
 		
-		
+
+
 		return {
 			rawHtml,
 			dynamicId,
-
-
 
 
 
