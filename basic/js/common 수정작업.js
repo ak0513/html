@@ -17,37 +17,33 @@ window.addEventListener("scroll", function() {
 
 
 var ui = {
-	// 초기 설정
 	config: {
 		ua: navigator.userAgent.toLowerCase()
 	},
 
-	// device 정보
 	deviceInfo: {
 		os: null,
 		device: null,
-		browser: null,
-		version: null,
-		mobile: false,
+		browser : null,
+		version : null,
+		mobile : userAgent.isMobile(),
 	},
 
-	// 사용자 에이전트 객체
+	// 모바일 체크
 	userAgent: {
 		ua: navigator.userAgent.toLowerCase(),
 
-		// 초기화 메서드
+		// 초기화 메서드 (필요 시 사용자 에이전트 값을 동적으로 업데이트 가능)
 		init: function(userAgentString) {
 			if (userAgentString) {
-				this.ua = userAgentString.toLowerCase();
+				this.ua = userAgentString.toLowerCase(); // 특정 UA 문자열을 사용하고 싶을 때
 			}
 		},
 
-		// 공통 메서드
 		matches: function(pattern) {
 			return this.ua.match(pattern) !== null;
 		},
 
-		// 각 디바이스/브라우저 체크
 		BlackBerry: function() { return this.matches(/blackberry/i); },
 		Android: function() { return this.matches(/android/i); },
 		iOS: function() { return this.matches(/iphone|ipad|ipod/i); },
@@ -59,167 +55,170 @@ var ui = {
 		chrome: function() { return this.matches(/chrome/i); },
 		msie: function() { return this.matches(/trident/i); },
 		firefox: function() { return this.matches(/firefox/i); },
-		safari: function() { return this.matches(/safari/i) && !this.chrome() && !this.edge(); },
-
-		// 운영체제 및 디바이스 정보 반환
+		safari: function() { 
+			return this.matches(/safari/i) && !this.chrome() && !this.edge(); 
+		},
 		any: function() {
-			return this.Android() || this.BlackBerry() || this.iOS() || this.Windows();
+			return this.Android() || this.BlackBerry() || this.iOS() || this.Opera() || this.Windows();
+		},
+		isMobile: function() {
+			return this.matches(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i);
 		}
 	},
-
-	// 모바일 여부 체크
-	isMobile: function() {
-		return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(this.config.ua);
-	},
-
-	// deviceInfo 세팅
-	setDeviceInfo: function() {
-		// 사용자 에이전트 기반 OS 정보 추출
-		this.deviceInfo.os = this.getOS();
-		this.deviceInfo.device = this.getDevice();
-		this.deviceInfo.browser = this.getBrowser();
-		this.deviceInfo.version = this.getVersion();
-		this.deviceInfo.mobile = this.isMobile(); // 모바일 여부 설정
-	},
-
-
-	// OS 정보 추출
-	getOS: function() {
-		if (this.userAgent.iOS()) return 'os_ios';
-		if (this.userAgent.Android()) return 'os_android';
-		if (this.userAgent.BlackBerry()) return 'os_blackBerry';
-		if (this.userAgent.Windows()) return 'os_windows';
-		return 'other-os';
-	},
-
-	// 디바이스 정보 추출
-	getDevice: function() {
-		if (this.userAgent.iPhone()) return 'iphone';
-		if (this.userAgent.iPad()) return 'ipad';
-		return 'other-device';
-	},
-
-	// 브라우저 정보 추출
-	getBrowser: function() {
-		if (this.userAgent.edge()) return "edge";
-		if (this.userAgent.opera()) return "opera";
-		if (this.userAgent.chrome()) return "chrome";
-		if (this.userAgent.msie()) return "msie";
-		if (this.userAgent.firefox()) return "firefox";
-		if (this.userAgent.safari()) return "safari";
-		return 'other-browser';
-	},
-
-	// 브라우저 버전 추출
-	getVersion: function() {
-		// 브라우저별 버전 정보 추출
-		var version = this.getBrowserVersion();
-		return version ? version : 'unknown';
-	},
-
-	// 브라우저 버전 파싱
-	getBrowserVersion: function() {
-		var versionPattern = {
-			"edge": /edge\/([\d\.]+)/,
-			"opera": /opr\/([\d\.]+)/,
-			"chrome": /chrome\/([\d\.]+)/,
-			"msie": /trident.*rv:([\d\.]+)/,
-			"firefox": /firefox\/([\d\.]+)/,
-			"safari": /version\/([\d\.]+).*safari/
-		};
-		for (var browser in versionPattern) {
-			if (this.userAgent[browser]()) {
-				var match = this.userAgent.ua.match(versionPattern[browser]);
-				if (match) {
-					// 소수점 제거
-					return match[1].split('.')[0];
-				}
-			}
-		}
-		return null;
-	},
-
+	
 	// body에 device별 클래스 추가
-	setBodyClass: function() {
-		this.setDeviceInfo();  // deviceInfo 세팅 호출
-		var setPlatform = this.deviceInfo.mobile ? 'mobile' : 'pc';
-		var bodyClass = `${setPlatform} ${this.deviceInfo.os} ${this.deviceInfo.browser} ver${this.deviceInfo.version} ${this.deviceInfo.device}`;
-		document.querySelector('body').setAttribute('class', bodyClass);
+	setBodyClass : function() {
+		// pc mobile 체크
+		var setPlatform = deviceInfo.mobile ? 'mobile' : 'pc';
+		var bodyClass = setPlatform + ' ' + deviceInfo.os + ' ' + deviceInfo.browser + ' ver' + deviceInfo.version + ' ' + deviceInfo.device;
+		document.querySelector('body').setAttribute('class', bodyClass)
+	},
+	
+	// deviceInfo 세팅
+	setDeviceInfo : function() {
+		// OS 체크
+		var osName = (function() {
+			switch(true) {
+				case userAgent.iOS() : return deviceInfo.os = 'os_ios';
+				case userAgent.Android() : return deviceInfo.os = 'os_android';
+				case userAgent.BlackBerry() : return deviceInfo.os = 'os_blackBerry';
+				case userAgent.Windows() : return deviceInfo.os = 'os_windows';
+				default : return  deviceInfo.os = 'other-os';
+			}
+		})();
+	
+		// 디바이스 체크
+		var deviceName = (function() {
+			switch(true) {
+				case userAgent.iPhone() : return deviceInfo.device = 'iphone';
+				case userAgent.iPad() : return deviceInfo.device = 'ipad';
+				default : return deviceInfo.device = 'other-device';
+			}
+		})();
+	
+		// 브라우저 체크
+		var browserName = (function() {
+			switch(true) {
+				case userAgent.edge() : return deviceInfo.browser = "edge";
+				case userAgent.opera() && !!window.opr: return deviceInfo.browser = "opera"
+				case userAgent.chrome() && !!window.chrome: return deviceInfo.browser = "chrome";
+				case userAgent.msie() : return deviceInfo.browser = "msie"
+				case userAgent.firefox() : return deviceInfo.browser = "firefox";
+				case userAgent.safari() : return deviceInfo.browser = "safari";
+				default : return deviceInfo.browser = 'other-browser';
+			}
+		})();
+
+		// 버전 체크
+		var VersionName = (function() {
+			switch(true) {
+				case userAgent.edge() : return deviceInfo.version = getVersion('edge');
+				case userAgent.opera() && !!window.opr: return deviceInfo.version = getVersion('opera');
+				case userAgent.chrome() && !!window.chrome: return deviceInfo.version = getVersion('chrome');
+				case userAgent.msie() : return deviceInfo.version = getVersion('msie');
+				case userAgent.firefox() : return deviceInfo.version = getVersion('firefox');
+				case userAgent.safari() : return deviceInfo.version = getVersion('safari');
+				default : return deviceInfo.browser = 'other-browser';
+			}
+		})();
 	},
 
-    // 포커스 비활성화(접근성)
-    accessDisable: function (eleDisable, module) {
-        if (!eleDisable) return;
+	// 버전 구하기
+	getVersion : function(agent) {
+		var version = null;
+		if(agent === 'edge') {
+			var matches = this.config.uamatch(/edg\/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/);
+		} else if(agent === 'opera') {
+			var matches = this.config.uamatch(/opera\/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/);
+		} else if(agent === 'chrome') {
+			var matches = this.config.uamatch(/chrome\/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/);
+		} else if(agent === 'msie') {
+			var matches = this.config.uamatch(/msie\/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/);
+		} else if(agent === 'firefox') {
+			var matches = this.config.uamatch(/firefox\/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/);
+		} else if(agent === 'safari') {
+			var matches = this.config.uamatch(/version\/([0-9]+\.[0-9]+)/);
+			console.log('safari', matches)
+		}
+		if (matches) {
+			version = matches[1].split('.')[0];
+		}
+		return version;
+	},
 
-		// 단일 요소일 경우 배열로 변환
-		var elements = Array.isArray(eleDisable) || NodeList.prototype.isPrototypeOf(eleDisable) ? Array.from(eleDisable) : [eleDisable];
+	// 포커스 비활성화(접근성)
+	accessDisable : function(eleDisable, module) {
+		if(eleDisable.length > 0) {
+			eleDisable = Array.from(eleDisable);
+			eleDisable.forEach(function(item) {
+				accessDisableFn(item)
+			})
+		} else {
+			accessDisableFn(eleDisable)
+		}
 
-
-        elements.forEach(function (item) {
-            var classPrefix = 'is-a11y-' + module;
-
-            // aria-hidden 처리: aria-hidden이 없거나 false일 때 true로 설정
-			if (!item.hasAttribute('aria-hidden') || item.getAttribute('aria-hidden') === 'false') {
-				// aria-hidden이 false였던 요소는 배열에 저장
-				if (item.getAttribute('aria-hidden') === 'false') {
-					item.dataset.originalAriaHidden = 'false';  // originalAriaHidden에 'false' 저장
-				}
-				item.setAttribute('aria-hidden', 'true');
-				item.classList.add(classPrefix + '-hidden');
+		function accessDisableFn(ele) {
+			var itemFocusTags = ele.querySelectorAll('input:not([tabindex]), button:not([tabindex]), a:not([tabindex]), select:not([tabindex]), textarea:not([tabindex])');
+			var itemTabindex = ele.querySelectorAll('[tabindex="0"]');
+			var itemTabindexM = ele.querySelectorAll('[tabindex="-1"]');
+			if(!ele.hasAttribute('aria-hidden')) {
+				ele.setAttribute('aria-hidden','true');
+				ele.classList.add('is-disable-' + module + '-aria-hidden');
 			} else {
-				item.classList.add(classPrefix + '-fixed');
+				ele.classList.add('is-disable-' + module + '-aria-fixed');
+			}
+			
+			itemFocusTags.forEach(function(item) {
+				item.setAttribute('tabindex', -1);
+				item.classList.add('is-disable-' + module + '-tags');
+			})
+			itemTabindex.forEach(function(item) {
+				item.setAttribute('tabindex', -1);
+				item.classList.add('is-disable-' + module + '-tabindex');
+			})
+			itemTabindexM.forEach(function(item) {
+				item.classList.add('is-disable-' + module + '-fixed');
+			})
+		}
+	},
+
+	// 포커스 비활성화(접근성)
+	accessEnable : function(eleEnable, module) {
+		if(eleEnable.length > 0) {
+			eleEnable = Array.from(eleEnable);
+			eleEnable.forEach(function(item) {
+				accessEnableFn(item)
+			})
+		} else {
+			accessEnableFn(eleEnable)
+		}
+
+		function accessEnableFn(ele) {
+			if(ele.classList.contains('is-disable-' + module + '-aria-hidden')) {
+				ele.removeAttribute('aria-hidden');
+				ele.classList.remove('is-disable-' + module + '-aria-hidden');
+			} else {
+				ele.classList.remove('is-disable-' + module + '-aria-fixed');
 			}
 
-            // tabindex 처리
-            var items = item.querySelectorAll('input, button, a, select, textarea, [tabindex]');
-            items.forEach(function (subItem) {
-                // tabindex가 있는 경우만 data-original-tabindex 저장
-                if (!subItem.hasAttribute('data-original-tabindex') && subItem.hasAttribute('tabindex')) {
-                    subItem.dataset.originalTabindex = subItem.getAttribute('tabindex');
-                }
-                subItem.setAttribute('tabindex', '-1');  // tabindex를 -1로 설정
-                subItem.classList.add(classPrefix + '-tags');
-            });
-        });
-    },
+			var itemFocusTags = ele.querySelectorAll('.is-disable-' + module + '-tags');
+			var itemTabindex = ele.querySelectorAll('.is-disable-' + module + '-tabindex');
+			var itemTabindexM = ele.querySelectorAll('.is-disable-' + module + '-fixed');
 
-    // 포커스 활성화(접근성)
-    accessEnable: function (eleEnable, module) {
-        if (!eleEnable) return;
-
-        // 단일 요소일 경우 배열로 변환
-		var elements = Array.isArray(eleEnable) || NodeList.prototype.isPrototypeOf(eleEnable) ? Array.from(eleEnable) : [eleEnable];
-
-        elements.forEach(function (item) {
-            var classPrefix = 'is-a11y-' + module;
-			// aria-hidden 복원
-			if (item.classList.contains(classPrefix + '-hidden')) {
-				// originalAriaHidden에 'false'가 저장되어 있으면, 복원
-				if (item.dataset.originalAriaHidden === 'false') {
-					item.setAttribute('aria-hidden', 'false');
-					delete item.dataset.originalAriaHidden;
-				} else {
-					item.removeAttribute('aria-hidden');
-				}
-			}
-            item.classList.remove(classPrefix + '-hidden', classPrefix + '-fixed');
-
-            // tabindex 복원
-            var items = item.querySelectorAll('.' + classPrefix + '-tags');
-            items.forEach(function (subItem) {
-                // data-original-tabindex가 있는 경우에만 복원
-				console.log(subItem.dataset.originalTabindex )
-                if (subItem.dataset.originalTabindex !== undefined) {
-					subItem.setAttribute('tabindex', subItem.dataset.originalTabindex);  // null이 아니면 저장된 tabindex 복원
-                    delete subItem.dataset.originalTabindex;  // 복원 후 dataset에서 삭제
-                } else {
-					subItem.removeAttribute('tabindex');  // tabindex가 없었던 경우 tabindex 속성 제거
-				}
-                subItem.classList.remove(classPrefix + '-tags');
-            });
-        });
-    },
-
+			itemFocusTags.forEach(function(item) {
+				item.removeAttribute('tabindex');
+				item.classList.remove('is-disable-' + module + '-tags');
+			})
+			itemTabindex.forEach(function(item) {
+				item.setAttribute('tabindex', 0);
+				item.classList.remove('is-disable-' + module + '-tabindex');
+			})
+			itemTabindexM.forEach(function(item) {
+				item.classList.remove('is-disable-' + module + '-fixed');
+			})
+		};
+	},
+	
 	// 형제요소 찾기
 	siblings : function(ele) {
 		if(typeof(ele) === 'string') {
@@ -305,7 +304,7 @@ var ui = {
 	setAttrRandomNum : function(ele, attr) {
 		for(var i =0; i < ele.length; i++) {
 			var eleAttr = ele[i].getAttribute(attr)
-			eleAttr = eleAttr + '?' + ui.getRandomNum();
+			eleAttr = eleAttr + '?' + getRandomNum();
 			ele[i].setAttribute(attr, eleAttr)
 		}
 	},

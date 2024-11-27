@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Multiple Gauge Bars</title>
+	<style>
+		/* 여러 개의 게이지를 나열할 수 있도록 하는 컨테이너 스타일 */
+		.gauge {
+			/* width:100%; */
+			/* margin: 20px; */
+			padding:0 10px;
+			display: flex;
+			justify-content: center;
+		}
+
+		/* 게이지 트랙(배경) 스타일 */
+		.gauge-track {
+			position: relative;
+			width: 100%;
+			height: 8px;
+			background: #f1f1f3;
+			border-radius: 5px;
+		}
+
+		/* 선택된 범위(색상으로 표시되는 부분) 스타일 */
+		.gauge-selected-range {
+			position: absolute;
+			top: 0;
+			height: 100%;
+			background: linear-gradient(to right, #06cc9d, #009de1);
+			border-radius: 10px;
+			z-index: 1;
+			transition: all 0.4s;
+		}
+
+		/* 각 구간을 나타내는 텍스트 스타일 */
+		.gauge-steps {
+			display: flex;
+			justify-content: space-between;
+			margin-top:20px;
+		}
+
+		/* 각 텍스트를 클릭 가능한 버튼으로 만들기 위한 스타일 */
+		.gague-steps-btn {
+			display: flex;
+			justify-content: center;
+			width:1px;
+			margin:0;
+			padding:0;
+			border:none;
+			background-color: transparent;
+			font-size: 16px;
+			text-align: center;
+			color:#000;
+			cursor:pointer;
+			white-space:nowrap;
+		}
+
+		.gague-steps-btn:first-child {
+			justify-content: flex-start;
+		}
+
+		.gague-steps-btn:last-child {
+			justify-content: flex-end;
+		}
+
+		/* 슬라이더 인디케이터(버튼) 스타일 */
+		.gauge-indicator {
+			position: absolute;
+			top: -4px;
+			z-index: 10;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 20px;
+			height: 20px;
+			background: #007bff;
+			border-radius: 50%;
+			cursor: grab;
+			border: none;
+			color: white;
+			font-size: 12px;
+			transition: all 0.4s;
+		}
+
+		.gauge-indicator:focus {
+			z-index: 20;
+		}
+
+		/* 끝 인디케이터(최대 값) 스타일 */
+		.gauge-indicator.end-indicator {
+			background: #28a745;
+		}
+
+		.hidden-text{padding:0 !important;margin:0 !important;overflow:hidden !important;position:absolute !important;border:0;width:1px !important;height:1px !important;clip:rect(1px,1px,1px,1px)}
+		.gauge-steps-text{padding:0 !important;margin:0 !important;overflow:hidden !important;position:absolute !important;border:0;width:1px !important;height:1px !important;clip:rect(1px,1px,1px,1px)}
+	</style>
+</head>
+
+<body>
+	<!-- 첫 번째 게이지 -->
+	<div class="hidden-text">연회비 1만원부터 5만원초과까지 선택하실 수 있습니다.</div>
+	<div class="gauge" id="gauge1" data-multi-gauge-values="0,10000,30000,50000,300000" data-multi-gauge-title="연회비">
+		<div class="gauge-track">
+			<div class="gauge-selected-range"></div>
+			<button class="gauge-indicator start-indicator" aria-label="연회비 최소금액(원)"></button>
+			<button class="gauge-indicator end-indicator" aria-label="연회비 최대금액(원)"></button>
+			<div class="gauge-steps">
+				<button type="button" class="gague-steps-btn">
+					<span class="gague-steps-value">0원</span>
+					<span class="gauge-steps-text" aria-live="polite"></span>
+				</button>
+				<button type="button" class="gague-steps-btn">
+					<span class="gague-steps-value">1만원</span>
+					<span class="gauge-steps-text" aria-live="polite"></span>
+				</button>
+				<button type="button" class="gague-steps-btn">
+					<span class="gague-steps-value">3만원</span>
+					<span class="gauge-steps-text" aria-live="polite"></span>
+				</button>
+				<button type="button" class="gague-steps-btn">
+					<span class="gague-steps-value">5만원</span>
+					<span class="gauge-steps-text" aria-live="polite"></span>
+				</button>
+				<button type="button" class="gague-steps-btn">
+					<span class="gague-steps-value">5만원초과</span>
+					<span class="gauge-steps-text" aria-live="polite"></span>
+				</button>
+			</div>
+		</div>
+		<!-- 히든 인풋 필드: 선택된 값이 업데이트됨 -->
+		<input type="hidden" class="gauge-start-value">
+		<input type="hidden" class="gauge-end-value">
+	</div>
+	<br><br><br>
+	<!-- 두 번째 게이지 -->
+	<div class="gauge" id="gauge2" data-multi-gauge-values="0,5000,10000,20000,30000" data-multi-gauge-title="적립금">
+		<div class="gauge-track">
+			<div class="gauge-selected-range"></div>
+			<button class="gauge-indicator start-indicator" aria-label="최소금액(원)"></button>
+			<button class="gauge-indicator end-indicator" aria-label="최대금액(원)"></button>
+			<div class="gauge-steps">
+				<button type="button">0원 <span class="gauge-steps-text"></button>
+				<button type="button">1만원 <span class="gauge-steps-text"></button>
+				<button type="button">3만원 <span class="gauge-steps-text"></button>
+				<button type="button">5만원 <span class="gauge-steps-text"></button>
+				<button type="button">5만원초과1 <span class="gauge-steps-text"></button>
+			</div>
+		</div>
+		<!-- 히든 인풋 필드: 선택된 값이 업데이트됨 -->
+		<input type="hidden" class="gauge-start-value">
+		<input type="hidden" class="gauge-end-value">
+	</div>
+
+
+
+	<div id="text" tabindex="0"></div>
+	<div id="text2" tabindex="0"></div>
+
+<script>
+function isAndroid() {
+	return /Android/i.test(navigator.userAgent);
+}
+
+// 멀티게이지
+function setMultiGauge(containerId) {
+	var container = document.getElementById(containerId); // 각 게이지 컨테이너를 찾음
+	var values = container.dataset.multiGaugeValues.split(',').map(Number); // data-values 속성에서 값 추출
+	var gagueTitle = container.dataset.multiGaugeTitle; // 게이지 타이틀
+
+	// 주요 요소 참조
+	var track = container.querySelector('.gauge-track');
+	var steps = Array.from(container.querySelectorAll('.gague-steps-btn')); // 각 구간의 텍스트
+	var selectedRange = container.querySelector('.gauge-selected-range'); // 선택된 범위
+	var startIndicator = container.querySelector('.start-indicator'); // 시작 인디케이터 버튼
+	var endIndicator = container.querySelector('.end-indicator'); // 끝 인디케이터 버튼
+	var gaugeStepsTexts = container.querySelectorAll('.gauge-steps-text');
+	var startValueInput = container.querySelector('.gauge-start-value'); // 시작 값 히든 인풋
+	var endValueInput = container.querySelector('.gauge-end-value'); // 끝 값 히든 인풋
+
+	// 초기 값 설정
+	var stepCount = values.length - 1; // 구간의 개수
+	// var trackWidth = container.querySelector('.gauge-track').offsetWidth; 
+	var trackWidth = track.offsetWidth; // 트랙의 너비
+	var stepWidth = trackWidth / stepCount; // 한 구간의 너비
+
+	var startValue = values[0]; // 초기 시작 값
+	var endValue = values[stepCount]; // 초기 끝 값
+	var startStep = 0; // 초기 시작 구간
+	var endStep = stepCount; // 초기 끝 구간
+
+
+	// 각 스텝에 데이터 값 추가
+	steps.forEach(function(step, index) {
+		if (values[index] !== undefined) {
+			step.dataset.value = values[index];
+		}
+	});
+
+	// 선택된 범위 업데이트
+	function updateSelectedRange() {
+		var startPos = startStep * stepWidth; // 시작 위치
+		var endPos = endStep * stepWidth; // 끝 위치
+
+		selectedRange.style.left = startPos + 'px';
+		selectedRange.style.width = endPos - startPos + 'px';
+
+		// 히든 인풋에 값 설정
+		// startValueInput.value = steps[startStep].innerText; // steps의 텍스트값 적용
+		// endValueInput.value = steps[endStep].innerText; // steps의 텍스트값 적용
+		startValueInput.value = steps[startStep].dataset.value;
+		endValueInput.value = steps[endStep].dataset.value;
+
+		// ARIA 속성 업데이트
+		updateAriaAttributes();
+	}
+
+	// ARIA 속성 설정
+	function updateAriaAttributes() {
+		setAriaAttributes(startIndicator, true);
+		setAriaAttributes(endIndicator, false);
+	}
+
+	function setAriaAttributes(indicator, isStart) {
+		indicator.setAttribute('role', 'slider');
+		indicator.setAttribute('aria-valuemin', isStart ? values[0] : values[startStep]);
+		indicator.setAttribute('aria-valuemax', isStart ? values[endStep] : values[stepCount]);
+		indicator.setAttribute('aria-valuenow', isStart ? startValue : endValue);
+
+		if (isAndroid()) {
+			indicator.setAttribute('aria-hidden', 'true');
+		}
+	}
+
+	// 인디케이터(슬라이더 버튼) 위치 업데이트
+	function updateIndicator(indicator, step, isStart) {
+		var newPosition = step * stepWidth; // 새 위치 계산
+		// 각 인디케이터의 너비 절반을 고려해 조정
+		var indicatorOffset = indicator.offsetWidth / 2;
+		if (isStart) {
+			newPosition -= indicatorOffset;
+		} else {
+			newPosition -= indicatorOffset;
+		}
+
+		indicator.style.left = newPosition + 'px'; // 위치 적용
+		var value = values[step]; // 해당 구간의 실제 값
+
+		// title에 구간 표시
+		// indicator.setAttribute('title', steps[step].innerText);
+
+		// aria-label에 구간 표시
+		// if (isStart) indicator.setAttribute('aria-label','연회비 최소 ' + steps[step].innerText);
+		// else indicator.setAttribute('aria-label','연회비 최대 ' + steps[step].innerText);
+		
+		if (isStart) startValue = value; // 시작 값 설정
+		else endValue = value; // 끝 값 설정
+	}
+
+
+	// 게이지 바 클릭 이벤트
+	function handleTrackClick(e) {
+		var trackRect = track.getBoundingClientRect();
+		var clickPosition = e.clientX - trackRect.left;
+		var clickedStep = Math.round(clickPosition / stepWidth);
+
+		if (Math.abs(clickedStep - startStep) < Math.abs(clickedStep - endStep)) {
+			startStep = Math.min(clickedStep, endStep);
+			updateIndicator(startIndicator, startStep, true);
+		} else {
+			endStep = Math.max(clickedStep, startStep);
+			updateIndicator(endIndicator, endStep, false);
+		}
+		updateSelectedRange();
+	}
+
+
+	// 드래그 이벤트 처리
+	function handleDrag(indicator, isStart) {
+		var isDragging = false;
+
+		function onMouseDown(e) {
+			isDragging = true;
+			indicator.style.cursor = 'grabbing';
+			e.preventDefault();
+		}
+
+		function onMouseMove(e) {
+			if (!isDragging) return;
+
+			var clientX = e.clientX || (e.touches && e.touches[0]?.clientX);
+			var trackRect = track.getBoundingClientRect();
+			var newStep = Math.round((clientX - trackRect.left) / stepWidth);
+
+			if (isStart) {
+				startStep = Math.max(0, Math.min(newStep, endStep));
+			} else {
+				endStep = Math.max(startStep, Math.min(newStep, stepCount));
+			}
+
+			updateIndicator(indicator, isStart ? startStep : endStep, isStart);
+			updateSelectedRange();
+		}
+
+		function onMouseUp() {
+			isDragging = false;
+			indicator.style.cursor = 'grab';
+		}
+		// 마우스 이벤트
+		indicator.addEventListener('mousedown', onMouseDown);
+		document.addEventListener('mousemove', onMouseMove);
+		document.addEventListener('mouseup', onMouseUp);
+
+		// 터치 이벤트
+		indicator.addEventListener('touchstart', onMouseDown);
+		document.addEventListener('touchmove', onMouseMove);
+		document.addEventListener('touchend', onMouseUp);
+	}
+
+	// 키보드 이벤트 처리
+	function handleKeyboard(indicator, isStart) {
+		indicator.addEventListener('keydown', function(e) {
+			if (e.key === 'ArrowRight') {
+				if (isStart) startStep = Math.min(startStep + 1, endStep);
+				else endStep = Math.min(endStep + 1, stepCount);
+			} else if (e.key === 'ArrowLeft') {
+				if (isStart) startStep = Math.max(startStep - 1, 0);
+				else endStep = Math.max(endStep - 1, startStep);
+			}
+
+			updateIndicator(indicator, isStart ? startStep : endStep, isStart);
+			updateSelectedRange(); // 범위 업데이트
+
+			// 보이스오버에서 접근성 이슈가 있는 경우 다른 요소로 포커스를 보낸 후 버튼으로 다시 보내야함.
+			/* if (/iPhone|iPod/i.test(navigator.userAgent)) {
+				document.querySelector('').focus(); // 현재 포커스를 이동
+				setTimeout(function () {
+					indicator.focus(); // 다시 포커스 설정
+				}, 1000);
+			} */
+
+			// gauge-steps-text 텍스트 제거
+			gaugeStepsTexts.forEach(function (span) {
+				span.innerHTML = ''; // 텍스트 제거
+			});
+		});
+	}
+
+	// steps버튼 span 초기화 및 업데이트 함수
+	function updateStepText(stepElement, startStep, endStep, steps, isStart) {
+		var span = stepElement.querySelector('.gauge-steps-text');
+		span.innerHTML = '';  // 기존 텍스트 초기화
+
+		var stepText = stepElement.textContent.trim();
+		var textContent = '';
+
+		// 선택된 텍스트 계산
+		if (isStart) {
+			if(startStep === endStep) {
+				textContent = gagueTitle + ' ' + stepText + ' 선택됨';
+			} else {
+				textContent = gagueTitle + ' ' + stepText + '에서 ' + steps[endStep].textContent.trim() + ' 선택됨';
+			}
+		} else {
+			if(startStep === endStep) {
+				textContent = gagueTitle + ' ' + steps[startStep].textContent.trim() + ' 선택됨';
+			} else {
+				textContent = gagueTitle + ' ' + steps[startStep].textContent.trim() + '에서 ' + stepText + ' 선택됨';
+			}
+		}
+
+		// span에 새로운 텍스트 할당
+		span.innerHTML = textContent;
+	}
+
+	// 텍스트 클릭 시 인디케이터 업데이트
+	steps.forEach(function (step, index) {
+		step.addEventListener("click", function () {
+			var clickedValue = values[index];
+			var distanceToStart = Math.abs(clickedValue - startValue);
+			var distanceToEnd = Math.abs(clickedValue - endValue);
+
+			// 부모 요소 찾기
+			var parent = this.parentNode;
+			var siblings = Array.from(parent.children);
+			var otherSiblings = siblings.filter(function(sibling) {
+				return sibling !== this;
+			});
+
+			// 모든 형제 요소에서 span 텍스트 초기화
+			otherSiblings.forEach(function (otherSibling) {
+				otherSibling.querySelector('.gauge-steps-text').textContent = '';
+			});
+
+			// 시작 또는 끝 인디케이터를 이동시키는 함수
+			function moveIndicator(isStart, stepIndex, value) {
+				if (isStart) {
+					startStep = stepIndex;
+					startValue = value;
+					updateIndicator(startIndicator, startStep, true);
+				} else {
+					endStep = stepIndex;
+					endValue = value;
+					updateIndicator(endIndicator, endStep, false);
+				}
+			}
+
+			if (index === startStep) {
+				moveIndicator(false, index, clickedValue); // 끝 인디케이터 이동
+				updateStepText(this, startStep, endStep, steps, false);
+			} else if (index === endStep) {
+				moveIndicator(true, index, clickedValue); // 시작 인디케이터 이동
+				updateStepText(this, startStep, endStep, steps, true);
+			} else {
+				// 더 가까운 인디케이터를 이동
+				if (distanceToStart < distanceToEnd || (distanceToStart === distanceToEnd)) {
+					if (index < endStep) {
+						moveIndicator(true, index, clickedValue); // 시작 인디케이터 이동
+						updateStepText(this, startStep, endStep, steps, true);
+					} else {
+						moveIndicator(false, index, clickedValue); // 끝 인디케이터 이동
+						updateStepText(this, startStep, endStep, steps, false);
+					}
+				} else {
+					moveIndicator(false, index, clickedValue); // 끝 인디케이터 이동
+					updateStepText(this, startStep, endStep, steps, false);
+				}
+			}
+
+			// 선택된 범위 및 히든 값 업데이트
+			updateSelectedRange();
+		});
+	});
+
+
+	// 드래그 및 키보드 이벤트 설정
+	handleDrag(startIndicator, true);
+	handleDrag(endIndicator, false);
+	handleKeyboard(startIndicator, true);
+	handleKeyboard(endIndicator, false);
+
+	// 선택된 범위 및 인디케이터 위치 업데이트 (리사이즈 포함)
+	function updateAllPositions() {
+		// 트랙의 새로운 너비 계산
+		trackWidth = track.offsetWidth;
+		stepWidth = trackWidth / stepCount;
+
+		// 시작/끝 인디케이터 및 선택된 범위 업데이트
+		updateIndicator(startIndicator, startStep, true);
+		updateIndicator(endIndicator, endStep, false);
+		updateSelectedRange();
+	}
+
+	// 리사이즈 이벤트 핸들러 추가
+	window.addEventListener('resize', updateAllPositions);
+
+	// 초기화
+	updateIndicator(startIndicator, startStep, true);
+	updateIndicator(endIndicator, endStep, false);
+	updateSelectedRange(); // 범위 초기화
+
+}
+
+setMultiGauge('gauge1');
+setMultiGauge('gauge2');
+</script>
+</body>
+
+</html>
