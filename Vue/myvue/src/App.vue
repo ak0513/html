@@ -1,4 +1,10 @@
 <template>
+	<!-- 클래스와 스타일 바인딩 -->
+	<classStyle></classStyle>
+	<!--// 클래스와 스타일 바인딩 -->
+
+	<hr>
+	
 	<!-- 템플릿 문법 -->
 	<templateSyntax></templateSyntax>
 	<!--// 템플릿 문법 -->
@@ -10,6 +16,8 @@
 	<!-- 계산된 속성 -->
 	<computedProperties></computedProperties>
 	<!--// 계산된 속성 -->
+
+	
 </template>
 
 <script setup>
@@ -18,6 +26,7 @@ import { createApp, ref} from 'vue';
 import templateSyntax from './components/template-syntax.vue'
 import reactivityFundamentals from './components/reactivity-fundamentals.vue'
 import computedProperties from './components/computed-properties.vue'
+import classStyle from './components/class-style.vue'
 
 const app = createApp({
   setup() {

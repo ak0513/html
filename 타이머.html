@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+// 변수 설정
+const intervalHours = 3; // 3시간 간격
+const workPeriodMinutes = 30; // 30분 동작
+const prepTimeMinutes = 10; // 준비 시간 10분
+
+// 1주일의 총 시간 (분 단위)
+// const totalWeekMinutes = 1 * 24 * 60;
+const totalWeekMinutes = 7* 24 * 60;
+
+// 3시간 간격으로 몇 번 동작하는지 계산
+const intervalMinutes = intervalHours * 60;
+const cyclesPerWeek = Math.floor(totalWeekMinutes / intervalMinutes);
+
+// 실제 동작 시간은 workPeriodMinutes - prepTimeMinutes
+const actualWorkMinutesPerCycle = workPeriodMinutes - prepTimeMinutes;
+
+// 일주일 동안의 실제 동작 시간
+const totalActualWorkMinutes = cyclesPerWeek * actualWorkMinutesPerCycle;
+console.log('totalActualWorkMinutes,', totalActualWorkMinutes)
+
+// 시간과 분으로 변환
+const hours = Math.floor(totalActualWorkMinutes / 60);
+const minutes = totalActualWorkMinutes % 60;
+
+console.log(`일주일 동안 실제로 동작하는 시간은 ${totalActualWorkMinutes}분입니다.`);
+console.log(`시간으로는 ${hours}시간 ${minutes}분입니다.`);
+
+
+    </script>
+</body>
+</html>

@@ -36,11 +36,11 @@ var ui = {
 		ua: navigator.userAgent.toLowerCase(),
 
 		// 초기화 메서드
-		init: function(userAgentString) {
+		/* init: function(userAgentString) {
 			if (userAgentString) {
 				this.ua = userAgentString.toLowerCase();
 			}
-		},
+		}, */
 
 		// 공통 메서드
 		matches: function(pattern) {
@@ -60,11 +60,12 @@ var ui = {
 		msie: function() { return this.matches(/trident/i); },
 		firefox: function() { return this.matches(/firefox/i); },
 		safari: function() { return this.matches(/safari/i) && !this.chrome() && !this.edge(); },
+		Macintosh: function() { return this.matches(/Macintosh/i); },
 
 		// 운영체제 및 디바이스 정보 반환
-		any: function() {
+		/* any: function() {
 			return this.Android() || this.BlackBerry() || this.iOS() || this.Windows();
-		}
+		} */
 	},
 
 	// 모바일 여부 체크
@@ -89,6 +90,7 @@ var ui = {
 		if (this.userAgent.Android()) return 'os_android';
 		if (this.userAgent.BlackBerry()) return 'os_blackBerry';
 		if (this.userAgent.Windows()) return 'os_windows';
+		if (this.userAgent.Macintosh()) return 'os_mac';
 		return 'other-os';
 	},
 
@@ -230,7 +232,6 @@ var ui = {
 		)
 		return siblings
 	},
-
 
 	// 이전 요소 찾기
 	prev : function(ele, selector) {
@@ -451,9 +452,9 @@ var ui = {
 
 	// 팝업
 	popup : function() {
-		var popWrap = document.querySelectorAll('.modal')
-		var btnPopOpen = document.querySelectorAll('[data-modal-open');
-		var btnPopClose = document.querySelectorAll('[data-modal-close');
+		var popWrap = document.querySelectorAll('.modal');
+		var btnPopOpen = document.querySelectorAll('[data-modal-open]');
+		var btnPopClose = document.querySelectorAll('[data-modal-close]');
 
 
 		popWrap.forEach(function(item) {
@@ -463,32 +464,32 @@ var ui = {
 			document.querySelector('#' + item.getAttribute('aria-labelledby'));
 			item.addEventListener('keydown', function(e) {
 				if(e.keyCode === 27) {
-					popClose(item);
+					// popClose(item);
 				}
 			});
 		})
-	
-		btnPopOpen.forEach(function(item, i) {
+
+		btnPopOpen.forEach(function(item, index) {
 			item.setAttribute('aria-haspopup', 'dialog');
-			btnPopOpens(i);
+			btnPopOpens(index);
 		})
 		
-		btnPopClose.forEach(function(item, i) {
-			btnPopCloses(item, i); 
+		btnPopClose.forEach(function(item, index) {
+			btnPopCloses(item, index); 
 		})
 
-		function btnPopOpens(i) {
-			btnPopOpen[i].addEventListener('click', popOpen);
+		function btnPopOpens(index) {
+			btnPopOpen[index].addEventListener('click', popOpen);
 		}
 
-		function btnPopCloses(ele, i) {
-			btnPopClose[i].addEventListener('click', function() {
+		function btnPopCloses(ele, index) {
+			btnPopClose[index].addEventListener('click', function() {
 				popClose(ele);
 			});
 		}
 
-		function popOpen(e) {
-			ele = e.target;
+		function popOpen(event) {
+			ele = event.target;
 			var controls = ele.dataset.modalOpen;
 			var target = document.querySelector(controls);
 			setTimeout(function() {target.focus()},1);
@@ -497,20 +498,29 @@ var ui = {
 			target.setAttribute('aria-modal', 'true');
 			// 포커스 회귀하기 위해 클래스 추가
 			ele.classList.add(controls.slice(1));
+			ui.accessEnable(target, 'modal');
 			// 접근성 소스
-			accessDisable(prevAll(target), 'modal');
+			ui.accessDisable(ui.siblings(target), 'modal');
 		}
 
 		function popClose(ele) {
 			var target = ele.closest('.modal')
 			var openedBtn = document.querySelector('[data-modal-open].'+ target.getAttribute('id'));
+			var openedPopWrap = document.querySelectorAll('.modal.active');
 			target.classList.remove('active')
 			setTimeout(function() {target.classList.remove('visible')},100);
 			// 포커스 회귀
 			openedBtn.focus();
 			openedBtn.classList.remove(target.getAttribute('id'));
+
+			console.log(openedPopWrap.length)
+
 			// 접근성 소스
-			accessEnable(prevAll(target), 'modal');
+			if(openedPopWrap.length > 1) {
+				ui.accessEnable(target, 'modal');
+			} else {
+				ui.accessEnable(ui.siblings(target), 'modal');
+			}
 		}
 	},
 
@@ -541,6 +551,178 @@ var ui = {
 		});
 	}
 };
+
+// 이전 요소 전체 찾기
+function prevAll(ele, selector) {
+	var prevAllElements = [];
+	var currentEle = ele.previousElementSibling;
+	while (currentEle) {
+		if (!selector || currentEle.matches(selector)) {
+			prevAllElements.push(currentEle);
+		}
+		currentEle = currentEle.previousElementSibling;
+	}
+	return prevAllElements;
+}
+
+
+// 다음 요소 전체 찾기
+function nextAll(ele, selector) {
+	var nextAllEle = [];
+	var currentEle = ele.nextElementSibling;
+	while (currentEle) {
+		if (!selector || currentEle.matches(selector)) {
+			nextAllEle.push(currentEle);
+		}
+		currentEle = currentEle.nextElementSibling;
+	}
+	return nextAllEle;
+}
+
+// 형제요소 찾기
+function siblings(ele) {
+	if(typeof(ele) === 'string') {
+		ele = document.querySelector(ele)
+	}
+	var siblings = [...ele.parentNode.children].filter((child) =>
+		child !== ele
+	)
+	return siblings
+}
+
+// 포커스 비활성화(접근성)
+function accessDisable(eleDisable, module) {
+	if(eleDisable.length > 0) {
+		eleDisable = Array.from(eleDisable);
+		eleDisable.forEach(function(item) {
+			accessDisableFn(item)
+		})
+	} else {
+		accessDisableFn(eleDisable)
+	}
+
+	function accessDisableFn(ele) {
+		var itemFocusTags = ele.querySelectorAll('input:not([tabindex]), button:not([tabindex]), a:not([tabindex]), select:not([tabindex]), textarea:not([tabindex])');
+		var itemTabindex = ele.querySelectorAll('[tabindex="0"]');
+		var itemTabindexM = ele.querySelectorAll('[tabindex="-1"]');
+		if(!ele.hasAttribute('aria-hidden')) {
+			ele.setAttribute('aria-hidden','true');
+			ele.classList.add('is-a11y-' + module + '-hidden');
+		} else {
+			ele.classList.add('is-a11y-' + module + '-fixed');
+		}
+		
+		itemFocusTags.forEach(function(item) {
+			item.setAttribute('tabindex', -1);
+			item.classList.add('is-a11y-' + module + '-tags');
+		})
+		itemTabindex.forEach(function(item) {
+			item.setAttribute('tabindex', -1);
+			item.classList.add('is-a11y-' + module + '-tabindex');
+		})
+		itemTabindexM.forEach(function(item) {
+			item.classList.add('is-a11y-' + module + '-fixed');
+		})
+	}
+}
+
+// 포커스 비활성화(접근성)
+function accessEnable(eleEnable, module) {
+	if(eleEnable.length > 0) {
+		eleEnable = Array.from(eleEnable);
+		eleEnable.forEach(function(item) {
+			accessEnableFn(item)
+		})
+	} else {
+		accessEnableFn(eleEnable)
+	}
+
+	function accessEnableFn(ele) {
+		if(ele.classList.contains('is-a11y-' + module + '-hidden')) {
+			ele.removeAttribute('aria-hidden');
+			ele.classList.remove('is-a11y-' + module + '-hidden');
+		} else {
+			ele.classList.remove('is-a11y-' + module + '-fixed');
+		}
+
+		var itemFocusTags = ele.querySelectorAll('.is-a11y-' + module + '-tags');
+		var itemTabindex = ele.querySelectorAll('.is-a11y-' + module + '-tabindex');
+		var itemTabindexM = ele.querySelectorAll('.is-a11y-' + module + '-fixed');
+
+		itemFocusTags.forEach(function(item) {
+			item.removeAttribute('tabindex');
+			item.classList.remove('is-a11y-' + module + '-tags');
+		})
+		itemTabindex.forEach(function(item) {
+			item.setAttribute('tabindex', 0);
+			item.classList.remove('is-a11y-' + module + '-tabindex');
+		})
+		itemTabindexM.forEach(function(item) {
+			item.classList.remove('is-a11y-' + module + '-fixed');
+		})
+	};
+}
+
+// 팝업 열기
+function openModal(target, btn) {
+	var modal = document.querySelector(target);
+	var openedModal = document.querySelectorAll('.modal.active');
+
+	setTimeout(function() {modal.focus()},1);
+	modal.classList.add('visible');
+	setTimeout(function() {modal.classList.add('active')},100);
+	modal.setAttribute('aria-modal', 'true');
+
+	// 팝업이 여러개인 경우 z-index 추가하기
+	if(openedModal.length > 0) {
+		modal.style.zIndex = 1000 + openedModal.length;
+	}
+
+	// 포커스 회귀하기 위해 클래스 추가
+	btn.setAttribute('data-modal', target);
+
+	// modal-body에 스크롤이 있는 경우 tabindex 추가
+	var modalBody = modal.querySelector('.modal-body');
+	var contentHeight = modalBody.scrollHeight; // 콘텐츠 전체 높이
+	var visibleHeight = modalBody.clientHeight; // 현재 보이는 높이
+	if (contentHeight > visibleHeight) {
+		modalBody.setAttribute('tabindex', '0');
+	} else {
+		modalBody.removeAttribute('tabindex'); // 필요 시 tabindex 제거
+	}
+
+	// 접근성 소스
+	if(!btn.closest('.modal')) {
+		accessDisable(prevAll(modal), 'modal');
+	} else {
+		accessDisable(btn.closest('.modal'), 'modal');
+	}
+	
+}
+
+// 팝업 닫기
+function closeModal(target) {
+	var modal = document.querySelector(target);
+	var openedBtn = document.querySelector('[data-modal="'+ target + '"]');
+	var openedModal = document.querySelectorAll('.modal.active');
+	modal.classList.remove('active')
+	setTimeout(function() {modal.classList.remove('visible')},100);
+
+
+
+	// 접근성 소스
+	if(openedModal.length > 1) {
+		accessEnable(openedBtn.closest('.modal'), 'modal');
+	} else {
+		accessEnable(prevAll(modal), 'modal');
+	}
+
+	// 포커스 회귀
+	openedBtn.focus();
+	openedBtn.removeAttribute('data-modal');
+}
+
+
 
 
 /***** 개인정보 마스킹 *****/
@@ -588,3 +770,23 @@ function maskAccountNumber(accountNumber) {
 	const maskedNumber = accountNumber.slice(0, 3) + '*'.repeat(accountNumber.length - 6) + accountNumber.slice(-3);
 	return maskedNumber;
 }
+
+document.addEventListener('keyup', function(event) {
+	if(event.keyCode === 27) {
+		// 모달 ESC키로 닫기
+		var modalVisible = document.querySelectorAll('.modal.active');
+		var modalVisible_max = 0;
+		var modalVisible_maxIndex = null;
+		modalVisible.forEach(function(item, index) {
+			var z = window.getComputedStyle(item).zIndex;
+			if(z > modalVisible_max){
+				modalVisible_max = z;
+				modalVisible_maxIndex = index;
+			}
+		})
+		if(modalVisible.length > 0){
+			var modalVisibleClose = modalVisible[modalVisible_maxIndex].getAttribute('id');
+			closeModal('#' + modalVisibleClose);
+		}
+	}
+})
