@@ -381,7 +381,7 @@ p.bullet-dot::before,
 	border-radius:0.8rem;
 }
 
-.modal-header {
+.modal-top {
 	padding:1.4rem;
 	border-bottom:1px solid var(--border-color);
 }
@@ -399,7 +399,7 @@ p.bullet-dot::before,
 	padding:1.4rem;
 }
 
-.modal-footer {
+.modal-bottom {
 	padding:1.4rem;
 	border-top:1px solid var(--border-color);
 }

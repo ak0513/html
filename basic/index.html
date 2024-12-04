@@ -1,4 +1,4 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 	<meta charset="UTF-8">
@@ -751,9 +751,9 @@
 	<!-- 팝업 -->
 	<div id="modal1" class="modal" aria-labelledby="modal-title">
 		<div class="modal-inner">
-			<div class="modal-header">
+			<div class="modal-top">
 				<h2 id="modal-title">팝업1</h2>
-				<button class="btn-modal-close" aria-label="팝업 닫기"></button>
+				<button class="btn-modal-close" onClick="closeModal('#modal1')"></button>
 			</div>
 			<div class="modal-body">
 				팝업 내용1
@@ -762,7 +762,7 @@
 					<button type="button" class="btn primary" title="팝업 열기" onClick="openModal('#modal2', this)">팝업 열기2</button>
 				</div>
 			</div>
-			<div class="modal-footer">
+			<div class="modal-bottom">
 				<div class="btn-wrap j-c-end">
 					<button type="button" class="btn primary small" onClick="closeModal('#modal1')">팝업 닫기</button>
 				</div>
@@ -770,19 +770,19 @@
 		</div>
 	</div>
 	<style>
-		.modal-body {max-height:200px;overflow: auto;}
+		#modal1 .modal-body {max-height:200px;overflow: auto;}
 	</style>
 
-	<div id="modal3" class="modal" aria-labelledby="modal-title">
+	<div id="modal3" class="modal alert" aria-labelledby="modal-3">
 		<div class="modal-inner">
-			<div class="modal-header">
-				<h2 id="modal-title">팝업3</h2>
-				<button class="btn-modal-close" aria-label="팝업 닫기"></button>
+			<div class="modal-top">
+				<h2 id="modal-title3">팝업3</h2>
+				<button class="btn-modal-close" onClick="closeModal('#modal3')"></button>
 			</div>
 			<div class="modal-body">
 				팝업 내용3
 			</div>
-			<div class="modal-footer">
+			<div class="modal-bottom">
 				<div class="btn-wrap j-c-end">
 					<button type="button" class="btn primary small" onClick="closeModal('#modal3')">팝업 닫기2</button>
 				</div>
@@ -790,11 +790,11 @@
 		</div>
 	</div>
 
-	<div id="modal2" class="modal" aria-labelledby="modal-title">
+	<div id="modal2" class="modal" aria-labelledby="modal-title2">
 		<div class="modal-inner">
-			<div class="modal-header">
-				<h2 id="modal-title">팝업2</h2>
-				<button class="btn-modal-close" aria-label="팝업 닫기"></button>
+			<div class="modal-top">
+				<h2 id="modal-title2">팝업2</h2>
+				<button class="btn-modal-close" onClick="closeModal('#modal2')"></button>
 			</div>
 			<div class="modal-body">
 				팝업 내용2
@@ -802,16 +802,38 @@
 					<button type="button" class="btn primary" title="팝업 열기" onClick="openModal('#modal3', this)">팝업 열기3</button>
 				</div>
 			</div>
-			<div class="modal-footer">
+			<div class="modal-bottom">
 				<div class="btn-wrap j-c-end">
 					<button type="button" class="btn primary small" onClick="closeModal('#modal2')">팝업 닫기2</button>
 				</div>
 			</div>
 		</div>
 	</div>
-
-
 	<!-- //팝업 -->
+
+
+	<div data-scrolldown="10" >1111</div>
+
+	<label><input type="checkbox" id="select-all"> 전체 선택</label><br>
+
+<label><input type="checkbox" class="checkbox"> 항목 1</label><br>
+<label><input type="checkbox" class="checkbox"> 항목 2</label><br>
+<label><input type="checkbox" class="checkbox"> 항목 3</label><br>
+<label><input type="checkbox" class="checkbox"> 항목 4</label><br>
+
+
+	<div style="height:1000px"></div>
+
+
+	<div>
+		<div>
+			<div>
+				<div>...</div>
+				<div>...</div>
+				<div>...</div>
+			</div>
+		</div>
+	</div>
 
 </body>
 </html>
