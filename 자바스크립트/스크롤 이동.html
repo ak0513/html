@@ -39,10 +39,10 @@
 			<button type="button" onclick="smoothScrollTo2('section2', 100, 'top', 2000, function() {console.log('Scrolled to bottom with offset');})">Scroll to Section 2</button>
 		</div>
 		<div style="margin-top:8px;">
-			<button type="button" data-duration="500" onclick="smoothScrollTo('section2')">Scroll to Section 2</button>
-			<button type="button" data-offset="100" onclick="smoothScrollTo('section2')">Scroll to Section 2</button>
-			<button type="button" data-position="bottom" onclick="smoothScrollTo('section2')">Scroll to Section 2</button>
-			<button type="button" data-position="bottom" data-duration="2000" onclick="smoothScrollTo('section2', function() {console.log('Scrolled to bottom with offset');})">Scroll to Section 2</button>
+			<button type="button" data-st-duration="500" onclick="smoothScrollTo('section2')">Scroll to Section 2</button>
+			<button type="button" data-st-offset="100" onclick="smoothScrollTo('section2')">Scroll to Section 2</button>
+			<button type="button" data-st-position="bottom" onclick="smoothScrollTo('section2')">Scroll to Section 2</button>
+			<button type="button" data-st-position="bottom" data-st-duration="2000" onclick="smoothScrollTo('section2', function() {console.log('Scrolled to bottom with offset');})">Scroll to Section 2</button>
 		</div>
 	</section>
 	<section id="section2">
@@ -63,12 +63,10 @@ function smoothScrollTo(targetId, callback) {
 		console.error('ID가 ' + targetId + '인 요소를 찾을 수 없습니다.');
 		return;
 	}
-	// data- 속성에서 기본값 읽어오기
-	var offset = event.target.hasAttribute('data-offset') ? parseInt(event.target.dataset.offset) : 0;
-	var position = event.target.hasAttribute('data-position') ? event.target.dataset.position : 'top';
-	var duration = event.target.hasAttribute('data-duration') ? parseInt(event.target.dataset.duration) : 1000;
-
-
+	// data-st- 속성에서 기본값 읽어오기
+	var offset = event.target.hasAttribute('data-st-offset') ? parseInt(event.target.dataset.stOffset) : 0;
+	var position = event.target.hasAttribute('data-st-position') ? event.target.dataset.stPosition : 'top';
+	var duration = event.target.hasAttribute('data-st-duration') ? parseInt(event.target.dataset.stDuration) : 1000;
 
 	// 시작 스크롤 위치
 	var start = window.pageYOffset;
@@ -86,26 +84,25 @@ function smoothScrollTo(targetId, callback) {
 
 	isScrolling = true; // 실행 상태로 플래그 설정
 
-	var startTime = performance.now();
+	var startTime = performance.now(); // 애니메이션 시작 시간 기록
 
 	function scrollStep(timestamp) {
-		var elapsedTime = timestamp - startTime;
-		var progress = Math.min(elapsedTime / duration, 1);
-		var easeInOutQuad = (progress < 0.5)
-		? 2 * progress * progress
-		: 1 - Math.pow(-2 * progress + 2, 2) / 2;
+		var elapsedTime = timestamp - startTime; // 경과 시간
+		var progress = Math.min(elapsedTime / duration, 1); // 정속 진행 (Linear)
+		var easeInOutQuad = (progress < 0.5) ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2; // 변속 진행
 
 		window.scrollTo(0, start + targetOffset * easeInOutQuad);
+		// window.scrollTo(0, start + targetOffset * progress); // 정속 진행으로 하는 경우
 
 		if (elapsedTime < duration) {
-		requestAnimationFrame(scrollStep);
+			requestAnimationFrame(scrollStep);
 		} else {
-		isScrolling = false; // 애니메이션 완료 후 플래그 초기화
-		
-		// 콜백 함수가 정의되어 있으면 호출
-		if (typeof callback === 'function') {
-			callback();
-		}
+			isScrolling = false; // 애니메이션 완료 후 플래그 초기화
+			
+			// 콜백 함수가 정의되어 있으면 호출
+			if (typeof callback === 'function') {
+				callback();
+			}
 		}
 	}
 
@@ -120,7 +117,7 @@ function smoothScrollTo2(targetId, offset, position, duration, callback) {
 	if (typeof offset === 'undefined') { offset = 0; }
 	if (typeof position === 'undefined') { position = 'top'; }
 
-	const targetElement = document.getElementById(targetId);
+	var targetElement = document.getElementById(targetId);
 	if (!targetElement) {
 		console.error('ID가 ' + targetId + '인 요소를 찾을 수 없습니다.');
 		return;
