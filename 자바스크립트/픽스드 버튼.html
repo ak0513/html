@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>버튼 고정 예제</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			height: 2000px;
+			/* 페이지 길이를 늘려 스크롤을 확인할 수 있도록 설정 */
+			margin: 0;
+		}
+
+		.section {
+			height: 200px;
+			padding: 20px;
+			background-color: rebeccapurple;
+			color: #fff;
+		}
+
+		.button {
+			padding: 10px 20px;
+			background-color: #4CAF50;
+			color: white;
+			font-size: 16px;
+			border: none;
+		}
+
+		.section.active {
+			position: fixed;
+			bottom: 600px;
+			left: 0;
+			right: 0;
+			/* margin-bottom:20px; */
+		}
+
+		.section.se2.active {
+			bottom: 300px;
+		}
+
+		.section.se3.active {
+			bottom: 0;
+			background-color: bisque;
+		}
+
+		.aa {
+			height: 2000px;
+		}
+
+		@media only screen and (max-width: 768px) {
+			.aa {
+				height: 3000px;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div class="aa"></div>
+	<div class="section se1" data-scrollActive-selector="scrollActive1" data-scrollActive-offset="600">Scroll active1</div>
+	<div style="height:2000px"></div>
+	<div class="section se2" data-scrollActive-selector="scrollActive2" data-scrollActive-offset="300">Scroll active2</div>
+	<div style="height:2000px"></div>
+	<div class="section se3" data-scrollActive-selector="scrollActive3">Scroll active3</div>
+	<div style="height:2000px"></div>
+
+	<script>
+		// 타겟 , active 콜백함수, active 제거 콜백함수
+		function scrollActive(selector, onActive, onInactive) {
+			// 기본값 설정
+			onActive = onActive || function () { };
+			onInactive = onInactive || function () { };
+
+			// 타겟 요소를 선택자 문자열로부터 선택
+			var target = document.querySelector('[data-scrollActive-selector="' + selector + '"]');
+
+			// 선택된 요소가 없으면 종료
+			if (!target) {
+				console.error('console.error: ' + selector + '인 요소를 찾을 수 없습니다.');
+				return;
+			}
+
+			// offsetTop을 계산하는 함수
+			function updateOffsetTop() {
+				// active 클래스가 적용되었는 경우 제거 후 offsetTop 계산
+				if (target.classList.contains('active')) {
+					target.classList.remove('active');
+					var offsetTop = target.offsetTop;
+					target.classList.add('active'); // 다시 복구
+				} else {
+					var offsetTop = target.offsetTop;
+				}
+				return offsetTop;
+			}
+
+			// active 클래스를 설정
+			function setClass() {
+				var targetOffsetTop = updateOffsetTop();
+				var targetHeight = target.clientHeight;
+				var scrollPosition = window.scrollY || document.documentElement.scrollTop;
+				var windowHeight = window.innerHeight;
+				var targetOffset = target.hasAttribute('data-scrollActive-offset') ? parseInt(target.dataset.scrollactiveOffset) : 0;
+
+				var isActive = target.classList.contains('active');
+
+				if (windowHeight + scrollPosition - targetHeight - targetOffset < targetOffsetTop) {
+					if (!isActive) {
+						target.classList.add('active');
+						onActive(target); // active가 추가되었을 때 콜백 호출
+					}
+				} else {
+					if (isActive) {
+						target.classList.remove('active');
+						onInactive(target); // active가 제거되었을 때 콜백 호출
+					}
+				}
+			}
+
+			// 이벤트 바인딩
+			window.addEventListener('scroll', setClass);
+			window.addEventListener('resize', setClass);
+
+			// 초기 실행
+			setClass();
+		}
+
+
+	</script>
+
+	<script>
+		scrollActive(
+			'scrollActive1',
+			function onActive(target) {
+				console.log('Active 클래스 추가됨:', target);
+			},
+			function onInactive(target) {
+				console.log('Active 클래스 제거됨:', target);
+			}
+		);
+		scrollActive(
+			'scrollActive2',
+			function onActive(target) {
+				console.log('Active 클래스 추가됨:', target);
+			}
+		);
+		scrollActive('scrollActive3');
+		scrollActive('scrollActive4');
+	</script>
+
+</body>
+
+</html>

@@ -1,18 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ko">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Scroll to Element</title>
+	<title>smoothScrollTo</title>
 	<style>
 		body {
 			margin: 0;
 			padding: 0;
-		}
-
-		#section1 {
-			text-align: center;
 		}
 
 		#section2 {
@@ -25,6 +20,7 @@
 			bottom: 100px;
 			left: 0;
 			right: 0;
+			text-align: center;
 		}
 	</style>
 </head>
@@ -39,10 +35,10 @@
 			<button type="button" onclick="smoothScrollTo2('section2', 100, 'top', 2000, function() {console.log('Scrolled to bottom with offset');})">Scroll to Section 2</button>
 		</div>
 		<div style="margin-top:8px;">
-			<button type="button" data-st-duration="500" onclick="smoothScrollTo('section2')">Scroll to Section 2</button>
-			<button type="button" data-st-offset="100" onclick="smoothScrollTo('section2')">Scroll to Section 2</button>
-			<button type="button" data-st-position="bottom" onclick="smoothScrollTo('section2')">Scroll to Section 2</button>
-			<button type="button" data-st-position="bottom" data-st-duration="2000" onclick="smoothScrollTo('section2', function() {console.log('Scrolled to bottom with offset');})">Scroll to Section 2</button>
+			<button type="button" data-scrollTo-duration="500" onclick="smoothScrollTo('section2')">Scroll to Section 2</button>
+			<button type="button" data-scrollTo-offset="100" onclick="smoothScrollTo('section2')">Scroll to Section 2</button>
+			<button type="button" data-scrollTo-position="bottom" onclick="smoothScrollTo('section2')">Scroll to Section 2</button>
+			<button type="button" data-scrollTo-position="bottom" data-scrollTo-duration="2000" onclick="smoothScrollTo('section2', function() {console.log('Scrolled to bottom with offset');})">Scroll to Section 2</button>
 		</div>
 	</section>
 	<section id="section2">
@@ -54,23 +50,23 @@
 var isScrolling = false; // 재호출 방지 플래그
 
 // 공통 스크롤 함수
-function smoothScrollTo(targetId, callback) {
+function smoothScrollTo(selector, callback) {
 	if (isScrolling) return; // 실행 중일 때는 무시
 
 	// 기본값 설정
-	var targetElement = document.getElementById(targetId);
-	if (!targetElement) {
-		console.error('ID가 ' + targetId + '인 요소를 찾을 수 없습니다.');
+	var target = document.getElementById(selector);
+	if (!target) {
+		console.error('ID가 ' + selector + '인 요소를 찾을 수 없습니다.');
 		return;
 	}
 	// data-st- 속성에서 기본값 읽어오기
-	var offset = event.target.hasAttribute('data-st-offset') ? parseInt(event.target.dataset.stOffset) : 0;
-	var position = event.target.hasAttribute('data-st-position') ? event.target.dataset.stPosition : 'top';
-	var duration = event.target.hasAttribute('data-st-duration') ? parseInt(event.target.dataset.stDuration) : 1000;
+	var offset = event.target.hasAttribute('data-scrollTo-offset') ? parseInt(event.target.dataset.scrolltoOffset) : 0;
+	var position = event.target.hasAttribute('data-scrollTo-position') ? event.target.dataset.scrolltoPosition : 'top';
+	var duration = event.target.hasAttribute('data-scrollTo-duration') ? parseInt(event.target.dataset.scrolltoDuration) : 1000;
 
 	// 시작 스크롤 위치
 	var start = window.pageYOffset;
-	var targetRect = targetElement.getBoundingClientRect();
+	var targetRect = target.getBoundingClientRect();
 	var targetOffset = (position === 'top') ? targetRect.top : targetRect.bottom - window.innerHeight;
 	targetOffset -= offset;
 
@@ -110,21 +106,21 @@ function smoothScrollTo(targetId, callback) {
 }
 	
 // 공통 스크롤 함수2
-function smoothScrollTo2(targetId, offset, position, duration, callback) {
+function smoothScrollTo2(selector, offset, position, duration, callback) {
 	if (isScrolling) return; // 실행 중일 때는 무시
 	// 기본값 설정 (IE 호환)
 	if (typeof duration === 'undefined') { duration = 1000; }
 	if (typeof offset === 'undefined') { offset = 0; }
 	if (typeof position === 'undefined') { position = 'top'; }
 
-	var targetElement = document.getElementById(targetId);
-	if (!targetElement) {
-		console.error('ID가 ' + targetId + '인 요소를 찾을 수 없습니다.');
+	var target = document.getElementById(selector);
+	if (!target) {
+		console.error('console.error: ID가 ' + selector + '인 요소를 찾을 수 없습니다.');
 		return;
 	}
 
 	var start = window.pageYOffset;
-	var targetRect = targetElement.getBoundingClientRect();
+	var targetRect = target.getBoundingClientRect();
 
 	// 타겟 위치 계산
 	var targetOffset = (position === 'top') ? targetRect.top : targetRect.bottom - window.innerHeight;
