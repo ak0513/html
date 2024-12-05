@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아코디언</title>
+</head>
+<body>
+<style>
+	body {margin:0;padding:0;}
+    /* 아코디언 */
+* + .accordion {
+	margin-top:16px;
+}
+
+.accordion {
+	border-top:1px solid #ddd;
+	border-bottom:1px solid #666;
+}
+
+.accordion-item + .accordion-item {
+	border-top:1px solid #ddd;
+}
+
+.accordion-button {
+	position: relative;
+	display: flex;
+	align-items: flex-start;
+	flex-direction: column;
+	width: 100%;
+	padding: 24px 24px 24px 0;
+	color:var(--black);
+	font-size: 18px;
+}
+
+.accordion-button::after {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 50%;
+	right: 0;
+	width: 16px;
+	height: 16px;
+	margin-left: auto;
+	background: url('../img/caret-down-fill.svg') no-repeat center;
+	transform: translateY(-50%);
+	transition: transform 0.2s ease-in-out;
+}
+
+.accordion-button.collapsed::after {
+	background: url('../img/caret-up-fill.svg') no-repeat center;
+}
+
+.accordion-button.collapsed {
+	color:var(--gray)
+}
+
+.accordion-sub-tit {
+	display: block;
+	margin-top:4px;
+	font-size: 13px;
+	color:#333;
+}
+
+.accordion-body {
+	padding: 16px 0;
+}
+
+.accordion-body .h-tit2:first-child {
+	margin-top:0;
+}
+
+.accordion .collapse:not(.show) {
+	display: none;
+}
+
+.accordion .collapsing {
+	overflow: hidden;
+	height: 0;
+	transition: height .35s ease;
+}
+#header {
+	position: fixed;
+	top:0;
+	width:100%;
+	height:100px;
+	background-color: #333;
+}
+</style>
+<header id="header"></header>
+<div style="height:500px"></div>
+    <div id="accordion1" class="accordion" data-accordion-operation="each" data-accordion-scroll="20">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="accordionTit1">
+                <button class="accordion-button" type="button" aria-expanded="true" aria-controls="accordionBody1" role="button">
+                    아코디언 헤더1-1
+                </button>
+            </h2>
+            <div id="accordionBody1" class="accordion-collapse collapse show" aria-labelledby="accordionTit1">
+                <div class="accordion-body">
+                    아코디언 바디1-1
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="accordionTit2">
+                <button class="accordion-button collapsed" type="button" aria-expanded="false" aria-controls="accordionBody2" role="button">
+                    아코디언 헤더1-2
+                </button>
+            </h2>
+            <div id="accordionBody2" class="accordion-collapse collapse" aria-labelledby="accordionTit2">
+                <div class="accordion-body">
+                    아코디언 바디1-2<br>아코디언 바디1-2<br>아코디언 바디1-2<br>아코디언 바디1-2<br>아코디언 바디1-2<br>아코디언 바디1-2<br>아코디언 바디1-2<br>아코디언 바디1-2
+                </div>
+            </div>
+        </div>
+    </div>
+	<div style="height:2500px"></div>
+    <script>
+// slideDown
+function showCollapse(ele, speed) {
+	ele.classList.remove('collapse');
+	ele.classList.add('collapsing');
+	ele.style.height = ele.scrollHeight + 'px';
+	setTimeout(function() {
+		ele.classList.remove('collapsing');
+		ele.classList.add('collapse', 'show');
+		ele.removeAttribute('style', 'height');
+	}, speed)
+}
+
+// slideUp
+function hideCollapse(ele, speed) {
+	ele.style.height = ele.scrollHeight + 'px';
+	setTimeout(function() {
+		ele.removeAttribute('style', 'height');
+	})
+	ele.classList.remove('collapse', 'show');
+	ele.classList.add('collapsing');
+	setTimeout(function() {
+		ele.classList.remove('collapsing');
+		ele.classList.add('collapse');
+	}, speed)
+}
+
+// 형제요소 찾기
+function siblings(ele) {
+	if(typeof(ele) === 'string') {
+		ele = document.querySelector(ele)
+	}
+	var siblings = [...ele.parentNode.children].filter((child) =>
+		child !== ele
+	)
+	return siblings
+}
+
+
+// 아코디언
+function accordion() {
+	var accordionBtns = document.querySelectorAll('.accordion-button');
+	accordionBtns.forEach(function(accBtnsEle) {
+		accBtnsEle.addEventListener('click', function(e) {
+			accordionToggle(e.target)
+		})
+	})
+
+	function accordionToggle(target) {
+		var self = target;
+		var accordion =  self.closest('.accordion'); // 클릭 요소의 부모 .accordion
+		var accBtn = accordion.querySelectorAll('.accordion-button'); // 클릭 요소 부모의 모든 버튼
+		var accItem = self.closest('.accordion-item'); // 클릭 요소의 .accordion-item
+		var accCollapseSiblings = siblings(accItem); // 클릭 요소의 형제 .accordion-item
+		var accCollapse = accordion.querySelector('#' + self.getAttribute('aria-controls')); // 클릭 요소의 .accordion-collapse
+		// 닫혀 있는 아코디언 클릭 하는 경우
+		if(self.classList.contains('collapsed')) {
+			// 클릭 요소의 accordion-collapse show
+			showCollapse(accCollapse, 350);
+			// 개별 클릭이 아닌 경우
+			if(accordion.dataset.accordionOperation !== 'each') {
+				// 클릭 요소의 형제 accordion-collapse hide
+				accCollapseSiblings.forEach(function(accCollapseSiblingsEle) {
+					if(accCollapseSiblingsEle.querySelector('.accordion-collapse').classList.contains('show')) {
+						hideCollapse(accCollapseSiblingsEle.querySelector('.accordion-collapse'), 350);
+					}
+				});
+				// 클릭 요소의 형제 accordion-header hide
+				accBtn.forEach(function(accBtnEle) {
+					hideHeader(accBtnEle);
+				})
+			}
+			
+			// 클릭 요소의 accordion-header show
+			showHeader(self);
+		} else { // 열려 있는 아코디언 클릭하는 경우
+			// 클릭 요소의 accordion-collapse hide
+			hideCollapse(accCollapse, 350);
+			// 클릭 요소의 accordion-header hide
+			hideHeader(self);
+		}
+		// 아코디언 오픈 시 아코디언 상단으로 이동시키기
+		if(accordion.dataset.accordionScroll.length > 0 ) {
+			console.log(accordion.dataset.accordionScroll )
+			var header = document.getElementById('header');
+			var headerHeight = header ? header.offsetHeight : 0;
+			console.log('scroll')
+			setTimeout(function() {
+				window.scroll({
+					top: self.offsetTop - headerHeight - parseInt(accordion.dataset.accordionScroll),
+					left:0,
+					behavior: 'smooth'
+				})
+			},350)
+		}
+		
+		
+	}
+
+	function hideHeader(target) {
+		target.classList.add('collapsed');
+		target.setAttribute('aria-expanded', false);
+	}
+
+	function showHeader(target) {
+		target.classList.remove('collapsed');
+		target.setAttribute('aria-expanded', true);
+	}
+}
+accordion();
+    </script>
+</body>
+</html>
