@@ -85,10 +85,11 @@
 	width:100%;
 	height:100px;
 	background-color: #333;
+	z-index: 10;
 }
 </style>
 <header id="header"></header>
-<div style="height:500px"></div>
+<div style="height:300px"></div>
     <div id="accordion1" class="accordion" data-accordion-operation="each" data-accordion-scroll="20">
         <div class="accordion-item">
             <h2 class="accordion-header" id="accordionTit1">
@@ -115,7 +116,34 @@
             </div>
         </div>
     </div>
-	<div style="height:2500px"></div>
+
+	<div id="accordion2" class="accordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="accordionTit1">
+                <button class="accordion-button" type="button" aria-expanded="true" aria-controls="accordionBody1" role="button">
+                    아코디언 헤더2-1
+                </button>
+            </h2>
+            <div id="accordionBody1" class="accordion-collapse collapse show" aria-labelledby="accordionTit1">
+                <div class="accordion-body">
+                    아코디언 바디2-1
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="accordionTit2">
+                <button class="accordion-button collapsed" type="button" aria-expanded="false" aria-controls="accordionBody2" role="button">
+                    아코디언 헤더2-2
+                </button>
+            </h2>
+            <div id="accordionBody2" class="accordion-collapse collapse" aria-labelledby="accordionTit2">
+                <div class="accordion-body">
+                    아코디언 바디2-2
+                </div>
+            </div>
+        </div>
+    </div>
+	<div style="height:2700px"></div>
     <script>
 // slideDown
 function showCollapse(ele, speed) {
@@ -198,11 +226,9 @@ function accordion() {
 			hideHeader(self);
 		}
 		// 아코디언 오픈 시 아코디언 상단으로 이동시키기
-		if(accordion.dataset.accordionScroll.length > 0 ) {
-			console.log(accordion.dataset.accordionScroll )
+		if(accordion.dataset.accordionScroll && accordion.dataset.accordionScroll.length > 0 ) {
 			var header = document.getElementById('header');
 			var headerHeight = header ? header.offsetHeight : 0;
-			console.log('scroll')
 			setTimeout(function() {
 				window.scroll({
 					top: self.offsetTop - headerHeight - parseInt(accordion.dataset.accordionScroll),
