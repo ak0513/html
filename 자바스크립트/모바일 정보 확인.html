@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모바일 정보 확인</title>
+</head>
+<body>
+    <style>
+        .t-tit1 {font-weight:500;color:#000;font-size:18px;}
+    </style>
+	<div style="padding:20px;">
+        <p class="t-tit1"><b>디바이스 가로 사이즈</b></p>
+        <p id="DeviceWidth"></p>
+        <br>
+
+        <p class="t-tit1"><b>디바이스 세로 사이즈</b></p>
+        <p id="DeviceHeight"></p>
+        <br>
+
+        <p class="t-tit1"><b>body Class</b></p>
+        <p id="bodyClass"></p>
+        <br>
+
+        <p class="t-tit1"><b>navigator.userAgent</b></p>
+        <p id="navigatorUserAgent"></p>
+        <br>
+
+        <p class="t-tit1"><b>navigator.platform</b></p>
+        <p id="navigatorPlatform"></p>
+        <br>
+
+        <p class="t-tit1"><b>navigator.appName</b></p>
+        <p id="navigatorAppName"></p>
+        <br>
+
+        <p class="t-tit1"><b>navigator.appCodeName</b></p>
+        <p id="navigatorAppCodeName"></p>
+        <br>
+	</div>
+	<script>
+		setTimeout(function() {
+			document.getElementById('DeviceWidth').innerText = window.innerWidth + 'px';
+			document.getElementById('DeviceHeight').innerText = window.innerHeight + 'px';
+			document.getElementById('bodyClass').innerText = document.querySelector('body').getAttribute('class')
+			document.getElementById('navigatorUserAgent').innerText = navigator.userAgent;
+			document.getElementById('navigatorPlatform').innerText = navigator.platform;
+			document.getElementById('navigatorAppName').innerText = navigator.appName;
+			document.getElementById('navigatorAppCodeName').innerText = navigator.appCodeName;
+		},1000)
+	</script>
+</body>
+</html>
