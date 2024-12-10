@@ -93,7 +93,7 @@
     <div id="accordion1" class="accordion" data-accordion-operation="each" data-accordion-scroll="20">
         <div class="accordion-item">
             <h2 class="accordion-header" id="accordionTit1">
-                <button class="accordion-button" type="button" aria-expanded="true" aria-controls="accordionBody1" role="button">
+                <button class="accordion-button" type="button" aria-expanded="true" aria-controls="accordionBody1" role="button" onclick="accordion(this)">
                     아코디언 헤더1-1
                 </button>
             </h2>
@@ -105,7 +105,7 @@
         </div>
         <div class="accordion-item">
             <h2 class="accordion-header" id="accordionTit2">
-                <button class="accordion-button collapsed" type="button" aria-expanded="false" aria-controls="accordionBody2" role="button">
+                <button class="accordion-button collapsed" type="button" aria-expanded="false" aria-controls="accordionBody2" role="button" onclick="accordion(this)">
                     아코디언 헤더1-2
                 </button>
             </h2>
@@ -120,7 +120,7 @@
 	<div id="accordion2" class="accordion">
         <div class="accordion-item">
             <h2 class="accordion-header" id="accordionTit1">
-                <button class="accordion-button" type="button" aria-expanded="true" aria-controls="accordionBody1" role="button">
+                <button class="accordion-button" type="button" aria-expanded="true" aria-controls="accordionBody1" role="button" onclick="accordion(this)">
                     아코디언 헤더2-1
                 </button>
             </h2>
@@ -132,7 +132,7 @@
         </div>
         <div class="accordion-item">
             <h2 class="accordion-header" id="accordionTit2">
-                <button class="accordion-button collapsed" type="button" aria-expanded="false" aria-controls="accordionBody2" role="button">
+                <button class="accordion-button collapsed" type="button" aria-expanded="false" aria-controls="accordionBody2" role="button" onclick="accordion(this)">
                     아코디언 헤더2-2
                 </button>
             </h2>
@@ -144,7 +144,7 @@
         </div>
     </div>
 	<div style="height:2700px"></div>
-    <script>
+<script>
 // slideDown
 function showCollapse(ele, speed) {
 	ele.classList.remove('collapse');
@@ -184,64 +184,7 @@ function siblings(ele) {
 
 
 // 아코디언
-function accordion() {
-	var accordionBtns = document.querySelectorAll('.accordion-button');
-	accordionBtns.forEach(function(accBtnsEle) {
-		accBtnsEle.addEventListener('click', function(e) {
-			accordionToggle(e.target)
-		})
-	})
-
-	function accordionToggle(target) {
-		var self = target;
-		console.log(self)
-		var accordion =  self.closest('.accordion'); // 클릭 요소의 부모 .accordion
-		var accBtn = accordion.querySelectorAll('.accordion-button'); // 클릭 요소 부모의 모든 버튼
-		var accItem = self.closest('.accordion-item'); // 클릭 요소의 .accordion-item
-		var accCollapseSiblings = siblings(accItem); // 클릭 요소의 형제 .accordion-item
-		var accCollapse = accordion.querySelector('#' + self.getAttribute('aria-controls')); // 클릭 요소의 .accordion-collapse
-		// 닫혀 있는 아코디언 클릭 하는 경우
-		if(self.classList.contains('collapsed')) {
-			// 클릭 요소의 accordion-collapse show
-			showCollapse(accCollapse, 350);
-			// 개별 클릭이 아닌 경우
-			if(accordion.dataset.accordionOperation !== 'each') {
-				// 클릭 요소의 형제 accordion-collapse hide
-				accCollapseSiblings.forEach(function(accCollapseSiblingsEle) {
-					if(accCollapseSiblingsEle.querySelector('.accordion-collapse').classList.contains('show')) {
-						hideCollapse(accCollapseSiblingsEle.querySelector('.accordion-collapse'), 350);
-					}
-				});
-				// 클릭 요소의 형제 accordion-header hide
-				accBtn.forEach(function(accBtnEle) {
-					hideHeader(accBtnEle);
-				})
-			}
-			
-			// 클릭 요소의 accordion-header show
-			showHeader(self);
-		} else { // 열려 있는 아코디언 클릭하는 경우
-			// 클릭 요소의 accordion-collapse hide
-			hideCollapse(accCollapse, 350);
-			// 클릭 요소의 accordion-header hide
-			hideHeader(self);
-		}
-		// 아코디언 오픈 시 아코디언 상단으로 이동시키기
-		if(accordion.dataset.accordionScroll && accordion.dataset.accordionScroll.length > 0 ) {
-			var header = document.getElementById('header');
-			var headerHeight = header ? header.offsetHeight : 0;
-			setTimeout(function() {
-				window.scroll({
-					top: self.offsetTop - headerHeight - parseInt(accordion.dataset.accordionScroll),
-					left:0,
-					behavior: 'smooth'
-				})
-			},350)
-		}
-		
-		
-	}
-
+function accordion(button) {
 	function hideHeader(target) {
 		target.classList.add('collapsed');
 		target.setAttribute('aria-expanded', false);
@@ -251,8 +194,51 @@ function accordion() {
 		target.classList.remove('collapsed');
 		target.setAttribute('aria-expanded', true);
 	}
+
+	var accordion =  button.closest('.accordion'); // 클릭 요소의 부모 .accordion
+	var accBtn = accordion.querySelectorAll('.accordion-button'); // 클릭 요소 부모의 모든 버튼
+	var accItem = button.closest('.accordion-item'); // 클릭 요소의 .accordion-item
+	var accCollapseSiblings = siblings(accItem); // 클릭 요소의 형제 .accordion-item
+	var accCollapse = accordion.querySelector('#' + button.getAttribute('aria-controls')); // 클릭 요소의 .accordion-collapse
+	// 닫혀 있는 아코디언 클릭 하는 경우
+	if(button.classList.contains('collapsed')) {
+		// 클릭 요소의 accordion-collapse show
+		showCollapse(accCollapse, 350);
+		// 개별 클릭이 아닌 경우
+		if(accordion.dataset.accordionOperation !== 'each') {
+			// 클릭 요소의 형제 accordion-collapse hide
+			accCollapseSiblings.forEach(function(accCollapseSiblingsEle) {
+				if(accCollapseSiblingsEle.querySelector('.accordion-collapse').classList.contains('show')) {
+					hideCollapse(accCollapseSiblingsEle.querySelector('.accordion-collapse'), 350);
+				}
+			});
+			// 클릭 요소의 형제 accordion-header hide
+			accBtn.forEach(function(accBtnEle) {
+				hideHeader(accBtnEle);
+			})
+		}
+		
+		// 클릭 요소의 accordion-header show
+		showHeader(button);
+	} else { // 열려 있는 아코디언 클릭하는 경우
+		// 클릭 요소의 accordion-collapse hide
+		hideCollapse(accCollapse, 350);
+		// 클릭 요소의 accordion-header hide
+		hideHeader(button);
+	}
+	// 아코디언 오픈 시 아코디언 상단으로 이동시키기
+	if(accordion.dataset.accordionScroll && accordion.dataset.accordionScroll.length > 0 ) {
+		var header = document.getElementById('header');
+		var headerHeight = header ? header.offsetHeight : 0;
+		setTimeout(function() {
+			window.scroll({
+				top: button.offsetTop - headerHeight - parseInt(accordion.dataset.accordionScroll),
+				left:0,
+				behavior: 'smooth'
+			})
+		},350)
+	}
 }
-accordion();
-    </script>
+</script>
 </body>
 </html>

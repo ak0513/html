@@ -180,7 +180,7 @@ function isAndroid() {
 }
 
 // 멀티게이지
-function setMultiGauge(containerId, startIndicatorPos, endIndicatorPos) {
+function setMultiGauge(containerId) {
 	var container = document.getElementById(containerId); // 각 게이지 컨테이너를 찾음
 	var values = container.dataset.multiGaugeValues.split(',').map(Number); // data-values 속성에서 값 추출
 	var gagueTitle = container.dataset.multiGaugeTitle; // 게이지 타이틀
@@ -197,14 +197,15 @@ function setMultiGauge(containerId, startIndicatorPos, endIndicatorPos) {
 
 	// 초기 값 설정
 	var stepCount = values.length - 1; // 구간의 개수
+	// var trackWidth = container.querySelector('.gauge-track').offsetWidth; 
 	var trackWidth = track.offsetWidth; // 트랙의 너비
 	var stepWidth = trackWidth / stepCount; // 한 구간의 너비
 
-	// 초기 값 설정
-	var startValue = startIndicatorPos || values[0]; // startIndicatorPos 값이 있으면 사용, 없으면 기본값
-	var endValue = endIndicatorPos || values[stepCount]; // endIndicatorPos 값이 있으면 사용, 없으면 기본값
-	var startStep = values.indexOf(startValue); // 초기 시작 구간
-	var endStep = values.indexOf(endValue); // 초기 끝 구간
+	var startValue = values[0]; // 초기 시작 값
+	var endValue = values[stepCount]; // 초기 끝 값
+	var startStep = 0; // 초기 시작 구간
+	var endStep = stepCount; // 초기 끝 구간
+
 
 	// 각 스텝에 데이터 값 추가
 	steps.forEach(function(step, index) {
@@ -477,7 +478,7 @@ function setMultiGauge(containerId, startIndicatorPos, endIndicatorPos) {
 
 }
 
-setMultiGauge('gauge1', 10000, 30000);
+setMultiGauge('gauge1');
 setMultiGauge('gauge2');
 </script>
 </body>
