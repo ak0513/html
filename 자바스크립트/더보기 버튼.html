@@ -37,7 +37,7 @@
 	<button type="button" onclick="getChildCount('#list');addDataAction('#list')">더보기2</button>
 
 	<div id="list2">
-		<div class="item">Item 1</div>
+		<div class="item">Item 11</div>
 		<div class="item">Item 2</div>
 		<div class="item">Item 3</div>
 	</div>
@@ -76,7 +76,7 @@
 		console.log('addDataCount', addDataCount)
 
 		if (newItems.length > 0) {
-			newItems[0].setAttribute('aria-live', 'polite');
+			// newItems[0].setAttribute('aria-live', 'polite');
 			newItems[0].setAttribute('title', '추가 목록');
 			newItems[0].setAttribute('tabindex', 0);
 			newItems[0].focus(); // 첫 번째 새로 추가된 요소에 포커스
