@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>더보기</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+		}
+
+		.item {
+			padding: 5px;
+			margin: 5px 0;
+			background: #f0f0f0;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+		}
+
+		button {
+			padding: 10px 20px;
+			font-size: 16px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="list">
+		<div class="item"><a href="#">Item 1</a></div>
+		<div class="item"><a href="#">Item 2</a></div>
+		<div class="item"><a href="#">Item 3</a></div>
+		<div class="item"><a href="#">Item 4</a></div>
+		<div class="item"><a href="#">Item 5</a></div>
+	</div>
+	<button type="button" onclick="getChildCount('#list');testAddDataAction('#list', 3)">더보기1</button>
+	<button type="button" onclick="getChildCount('#list');addDataAction('#list')">더보기2</button>
+
+	<div id="list2">
+		<div class="item"><a href="#">Item 1</a></div>
+		<div class="item"><a href="#">Item 2</a></div>
+		<div class="item"><a href="#">Item 3</a></div>
+	</div>
+	<button type="button" onclick="getChildCount('#list2');testAddDataAction('#list2', 2)">더보기1</button>
+	<button type="button" onclick="getChildCount('#list2');addDataAction('#list2')">더보기2</button>
+
+	<script>
+	var addDataCount = null;
+
+	// 현재 목록의 자식요소 개수를 반환
+	function getChildCount(listId) {
+		var list = document.querySelector(listId);
+		addDataCount = list.children.length;
+		return addDataCount // 목록의 자식 요소 개수 반환
+	}
+
+	// 요소를 복사하고 마지막 자식 뒤에 추가
+	function copyAndAppend(listId, count) {
+		var list = document.querySelector(listId);
+		var items = Array.from(list.children).slice(0, count); // count 개수만큼 요소만 복사
+		let lastItem = list.lastElementChild; // 마지막 요소 가져오기
+		
+		for (var item of items) {
+			var clonedItem = item.cloneNode(true); // 요소 복제
+			lastItem.insertAdjacentElement('afterend', clonedItem); // 마지막 요소 뒤에 삽입
+			lastItem = clonedItem; // 새로 복제된 요소를 마지막 요소로 설정
+		}
+	}
+
+	// 새롭게 추가된 데이터의 첫 번째 항목에 포커스 이동
+	function addDataAction(listId) {
+		var list = document.querySelector(listId);
+		var allItems = Array.from(list.children); // 모든 자식 요소 가져오기
+		var newItems = allItems.slice(addDataCount); // 추가된 요소 추출
+
+		console.log('addDataCount', addDataCount)
+
+		if (newItems.length > 0) {
+			newItems[0].setAttribute('aria-live', 'polite');
+			newItems[0].setAttribute('title', '추가 목록');
+			newItems[0].setAttribute('tabindex', 0);
+			newItems[0].focus(); // 첫 번째 새로 추가된 요소에 포커스
+		}
+	}
+
+	// 데이터가 들어오는 가정하에 테스트용
+	function testAddDataAction(listId, count) {
+		copyAndAppend(listId, count); // 요소를 복사하고 마지막 자식 뒤에 추가
+		addDataAction(listId);        // 새롭게 추가된 데이터의 첫 번째 항목에 포커스 이동
+	}
+
+
+	</script>
+</body>
+
+</html>
