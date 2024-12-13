@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스크롤 애니메이션</title>
+    <style>
+        body {
+            min-height: 500vh;
+            margin: 0;
+            padding: 0 24px;
+            background-color: #111;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, .07) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(255, 255, 255, .07) 2px, transparent 2px),
+                linear-gradient(rgba(255, 255, 255, .06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, .06) 1px, transparent 1px);
+            background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+            background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+            overflow-x: hidden;
+        }
+        .p {
+            position: relative;
+        }
+        .scrolling-element {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100px;
+            height: 100px;
+            border: 1px solid #000;
+            background-color: #fff;
+            transition: left 0.1s ease; /* 부드러운 이동 */
+        }
+        .scrolling-element.ele1 {
+            background-color: red;
+            top:0;
+        }
+        .scrolling-element.ele2 {
+            top: 60%;
+            background-color: blue;
+        }
+        .scrolling-element.ele3 {
+            top: 70%;
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+    <div style="height:2000px;background-color: bisque;"></div>
+    <div class="p"><div class="scrolling-element ele1" data-height="1000" data-animation-threshold="100" data-animation-scale="[1, 10, 1000]"></div></div>
+    <!-- <div class="p"><div class="scrolling-element ele2" data-move-factor="5" data-scroll-limit="400"></div></div> -->
+    <!-- <div class="p"><div class="scrolling-element ele3" data-move-factor="15" data-scroll-limit="200"></div></div> -->
+
+    <script>
+        const scrollingElements = document.querySelectorAll('.scrolling-element');
+        let animationFrameId;
+
+        const updateScrollPosition = () => {
+            const scrollY = window.scrollY; // 현재 스크롤 위치
+
+            scrollingElements.forEach((element) => {
+                const rect = element.getBoundingClientRect();
+                const parentElement = element.parentElement;
+                const elementHeight = element.clientHeight;
+                const windowHeight = window.innerHeight;
+
+                // 애니메이션 시작/종료 지점 계산
+                const elementOffsetTop = parentElement.offsetTop; // 요소의 부모 기준 offsetTop
+                const scrollLimit = parseFloat(element.dataset.animationScale.split(',')[2]); // data-animation-scale의 세 번째 값 (애니메이션 지속 범위)
+                const animationStart = elementOffsetTop; // 애니메이션 시작 지점
+                const animationEnd = animationStart + scrollLimit; // 애니메이션 종료 지점
+
+                // 사용자가 조정 가능한 비율 설정 (화면 하단에서 기준)
+                const threshold = parseInt(element.dataset.animationThreshold) / 100;
+
+                // 가시성 여부 계산
+                const isVisible = scrollY + windowHeight * (1 - threshold) >= animationStart && scrollY <= animationEnd;
+
+                // 이동 거리 계산
+                let transformValue = '';
+                
+                const parentElementHeight = parseFloat(element.getAttribute('data-height')); // 각 요소의 스크롤 범위
+                // 부모 높이 동기화
+                if (parentElementHeight) {
+                    parentElement.style.height = `${parentElementHeight}px`;
+                }
+
+               
+
+                // 이동 거리 계산: 스크롤 위치에 비례
+                let moveDistance;
+
+                // scale
+                if (element.dataset.animationScale) {
+                    var [startScale, endScale] = JSON.parse(element.dataset.animationScale);
+                    // moveDistance = Math.min((scrollY / scrollLimit) * endScale, endScale);
+                    // transformValue += 'Scale(' + (isVisible ? moveDistance : startScale) + ')';
+
+                    // 진행 비율 계산 (0 ~ 1)
+                    const progress = Math.min(
+                        Math.max((scrollY + windowHeight * (1 - threshold) - animationStart) / scrollLimit, 0),
+                        1
+                    );
+
+                    // 스케일 값 보간
+                    const currentScale = isVisible
+                        ? startScale + (endScale - startScale) * progress // 스케일 보간
+                        : startScale; // 가시성이 없으면 초기값 유지
+
+                    transformValue += `scale(${currentScale})`;
+                    
+                    console.group()
+                        console.log('scrollY', scrollY)
+                        console.log('progress', progress)
+                        console.log('animationStart:', animationStart);
+                        console.log('animationEnd:', animationEnd);
+                        console.log('scrollLimit', scrollLimit)
+                        console.log('isVisible', isVisible)
+                        console.log('currentScale', currentScale)
+                        // console.log('transformValue', transformValue)
+                    console.groupEnd()
+                }
+
+                // 이동 거리 적용
+                element.style.transform = transformValue.trim();
+
+            });
+        };
+
+        // scroll 이벤트가 발생할 때마다 업데이트
+        window.addEventListener('scroll', updateScrollPosition);
+
+        // 초기 업데이트
+        updateScrollPosition();
+    </script>
+
+</body>
+</html>

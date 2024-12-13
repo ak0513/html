@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll animation</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            height: 200vh;
+        }
+
+        [data-animation] {
+            opacity: 0;
+            width: 200px;
+            transition-property: all;
+            transition-duration: 0.4s;
+        }
+
+        [data-animation].visible {
+            opacity: 1;
+        }
+
+
+        .content {
+            width: 200px;
+            margin: 50px auto;
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div style="height:1200px"></div>
+    <div class="content" data-animation="true" data-animation-threshold="40" data-animation-duration="0.4", data-animation-opacity="[0,1]" data-animation-translateX="[-1000, 0]" data-animation-translateY="[-50, 0]" data-animation-scale="[0, 1]">Scroll to see me fade in!</div>
+    <div style="height:50px"></div>
+    <div class="content" data-animation="true" data-animation-threshold="20" data-animation-duration="1.4", data-animation-opacity="[0,1]" data-animation-translateY="[-50, 0]">Scroll to see me fade in!</div>
+    <div style="height:50px"></div>
+    <div class="content" data-animation="true" data-animation-threshold="20" data-animation-duration="2.4", data-animation-opacity="[0,1]" data-animation-scale="[0, 1]">Scroll to see me fade in!</div>
+    <div style="height:50px"></div>
+    <div class="content" data-animation="true" data-animation-threshold="20" data-animation-duration="1" data-animation-rotate="[30, 0]">Scroll to see me fade in!</div>
+    <div style="height:2000px"></div>
+    <script>
+        let ticking = false;
+        const animationElements = document.querySelectorAll('[data-animation]');
+
+        function setAnimationScroll() {
+            animationElements.forEach(ele => {
+                const rect = ele.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                let transformValue = '';
+                // 사용자가 조정 가능한 비율 설정 (화면 하단에서 기준)
+                const threshold = parseInt(ele.dataset.animationThreshold) / 100;
+                // 스크롤 위치를 기준으로 가시성 결정
+                const isVisible = rect.top <= windowHeight * (1 - threshold);
+
+                // 가시성에 따라 'visible' 클래스를 추가하거나 제거
+                if (isVisible) {
+                    ele.classList.add('visible');
+                } else {
+                    ele.classList.remove('visible');
+                }
+
+                // duration
+                if (ele.dataset.animationDuration) {
+                    var duration = ele.dataset.animationDuration;
+                    ele.style.transitionDuration = duration + 's';
+                }
+
+                // opacity
+                if (ele.dataset.animationOpacity) {
+                    var [startOpacity, endOpacity] = JSON.parse(ele.dataset.animationOpacity);
+                    ele.style.opacity = isVisible ? endOpacity : startOpacity;
+                }
+
+                // translateX
+                if (ele.dataset.animationTranslatex) {
+                    var [startTranslateX, endTranslateX] = JSON.parse(ele.dataset.animationTranslatex);
+                    transformValue += 'translateX(' + (isVisible ? endTranslateX : startTranslateX) + 'px)';
+                }
+
+                // translateY
+                if (ele.dataset.animationTranslatey) {
+                    var [startTranslateY, endTranslateY] = JSON.parse(ele.dataset.animationTranslatey);
+                    transformValue += 'translateY(' + (isVisible ? endTranslateY : startTranslateY) + 'px)';
+                }
+
+                // scale
+                if (ele.dataset.animationScale) {
+                    var [startScale, endScale] = JSON.parse(ele.dataset.animationScale);
+                    transformValue += 'Scale(' + (isVisible ? endScale : startScale) + ')';
+                }
+
+                // rotate
+                if (ele.dataset.animationRotate) {
+                    var [startRotate, endRotate] = JSON.parse(ele.dataset.animationRotate);
+                    transformValue += 'Rotate(' + (isVisible ? endRotate : startRotate) + 'deg)';
+                }
+
+                // 최종 transform 값 설정
+                ele.style.transform = transformValue.trim();
+            });
+        }
+
+        function handleScroll() {
+            if (!ticking) {
+                ticking = true;
+                requestAnimationFrame(() => {
+                    setAnimationScroll();
+                    ticking = false;
+                });
+            }
+        }
+
+        // 스크롤 이벤트 리스너 추가
+        window.addEventListener('scroll', handleScroll);
+
+        // 초기 상태 확인
+        setAnimationScroll();
+    </script>
+</body>
+</html>

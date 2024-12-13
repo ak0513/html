@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>복사</title>
+</head>
+<body>
+      <pre>
+        <code class="copy">
+            <div class="aaa">dsfdsF</div>
+        </code>
+      </pre>
+    <script>
+    document.querySelector('.copy').classList.add('bbb');
+
+    var preTags = document.querySelectorAll('pre');
+    preTags.forEach(function(preTag) {
+        var preTagHtml = preTag.innerHTML;
+        console.log(preTagHtml)
+    })
+
+
+
+    // 순수한 HTML 복사 함수
+    function copyPureHTML(element) {
+        // 임시 div를 생성하여 원본 요소의 순수한 HTML을 복사
+        const tempDiv = document.createElement('div');
+        
+        // 선택된 요소의 깊은 복사본을 생성
+        const clonedElement = element.cloneNode(true);
+        
+        // console.log('clonedElement', clonedElement)
+        // 임시 div에 순수한 요소 추가
+        tempDiv.appendChild(clonedElement);
+        
+        // 텍스트로 변환
+        const pureHTML = tempDiv.innerHTML.trim();
+        
+        // 클립보드에 복사
+        navigator.clipboard.writeText(pureHTML).then(() => {
+            console.log('순수한 HTML이 클립보드에 복사되었습니다.');
+        }).catch(err => {
+            console.error('복사 중 오류 발생:', err);
+        });
+        }
+
+        // .copy 클래스를 가진 요소들에 이벤트 리스너 추가
+        document.addEventListener('DOMContentLoaded', () => {
+            const copyElements = document.querySelectorAll('.copy');
+            
+            copyElements.forEach(element => {
+                element.addEventListener('click', (event) => {
+                // 클릭 이벤트가 자식 요소에서 발생해도 부모 요소의 HTML을 복사
+                const targetElement = event.currentTarget;
+                copyPureHTML(targetElement);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

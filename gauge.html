@@ -201,10 +201,15 @@ function setMultiGauge(containerId, startIndicatorPos, endIndicatorPos) {
 	var stepWidth = trackWidth / stepCount; // 한 구간의 너비
 
 	// 초기 값 설정
-	var startValue = startIndicatorPos || values[0]; // startIndicatorPos 값이 있으면 사용, 없으면 기본값
-	var endValue = endIndicatorPos || values[stepCount]; // endIndicatorPos 값이 있으면 사용, 없으면 기본값
+	var startValue = startIndicatorPos ?? values[0]; // startIndicatorPos 값이 있으면 사용, 없으면 기본값
+	var endValue = endIndicatorPos ?? values[stepCount]; // endIndicatorPos 값이 있으면 사용, 없으면 기본값
 	var startStep = values.indexOf(startValue); // 초기 시작 구간
 	var endStep = values.indexOf(endValue); // 초기 끝 구간
+
+	console.log('startValue',startValue)
+	console.log('endValue',endValue)
+	console.log('startStep',startStep)
+	console.log('endStep',endStep)
 
 	// 각 스텝에 데이터 값 추가
 	steps.forEach(function(step, index) {
@@ -477,8 +482,8 @@ function setMultiGauge(containerId, startIndicatorPos, endIndicatorPos) {
 
 }
 
-setMultiGauge('gauge1', 10000, 30000);
-setMultiGauge('gauge2');
+setMultiGauge('gauge1', 0, 0);
+// setMultiGauge('gauge2', 0 ,10000);
 </script>
 </body>
 
