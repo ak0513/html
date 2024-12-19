@@ -1,6 +1,6 @@
 <template>
 	<!-- 클래스와 스타일 바인딩 -->
-	<classStyle></classStyle>
+	<!-- <classStyle></classStyle> -->
 	<!--// 클래스와 스타일 바인딩 -->
 
 	<hr>
@@ -21,7 +21,12 @@
 	<computedProperties></computedProperties>
 	<!--// 계산된 속성 -->
 
-	
+	<hr>
+
+	<!-- 클래스와 스타일 바인딩 -->
+	<classStyle></classStyle>
+	<!--// 클래스와 스타일 바인딩 -->
+
 </template>
 
 <script setup>
@@ -41,6 +46,8 @@ const app = createApp({
 
 app.mount('#app')
 
+
+
 </script>
 
 <style>
@@ -57,4 +64,6 @@ ol > li + li, ul > li + li{margin-top:4px;}
 #list-type {height:20px;background-color: antiquewhite;}
 
 hr{margin:48px 0;}
+pre {display:block;margin-bottom:1rem;background-color: #f6f6f6;padding:16px 20px;border-radius: 8px;}
+
 </style>
