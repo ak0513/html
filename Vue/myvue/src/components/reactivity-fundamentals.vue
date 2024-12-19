@@ -1,5 +1,5 @@
 <template>
-    <h1>반응형 기초</h1>
+    <h1><a href="https://v3-docs.vuejs-korea.org/guide/essentials/reactivity-fundamentals.html" target="_blank">반응형 기초</a></h1>
 	<h2>반응형 상태 설정</h2>
 	<ol>
 		<li>{{ state.count }}</li>

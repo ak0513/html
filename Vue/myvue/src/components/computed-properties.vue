@@ -1,5 +1,5 @@
 <template>
-    <h1>계산된 속성</h1>
+    <h1><a href="https://v3-docs.vuejs-korea.org/guide/essentials/computed.html" target="_blank">계산된 속성</a></h1>
 	<h2>기본 예제</h2>
 	<ol>
 		<li>책을 가지고 있다:</li>

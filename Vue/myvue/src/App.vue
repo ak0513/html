@@ -9,9 +9,13 @@
 	<templateSyntax></templateSyntax>
 	<!--// 템플릿 문법 -->
 
+	<hr>
+
 	<!-- 반응형 기초 -->
 	<reactivityFundamentals></reactivityFundamentals>
 	<!--// 반응형 기초 -->
+
+	<hr>
 
 	<!-- 계산된 속성 -->
 	<computedProperties></computedProperties>
@@ -37,37 +41,10 @@ const app = createApp({
 
 app.mount('#app')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
 
 <style>
-h1 {margin-top:40px;font-weight:900;}
+h1, h1 a {margin-top:40px;font-weight:900;color:#000;text-decoration-thickness: from-font;}
 h2 {font-size:24px;font-weight:900}
 h3 {font-size:20px;font-weight:700}
 h4 {font-size:18px;font-weight:500}
@@ -78,4 +55,6 @@ ol > li + li, ul > li + li{margin-top:4px;}
 
 .wrapper,
 #list-type {height:20px;background-color: antiquewhite;}
+
+hr{margin:48px 0;}
 </style>

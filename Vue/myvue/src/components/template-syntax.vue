@@ -1,5 +1,5 @@
 <template>
-	<h1>템플릿 문법</h1>
+	<h1><a href="https://v3-docs.vuejs-korea.org/guide/essentials/template-syntax.html" target="_blank">템플릿 문법</a></h1>
 	<h2>HTML 출력</h2>
 	<p>이중 중괄호는 데이터를 HTML이 아닌 일반 텍스트로 해석합니다. <br>실제 HTML을 출력하려면 v-html 디렉티브을 사용해야 합니다.</p>
 	<ol>
