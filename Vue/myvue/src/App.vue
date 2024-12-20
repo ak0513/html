@@ -1,7 +1,7 @@
 <template>
-	<!-- 클래스와 스타일 바인딩 -->
-	<!-- <classStyle></classStyle> -->
-	<!--// 클래스와 스타일 바인딩 -->
+	<!-- 조건부 렌더링 -->
+	<componentalRendering></componentalRendering>
+	<!--// 조건부 렌더링 -->
 
 	<hr>
 	
@@ -36,6 +36,7 @@ import templateSyntax from './components/template-syntax.vue'
 import reactivityFundamentals from './components/reactivity-fundamentals.vue'
 import computedProperties from './components/computed-properties.vue'
 import classStyle from './components/class-style.vue'
+import componentalRendering from './components/conditional-rendering.vue'
 
 const app = createApp({
   setup() {
@@ -51,7 +52,7 @@ app.mount('#app')
 </script>
 
 <style>
-h1, h1 a {margin-top:40px;font-weight:900;color:#000;text-decoration-thickness: from-font;}
+h1, h1 a {margin-top:40px;font-weight:900;color:#191d21;text-decoration-thickness: from-font;}
 h2 {font-size:24px;font-weight:900}
 h3 {font-size:20px;font-weight:700}
 h4 {font-size:18px;font-weight:500}
@@ -59,11 +60,12 @@ h2, h3, h4 {margin:30px 0 12px;font-weight:700;}
 /* h2 + h3 {margin-top:12px;} */
 /* h3 + h4 {margin-top:8px;} */
 ol > li + li, ul > li + li{margin-top:4px;}
-
+p {margin-top:1rem;}
 .wrapper,
 #list-type {height:20px;background-color: antiquewhite;}
 
 hr{margin:48px 0;}
 pre {display:block;margin-bottom:1rem;background-color: #f6f6f6;padding:16px 20px;border-radius: 8px;}
-
+code {padding:2px 7px;background-color:#f9f9f9;border-radius:4px;}
+h2 code { color:rgb(71, 101, 130);}
 </style>
