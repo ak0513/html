@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smooth Scroll & Active Button</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      background-color: #333;
+      padding: 10px 0;
+      z-index: 1000;
+    }
+
+    .navbar button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      color: white;
+      background-color: transparent;
+      border: 1px solid white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .navbar button.active {
+      background-color: white;
+      color: black;
+    }
+
+    .section {
+      height: 500px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      background-color: #f4f4f4;
+      border-bottom: 1px solid #ddd;
+    }
+
+    #section1 {
+      background-color: #ffdddd;
+    }
+
+    #section2 {
+      background-color: #ddffdd;
+    }
+
+    #section3 {
+      background-color: #ddddff;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <button data-target="#section1">Section 1</button>
+    <button data-target="#section2">Section 2</button>
+    <button data-target="#section3">Section 3</button>
+  </div>
+  <div id="section1" class="section">Section 1 Content</div>
+  <div id="section2" class="section">Section 2 Content</div>
+  <div id="section3" class="section">Section 3 Content</div>
+  <div style="height:2000px"></div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const buttons = document.querySelectorAll(".navbar button");
+      const sections = document.querySelectorAll(".section");
+
+      // Smooth scroll on button click
+      buttons.forEach(button => {
+        button.addEventListener("click", () => {
+          const targetId = button.getAttribute("data-target");
+          const targetSection = document.querySelector(targetId);
+          if (targetSection) {
+            targetSection.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+
+      // Update active button on scroll
+      window.addEventListener("scroll", () => {
+        let currentSectionId = "";
+
+        sections.forEach(section => {
+            const rect = section.getBoundingClientRect();
+            // 섹션의 상단이 브라우저 상단에 도달한 경우
+            if (rect.top <= 0 && rect.bottom >= 0) {
+            currentSectionId = `#${section.id}`;
+            }
+        });
+
+        buttons.forEach(button => {
+            if (button.getAttribute("data-target") === currentSectionId) {
+            button.classList.add("active");
+            } else {
+            button.classList.remove("active");
+            }
+        });
+        });
+
+    });
+  </script>
+</body>
+</html>

@@ -29,12 +29,6 @@
 	<div style="height:2000px"></div>
 	<section id="section1">
 		<div>
-			<button type="button" onclick="smoothScrollTo2('section2')">Scroll to Section 2</button>
-			<button type="button" onclick="smoothScrollTo2('section2', 50)">Scroll to Section 2</button>
-			<button type="button" onclick="smoothScrollTo2('section2', -50 , 'bottom')">Scroll to Section 2</button>
-			<button type="button" onclick="smoothScrollTo2('section2', 100, 'top', 2000, function() {console.log('Scrolled to bottom with offset');})">Scroll to Section 2</button>
-		</div>
-		<div style="margin-top:8px;">
 			<button type="button" data-scrollTo-duration="500" onclick="smoothScrollTo('section2')">Scroll to Section 2</button>
 			<button type="button" data-scrollTo-offset="100" onclick="smoothScrollTo('section2')">Scroll to Section 2</button>
 			<button type="button" data-scrollTo-position="bottom" onclick="smoothScrollTo('section2')">Scroll to Section 2</button>
@@ -104,61 +98,6 @@ function smoothScrollTo(selector, callback) {
 
 	requestAnimationFrame(scrollStep);
 }
-	
-// 공통 스크롤 함수2
-function smoothScrollTo2(selector, offset, position, duration, callback) {
-	if (isScrolling) return; // 실행 중일 때는 무시
-	// 기본값 설정 (IE 호환)
-	if (typeof duration === 'undefined') { duration = 1000; }
-	if (typeof offset === 'undefined') { offset = 0; }
-	if (typeof position === 'undefined') { position = 'top'; }
-
-	var target = document.getElementById(selector);
-	if (!target) {
-		console.error('console.error: ID가 ' + selector + '인 요소를 찾을 수 없습니다.');
-		return;
-	}
-
-	var start = window.pageYOffset;
-	var targetRect = target.getBoundingClientRect();
-
-	// 타겟 위치 계산
-	var targetOffset = (position === 'top') ? targetRect.top : targetRect.bottom - window.innerHeight;
-
-	// 추가 오프셋 적용
-	targetOffset -= offset;
-
-	var scrollTarget = start + targetOffset;
-
-	// 타겟 위치가 이미 정확히 맞춰져 있으면 함수 종료
-	if (Math.abs(scrollTarget - start) < 1) {
-		console.log('이미 목표 위치에 있습니다.');
-		return;
-	}
-
-	isScrolling = true; // 실행 상태로 플래그 설정
-
-	var startTime = performance.now();
-
-	function scrollStep(timestamp) {
-		var elapsedTime = timestamp - startTime;
-		var progress = Math.min(elapsedTime / duration, 1);
-		var easeInOutQuad = (progress < 0.5) ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-		window.scrollTo(0, start + targetOffset * easeInOutQuad);
-		if (elapsedTime < duration) {
-			requestAnimationFrame(scrollStep);
-		} else {
-			isScrolling = false; // 애니메이션 완료 후 플래그 초기화
-
-			// 콜백 함수가 정의되어 있으면 호출
-			if (typeof callback === 'function') {
-				callback();
-			}
-		}
-	}
-	requestAnimationFrame(scrollStep);
-}
-
 	</script>
 </body>
 
