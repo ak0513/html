@@ -5,6 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>stopPropagation</title>
+    <style>
+        table th,
+        table td {border:1px solid #ddd;padding:8px;}
+        li + li {margin-top:8px;}
+    </style>
 </head>
 
 <body>
@@ -13,13 +18,34 @@
     <hr>
     <div class="parent">
         부모 요소
-        <div class="child">자식 요소</div>
+        <div class="child"><button type="button">자식 요소</button></div>
     </div>
     <hr>
     <div class="parent2">
         부모 요소2
-        <div class="child2">자식 요소2</div>
+        <div class="child2"><button type="button">자식 요소2</button></div>
     </div>
+    <script>
+        document.querySelector(".child").addEventListener("click", function (event) {
+            event.stopPropagation(); // 부모 요소로 이벤트 전파 방지
+            alert("자식 요소 클릭");
+        });
+
+
+        document.querySelector(".parent").addEventListener("click", function () {
+            alert("부모 요소 클릭");
+        });
+
+        document.querySelector(".child2").addEventListener("click", function (event) {
+            // event.stopPropagation(); // 부모 요소로 이벤트 전파 방지
+            alert("자식 요소 클릭");
+        });
+
+
+        document.querySelector(".parent2").addEventListener("click", function () {
+            alert("부모 요소 클릭");
+        });
+    </script>
 
 
     <h2><strong>이벤트 전파(Event Propagation)</strong></h2>
@@ -28,15 +54,39 @@
         <li><strong>캡처링 단계 (Capturing Phase)</strong><br>이벤트가 루트에서 시작하여 이벤트가 발생한 타겟 요소로 내려가는 과정입니다.</li>
         <li><strong>버블링 단계 (Bubbling Phase)</strong><br>이벤트가 발생한 타겟 요소에서 시작하여 루트 요소로 올라가는 과정입니다.</li>
     </ol>
+    <p>JavaScript에서 이벤트 전파는 <strong>기본적으로 버블링 단계</strong>에서 발생한다.<br>만약 캡처링을 활성화하지 않았다면, DOM에서의 이벤트 처리는 모두 <strong>버블링</strong>으로 간주된다.</p>
     <div class="outer">
-        outer
-        <div class="inner">inner</div>
+        Outer 캡처링 true
+        <div class="inner"><button type="button">Inner 캡처링 true</button></div>
     </div>
     <hr>
     <div class="outer2">
-        outer2
-        <div class="inner2">inner2</div>
+        버블링 = Outer2 캡처링 false
+        <div class="inner2"><button type="button">버블링 = Inner2 캡처링 false</button></div>
     </div>
+    <script>
+        document.querySelector(".outer").addEventListener("click", () => {
+            alert("Outer 캡처링 true");
+        }, true); // 캡처링 활성화
+
+        document.querySelector(".inner").addEventListener("click", () => {
+            alert("Inner 캡처링 true");
+        }, true);
+        // Outer 캡처링 true
+        // Inner 캡처링 true
+
+        document.querySelector(".outer2").addEventListener("click", () => {
+            alert("Outer2 캡처링 false");
+        }, false); // 캡처링 활성화
+
+        document.querySelector(".inner2").addEventListener("click", () => {
+            alert("Inner2 캡처링 false");
+        }, false);
+        // Inner 캡처링 false
+        // Outer 캡처링 false
+
+    </script>
+
 
     <h2><strong>이벤트 캡처링 vs 버블링 요약</strong></h2>
     <table>
@@ -65,46 +115,26 @@
             </tr>
         </tbody>
     </table>
+
+    <h2><strong>5. 이벤트 전파 제어</strong></h2>
+    <h3>1. <code>event.stopPropagation()</code></h3>
+    <ul><li>이벤트가 더 이상 캡처링 또는 버블링되지 않도록 중단합니다.</li></ul>
+    <h3>2. <code>event.stopImmediatePropagation()</code></h3>
+    <ul><li>동일한 요소에 바인딩된 다른 이벤트 핸들러도 실행되지 않도록 합니다.</li></ul>
+
+    <button type="button" class="stopImmediatePropagation">stopImmediatePropagation</button>
+
     <script>
-        document.querySelector(".child").addEventListener("click", function (event) {
-            event.stopPropagation(); // 부모 요소로 이벤트 전파 방지
-            alert("자식 요소 클릭");
+        document.querySelector(".stopImmediatePropagation").addEventListener("click", (event) => {
+            alert("stopImmediatePropagation만 실행됨1");
         });
-
-
-        document.querySelector(".parent").addEventListener("click", function () {
-            alert("부모 요소 클릭");
+        document.querySelector(".stopImmediatePropagation").addEventListener("click", (event) => {
+            event.stopImmediatePropagation(); 
+            alert("stopImmediatePropagation만 실행됨2");
         });
-
-        document.querySelector(".child2").addEventListener("click", function (event) {
-            // event.stopPropagation(); // 부모 요소로 이벤트 전파 방지
-            alert("자식 요소 클릭");
+        document.querySelector(".stopImmediatePropagation").addEventListener("click", (event) => {
+            alert("stopImmediatePropagation만 실행안됨"); // event.stopImmediatePropagation();  로 인해 실행 안됨
         });
-
-
-        document.querySelector(".parent2").addEventListener("click", function () {
-            alert("부모 요소 클릭");
-        });
-
-        document.querySelector(".outer").addEventListener("click", () => {
-            console.log("Outer 캡처링 true");
-        }, true); // 캡처링 활성화
-
-        document.querySelector(".inner").addEventListener("click", () => {
-            console.log("Inner 캡처링 true");
-        }, true);
-        // Outer 캡처링 true
-        // Inner 캡처링 true
-
-        document.querySelector(".outer2").addEventListener("click", () => {
-            console.log("Outer2 캡처링 false");
-        }, false); // 캡처링 활성화
-
-        document.querySelector(".inner2").addEventListener("click", () => {
-            console.log("Inner2 캡처링 false");
-        }, false);
-        // Inner 캡처링 true
-        // Outer 캡처링 true
     </script>
 </body>
 
