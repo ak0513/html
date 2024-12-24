@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>stopPropagation</title>
+</head>
+
+<body>
+    <h2>event.stopPropagation()</h2>
+    <p>이 메서드는 이벤트가 상위 DOM 요소로 전파(bubbling)되는 것을 막습니다.</p>
+    <hr>
+    <div class="parent">
+        부모 요소
+        <div class="child">자식 요소</div>
+    </div>
+    <hr>
+    <div class="parent2">
+        부모 요소2
+        <div class="child2">자식 요소2</div>
+    </div>
+
+
+    <script>
+        document.querySelector(".child").addEventListener("click", function (event) {
+            event.stopPropagation(); // 부모 요소로 이벤트 전파 방지
+            alert("자식 요소 클릭");
+        });
+
+
+        document.querySelector(".parent").addEventListener("click", function () {
+            alert("부모 요소 클릭");
+        });
+
+        document.querySelector(".child2").addEventListener("click", function (event) {
+            // event.stopPropagation(); // 부모 요소로 이벤트 전파 방지
+            alert("자식 요소 클릭");
+        });
+
+
+        document.querySelector(".parent2").addEventListener("click", function () {
+            alert("부모 요소 클릭");
+        });
+
+
+    </script>
+</body>
+
+</html>
