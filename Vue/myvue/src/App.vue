@@ -1,4 +1,9 @@
 <template>
+	<!-- 탭으로 구현 -->
+	<tabsT></tabsT>
+	<!-- //탭으로 구현 -->
+
+
 	<!-- 조건부 렌더링 -->
 	<componentalRendering></componentalRendering>
 	<!--// 조건부 렌더링 -->
@@ -37,6 +42,7 @@ import reactivityFundamentals from './components/reactivity-fundamentals.vue'
 import computedProperties from './components/computed-properties.vue'
 import classStyle from './components/class-style.vue'
 import componentalRendering from './components/conditional-rendering.vue'
+import tabsT from './components/tabsT.vue'
 
 const app = createApp({
   setup() {
