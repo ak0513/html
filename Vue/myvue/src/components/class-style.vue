@@ -1,4 +1,5 @@
 <template>
+    <div id="tab4" role="tabpanel">
     <h1><a href="https://v3-docs.vuejs-korea.org/guide/essentials/class-and-style.html#binding-html-classes" target="_blank">클래스와 스타일</a></h1>
     <h2>HTML 클래스 바인딩</h2>
     <h3>객체로 바인딩 하기</h3>
@@ -101,7 +102,7 @@ style="display: -webkit-box;"
 </pre>
     <p>이 경우, 브라우저가 지원하는 배열 내 마지막 값을 렌더링합니다. <br>이 예제에서 브라우저가 flex와 -webkit-box 속성만 지원한다면, flex라는 표준 속성 값이 있음에도 display: -webkit-box를 렌더링 합니다.</p>
 
-
+    </div>
 </template>
 
 <script setup>

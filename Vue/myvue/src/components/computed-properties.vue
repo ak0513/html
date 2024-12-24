@@ -1,4 +1,5 @@
 <template>
+	<div id="tab3" role="tabpanel">
     <h1><a href="https://v3-docs.vuejs-korea.org/guide/essentials/computed.html" target="_blank">계산된 속성</a></h1>
 	<h2>기본 예제</h2>
 	<ol>
@@ -14,6 +15,7 @@
 	<ol>
 		<li>{{ fullName }}</li>
 	</ol>
+	</div>
 </template>
 
 <script setup>

@@ -2,46 +2,10 @@
 	<!-- 탭으로 구현 -->
 	<tabsT></tabsT>
 	<!-- //탭으로 구현 -->
-
-
-	<!-- 조건부 렌더링 -->
-	<componentalRendering></componentalRendering>
-	<!--// 조건부 렌더링 -->
-
-	<hr>
-	
-	<!-- 템플릿 문법 -->
-	<templateSyntax></templateSyntax>
-	<!--// 템플릿 문법 -->
-
-	<hr>
-
-	<!-- 반응형 기초 -->
-	<reactivityFundamentals></reactivityFundamentals>
-	<!--// 반응형 기초 -->
-
-	<hr>
-
-	<!-- 계산된 속성 -->
-	<computedProperties></computedProperties>
-	<!--// 계산된 속성 -->
-
-	<hr>
-
-	<!-- 클래스와 스타일 바인딩 -->
-	<classStyle></classStyle>
-	<!--// 클래스와 스타일 바인딩 -->
-
 </template>
 
 <script setup>
 import { createApp, ref} from 'vue';
-
-import templateSyntax from './components/template-syntax.vue'
-import reactivityFundamentals from './components/reactivity-fundamentals.vue'
-import computedProperties from './components/computed-properties.vue'
-import classStyle from './components/class-style.vue'
-import componentalRendering from './components/conditional-rendering.vue'
 import tabsT from './components/tabsT.vue'
 
 const app = createApp({

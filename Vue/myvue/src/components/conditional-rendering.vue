@@ -1,4 +1,5 @@
 <template>
+    <div id="tab5" role="tabpanel">
     <h1><a href="https://v3-docs.vuejs-korea.org/guide/essentials/conditional.html" target="_blank">조건부 렌더링</a></h1>
     <h2><code>v-if</code></h2>
 <pre>
@@ -78,6 +79,7 @@ const toggle = () => {
 <pre>
 &lt;div&gt;텍스트&lt;/div&gt;
 </pre>
+    </div>
 </template>
 
 <script setup>
