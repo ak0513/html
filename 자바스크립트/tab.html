@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>탭 애니메이션 (jQuery)</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .tab {
+            position: relative;
+            display: flex;
+            background-color: gray;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        .tab_item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        .tab_item button {
+            width: 100%;
+            padding: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .tab_item.active button {
+            color: black;
+        }
+        .tab::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            height: 4px;
+            width: 0;
+            background-color: white;
+            transition: left 0.3s ease, width 0.3s ease;
+        }
+        .tab_cont {
+            display: none;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .tab_cont.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <ul class="tab">
+        <li class="tab_item active"><button type="button">탭1</button></li>
+        <li class="tab_item"><button type="button">탭2</button></li>
+    </ul>
+    <div class="tab_cont active">탭1 내용</div>
+    <div class="tab_cont">탭2 내용</div>
+
+    <script>
+        $(document).ready(function () {
+            const $tab = $(".tab");
+            const $tabItems = $(".tab_item");
+            const $tabContents = $(".tab_cont");
+            const tabCount = $tabItems.length;
+
+            // Set initial active bar position and width
+            const $tabBar = $("<div>")
+                .addClass("tab-bar")
+                .css({
+                    position: "absolute",
+                    bottom: 0,
+                    height: "4px",
+                    backgroundColor: "white",
+                    transition: "left 0.3s ease, width 0.3s ease",
+                    width: `${100 / tabCount}%`,
+                    left: "0%",
+                });
+            $tab.append($tabBar);
+
+            $tabItems.each(function (index) {
+                $(this).on("click", function () {
+                    // Update active class
+                    $tabItems.removeClass("active");
+                    $(this).addClass("active");
+
+                    $tabContents.removeClass("active");
+                    $tabContents.eq(index).addClass("active");
+
+                    // Move the active bar
+                    const leftPercentage = (100 / tabCount) * index;
+                    $tabBar.css("left", `${leftPercentage}%`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
