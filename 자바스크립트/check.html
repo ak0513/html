@@ -9,7 +9,8 @@
   <link rel="stylesheet" href="https://www.shinhancard.com/pconts/css/shcard/shc-com.css?ver=117" media="all">
 	<title>체크박스</title>
 	<style>
-	
+		input[type="radio"]:focus + span.t, 
+		input[type="checkbox"]:focus + span.t {box-shadow:none !important;}
 	</style>
 </head>
 
@@ -18,6 +19,12 @@
 	<label for="check01" class="check_default">
 		<input type="checkbox" id="check01" name="checkN01" checked="">
 		<span>체크박스 레이블</span>
+	</label>
+</div>
+	 <div class="check_wrap check-dx">
+	<label for="check02" class="check_default">
+		<input type="checkbox" id="check02" name="checkN02" checked="">
+		<span class="t">체크박스 레이블</span>
 	</label>
 </div>
 </body>
