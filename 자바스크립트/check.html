@@ -17,16 +17,27 @@
 <body>
   <div class="check_wrap check-dx">
 	<label for="check01" class="check_default">
-		<input type="checkbox" id="check01" name="checkN01" checked="">
+		<input type="checkbox" id="check01" name="checkN01">
 		<span>체크박스 레이블</span>
 	</label>
 </div>
 	 <div class="check_wrap check-dx">
 	<label for="check02" class="check_default">
-		<input type="checkbox" id="check02" name="checkN02" checked="">
+		<input type="checkbox" id="check02" name="checkN02">
 		<span class="t">체크박스 레이블</span>
 	</label>
 </div>
+
+<style>
+	.test input {appearance: none;width: 20px;height: 20px;background-color: bisque;}
+    .test input:checked {background-color: blue;}
+</style>
+<div class="test">
+	<label for="check03">체크박스</label>
+	<input type="checkbox" id="check03" name="checkN03">
+</div>
+
+	
 </body>
 
 </html>
