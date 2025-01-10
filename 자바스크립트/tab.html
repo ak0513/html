@@ -57,11 +57,15 @@
 </head>
 <body>
     <ul class="tab">
-        <li class="tab_item active"><button type="button">탭1</button></li>
-        <li class="tab_item"><button type="button">탭2</button></li>
+        <li class="tab_item active">
+            <button type="button" aria-controls="section01" aria-selected="true">탭1</button>
+        </li>
+        <li class="tab_item">
+            <button type="button" aria-controls="section02" aria-selected="false">탭2</button>
+        </li>
     </ul>
-    <div class="tab_cont active">탭1 내용</div>
-    <div class="tab_cont">탭2 내용</div>
+    <div class="tab_cont active"  id="section01">탭1 내용</div>
+    <div class="tab_cont"  id="section02">탭2 내용</div>
 
     <script>
         $(document).ready(function () {
@@ -70,7 +74,7 @@
             const $tabContents = $(".tab_cont");
             const tabCount = $tabItems.length;
 
-            // Set initial active bar position and width
+            // Add tab-bar for animation
             const $tabBar = $("<div>")
                 .addClass("tab-bar")
                 .css({
@@ -88,7 +92,9 @@
                 $(this).on("click", function () {
                     // Update active class
                     $tabItems.removeClass("active");
+                    $tabItems.find("button").attr("aria-selected", "false");
                     $(this).addClass("active");
+                    $(this).find("button").attr("aria-selected", "true");
 
                     $tabContents.removeClass("active");
                     $tabContents.eq(index).addClass("active");
