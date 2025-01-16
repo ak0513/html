@@ -12,13 +12,13 @@
 </head>
 <body>
   <div class="parent">
-    <div>Item 11</div>
+    <div>Item 1</div>
     <div data-hidden="true">Item 2</div>
     <div>Item 3</div>
     <div data-hidden="true">Item 4</div>
     <div>Item 5</div>
   </div>
-  <button class="show-hidden" aria-expanded="false">Show Hidden Items</button>
+  <button class="show-hidden" aria-expanded="false">열림</button>
 
   <script>
     document.querySelector('.show-hidden').addEventListener('click', function () {
@@ -33,7 +33,7 @@
           }
         });
         this.setAttribute('aria-expanded', 'false');
-        this.textContent = 'Show Hidden Items';
+        this.textContent = '열림'; // 버튼 텍스트 변경
       } else {
         // 숨긴 요소 보이기
         items.forEach(item => {
@@ -42,7 +42,7 @@
           }
         });
         this.setAttribute('aria-expanded', 'true');
-        this.textContent = 'Hide Hidden Items';
+        this.textContent = '닫힘'; // 버튼 텍스트 변경
       }
     });
   </script>
