@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Show Hidden Elements</title>
   <style>
-    .hidden {
+    [data-hidden="true"] {
       display: none;
     }
   </style>
@@ -13,31 +13,26 @@
 <body>
   <div class="parent">
     <div>Item 1</div>
-    <div class="hidden">Item 2</div>
+    <div data-hidden="true">Item 2</div>
     <div>Item 3</div>
-    <div class="hidden">Item 4</div>
+    <div data-hidden="true">Item 4</div>
     <div>Item 5</div>
   </div>
   <button class="show-hidden" aria-expanded="false">Show Hidden Items</button>
 
   <script>
     document.querySelector('.show-hidden').addEventListener('click', function () {
-      const hiddenItems = document.querySelectorAll('.parent .hidden');
-      const allItems = document.querySelectorAll('.parent div');
+      const hiddenItems = document.querySelectorAll('.parent [data-hidden="true"]');
       const isExpanded = this.getAttribute('aria-expanded') === 'true';
 
       if (isExpanded) {
-        // 모든 아이템 숨기기
-        allItems.forEach(item => {
-          if (!item.classList.contains('hidden')) {
-            item.classList.add('hidden');
-          }
-        });
+        // 숨기기
+        hiddenItems.forEach(item => item.setAttribute('data-hidden', 'true'));
         this.setAttribute('aria-expanded', 'false');
         this.textContent = 'Show Hidden Items';
       } else {
-        // 숨겨진 아이템 보이기
-        hiddenItems.forEach(item => item.classList.remove('hidden'));
+        // 보이기
+        hiddenItems.forEach(item => item.setAttribute('data-hidden', 'false'));
         this.setAttribute('aria-expanded', 'true');
         this.textContent = 'Hide Hidden Items';
       }
