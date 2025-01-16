@@ -12,7 +12,7 @@
 </head>
 <body>
   <div class="parent">
-    <div>Item 1</div>
+    <div>Item 11</div>
     <div data-hidden="true">Item 2</div>
     <div>Item 3</div>
     <div data-hidden="true">Item 4</div>
@@ -22,17 +22,25 @@
 
   <script>
     document.querySelector('.show-hidden').addEventListener('click', function () {
-      const hiddenItems = document.querySelectorAll('.parent [data-hidden="true"]');
+      const items = document.querySelectorAll('.parent div');
       const isExpanded = this.getAttribute('aria-expanded') === 'true';
 
       if (isExpanded) {
-        // 숨기기
-        hiddenItems.forEach(item => item.setAttribute('data-hidden', 'true'));
+        // 다시 숨김 처리
+        items.forEach(item => {
+          if (item.hasAttribute('data-hidden')) {
+            item.setAttribute('data-hidden', 'true');
+          }
+        });
         this.setAttribute('aria-expanded', 'false');
         this.textContent = 'Show Hidden Items';
       } else {
-        // 보이기
-        hiddenItems.forEach(item => item.setAttribute('data-hidden', 'false'));
+        // 숨긴 요소 보이기
+        items.forEach(item => {
+          if (item.hasAttribute('data-hidden')) {
+            item.setAttribute('data-hidden', 'false');
+          }
+        });
         this.setAttribute('aria-expanded', 'true');
         this.textContent = 'Hide Hidden Items';
       }
