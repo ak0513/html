@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Show Hidden Elements</title>
+  <style>
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="parent">
+    <div>Item 1</div>
+    <div class="hidden">Item 2</div>
+    <div>Item 3</div>
+    <div class="hidden">Item 4</div>
+    <div>Item 5</div>
+  </div>
+  <button class="show-hidden" aria-expanded="false">Show Hidden Items</button>
+
+  <script>
+    document.querySelector('.show-hidden').addEventListener('click', function () {
+      const hiddenItems = document.querySelectorAll('.parent .hidden');
+      const isExpanded = this.getAttribute('aria-expanded') === 'true';
+
+      if (isExpanded) {
+        // 숨기기
+        hiddenItems.forEach(item => item.classList.add('hidden'));
+        this.setAttribute('aria-expanded', 'false');
+        this.textContent = 'Show Hidden Items';
+      } else {
+        // 보이기
+        hiddenItems.forEach(item => item.classList.remove('hidden'));
+        this.setAttribute('aria-expanded', 'true');
+        this.textContent = 'Hide Hidden Items';
+      }
+    });
+  </script>
+</body>
+</html>
