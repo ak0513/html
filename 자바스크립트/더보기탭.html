@@ -23,15 +23,20 @@
   <script>
     document.querySelector('.show-hidden').addEventListener('click', function () {
       const hiddenItems = document.querySelectorAll('.parent .hidden');
+      const allItems = document.querySelectorAll('.parent div');
       const isExpanded = this.getAttribute('aria-expanded') === 'true';
 
       if (isExpanded) {
-        // 숨기기
-        hiddenItems.forEach(item => item.classList.add('hidden'));
+        // 모든 아이템 숨기기
+        allItems.forEach(item => {
+          if (!item.classList.contains('hidden')) {
+            item.classList.add('hidden');
+          }
+        });
         this.setAttribute('aria-expanded', 'false');
         this.textContent = 'Show Hidden Items';
       } else {
-        // 보이기
+        // 숨겨진 아이템 보이기
         hiddenItems.forEach(item => item.classList.remove('hidden'));
         this.setAttribute('aria-expanded', 'true');
         this.textContent = 'Hide Hidden Items';
