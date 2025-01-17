@@ -73,29 +73,20 @@
         document.addEventListener('DOMContentLoaded', () => {
             const button = document.getElementById('tooltipButton');
             const tooltip = document.getElementById('tooltip');
-            const icon = button.querySelector('.button-icon');
 
             button.addEventListener('click', () => {
                 // Toggle tooltip visibility
                 tooltip.classList.toggle('show');
 
-                // Get dimensions of button and icon
+                // Get button dimensions
                 const buttonRect = button.getBoundingClientRect();
-                const iconRect = icon.getBoundingClientRect();
 
-                // Calculate the icon's center
-                const iconCenterX = iconRect.left + iconRect.width / 2;
-
-                // Calculate the tooltip position
+                // Calculate tooltip position
                 const tooltipWidth = tooltip.offsetWidth;
-                const tooltipLeft = iconCenterX - tooltipWidth / 2;
+                const tooltipLeft = buttonRect.left + buttonRect.width - 10 - tooltipWidth;
 
-                // Adjust the tooltip and its arrow
+                // Update tooltip position
                 tooltip.style.left = `${tooltipLeft}px`;
-
-                // Adjust the arrow's position relative to the tooltip
-                const arrowLeft = iconCenterX - tooltipLeft - 6; // Arrow width: 6px
-                tooltip.style.setProperty('--arrow-left', `${arrowLeft}px`);
             });
         });
     </script>
