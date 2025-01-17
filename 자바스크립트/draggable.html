@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Touch Drag and Drop</title>
+    <title>Vertical Drag and Drop</title>
     <style>
         body {
             margin: 0;
@@ -46,7 +46,7 @@
 <body>
     <ul id="sortable-list">
         <li>Item 1</li>
-        <li>Item 22</li>
+        <li>Item 2</li>
         <li>Item 3</li>
         <li>Item 4</li>
     </ul>
@@ -55,8 +55,9 @@
         const list = document.getElementById("sortable-list");
         let draggingElement = null;
         let placeholder = null;
-        let offsetX = 0;
-        let offsetY = 0;
+        let startX = 0;
+        let startY = 0;
+        let initialLeft = 0;
 
         // 터치 시작 이벤트
         list.addEventListener("touchstart", (e) => {
@@ -67,8 +68,9 @@
             const rect = target.getBoundingClientRect();
 
             draggingElement = target;
-            offsetX = touch.clientX - rect.left;
-            offsetY = touch.clientY - rect.top;
+            startX = touch.clientX;
+            startY = touch.clientY;
+            initialLeft = rect.left; // 수평 위치 고정
 
             placeholder = document.createElement("li");
             placeholder.classList.add("placeholder");
@@ -78,7 +80,7 @@
             target.classList.add("dragging");
             target.style.width = `${rect.width}px`; // 드래그 시 크기 고정
             target.style.top = `${rect.top}px`;
-            target.style.left = `${rect.left}px`;
+            target.style.left = `${initialLeft}px`; // 고정된 수평 위치 설정
         });
 
         // 터치 이동 이벤트
@@ -88,8 +90,12 @@
             e.preventDefault(); // 기본 스크롤 방지
 
             const touch = e.touches[0];
-            draggingElement.style.top = `${touch.clientY - offsetY}px`;
-            draggingElement.style.left = `${touch.clientX - offsetX}px`;
+            const deltaY = touch.clientY - startY;
+
+            draggingElement.style.top = `${parseFloat(draggingElement.style.top) + deltaY}px`; // 수직 이동
+            draggingElement.style.left = `${initialLeft}px`; // 수평 위치 고정
+
+            startY = touch.clientY; // 업데이트된 시작점 설정
 
             const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
             const closestLi = elementBelow?.closest("li");
