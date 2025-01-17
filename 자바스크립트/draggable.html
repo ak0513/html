@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drag and Drop with Button</title>
+    <title>Drag and Drop with Multiple Buttons</title>
     <style>
         body {
             margin: 0;
@@ -27,17 +27,45 @@
             position: relative;
         }
 
-        button {
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        button, a {
             padding: 5px 10px;
             border: none;
-            background-color: #007BFF;
-            color: white;
             border-radius: 3px;
+            text-decoration: none;
+            font-size: 14px;
             cursor: pointer;
         }
 
-        button:hover {
+        .move-btn {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .move-btn:hover {
             background-color: #0056b3;
+        }
+
+        .link-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .link-btn:hover {
+            background-color: #1e7e34;
+        }
+
+        .custom-btn {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .custom-btn:hover {
+            background-color: #e0a800;
         }
 
         .dragging {
@@ -51,7 +79,7 @@
         .placeholder {
             background: #e0e0e0;
             border: 2px dashed #ccc;
-            height: 30px; /* 줄어든 높이 */
+            height: 30px;
             margin: 5px 0;
             width: 90%; /* 줄어든 너비 */
             margin-left: auto;
@@ -61,10 +89,38 @@
 </head>
 <body>
     <ul id="sortable-list">
-        <li>Item 1 <button class="move-btn">Move</button></li>
-        <li>Item 2 <button class="move-btn">Move</button></li>
-        <li>Item 3 <button class="move-btn">Move</button></li>
-        <li>Item 4 <button class="move-btn">Move</button></li>
+        <li>
+            Item 1
+            <div class="actions">
+                <button class="move-btn">Move</button>
+                <a href="https://example.com" class="link-btn" target="_blank">Link</a>
+                <button class="custom-btn" onclick="alert('Button clicked!')">Custom Action</button>
+            </div>
+        </li>
+        <li>
+            Item 2
+            <div class="actions">
+                <button class="move-btn">Move</button>
+                <a href="https://example.com" class="link-btn" target="_blank">Link</a>
+                <button class="custom-btn" onclick="alert('Button clicked!')">Custom Action</button>
+            </div>
+        </li>
+        <li>
+            Item 3
+            <div class="actions">
+                <button class="move-btn">Move</button>
+                <a href="https://example.com" class="link-btn" target="_blank">Link</a>
+                <button class="custom-btn" onclick="alert('Button clicked!')">Custom Action</button>
+            </div>
+        </li>
+        <li>
+            Item 4
+            <div class="actions">
+                <button class="move-btn">Move</button>
+                <a href="https://example.com" class="link-btn" target="_blank">Link</a>
+                <button class="custom-btn" onclick="alert('Button clicked!')">Custom Action</button>
+            </div>
+        </li>
     </ul>
 
     <script>
@@ -79,7 +135,7 @@
             const button = e.target.closest(".move-btn");
             if (!button) return;
 
-            const target = button.parentElement; // 버튼의 부모 요소인 li 가져오기
+            const target = button.parentElement.parentElement; // 버튼의 부모 요소(li) 가져오기
             if (!target) return;
 
             const touch = e.touches[0];
@@ -119,13 +175,10 @@
             const closestLi = elementBelow?.closest("li");
 
             if (touch.clientY < listRect.top) {
-                // 화면 최상단을 벗어나면 placeholder를 맨 위로 이동
                 list.insertBefore(placeholder, list.firstChild);
             } else if (touch.clientY > listRect.bottom) {
-                // 화면 최하단을 벗어나면 placeholder를 맨 아래로 이동
                 list.appendChild(placeholder);
             } else if (closestLi && closestLi !== placeholder && closestLi !== draggingElement) {
-                // 드래그 방향에 따라 placeholder를 정확히 이동
                 const rect = closestLi.getBoundingClientRect();
                 const midpoint = rect.top + rect.height / 2;
 
