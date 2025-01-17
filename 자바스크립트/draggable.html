@@ -44,7 +44,6 @@
     </style>
 </head>
 <body>
-    <h1>드래그</h1>
     <ul id="sortable-list">
         <li>Item 1</li>
         <li>Item 2</li>
@@ -56,7 +55,6 @@
         const list = document.getElementById("sortable-list");
         let draggingElement = null;
         let placeholder = null;
-        let startX = 0;
         let startY = 0;
         let initialLeft = 0;
 
@@ -69,7 +67,6 @@
             const rect = target.getBoundingClientRect();
 
             draggingElement = target;
-            startX = touch.clientX;
             startY = touch.clientY;
             initialLeft = rect.left; // 수평 위치 고정
 
@@ -102,7 +99,18 @@
             const closestLi = elementBelow?.closest("li");
 
             if (closestLi && closestLi !== placeholder && closestLi !== draggingElement) {
-                list.insertBefore(placeholder, closestLi.nextSibling);
+                // 드래그 방향에 따라 placeholder를 정확히 이동
+                const rect = closestLi.getBoundingClientRect();
+                const midpoint = rect.top + rect.height / 2;
+
+                if (touch.clientY < midpoint) {
+                    list.insertBefore(placeholder, closestLi);
+                } else {
+                    list.insertBefore(placeholder, closestLi.nextSibling);
+                }
+            } else if (!closestLi) {
+                // 터치가 맨 위로 이동할 때 placeholder를 첫 번째로 삽입
+                list.insertBefore(placeholder, list.firstChild);
             }
         });
 
