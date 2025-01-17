@@ -3,17 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drag and Drop with Multiple Buttons</title>
+    <title>Independent Drag and Drop Lists</title>
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
         }
 
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+
         ul {
             list-style: none;
             padding: 0;
             margin: 0;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #f9f9f9;
         }
 
         li {
@@ -32,13 +42,12 @@
             gap: 10px;
         }
 
-        button, a {
+        button {
             padding: 5px 10px;
             border: none;
             border-radius: 3px;
-            text-decoration: none;
-            font-size: 14px;
             cursor: pointer;
+            font-size: 14px;
         }
 
         .move-btn {
@@ -48,24 +57,6 @@
 
         .move-btn:hover {
             background-color: #0056b3;
-        }
-
-        .link-btn {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .link-btn:hover {
-            background-color: #1e7e34;
-        }
-
-        .custom-btn {
-            background-color: #ffc107;
-            color: black;
-        }
-
-        .custom-btn:hover {
-            background-color: #e0a800;
         }
 
         .dragging {
@@ -81,129 +72,144 @@
             border: 2px dashed #ccc;
             height: 30px;
             margin: 5px 0;
-            width: 90%; /* 줄어든 너비 */
+            width: 90%;
             margin-left: auto;
             margin-right: auto;
         }
     </style>
 </head>
 <body>
-    <ul id="sortable-list">
-        <li>
-            Item 1
-            <div class="actions">
-                <button class="move-btn">Move</button>
-                <a href="https://example.com" class="link-btn" target="_blank">Link</a>
-                <button class="custom-btn" onclick="alert('Button clicked!')">Custom Action</button>
-            </div>
-        </li>
-        <li>
-            Item 2
-            <div class="actions">
-                <button class="move-btn">Move</button>
-                <a href="https://example.com" class="link-btn" target="_blank">Link</a>
-                <button class="custom-btn" onclick="alert('Button clicked!')">Custom Action</button>
-            </div>
-        </li>
-        <li>
-            Item 3
-            <div class="actions">
-                <button class="move-btn">Move</button>
-                <a href="https://example.com" class="link-btn" target="_blank">Link</a>
-                <button class="custom-btn" onclick="alert('Button clicked!')">Custom Action</button>
-            </div>
-        </li>
-        <li>
-            Item 4
-            <div class="actions">
-                <button class="move-btn">Move</button>
-                <a href="https://example.com" class="link-btn" target="_blank">Link</a>
-                <button class="custom-btn" onclick="alert('Button clicked!')">Custom Action</button>
-            </div>
-        </li>
-    </ul>
+    <div class="container">
+        <ul id="list1">
+            <li>
+                List 1 - Item 1
+                <div class="actions">
+                    <button class="move-btn">Move</button>
+                </div>
+            </li>
+            <li>
+                List 1 - Item 2
+                <div class="actions">
+                    <button class="move-btn">Move</button>
+                </div>
+            </li>
+        </ul>
+
+        <ul id="list2">
+            <li>
+                List 2 - Item 1
+                <div class="actions">
+                    <button class="move-btn">Move</button>
+                </div>
+            </li>
+            <li>
+                List 2 - Item 2
+                <div class="actions">
+                    <button class="move-btn">Move</button>
+                </div>
+            </li>
+        </ul>
+
+        <ul id="list3">
+            <li>
+                List 3 - Item 1
+                <div class="actions">
+                    <button class="move-btn">Move</button>
+                </div>
+            </li>
+            <li>
+                List 3 - Item 2
+                <div class="actions">
+                    <button class="move-btn">Move</button>
+                </div>
+            </li>
+        </ul>
+    </div>
 
     <script>
-        const list = document.getElementById("sortable-list");
-        let draggingElement = null;
-        let placeholder = null;
-        let startY = 0;
-        let initialLeft = 0;
+        function enableDragAndDrop(list) {
+            let draggingElement = null;
+            let placeholder = null;
+            let startY = 0;
+            let initialLeft = 0;
 
-        // 버튼을 눌러 드래그 시작
-        list.addEventListener("touchstart", (e) => {
-            const button = e.target.closest(".move-btn");
-            if (!button) return;
+            list.addEventListener("touchstart", (e) => {
+                const button = e.target.closest(".move-btn");
+                if (!button) return;
 
-            const target = button.parentElement.parentElement; // 버튼의 부모 요소(li) 가져오기
-            if (!target) return;
+                const target = button.parentElement.parentElement; // 버튼의 부모 요소(li)
+                if (!target) return;
 
-            const touch = e.touches[0];
-            const rect = target.getBoundingClientRect();
+                const touch = e.touches[0];
+                const rect = target.getBoundingClientRect();
 
-            draggingElement = target;
-            startY = touch.clientY;
-            initialLeft = rect.left; // 수평 위치 고정
+                draggingElement = target;
+                startY = touch.clientY;
+                initialLeft = rect.left;
 
-            placeholder = document.createElement("li");
-            placeholder.classList.add("placeholder");
-            placeholder.style.height = `${rect.height * 0.7}px`; // 원래 높이보다 작게 설정
-            target.parentNode.insertBefore(placeholder, target.nextSibling);
+                placeholder = document.createElement("li");
+                placeholder.classList.add("placeholder");
+                placeholder.style.height = `${rect.height * 0.7}px`;
+                target.parentNode.insertBefore(placeholder, target.nextSibling);
 
-            target.classList.add("dragging");
-            target.style.width = `${rect.width}px`; // 드래그 시 크기 고정
-            target.style.top = `${rect.top}px`;
-            target.style.left = `${initialLeft}px`; // 고정된 수평 위치 설정
-        });
+                target.classList.add("dragging");
+                target.style.width = `${rect.width}px`;
+                target.style.top = `${rect.top}px`;
+                target.style.left = `${initialLeft}px`;
+            });
 
-        // 터치 이동 이벤트
-        list.addEventListener("touchmove", (e) => {
-            if (!draggingElement) return;
+            list.addEventListener("touchmove", (e) => {
+                if (!draggingElement) return;
 
-            e.preventDefault(); // 기본 스크롤 방지
+                e.preventDefault();
 
-            const touch = e.touches[0];
-            const deltaY = touch.clientY - startY;
+                const touch = e.touches[0];
+                const deltaY = touch.clientY - startY;
 
-            draggingElement.style.top = `${parseFloat(draggingElement.style.top) + deltaY}px`; // 수직 이동
-            draggingElement.style.left = `${initialLeft}px`; // 수평 위치 고정
+                draggingElement.style.top = `${parseFloat(draggingElement.style.top) + deltaY}px`;
+                draggingElement.style.left = `${initialLeft}px`;
 
-            startY = touch.clientY; // 업데이트된 시작점 설정
+                startY = touch.clientY;
 
-            const listRect = list.getBoundingClientRect(); // 리스트의 경계 가져오기
-            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
-            const closestLi = elementBelow?.closest("li");
+                const listRect = list.getBoundingClientRect();
+                const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+                const closestLi = elementBelow?.closest("li");
 
-            if (touch.clientY < listRect.top) {
-                list.insertBefore(placeholder, list.firstChild);
-            } else if (touch.clientY > listRect.bottom) {
-                list.appendChild(placeholder);
-            } else if (closestLi && closestLi !== placeholder && closestLi !== draggingElement) {
-                const rect = closestLi.getBoundingClientRect();
-                const midpoint = rect.top + rect.height / 2;
+                if (touch.clientY < listRect.top) {
+                    list.insertBefore(placeholder, list.firstChild);
+                } else if (touch.clientY > listRect.bottom) {
+                    list.appendChild(placeholder);
+                } else if (closestLi && closestLi !== placeholder && closestLi !== draggingElement) {
+                    const rect = closestLi.getBoundingClientRect();
+                    const midpoint = rect.top + rect.height / 2;
 
-                if (touch.clientY < midpoint) {
-                    list.insertBefore(placeholder, closestLi);
-                } else {
-                    list.insertBefore(placeholder, closestLi.nextSibling);
+                    if (touch.clientY < midpoint) {
+                        list.insertBefore(placeholder, closestLi);
+                    } else {
+                        list.insertBefore(placeholder, closestLi.nextSibling);
+                    }
                 }
-            }
-        });
+            });
 
-        // 터치 종료 이벤트
-        list.addEventListener("touchend", () => {
-            if (!draggingElement) return;
+            list.addEventListener("touchend", () => {
+                if (!draggingElement) return;
 
-            placeholder.parentNode.insertBefore(draggingElement, placeholder);
-            placeholder.remove();
+                placeholder.parentNode.insertBefore(draggingElement, placeholder);
+                placeholder.remove();
 
-            draggingElement.classList.remove("dragging");
-            draggingElement.style.removeProperty("top");
-            draggingElement.style.removeProperty("left");
-            draggingElement.style.removeProperty("width");
-            draggingElement = null;
-            placeholder = null;
-        });
+                draggingElement.classList.remove("dragging");
+                draggingElement.style.removeProperty("top");
+                draggingElement.style.removeProperty("left");
+                draggingElement.style.removeProperty("width");
+                draggingElement = null;
+                placeholder = null;
+            });
+        }
+
+        // 리스트 각각에 Drag and Drop 활성화
+        enableDragAndDrop(document.getElementById("list1"));
+        enableDragAndDrop(document.getElementById("list2"));
+        enableDragAndDrop(document.getElementById("list3"));
     </script>
 </body>
 </html>
