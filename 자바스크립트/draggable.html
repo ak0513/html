@@ -95,10 +95,17 @@
 
             startY = touch.clientY; // 업데이트된 시작점 설정
 
+            const listRect = list.getBoundingClientRect(); // 리스트의 경계 가져오기
             const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
             const closestLi = elementBelow?.closest("li");
 
-            if (closestLi && closestLi !== placeholder && closestLi !== draggingElement) {
+            if (touch.clientY < listRect.top) {
+                // 화면 최상단을 벗어나면 placeholder를 맨 위로 이동
+                list.insertBefore(placeholder, list.firstChild);
+            } else if (touch.clientY > listRect.bottom) {
+                // 화면 최하단을 벗어나면 placeholder를 맨 아래로 이동
+                list.appendChild(placeholder);
+            } else if (closestLi && closestLi !== placeholder && closestLi !== draggingElement) {
                 // 드래그 방향에 따라 placeholder를 정확히 이동
                 const rect = closestLi.getBoundingClientRect();
                 const midpoint = rect.top + rect.height / 2;
@@ -108,9 +115,6 @@
                 } else {
                     list.insertBefore(placeholder, closestLi.nextSibling);
                 }
-            } else if (!closestLi) {
-                // 터치가 맨 위로 이동할 때 placeholder를 첫 번째로 삽입
-                list.insertBefore(placeholder, list.firstChild);
             }
         });
 
