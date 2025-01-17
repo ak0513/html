@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vertical Drag and Drop</title>
+    <title>Drag and Drop with Button</title>
     <style>
         body {
             margin: 0;
@@ -21,11 +21,23 @@
             margin: 5px 0;
             background: #f0f0f0;
             border: 1px solid #ccc;
-            cursor: grab;
-            -webkit-user-select: none; /* Safari, Chrome */
-            -ms-user-select: none;     /* Internet Explorer */
-            user-select: none;         /* 표준 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             position: relative;
+        }
+
+        button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
         }
 
         .dragging {
@@ -39,16 +51,20 @@
         .placeholder {
             background: #e0e0e0;
             border: 2px dashed #ccc;
-            height: 20px;
+            height: 30px; /* 줄어든 높이 */
+            margin: 5px 0;
+            width: 90%; /* 줄어든 너비 */
+            margin-left: auto;
+            margin-right: auto;
         }
     </style>
 </head>
 <body>
     <ul id="sortable-list">
-        <li>Item 1</li>
-        <li>Item 2</li>
-        <li>Item 3</li>
-        <li>Item 4</li>
+        <li>Item 1 <button class="move-btn">Move</button></li>
+        <li>Item 2 <button class="move-btn">Move</button></li>
+        <li>Item 3 <button class="move-btn">Move</button></li>
+        <li>Item 4 <button class="move-btn">Move</button></li>
     </ul>
 
     <script>
@@ -58,9 +74,12 @@
         let startY = 0;
         let initialLeft = 0;
 
-        // 터치 시작 이벤트
+        // 버튼을 눌러 드래그 시작
         list.addEventListener("touchstart", (e) => {
-            const target = e.target.closest("li");
+            const button = e.target.closest(".move-btn");
+            if (!button) return;
+
+            const target = button.parentElement; // 버튼의 부모 요소인 li 가져오기
             if (!target) return;
 
             const touch = e.touches[0];
@@ -72,7 +91,7 @@
 
             placeholder = document.createElement("li");
             placeholder.classList.add("placeholder");
-            placeholder.style.height = `${rect.height}px`;
+            placeholder.style.height = `${rect.height * 0.7}px`; // 원래 높이보다 작게 설정
             target.parentNode.insertBefore(placeholder, target.nextSibling);
 
             target.classList.add("dragging");
