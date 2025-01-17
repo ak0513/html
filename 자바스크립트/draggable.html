@@ -5,9 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Touch Drag and Drop</title>
     <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
         ul {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         li {
@@ -35,7 +41,7 @@
 </head>
 <body>
     <ul id="sortable-list">
-        <li>Item 1</li>
+        <li>Item 11</li>
         <li>Item 2</li>
         <li>Item 3</li>
         <li>Item 4</li>
@@ -62,6 +68,9 @@
         // 터치 이동 이벤트
         list.addEventListener("touchmove", (e) => {
             if (!draggingElement) return;
+
+            // 기본 스크롤 동작 방지
+            e.preventDefault();
 
             const touch = e.touches[0];
             const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
