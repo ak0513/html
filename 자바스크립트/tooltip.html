@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button with Tooltip</title>
+    <style>
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .tooltip {
+            position: absolute;
+            top: 100%; /* Position below the button */
+            left: 50%; /* Center horizontally relative to the button */
+            transform: translateX(-50%);
+            display: none;
+            background-color: #333;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .tooltip-arrow {
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 6px solid #333;
+        }
+
+        .tooltip-content {
+            padding: 4px 8px;
+            font-size: 14px;
+        }
+
+        .tooltip.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="tooltip-container">
+        <button class="tooltip-button" id="tooltipButton">
+            <span class="button-text">Click me</span>
+            <span class="button-icon">🔽</span>
+        </button>
+        <div class="tooltip" id="tooltip">
+            <div class="tooltip-arrow"></div>
+            <div class="tooltip-content">This is a tooltip</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const button = document.getElementById('tooltipButton');
+            const tooltip = document.getElementById('tooltip');
+            const icon = button.querySelector('.button-icon');
+
+            button.addEventListener('click', () => {
+                // Toggle tooltip visibility
+                tooltip.classList.toggle('show');
+
+                // Get dimensions of button and icon
+                const buttonRect = button.getBoundingClientRect();
+                const iconRect = icon.getBoundingClientRect();
+
+                // Calculate tooltip position
+                const tooltipWidth = tooltip.offsetWidth;
+                const tooltipArrow = tooltip.querySelector('.tooltip-arrow');
+                const arrowWidth = tooltipArrow.offsetWidth;
+
+                const iconCenterX = iconRect.left + iconRect.width / 2;
+                const tooltipLeft = iconCenterX - tooltipWidth / 2;
+                const arrowLeft = tooltipWidth / 2 - arrowWidth / 2;
+
+                // Set tooltip and arrow positions
+                tooltip.style.left = `${tooltipLeft}px`;
+                tooltipArrow.style.left = `${arrowLeft}px`;
+            });
+        });
+    </script>
+</body>
+</html>
