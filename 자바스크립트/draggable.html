@@ -16,6 +16,9 @@
             background: #f0f0f0;
             border: 1px solid #ccc;
             cursor: grab;
+            -webkit-user-select: none; /* Safari, Chrome */
+            -ms-user-select: none;     /* Internet Explorer */
+            user-select: none;         /* 표준 */
         }
 
         .dragging {
@@ -32,7 +35,7 @@
 </head>
 <body>
     <ul id="sortable-list">
-        <li>Item 11</li>
+        <li>Item 1</li>
         <li>Item 2</li>
         <li>Item 3</li>
         <li>Item 4</li>
