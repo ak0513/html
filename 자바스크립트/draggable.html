@@ -3,76 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drag and Drop</title>
+    <title>Touch Drag and Drop</title>
     <style>
         ul {
-            list-style-type: none;
+            list-style: none;
             padding: 0;
         }
 
         li {
             padding: 15px;
             margin: 5px 0;
-            background-color: #f0f0f0;
+            background: #f0f0f0;
             border: 1px solid #ccc;
             cursor: grab;
         }
 
         .dragging {
-            opacity: 0.5;
+            opacity: 0.7;
             background-color: #d0d0d0;
+        }
+
+        .placeholder {
+            background: #e0e0e0;
+            border: 2px dashed #ccc;
+            height: 40px;
         }
     </style>
 </head>
 <body>
     <ul id="sortable-list">
-        <li draggable="true">Item 1</li>
-        <li draggable="true">Item 2</li>
-        <li draggable="true">Item 3</li>
-        <li draggable="true">Item 4</li>
+        <li>Item 11</li>
+        <li>Item 2</li>
+        <li>Item 3</li>
+        <li>Item 4</li>
     </ul>
 
     <script>
         const list = document.getElementById("sortable-list");
         let draggingElement = null;
+        let placeholder = null;
 
-        // 드래그 시작 이벤트
-        list.addEventListener("dragstart", (e) => {
-            draggingElement = e.target;
-            e.target.classList.add("dragging");
+        // 터치 시작 이벤트
+        list.addEventListener("touchstart", (e) => {
+            const target = e.target.closest("li");
+            if (!target) return;
+
+            draggingElement = target;
+            placeholder = document.createElement("li");
+            placeholder.classList.add("placeholder");
+            target.parentNode.insertBefore(placeholder, target.nextSibling);
+
+            target.classList.add("dragging");
         });
 
-        // 드래그 끝 이벤트
-        list.addEventListener("dragend", (e) => {
-            e.target.classList.remove("dragging");
-            draggingElement = null;
-        });
+        // 터치 이동 이벤트
+        list.addEventListener("touchmove", (e) => {
+            if (!draggingElement) return;
 
-        // 드래그 요소 위로 이동
-        list.addEventListener("dragover", (e) => {
-            e.preventDefault();
-            const afterElement = getDragAfterElement(list, e.clientY);
-            if (afterElement == null) {
-                list.appendChild(draggingElement);
-            } else {
-                list.insertBefore(draggingElement, afterElement);
+            const touch = e.touches[0];
+            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            const closestLi = elementBelow?.closest("li");
+
+            if (closestLi && closestLi !== placeholder && closestLi !== draggingElement) {
+                list.insertBefore(placeholder, closestLi.nextSibling);
             }
         });
 
-        // 드래그 위치 감지
-        function getDragAfterElement(container, y) {
-            const draggableElements = [...container.querySelectorAll("li:not(.dragging)")];
+        // 터치 종료 이벤트
+        list.addEventListener("touchend", () => {
+            if (!draggingElement) return;
 
-            return draggableElements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
-                } else {
-                    return closest;
-                }
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
-        }
+            placeholder.parentNode.insertBefore(draggingElement, placeholder);
+            placeholder.remove();
+            draggingElement.classList.remove("dragging");
+            draggingElement = null;
+            placeholder = null;
+        });
     </script>
 </body>
 </html>
