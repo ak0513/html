@@ -24,8 +24,8 @@
 
         .tooltip {
             position: absolute;
-            top: 100%; /* Position below the button */
-            left: 50%; /* Center horizontally relative to the button */
+            top: calc(100% + 10px); /* Position below the button with spacing */
+            left: 50%; /* Start centered relative to the button */
             transform: translateX(-50%);
             display: none;
             background-color: #333;
@@ -39,7 +39,7 @@
         .tooltip-arrow {
             position: absolute;
             top: -6px;
-            left: 50%;
+            left: 50%; /* Start centered relative to the tooltip */
             transform: translateX(-50%);
             width: 0;
             height: 0;
@@ -74,27 +74,25 @@
         document.addEventListener('DOMContentLoaded', () => {
             const button = document.getElementById('tooltipButton');
             const tooltip = document.getElementById('tooltip');
-            const icon = button.querySelector('.button-icon');
+            const tooltipArrow = tooltip.querySelector('.tooltip-arrow');
 
             button.addEventListener('click', () => {
                 // Toggle tooltip visibility
                 tooltip.classList.toggle('show');
 
-                // Get dimensions of button and icon
+                // Get button and tooltip dimensions
                 const buttonRect = button.getBoundingClientRect();
-                const iconRect = icon.getBoundingClientRect();
+                const tooltipRect = tooltip.getBoundingClientRect();
 
-                // Calculate tooltip position
-                const tooltipWidth = tooltip.offsetWidth;
-                const tooltipArrow = tooltip.querySelector('.tooltip-arrow');
-                const arrowWidth = tooltipArrow.offsetWidth;
+                // Calculate the button center and adjust tooltip position
+                const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+                const tooltipLeft = buttonCenterX - tooltipRect.width / 2;
 
-                const iconCenterX = iconRect.left + iconRect.width / 2;
-                const tooltipLeft = iconCenterX - tooltipWidth / 2;
-                const arrowLeft = tooltipWidth / 2 - arrowWidth / 2;
-
-                // Set tooltip and arrow positions
+                // Adjust the tooltip's position
                 tooltip.style.left = `${tooltipLeft}px`;
+
+                // Align the arrow to the button's center
+                const arrowLeft = tooltipRect.width / 2 - tooltipArrow.offsetWidth / 2;
                 tooltipArrow.style.left = `${arrowLeft}px`;
             });
         });
