@@ -1,1 +1,109 @@
-1
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>토스트 팝업 예시</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #007BFF;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.3s ease;
+      z-index: 1000;
+      transform: translateY(20px); /* 기본 위치에서 살짝 올라감 */
+    }
+    .toast.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0); /* 애니메이션 효과 */
+    }
+    .toast button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 18px;
+      margin-left: 15px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- 버튼들 -->
+  <button id="showAutoCloseToastButton">자동으로 닫히는 토스트 열기</button>
+  <button id="showCloseButtonToastButton">닫기 버튼이 있는 토스트 열기</button>
+
+  <!-- 자동으로 닫히는 토스트 팝업 -->
+  <div id="autoCloseToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1">
+    <span>5초 후 자동으로 닫힙니다!</span>
+  </div>
+
+  <!-- 닫기 버튼이 있는 토스트 팝업 -->
+  <div id="closeButtonToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1">
+    <span>이 토스트는 닫기 버튼이 있습니다!</span>
+    <button id="closeToastButton">닫기</button>
+  </div>
+
+  <script>
+    // 자동으로 닫히는 토스트 팝업 표시 함수
+    function showToastPopup(popupId, autoCloseTime, triggerButton) {
+      const toast = document.getElementById(popupId);
+      const showToastButton = triggerButton;  // 팝업을 연 버튼
+      let toastTimer;
+
+      // 팝업 열기
+      toast.classList.add('show');
+      toast.focus(); // 토스트 팝업에 포커스를 이동
+
+      // 자동 닫기 처리 (autoCloseTime이 없으면 닫지 않음)
+      if (autoCloseTime) {
+        toastTimer = setTimeout(() => {
+          closeToast();
+        }, autoCloseTime);
+      }
+
+      // 닫힌 후에 열었던 버튼으로 포커스 이동
+      function closeToast() {
+        toast.classList.remove('show');
+        clearTimeout(toastTimer);
+        showToastButton.focus();
+      }
+
+      return closeToast;
+    }
+
+    // 자동으로 닫히는 토스트 팝업 열기 버튼 클릭 시
+    document.getElementById('showAutoCloseToastButton').addEventListener('click', function() {
+      const closeToast = showToastPopup('autoCloseToast', 5000, this); // 5초 후 자동 닫기
+    });
+
+    // 닫기 버튼이 있는 토스트 팝업 열기 버튼 클릭 시
+    document.getElementById('showCloseButtonToastButton').addEventListener('click', function() {
+      const closeToast = showToastPopup('closeButtonToast', null, this); // 자동 닫지 않음
+      
+      // 닫기 버튼 클릭 시 토스트 닫기
+      document.getElementById('closeToastButton').addEventListener('click', closeToast);
+    });
+  </script>
+</body>
+</html>
