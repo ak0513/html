@@ -15,12 +15,12 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 12px;
-            background-color: #007bff;
-            color: white;
+            color: #333;
+            background-color: #fff;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size:16px;
         }
 
         .tooltip {
@@ -67,7 +67,7 @@
             font-size: 14px;
         }
 
-        .tooltip.show {
+        .tooltip.on {
             display: block;
         }
     </style>
@@ -225,91 +225,77 @@
                 const button = container.querySelector('.tooltip-button');
                 const tooltip = container.querySelector('.tooltip');
                 const closeButton = container.querySelector('.tooltip-close');
+                const buttonIcon = container.querySelector('.button-icon');
 
                 button.addEventListener('click', () => {
-                    const isTooltipVisible = tooltip.classList.contains('show');
+                    const isTooltipVisible = tooltip.classList.contains('on');
 
-                    document.querySelectorAll('.tooltip').forEach(tip => tip.classList.remove('show'));
+                    document.querySelectorAll('.tooltip').forEach(tip => tip.classList.remove('on'));
 
                     if (!isTooltipVisible) {
-                        tooltip.classList.add('show');
+                        tooltip.classList.add('on');
                     }
 
                     const tooltipWidth = tooltip.offsetWidth;
                     const tooltipHeight = tooltip.offsetHeight;
                     const buttonWidth = button.offsetWidth;
                     const buttonHeight = button.offsetHeight;
-                    var neckPx = 6;
+                    const buttonIconWidth = buttonIcon.offsetWidth;
+                    var neckPx = 6; // 꺽쇠 width
 
-                    // Update tooltip position
+                    // 툴팁이 아래에 위치
                     if (tooltip.classList.contains('topleft')) {
-                        // const tooltipTop = buttonHeight + neckPx;
-                        // const tooltipLeft = buttonWidth - 35;
                         tooltip.style.top = buttonHeight + neckPx + 'px';
-                        tooltip.style.left = buttonWidth - 35 + 'px';
+                        tooltip.style.left = buttonWidth - 35 + 'px'; // 박스 왼쪽라인부터 꺽쇠 위치만큼 이동 = 35
                     } else if(tooltip.classList.contains('topright')) {
-                        // const tooltipTop = buttonHeight + neckPx;
-                        // const tooltipRight = buttonWidth - tooltipWidth + 35;
                         tooltip.style.top = buttonHeight + neckPx + 'px';
                         tooltip.style.left = -1 * (tooltipWidth - buttonWidth) + 'px';
                         // tooltip.style.right = buttonWidth - tooltipWidth + 35 + 'px';
 
                     } else if(tooltip.classList.contains('topcenter')) {
-                        // const tooltipTop = buttonHeight + neckPx;
-                        // const tooltipLeft = buttonWidth - (tooltipWidth / 2) - 25;
                         tooltip.style.top = buttonHeight + neckPx + 'px';
-                        tooltip.style.left = buttonWidth - (tooltipWidth / 2) - 25 + 'px';
-
+                        // tooltip.style.left = buttonWidth - (tooltipWidth / 2) - 25 + 'px';
+                        tooltip.style.left = buttonWidth - (tooltipWidth / 2) - (buttonIconWidth / 2) - neckPx + 'px';
                     } 
                     
+                    // 툴팁이 위에 위치
                     else if (tooltip.classList.contains('bottomleft')) {
-                        // const tooltipBottom = -1 * tooltipHeight - neckPx;
-                        // const tooltipLeft = buttonWidth - 35;
                         tooltip.style.top = -1 * tooltipHeight - neckPx + 'px';
-                        tooltip.style.left = buttonWidth - 35 + 'px';
+                        tooltip.style.left = buttonWidth - 35 + 'px'; // 박스 왼쪽라인부터 꺽쇠 위치만큼 이동 = 35
                     } else if(tooltip.classList.contains('bottomright')) {
-                        // const tooltipBottom = -1 * tooltipHeight - neckPx;
-                        // const tooltipRight = buttonWidth - tooltipWidth + 35;
                         tooltip.style.top = -1 * tooltipHeight - neckPx + 'px';
                         tooltip.style.left = -1 * (tooltipWidth - buttonWidth) + 'px';
                         // tooltip.style.right = buttonWidth - tooltipWidth + 35 + 'px';
 
                     } else if(tooltip.classList.contains('bottomcenter')) {
-                        // const tooltipBottom = -1 * tooltipHeight - neckPx;
-                        // const tooltipLeft = buttonWidth - (tooltipWidth / 2) - 25;
                         tooltip.style.top = -1 * tooltipHeight - neckPx + 'px';
-                        tooltip.style.left = buttonWidth - (tooltipWidth / 2) - 25 + 'px';
+                        // tooltip.style.left = buttonWidth - (tooltipWidth / 2) - 25 + 'px';
+                        tooltip.style.left = buttonWidth - (tooltipWidth / 2) - (buttonIconWidth / 2) - neckPx + 'px';
                     }
 
+
+                    // 툴팁이 오른쪽에 위치
                     else if (tooltip.classList.contains('lefttop')) {
-                        // const tooltipLeft = buttonWidth + neckPx;
                         tooltip.style.top = '6px';
                         tooltip.style.left = buttonWidth + neckPx + 'px';
                     } else if(tooltip.classList.contains('leftbottom')) {
-                        // const tooltipLeft = buttonWidth + neckPx;
                         tooltip.style.bottom = '6px';
                         tooltip.style.left = buttonWidth + neckPx + 'px';
                     } else if(tooltip.classList.contains('leftcenter')) {
-                        // const tooltipTop = (buttonHeight / 2) - (tooltipHeight / 2);
-                        // const tooltipLeft = buttonWidth + neckPx;
                         tooltip.style.top = (buttonHeight / 2) - (tooltipHeight / 2) + 'px';
                         tooltip.style.left = buttonWidth + neckPx + 'px';
 
                     } 
                     
                     
-                    
+                    // 툴팁이 왼쪽에 위치
                     else if (tooltip.classList.contains('righttop')) {
-                        // const tooltipLeft = -1 * tooltipWidth - neckPx;
                         tooltip.style.top = '6px';
                         tooltip.style.left = -1 * tooltipWidth - neckPx + 'px';
                     } else if(tooltip.classList.contains('rightbottom')) {
-                        // const tooltipLeft = -1 * tooltipWidth - neckPx;
                         tooltip.style.bottom = '6px';
                         tooltip.style.left = -1 * tooltipWidth - neckPx + 'px';
                     } else if(tooltip.classList.contains('rightcenter')) {
-                        // const tooltipTop = (buttonHeight / 2) - (tooltipHeight / 2);
-                        // const tooltipLeft = -1 * tooltipWidth - neckPx;
                         tooltip.style.top = (buttonHeight / 2) - (tooltipHeight / 2) + 'px';
                         tooltip.style.left = -1 * tooltipWidth - neckPx + 'px';
 
@@ -318,21 +304,21 @@
 
                 if (closeButton) {
                     closeButton.addEventListener('click', (event) => {
-                        event.stopPropagation(); // Prevent the document click event from closing the tooltip
-                        tooltip.classList.remove('show');
+                        event.stopPropagation();
+                        tooltip.classList.remove('on');
                         button.focus(); 
                     });
                 }
 
                 tooltip.addEventListener('focusout', () => {
-                    tooltip.classList.remove('show');
+                    tooltip.classList.remove('on');
                 });
             });
 
-            // Close tooltips if clicked outside
+            
             document.addEventListener('click', (event) => {
                 if (!event.target.closest('.tooltip-container')) {
-                    document.querySelectorAll('.tooltip').forEach(tip => tip.classList.remove('show'));
+                    document.querySelectorAll('.tooltip').forEach(tip => tip.classList.remove('on'));
                 }
             });
         });
