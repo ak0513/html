@@ -61,20 +61,6 @@
             left: 50%;
             transform: translateX(-50%);
         }
-        .tooltip.bottomleft {
-            left: 10px;
-        }
-
-        .tooltip.bottomright::before {
-            bottom: -6px;
-            right: 10px;
-        }
-        
-        .tooltip.bottomcenter::before {
-            bottom: -6px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
 
         .tooltip-content {
             padding: 4px 8px;
@@ -87,6 +73,7 @@
     </style>
 </head>
 <body>
+    <div style="height:100px"></div>
     <div class="tooltip-container">
         <button class="tooltip-button">
             <span class="button-text">툴팁 버튼 1<Br>1</span>
@@ -191,19 +178,22 @@
                         tooltip.style.top = `${tooltipTop}px`;
                         tooltip.style.left = `${tooltipLeft}px`;
 
-                    } else if(tooltip.classList.contains('right')) {
+                    } else if (tooltip.classList.contains('bottomleft')) {
+                        const tooltipBottom = -1 * buttonHeight - 6;
+                        const tooltipLeft = buttonWidth - 35;
+                        tooltip.style.top = `${tooltipBottom}px`;
+                        tooltip.style.left = `${tooltipLeft}px`;
+                    } else if(tooltip.classList.contains('bottomright')) {
+                        const tooltipBottom = -1 * buttonHeight - 6;
+                        const tooltipRight = buttonWidth - tooltipWidth + 35;
+                        tooltip.style.top = `${tooltipBottom}px`;
+                        tooltip.style.right = `${tooltipRight}px`;
 
-                    } else if(tooltip.classList.contains('right')) {
-
-                    } else if(tooltip.classList.contains('right')) {
-
-                    } else if(tooltip.classList.contains('right')) {
-
-                    } else if(tooltip.classList.contains('right')) {
-
-                    } else if(tooltip.classList.contains('right')) {
-
-                    } else if(tooltip.classList.contains('right')) {
+                    } else if(tooltip.classList.contains('bottomcenter')) {
+                        const tooltipBottom = -1 * buttonHeight - 6;
+                        const tooltipLeft = buttonWidth - (tooltipWidth / 2) - 25;
+                        tooltip.style.top = `${tooltipBottom}px`;
+                        tooltip.style.left = `${tooltipLeft}px`;
 
                     }
                     
