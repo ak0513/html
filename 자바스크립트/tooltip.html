@@ -74,64 +74,107 @@
 </head>
 <body>
     <div style="height:100px"></div>
-    <div class="tooltip-container">
-        <button class="tooltip-button">
-            <span class="button-text">툴팁 버튼 1<Br>1</span>
-            <span class="button-icon">🔽</span>
-        </button>
-        <div class="tooltip topleft">
-            <div class="tooltip-content">This is tooltip 1</div>
-            <button type="button" class="tooltip-close">닫기</button>
+    <div>
+        <div class="tooltip-container">
+            <button class="tooltip-button">
+                <span class="button-text">툴팁 버튼 1</span>
+                <span class="button-icon">🔽</span>
+            </button>
+            <div class="tooltip topleft">
+                <div class="tooltip-content">This is tooltip 1</div>
+                <button type="button" class="tooltip-close">닫기</button>
+            </div>
+        </div>
+
+        <div class="tooltip-container">
+            <button class="tooltip-button">
+                <span class="button-text">툴팁 버튼 2<Br>1</span>
+                <span class="button-icon">🔽</span>
+            </button>
+            <div class="tooltip topright">
+                <div class="tooltip-content">This is tooltip 2</div>
+            </div>
+        </div>
+        
+        <div class="tooltip-container">
+            <button class="tooltip-button">
+                <span class="button-text">툴팁 버튼 2<Br>1<Br>1</span>
+                <span class="button-icon">🔽</span>
+            </button>
+            <div class="tooltip topcenter">
+                <div class="tooltip-content">This is tooltip 2</div>
+            </div>
         </div>
     </div>
 
-    <div class="tooltip-container">
-        <button class="tooltip-button">
-            <span class="button-text">툴팁 버튼 2<Br>1</span>
-            <span class="button-icon">🔽</span>
-        </button>
-        <div class="tooltip topright">
-            <div class="tooltip-content">This is tooltip 2</div>
+    <div style="height:100px"></div>
+
+    <div>
+        <div class="tooltip-container">
+            <button class="tooltip-button">
+                <span class="button-text">툴팁 버튼 1</span>
+                <span class="button-icon">🔽</span>
+            </button>
+            <div class="tooltip bottomleft">
+                <div class="tooltip-content">This is tooltip 1</div>
+            </div>
         </div>
-    </div>
-    
-    <div class="tooltip-container">
-        <button class="tooltip-button">
-            <span class="button-text">툴팁 버튼 2<Br>1</span>
-            <span class="button-icon">🔽</span>
-        </button>
-        <div class="tooltip topcenter">
-            <div class="tooltip-content">This is tooltip 2</div>
+
+        <div class="tooltip-container">
+            <button class="tooltip-button">
+                <span class="button-text">툴팁 버튼 2<Br>1</span>
+                <span class="button-icon">🔽</span>
+            </button>
+            <div class="tooltip bottomright">
+                <div class="tooltip-content">This is tooltip 2</div>
+            </div>
+        </div>
+        
+        <div class="tooltip-container">
+            <button class="tooltip-button">
+                <span class="button-text">툴팁 버튼 2<Br>1<Br>1</span>
+                <span class="button-icon">🔽</span>
+            </button>
+            <div class="tooltip bottomcenter">
+                <div class="tooltip-content">This is tooltip 2</div>
+            </div>
         </div>
     </div>
 
-    <div class="tooltip-container">
-        <button class="tooltip-button">
-            <span class="button-text">툴팁 버튼 1<Br>1</span>
-            <span class="button-icon">🔽</span>
-        </button>
-        <div class="tooltip bottomleft">
-            <div class="tooltip-content">This is tooltip 1</div>
-        </div>
-    </div>
+    <div style="height:100px"></div>
 
-    <div class="tooltip-container">
-        <button class="tooltip-button">
-            <span class="button-text">툴팁 버튼 2<Br>1</span>
-            <span class="button-icon">🔽</span>
-        </button>
-        <div class="tooltip bottomright">
-            <div class="tooltip-content">This is tooltip 2</div>
+    <div>
+        <div class="tooltip-container">
+            <button class="tooltip-button">
+                <span class="button-text">툴팁 버튼 1<Br>1<Br>1</span>
+                <span class="button-icon">🔽</span>
+            </button>
+            <div class="tooltip lefttop">
+                <div class="tooltip-content">This is tooltip 1</div>
+            </div>
         </div>
     </div>
-    
-    <div class="tooltip-container">
-        <button class="tooltip-button">
-            <span class="button-text">툴팁 버튼 2<Br>1</span>
-            <span class="button-icon">🔽</span>
-        </button>
-        <div class="tooltip bottomcenter">
-            <div class="tooltip-content">This is tooltip 2</div>
+    <div>
+
+        <div class="tooltip-container">
+            <button class="tooltip-button">
+                <span class="button-text">툴팁 버튼 2<Br>1<Br>1</span>
+                <span class="button-icon">🔽</span>
+            </button>
+            <div class="tooltip leftcenter">
+                <div class="tooltip-content">This is tooltip 2</div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="tooltip-container">
+            <button class="tooltip-button">
+                <span class="button-text">툴팁 버튼 2<Br>1<Br>1</span>
+                <span class="button-icon">🔽</span>
+            </button>
+            <div class="tooltip leftbottom">
+                <div class="tooltip-content">This is tooltip 2</div>
+            </div>
         </div>
     </div>
 
@@ -157,6 +200,7 @@
                     }
 
                     const tooltipWidth = tooltip.offsetWidth;
+                    const tooltipHeight = tooltip.offsetHeight;
                     const buttonWidth = button.offsetWidth;
                     const buttonHeight = button.offsetHeight;
 
@@ -178,24 +222,42 @@
                         tooltip.style.top = `${tooltipTop}px`;
                         tooltip.style.left = `${tooltipLeft}px`;
 
-                    } else if (tooltip.classList.contains('bottomleft')) {
-                        const tooltipBottom = -1 * buttonHeight - 6;
+                    } 
+                    
+                    else if (tooltip.classList.contains('bottomleft')) {
+                        const tooltipBottom = -1 * tooltipHeight - 6;
                         const tooltipLeft = buttonWidth - 35;
                         tooltip.style.top = `${tooltipBottom}px`;
                         tooltip.style.left = `${tooltipLeft}px`;
                     } else if(tooltip.classList.contains('bottomright')) {
-                        const tooltipBottom = -1 * buttonHeight - 6;
+                        const tooltipBottom = -1 * tooltipHeight - 6;
                         const tooltipRight = buttonWidth - tooltipWidth + 35;
                         tooltip.style.top = `${tooltipBottom}px`;
                         tooltip.style.right = `${tooltipRight}px`;
 
                     } else if(tooltip.classList.contains('bottomcenter')) {
-                        const tooltipBottom = -1 * buttonHeight - 6;
+                        const tooltipBottom = -1 * tooltipHeight - 6;
                         const tooltipLeft = buttonWidth - (tooltipWidth / 2) - 25;
                         tooltip.style.top = `${tooltipBottom}px`;
                         tooltip.style.left = `${tooltipLeft}px`;
-
                     }
+
+                    else if (tooltip.classList.contains('lefttop')) {
+                        tooltip.style.top = `6px`;
+                        const tooltipLeft = buttonWidth + 6;
+                        tooltip.style.left = `${tooltipLeft}px`;
+                    } else if(tooltip.classList.contains('leftbottom')) {
+                        const tooltipBottom = tooltipHeight - 6;
+                        const tooltipLeft = buttonWidth + 6;
+                        tooltip.style.bottom = `6px`;
+                        tooltip.style.left = `${tooltipLeft}px`;
+                    } else if(tooltip.classList.contains('leftcenter')) {
+                        const tooltipTop = (buttonHeight / 2) - (tooltipHeight / 2);
+                        const tooltipLeft = buttonWidth + 6;
+                        tooltip.style.top = `${tooltipTop}px`;
+                        tooltip.style.left = `${tooltipLeft}px`;
+
+                    } 
                     
                     
                     
