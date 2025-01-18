@@ -31,25 +31,28 @@
       border-radius: 8px;
       overflow: hidden;
       position: relative;
+      line-height: 1;
+      background: #333;
     }
-    .number .random {
+
+    .random {
       position: absolute;
-      top: 100%; /* 시작 위치 */
-      animation: slide 0.3s linear infinite;
+      top: 100%;
+      animation: slide-up 1s infinite;
     }
+    
     .number.stable .random {
       animation: none;
-      transform: translateY(-100%);
       top: 0;
       color: #4caf50;
-      font-weight: bold;
     }
-    @keyframes slide {
-      from {
-        transform: translateY(100%);
+
+    @keyframes slide-up {
+      0% {
+        top: 100%;
       }
-      to {
-        transform: translateY(-100%);
+      100% {
+        top: 0;
       }
     }
   </style>
@@ -75,12 +78,7 @@
       // 랜덤 숫자 애니메이션 실행
       let randomInterval = setInterval(() => {
         randomSpan.textContent = Math.floor(Math.random() * 10); // 랜덤 숫자
-        randomSpan.style.top = "100%"; // 초기 위치로 리셋
-        setTimeout(() => {
-          randomSpan.style.transition = "transform 0.3s linear";
-          randomSpan.style.transform = "translateY(-100%)";
-        }, 10); // 자연스러운 애니메이션
-      }, 300);
+      }, 100);
 
       // 목표 숫자로 고정
       setTimeout(() => {
