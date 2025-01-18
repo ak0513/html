@@ -1,76 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Random Numbers to Real Data</title>
+  <title>토스트 팝업</title>
   <style>
     body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background: #282c34;
-      color: #fff;
       font-family: Arial, sans-serif;
     }
-    .container {
-      display: flex;
-      gap: 20px;
-      font-size: 2rem;
-      font-weight: bold;
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #333;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 1000;
     }
-    .number {
-      width: 50px;
-      height: 50px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border: 2px solid #fff;
-      border-radius: 8px;
-      background: #333;
+    .toast.show {
+      display: block;
+      opacity: 1;
+    }
+    .toast button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      margin-left: 10px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="numbers-container">
-    <div class="number" data-target="7">0</div>
-    <div class="number" data-target="2">0</div>
-    <div class="number" data-target="5">0</div>
-    <div class="number" data-target="9">0</div>
-    <div class="number" data-target="3">0</div>
+  <button id="showToastButton">토스트 열기</button>
+
+  <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <span>토스트 메시지입니다!</span>
+    <button id="closeToastButton" aria-label="닫기">닫기</button>
   </div>
 
   <script>
-    const container = document.getElementById('numbers-container');
-    const numberElements = container.querySelectorAll('.number');
+    const toast = document.getElementById('toast');
+    const showToastButton = document.getElementById('showToastButton');
+    const closeToastButton = document.getElementById('closeToastButton');
 
-    function startAnimation(index) {
-      const element = numberElements[index];
-      const targetValue = element.getAttribute('data-target');
+    let toastTimer;
 
-      let randomCount = 0; // 난수 표시 횟수
-      let intervalDuration = 1000; // 1초 동안 10개의 난수 생성
-      let intervalTime = intervalDuration / 10; // 난수 간격 (100ms 간격으로 10번)
+    function showToast(autoCloseTime) {
+      toast.classList.add('show');
       
-      const randomInterval = setInterval(() => {
-        if (randomCount < 10) {
-          element.textContent = Math.floor(Math.random() * 10); // 난수 표시
-          randomCount++;
-        } else {
-          clearInterval(randomInterval); // 10개 난수 후 인터벌 종료
-          element.textContent = targetValue; // 목표 숫자로 설정
-        }
-      }, intervalTime); // 100ms 간격으로 10개 난수
+      // 자동 닫기 설정
+      toastTimer = setTimeout(() => {
+        closeToast();
+      }, autoCloseTime);
 
+      // 닫기 버튼 클릭 시 토스트 닫기
+      closeToastButton.addEventListener('click', closeToast);
+
+      // 포커스를 열었던 버튼으로 이동
+      showToastButton.focus();
     }
 
-    // 각 숫자에 대해 애니메이션 시작 (0.3초 간격으로 숫자 표시)
-    numberElements.forEach((_, index) => {
-      setTimeout(() => {
-        startAnimation(index);
-      }, 300 * index); // 각 숫자마다 0.3초 딜레이
+    function closeToast() {
+      toast.classList.remove('show');
+      clearTimeout(toastTimer);
+    }
+
+    // 토스트 팝업 열기 버튼 클릭 시
+    showToastButton.addEventListener('click', () => {
+      showToast(5000); // 5초 후 자동 닫기
     });
   </script>
 </body>
