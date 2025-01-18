@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Numbers to Real Data</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: #282c34;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      display: flex;
+      gap: 20px;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+    .number {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid #fff;
+      border-radius: 8px;
+      animation: spin 0.2s linear infinite;
+    }
+    .number.stable {
+      animation: none;
+      color: #4caf50;
+      border-color: #4caf50;
+    }
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="numbers-container">
+    <div class="number" data-target="7">0</div>
+    <div class="number" data-target="2">0</div>
+    <div class="number" data-target="5">0</div>
+    <div class="number" data-target="9">0</div>
+    <div class="number" data-target="3">0</div>
+  </div>
+
+  <script>
+    const container = document.getElementById('numbers-container');
+    const numberElements = container.querySelectorAll('.number');
+
+    function startAnimation(index) {
+      const element = numberElements[index];
+      const targetValue = element.getAttribute('data-target'); // 목표 숫자 가져오기
+      let randomInterval = setInterval(() => {
+        element.textContent = Math.floor(Math.random() * 10); // 랜덤 숫자
+      }, 100);
+
+      // 목표 숫자로 전환
+      setTimeout(() => {
+        clearInterval(randomInterval); // 랜덤 숫자 애니메이션 멈춤
+        element.textContent = targetValue; // 목표 숫자로 설정
+        element.classList.add('stable'); // 스타일 업데이트
+      }, 1500 * (index + 1)); // 순차적으로 적용
+    }
+
+    // 모든 숫자 애니메이션 시작
+    numberElements.forEach((_, index) => startAnimation(index));
+  </script>
+</body>
+</html>
