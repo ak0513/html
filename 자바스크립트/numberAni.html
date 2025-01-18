@@ -5,25 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Number Animation</title>
     <style>
-        #number-display {
+        .number-display {
             font-size: 48px;
             font-weight: bold;
             text-align: center;
-            margin-top: 20px;
+            margin: 10px 0;
         }
     </style>
 </head>
 <body>
-    <div id="number-display">5</div>
+    <div class="number-display" data-value="5">5</div>
+    <div class="number-display" data-value="8">8</div>
+    <div class="number-display" data-value="3">3</div>
 
     <script>
-        const displayElement = document.getElementById('number-display');
-        const initialValue = parseInt(displayElement.textContent, 10);
+        const elements = document.querySelectorAll('.number-display');
 
-        function showRandomNumbers(duration, callback) {
+        function showRandomNumbers(element, duration, callback) {
             const startTime = Date.now();
             const interval = setInterval(() => {
-                displayElement.textContent = Math.floor(Math.random() * 10);
+                element.textContent = Math.floor(Math.random() * 10);
                 if (Date.now() - startTime >= duration) {
                     clearInterval(interval);
                     callback();
@@ -31,11 +32,11 @@
             }, 100);
         }
 
-        function showSequentialNumbers(maxValue, duration) {
+        function showSequentialNumbers(element, maxValue, duration) {
             let current = 0;
             const intervalTime = duration / (maxValue + 1);
             const interval = setInterval(() => {
-                displayElement.textContent = current;
+                element.textContent = current;
                 if (current >= maxValue) {
                     clearInterval(interval);
                 }
@@ -43,9 +44,16 @@
             }, intervalTime);
         }
 
+        function startAnimationForElement(element) {
+            const initialValue = parseInt(element.getAttribute('data-value'), 10);
+            showRandomNumbers(element, 300, () => {
+                showSequentialNumbers(element, initialValue, 400);
+            });
+        }
+
         function startAnimation() {
-            showRandomNumbers(1000, () => {
-                showSequentialNumbers(initialValue, 1000);
+            elements.forEach((element) => {
+                startAnimationForElement(element);
             });
         }
 
