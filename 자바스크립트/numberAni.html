@@ -5,18 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Number Animation</title>
     <style>
+        .number-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 50px;
+        }
+
         .number-display {
             font-size: 48px;
             font-weight: bold;
             text-align: center;
-            margin: 10px 0;
         }
     </style>
 </head>
 <body>
-    <div class="number-display" data-value="5">5</div>
-    <div class="number-display" data-value="8">8</div>
-    <div class="number-display" data-value="3">3</div>
+    <div class="number-container">
+        <div class="number-display" data-value="5">5</div>
+        <div class="number-display" data-value="8">8</div>
+        <div class="number-display" data-value="3">3</div>
+    </div>
 
     <script>
         const elements = document.querySelectorAll('.number-display');
@@ -44,16 +52,19 @@
             }, intervalTime);
         }
 
-        function startAnimationForElement(element) {
+        function startAnimationForElement(element, delay) {
             const initialValue = parseInt(element.getAttribute('data-value'), 10);
-            showRandomNumbers(element, 300, () => {
-                showSequentialNumbers(element, initialValue, 400);
-            });
+            setTimeout(() => {
+                showRandomNumbers(element, 300, () => {
+                    showSequentialNumbers(element, initialValue, 400);
+                });
+            }, delay);
         }
 
         function startAnimation() {
-            elements.forEach((element) => {
-                startAnimationForElement(element);
+            elements.forEach((element, index) => {
+                const delay = index * 500; // 0.5초씩 지연
+                startAnimationForElement(element, delay);
             });
         }
 
