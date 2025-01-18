@@ -18,8 +18,8 @@
             font-weight: bold;
             text-align: center;
             overflow: hidden;
-            height: 60px; /* Adjust height for animation effect */
-            width: 50px; /* Adjust width to align numbers */
+            height: 60px; /* 높이를 고정하여 숫자가 깔끔히 보이도록 설정 */
+            width: 50px; /* 숫자 간 정렬을 위한 고정된 너비 */
         }
 
         .number {
@@ -31,10 +31,10 @@
 
         @keyframes slideUp {
             from {
-                transform: translateY(100%);
+                transform: translateY(100%); /* 화면 아래에서 시작 */
             }
             to {
-                transform: translateY(0);
+                transform: translateY(0); /* 정상 위치로 이동 */
             }
         }
     </style>
@@ -59,7 +59,7 @@
             const numberElement = document.createElement('div');
             numberElement.textContent = number;
             numberElement.className = 'number';
-            element.innerHTML = ''; // Clear previous number
+            element.innerHTML = ''; // 기존 숫자를 제거
             element.appendChild(numberElement);
         }
 
