@@ -1,82 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Random Number Animation</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f4f4f4;
-      font-family: Arial, sans-serif;
-    }
-    .number-box {
-      position: relative;
-      width: 100px;
-      height: 100px;
-      overflow: hidden;
-      border: 2px solid #333;
-      border-radius: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #fff;
-      font-size: 2rem;
-      font-weight: bold;
-      color: #333;
-    }
-    .number {
-      position: absolute;
-      animation: moveUp 0.5s ease-in-out forwards;
-    }
-    @keyframes moveUp {
-      from {
-        transform: translateY(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .count { font-size: 30px; margin: 10px 0; }
+    </style>
 </head>
 <body>
-  <div class="number-box" id="numberBox"></div>
+    <!-- 여러 개의 카운트 요소 -->
+    <h2 class="count" data-target="1234567890">0</h2>
+    <h2 class="count" data-target="987654321">0</h2>
+    <h2 class="count" data-target="456789012">0</h2>
 
-  <script>
-    function displayRandomNumbers() {
-      const numberBox = document.getElementById('numberBox');
-      let count = 0;
+    <script>
+        document.querySelectorAll('.count').forEach(countBox => {
+            let targetNumber = parseInt(countBox.getAttribute('data-target'), 10); // 목표 숫자 가져오기
+            let count = 0;
 
-      function showNumber(final = false) {
-        const number = document.createElement('div');
-        number.className = 'number';
-        number.textContent = final 
-          ? Math.floor(Math.random() * 100) // 마지막 숫자
-          : Math.floor(Math.random() * 100); // 중간 랜덤 숫자
-
-        numberBox.innerHTML = ''; // 이전 숫자 제거
-        numberBox.appendChild(number); // 새로운 숫자 표시
-      }
-
-      const interval = setInterval(() => {
-        if (count < 5) {
-          showNumber(); // 중간 숫자 표시
-          count++;
-        } else {
-          clearInterval(interval);
-          showNumber(true); // 최종 숫자 표시
-        }
-      }, 800); // 0.8초 간격
-    }
-
-    // 애니메이션 실행
-    displayRandomNumbers();
-  </script>
+            let counting = setInterval(function () {
+                if (count >= targetNumber) {
+                    count = targetNumber;
+                    clearInterval(counting);
+                } else {
+                    count += Math.ceil(targetNumber / 100); // 100회에 걸쳐 도달하도록 분할 증가
+                }
+                countBox.innerHTML = new Intl.NumberFormat().format(count);
+            }, 10);
+        });
+    </script>
 </body>
 </html>
