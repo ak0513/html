@@ -29,30 +29,38 @@
       align-items: center;
       border: 2px solid #fff;
       border-radius: 8px;
-      animation: spin 0.2s linear infinite;
+      overflow: hidden;
+      position: relative;
     }
-    .number.stable {
+    .number .random {
+      position: absolute;
+      top: 100%;
+      animation: slide 0.2s linear infinite;
+    }
+    .number.stable .random {
       animation: none;
+      transform: translateY(-100%);
+      top: 0;
       color: #4caf50;
-      border-color: #4caf50;
+      font-weight: bold;
     }
-    @keyframes spin {
+    @keyframes slide {
       from {
-        transform: rotate(0deg);
+        transform: translateY(0);
       }
       to {
-        transform: rotate(360deg);
+        transform: translateY(-100%);
       }
     }
   </style>
 </head>
 <body>
   <div class="container" id="numbers-container">
-    <div class="number" data-target="7">0</div>
-    <div class="number" data-target="2">0</div>
-    <div class="number" data-target="5">0</div>
-    <div class="number" data-target="9">0</div>
-    <div class="number" data-target="3">0</div>
+    <div class="number" data-target="7"><span class="random">0</span></div>
+    <div class="number" data-target="2"><span class="random">0</span></div>
+    <div class="number" data-target="5"><span class="random">0</span></div>
+    <div class="number" data-target="9"><span class="random">0</span></div>
+    <div class="number" data-target="3"><span class="random">0</span></div>
   </div>
 
   <script>
@@ -61,15 +69,17 @@
 
     function startAnimation(index) {
       const element = numberElements[index];
-      const targetValue = element.getAttribute('data-target'); // 목표 숫자 가져오기
+      const targetValue = element.getAttribute('data-target');
+      const randomSpan = element.querySelector('.random');
+
       let randomInterval = setInterval(() => {
-        element.textContent = Math.floor(Math.random() * 10); // 랜덤 숫자
+        randomSpan.textContent = Math.floor(Math.random() * 10); // 랜덤 숫자
       }, 100);
 
       // 목표 숫자로 전환
       setTimeout(() => {
         clearInterval(randomInterval); // 랜덤 숫자 애니메이션 멈춤
-        element.textContent = targetValue; // 목표 숫자로 설정
+        randomSpan.textContent = targetValue; // 목표 숫자로 설정
         element.classList.add('stable'); // 스타일 업데이트
       }, 1500 * (index + 1)); // 순차적으로 적용
     }
