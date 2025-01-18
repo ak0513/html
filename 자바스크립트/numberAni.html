@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Number Animation</title>
+    <title>Rotating Number Animation</title>
     <style>
         .number-container {
             display: flex;
@@ -13,38 +13,74 @@
         }
 
         .number-display {
+            position: relative;
             font-size: 48px;
             font-weight: bold;
             text-align: center;
+            overflow: hidden;
+            height: 60px; /* Adjust height for animation effect */
+            width: 50px; /* Adjust width to align numbers */
+        }
+
+        .number {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
     <div class="number-container">
-        <div class="number-display" data-value="5">5</div>
-        <div class="number-display" data-value="8">8</div>
-        <div class="number-display" data-value="3">3</div>
+        <div class="number-display" data-value="5">
+            <div class="number">5</div>
+        </div>
+        <div class="number-display" data-value="8">
+            <div class="number">8</div>
+        </div>
+        <div class="number-display" data-value="3">
+            <div class="number">3</div>
+        </div>
     </div>
 
     <script>
         const elements = document.querySelectorAll('.number-display');
 
+        function createRotatingNumber(element, number) {
+            const numberElement = document.createElement('div');
+            numberElement.textContent = number;
+            numberElement.className = 'number';
+            element.innerHTML = ''; // Clear previous number
+            element.appendChild(numberElement);
+        }
+
         function showRandomNumbers(element, duration, callback) {
             const startTime = Date.now();
             const interval = setInterval(() => {
-                element.textContent = Math.floor(Math.random() * 10);
-                if (Date.now() - startTime >= duration) {
-                    clearInterval(interval);
-                    callback();
-                }
+                const randomNum = Math.floor(Math.random() * 10);
+                createRotatingNumber(element, randomNum);
             }, 100);
+
+            setTimeout(() => {
+                clearInterval(interval);
+                callback();
+            }, duration);
         }
 
         function showSequentialNumbers(element, maxValue, duration) {
             let current = 0;
             const intervalTime = duration / (maxValue + 1);
             const interval = setInterval(() => {
-                element.textContent = current;
+                createRotatingNumber(element, current);
                 if (current >= maxValue) {
                     clearInterval(interval);
                 }
