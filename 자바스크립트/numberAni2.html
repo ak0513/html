@@ -34,8 +34,8 @@
     }
     .number .random {
       position: absolute;
-      top: 100%;
-      animation: slide 0.2s linear infinite;
+      top: 100%; /* 시작 위치 */
+      animation: slide 0.3s linear infinite;
     }
     .number.stable .random {
       animation: none;
@@ -46,7 +46,7 @@
     }
     @keyframes slide {
       from {
-        transform: translateY(0);
+        transform: translateY(100%);
       }
       to {
         transform: translateY(-100%);
@@ -72,16 +72,22 @@
       const targetValue = element.getAttribute('data-target');
       const randomSpan = element.querySelector('.random');
 
+      // 랜덤 숫자 애니메이션 실행
       let randomInterval = setInterval(() => {
         randomSpan.textContent = Math.floor(Math.random() * 10); // 랜덤 숫자
-      }, 100);
+        randomSpan.style.top = "100%"; // 초기 위치로 리셋
+        setTimeout(() => {
+          randomSpan.style.transition = "transform 0.3s linear";
+          randomSpan.style.transform = "translateY(-100%)";
+        }, 10); // 자연스러운 애니메이션
+      }, 300);
 
-      // 목표 숫자로 전환
+      // 목표 숫자로 고정
       setTimeout(() => {
         clearInterval(randomInterval); // 랜덤 숫자 애니메이션 멈춤
         randomSpan.textContent = targetValue; // 목표 숫자로 설정
-        element.classList.add('stable'); // 스타일 업데이트
-      }, 1500 * (index + 1)); // 순차적으로 적용
+        element.classList.add('stable'); // 고정 스타일 추가
+      }, 1500 * (index + 1)); // 순차적 적용
     }
 
     // 모든 숫자 애니메이션 시작
