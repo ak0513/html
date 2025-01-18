@@ -1,111 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rotating Number Animation</title>
-    <style>
-        .number-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 50px;
-        }
-
-        .number-display {
-            position: relative;
-            font-size: 48px;
-            font-weight: bold;
-            text-align: center;
-            overflow: hidden;
-            height: 60px; /* 높이를 고정하여 숫자가 깔끔히 보이도록 설정 */
-            width: 50px; /* 숫자 간 정렬을 위한 고정된 너비 */
-        }
-
-        .number {
-            position: absolute;
-            width: 100%;
-            text-align: center;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(100%); /* 화면 아래에서 시작 */
-            }
-            to {
-                transform: translateY(0); /* 정상 위치로 이동 */
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Number Animation</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+      font-family: Arial, sans-serif;
+    }
+    .number-box {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      overflow: hidden;
+      border: 2px solid #333;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #fff;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #333;
+    }
+    .number {
+      position: absolute;
+      animation: moveUp 0.5s ease-in-out forwards;
+    }
+    @keyframes moveUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="number-container">
-        <div class="number-display" data-value="5">
-            <div class="number">5</div>
-        </div>
-        <div class="number-display" data-value="8">
-            <div class="number">8</div>
-        </div>
-        <div class="number-display" data-value="3">
-            <div class="number">3</div>
-        </div>
-    </div>
+  <div class="number-box" id="numberBox"></div>
 
-    <script>
-        const elements = document.querySelectorAll('.number-display');
+  <script>
+    function displayRandomNumbers() {
+      const numberBox = document.getElementById('numberBox');
+      let count = 0;
 
-        function createRotatingNumber(element, number) {
-            const numberElement = document.createElement('div');
-            numberElement.textContent = number;
-            numberElement.className = 'number';
-            element.innerHTML = ''; // 기존 숫자를 제거
-            element.appendChild(numberElement);
+      function showNumber(final = false) {
+        const number = document.createElement('div');
+        number.className = 'number';
+        number.textContent = final 
+          ? Math.floor(Math.random() * 100) // 마지막 숫자
+          : Math.floor(Math.random() * 100); // 중간 랜덤 숫자
+
+        numberBox.innerHTML = ''; // 이전 숫자 제거
+        numberBox.appendChild(number); // 새로운 숫자 표시
+      }
+
+      const interval = setInterval(() => {
+        if (count < 5) {
+          showNumber(); // 중간 숫자 표시
+          count++;
+        } else {
+          clearInterval(interval);
+          showNumber(true); // 최종 숫자 표시
         }
+      }, 800); // 0.8초 간격
+    }
 
-        function showRandomNumbers(element, duration, callback) {
-            const startTime = Date.now();
-            const interval = setInterval(() => {
-                const randomNum = Math.floor(Math.random() * 10);
-                createRotatingNumber(element, randomNum);
-            }, 100);
-
-            setTimeout(() => {
-                clearInterval(interval);
-                callback();
-            }, duration);
-        }
-
-        function showSequentialNumbers(element, maxValue, duration) {
-            let current = 0;
-            const intervalTime = duration / (maxValue + 1);
-            const interval = setInterval(() => {
-                createRotatingNumber(element, current);
-                if (current >= maxValue) {
-                    clearInterval(interval);
-                }
-                current++;
-            }, intervalTime);
-        }
-
-        function startAnimationForElement(element, delay) {
-            const initialValue = parseInt(element.getAttribute('data-value'), 10);
-            setTimeout(() => {
-                showRandomNumbers(element, 300, () => {
-                    showSequentialNumbers(element, initialValue, 400);
-                });
-            }, delay);
-        }
-
-        function startAnimation() {
-            elements.forEach((element, index) => {
-                const delay = index * 500; // 0.5초씩 지연
-                startAnimationForElement(element, delay);
-            });
-        }
-
-        // 애니메이션 시작
-        startAnimation();
-    </script>
+    // 애니메이션 실행
+    displayRandomNumbers();
+  </script>
 </body>
 </html>
