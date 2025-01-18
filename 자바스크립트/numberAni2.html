@@ -12,25 +12,38 @@
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background-color: #333;
+      background-color: #007BFF;
       color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
+      padding: 15px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       display: none;
       opacity: 0;
-      transition: opacity 0.5s ease;
+      transition: opacity 0.5s ease, transform 0.3s ease;
       z-index: 1000;
+      transform: translateY(20px); /* 기본 위치에서 살짝 올라감 */
     }
     .toast.show {
       display: block;
       opacity: 1;
+      transform: translateY(0); /* 애니메이션 효과 */
     }
     .toast button {
       background: none;
       border: none;
       color: white;
+      font-size: 18px;
+      margin-left: 15px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button {
+      padding: 10px 20px;
       font-size: 16px;
-      margin-left: 10px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
     }
   </style>
@@ -38,7 +51,7 @@
 <body>
   <button id="showToastButton">토스트 열기</button>
 
-  <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+  <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1">
     <span>토스트 메시지입니다!</span>
     <button id="closeToastButton" aria-label="닫기">닫기</button>
   </div>
@@ -52,7 +65,8 @@
 
     function showToast(autoCloseTime) {
       toast.classList.add('show');
-      
+      toast.focus(); // 토스트 팝업이 열리면 포커스를 토스트에 이동
+
       // 자동 닫기 설정
       toastTimer = setTimeout(() => {
         closeToast();
@@ -61,8 +75,10 @@
       // 닫기 버튼 클릭 시 토스트 닫기
       closeToastButton.addEventListener('click', closeToast);
 
-      // 포커스를 열었던 버튼으로 이동
-      showToastButton.focus();
+      // 닫힌 후에 열었던 버튼으로 포커스 이동
+      setTimeout(() => {
+        showToastButton.focus();
+      }, autoCloseTime);
     }
 
     function closeToast() {
