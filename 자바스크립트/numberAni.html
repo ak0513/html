@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Animation</title>
+    <style>
+        #number-display {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="number-display">5</div>
+
+    <script>
+        const displayElement = document.getElementById('number-display');
+        const initialValue = parseInt(displayElement.textContent, 10);
+
+        function showRandomNumbers(duration, callback) {
+            const startTime = Date.now();
+            const interval = setInterval(() => {
+                displayElement.textContent = Math.floor(Math.random() * 10);
+                if (Date.now() - startTime >= duration) {
+                    clearInterval(interval);
+                    callback();
+                }
+            }, 100);
+        }
+
+        function showSequentialNumbers(maxValue, duration) {
+            let current = 0;
+            const intervalTime = duration / (maxValue + 1);
+            const interval = setInterval(() => {
+                displayElement.textContent = current;
+                if (current >= maxValue) {
+                    clearInterval(interval);
+                }
+                current++;
+            }, intervalTime);
+        }
+
+        function startAnimation() {
+            showRandomNumbers(1000, () => {
+                showSequentialNumbers(initialValue, 1000);
+            });
+        }
+
+        // 애니메이션 시작
+        startAnimation();
+    </script>
+</body>
+</html>
