@@ -50,16 +50,16 @@
       const element = numberElements[index];
       const targetValue = element.getAttribute('data-target');
 
-      // 랜덤 숫자 애니메이션 실행
+      // 난수 표시 속도: 0.3초 간격으로 숫자 표시
       let randomInterval = setInterval(() => {
-        element.textContent = Math.floor(Math.random() * 10); // 랜덤 숫자
-      }, 100);
+        element.textContent = Math.floor(Math.random() * 10); // 난수 표시
+      }, 300); // 0.3초 간격
 
-      // 목표 숫자로 고정
+      // 목표 숫자로 고정 (0.2초 후)
       setTimeout(() => {
-        clearInterval(randomInterval); // 랜덤 숫자 애니메이션 멈춤
+        clearInterval(randomInterval); // 난수 애니메이션 멈춤
         element.textContent = targetValue; // 목표 숫자로 설정
-      }, 1500 * (index + 1)); // 순차적 적용
+      }, 200 + (1500 * index)); // 0.2초 딜레이 후 목표 숫자로 설정
     }
 
     // 모든 숫자 애니메이션 시작
