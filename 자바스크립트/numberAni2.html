@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>토스트 팝업</title>
+  <title>토스트 팝업 예시</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -49,20 +49,26 @@
   </style>
 </head>
 <body>
-  <button id="showToastButton">토스트 열기</button>
+  <!-- 버튼들 -->
+  <button id="showAutoCloseToastButton">자동으로 닫히는 토스트 열기</button>
+  <button id="showCloseButtonToastButton">닫기 버튼이 있는 토스트 열기</button>
 
-  <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1">
-    <span>토스트 메시지입니다!</span>
-    <button id="closeToastButton" aria-label="닫기">닫기</button>
+  <!-- 자동으로 닫히는 토스트 팝업 -->
+  <div id="autoCloseToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1">
+    <span>5초 후 자동으로 닫힙니다!</span>
+  </div>
+
+  <!-- 닫기 버튼이 있는 토스트 팝업 -->
+  <div id="closeButtonToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1">
+    <span>이 토스트는 닫기 버튼이 있습니다!</span>
+    <button id="closeToastButton">닫기</button>
   </div>
 
   <script>
-    // 토스트 팝업을 표시하는 함수
+    // 자동으로 닫히는 토스트 팝업 표시 함수
     function showToastPopup(popupId, autoCloseTime) {
       const toast = document.getElementById(popupId);
-      const closeToastButton = toast.querySelector('button');
-      const showToastButton = document.getElementById('showToastButton');
-
+      const showToastButton = document.getElementById('showAutoCloseToastButton') || document.getElementById('showCloseButtonToastButton');
       let toastTimer;
 
       // 팝업 열기
@@ -76,20 +82,27 @@
         }, autoCloseTime);
       }
 
-      // 닫기 버튼 클릭 시 토스트 닫기
-      closeToastButton.addEventListener('click', closeToast);
-
       // 닫힌 후에 열었던 버튼으로 포커스 이동
       function closeToast() {
         toast.classList.remove('show');
         clearTimeout(toastTimer);
         showToastButton.focus();
       }
+
+      return closeToast;
     }
 
-    // 토스트 팝업 열기 버튼 클릭 시
-    document.getElementById('showToastButton').addEventListener('click', () => {
-      showToastPopup('toast', 5000); // 5초 후 자동 닫기
+    // 자동으로 닫히는 토스트 팝업 열기 버튼 클릭 시
+    document.getElementById('showAutoCloseToastButton').addEventListener('click', () => {
+      showToastPopup('autoCloseToast', 5000); // 5초 후 자동 닫기
+    });
+
+    // 닫기 버튼이 있는 토스트 팝업 열기 버튼 클릭 시
+    document.getElementById('showCloseButtonToastButton').addEventListener('click', () => {
+      const closeToast = showToastPopup('closeButtonToast');
+      
+      // 닫기 버튼 클릭 시 토스트 닫기
+      document.getElementById('closeToastButton').addEventListener('click', closeToast);
     });
   </script>
 </body>
