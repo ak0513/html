@@ -81,7 +81,7 @@
                 <span class="button-icon">🔽</span>
             </button>
             <div class="tooltip topleft">
-                <div class="tooltip-content">This is tooltip 1</div>
+                <div class="tooltip-content">This is tooltip 1<br>This is tooltip 1</div>
                 <button type="button" class="tooltip-close">닫기</button>
             </div>
         </div>
@@ -103,6 +103,7 @@
             </button>
             <div class="tooltip topcenter">
                 <div class="tooltip-content">This is tooltip 2</div>
+                <button type="button" class="tooltip-close">닫기</button>
             </div>
         </div>
     </div>
@@ -116,7 +117,7 @@
                 <span class="button-icon">🔽</span>
             </button>
             <div class="tooltip bottomleft">
-                <div class="tooltip-content">This is tooltip 1</div>
+                <div class="tooltip-content">This is tooltip 1<br>This is tooltip 1</div>
             </div>
         </div>
 
@@ -155,7 +156,6 @@
         </div>
     </div>
     <div>
-
         <div class="tooltip-container">
             <button class="tooltip-button">
                 <span class="button-text">툴팁 버튼 2<Br>1<Br>1</span>
@@ -178,6 +178,45 @@
         </div>
     </div>
 
+    <div style="height:100px"></div>
+
+    <div style="display:flex;">
+        <div style="width:300px"></div>
+        <div class="tooltip-container">
+            <button class="tooltip-button">
+                <span class="button-text">툴팁 버튼 1<Br>1<Br>1</span>
+                <span class="button-icon">🔽</span>
+            </button>
+            <div class="tooltip righttop">
+                <div class="tooltip-content">This is tooltip 1</div>
+            </div>
+        </div>
+    </div>
+    <div style="display:flex;">
+        <div style="width:300px"></div>
+        <div class="tooltip-container">
+            <button class="tooltip-button">
+                <span class="button-text">툴팁 버튼 2<Br>1<Br>1</span>
+                <span class="button-icon">🔽</span>
+            </button>
+            <div class="tooltip rightcenter">
+                <div class="tooltip-content">This is tooltip 2</div>
+            </div>
+        </div>
+    </div>
+    <div style="display:flex;">
+        <div style="width:300px"></div>
+        <div class="tooltip-container">
+            <button class="tooltip-button">
+                <span class="button-text">툴팁 버튼 2<Br>1<Br>1</span>
+                <span class="button-icon">🔽</span>
+            </button>
+            <div class="tooltip rightbottom">
+                <div class="tooltip-content">This is tooltip 2</div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const tooltipContainers = document.querySelectorAll('.tooltip-container');
@@ -188,13 +227,10 @@
                 const closeButton = container.querySelector('.tooltip-close');
 
                 button.addEventListener('click', () => {
-                    // Toggle tooltip visibility
                     const isTooltipVisible = tooltip.classList.contains('show');
 
-                    // Hide all tooltips
                     document.querySelectorAll('.tooltip').forEach(tip => tip.classList.remove('show'));
 
-                    // Show the clicked tooltip if it was not visible
                     if (!isTooltipVisible) {
                         tooltip.classList.add('show');
                     }
@@ -203,68 +239,81 @@
                     const tooltipHeight = tooltip.offsetHeight;
                     const buttonWidth = button.offsetWidth;
                     const buttonHeight = button.offsetHeight;
+                    var neckPx = 6;
 
                     // Update tooltip position
                     if (tooltip.classList.contains('topleft')) {
-                        const tooltipTop = buttonHeight + 6;
-                        const tooltipLeft = buttonWidth - 35;
-                        tooltip.style.top = `${tooltipTop}px`;
-                        tooltip.style.left = `${tooltipLeft}px`;
+                        // const tooltipTop = buttonHeight + neckPx;
+                        // const tooltipLeft = buttonWidth - 35;
+                        tooltip.style.top = buttonHeight + neckPx + 'px';
+                        tooltip.style.left = buttonWidth - 35 + 'px';
                     } else if(tooltip.classList.contains('topright')) {
-                        const tooltipTop = buttonHeight + 6;
-                        const tooltipRight = buttonWidth - tooltipWidth + 35;
-                        tooltip.style.top = `${tooltipTop}px`;
-                        tooltip.style.right = `${tooltipRight}px`;
+                        // const tooltipTop = buttonHeight + neckPx;
+                        // const tooltipRight = buttonWidth - tooltipWidth + 35;
+                        tooltip.style.top = buttonHeight + neckPx + 'px';
+                        tooltip.style.left = -1 * (tooltipWidth - buttonWidth) + 'px';
+                        // tooltip.style.right = buttonWidth - tooltipWidth + 35 + 'px';
 
                     } else if(tooltip.classList.contains('topcenter')) {
-                        const tooltipTop = buttonHeight + 6;
-                        const tooltipLeft = buttonWidth - (tooltipWidth / 2) - 25;
-                        tooltip.style.top = `${tooltipTop}px`;
-                        tooltip.style.left = `${tooltipLeft}px`;
+                        // const tooltipTop = buttonHeight + neckPx;
+                        // const tooltipLeft = buttonWidth - (tooltipWidth / 2) - 25;
+                        tooltip.style.top = buttonHeight + neckPx + 'px';
+                        tooltip.style.left = buttonWidth - (tooltipWidth / 2) - 25 + 'px';
 
                     } 
                     
                     else if (tooltip.classList.contains('bottomleft')) {
-                        const tooltipBottom = -1 * tooltipHeight - 6;
-                        const tooltipLeft = buttonWidth - 35;
-                        tooltip.style.top = `${tooltipBottom}px`;
-                        tooltip.style.left = `${tooltipLeft}px`;
+                        // const tooltipBottom = -1 * tooltipHeight - neckPx;
+                        // const tooltipLeft = buttonWidth - 35;
+                        tooltip.style.top = -1 * tooltipHeight - neckPx + 'px';
+                        tooltip.style.left = buttonWidth - 35 + 'px';
                     } else if(tooltip.classList.contains('bottomright')) {
-                        const tooltipBottom = -1 * tooltipHeight - 6;
-                        const tooltipRight = buttonWidth - tooltipWidth + 35;
-                        tooltip.style.top = `${tooltipBottom}px`;
-                        tooltip.style.right = `${tooltipRight}px`;
+                        // const tooltipBottom = -1 * tooltipHeight - neckPx;
+                        // const tooltipRight = buttonWidth - tooltipWidth + 35;
+                        tooltip.style.top = -1 * tooltipHeight - neckPx + 'px';
+                        tooltip.style.left = -1 * (tooltipWidth - buttonWidth) + 'px';
+                        // tooltip.style.right = buttonWidth - tooltipWidth + 35 + 'px';
 
                     } else if(tooltip.classList.contains('bottomcenter')) {
-                        const tooltipBottom = -1 * tooltipHeight - 6;
-                        const tooltipLeft = buttonWidth - (tooltipWidth / 2) - 25;
-                        tooltip.style.top = `${tooltipBottom}px`;
-                        tooltip.style.left = `${tooltipLeft}px`;
+                        // const tooltipBottom = -1 * tooltipHeight - neckPx;
+                        // const tooltipLeft = buttonWidth - (tooltipWidth / 2) - 25;
+                        tooltip.style.top = -1 * tooltipHeight - neckPx + 'px';
+                        tooltip.style.left = buttonWidth - (tooltipWidth / 2) - 25 + 'px';
                     }
 
                     else if (tooltip.classList.contains('lefttop')) {
-                        tooltip.style.top = `6px`;
-                        const tooltipLeft = buttonWidth + 6;
-                        tooltip.style.left = `${tooltipLeft}px`;
+                        // const tooltipLeft = buttonWidth + neckPx;
+                        tooltip.style.top = '6px';
+                        tooltip.style.left = buttonWidth + neckPx + 'px';
                     } else if(tooltip.classList.contains('leftbottom')) {
-                        const tooltipBottom = tooltipHeight - 6;
-                        const tooltipLeft = buttonWidth + 6;
-                        tooltip.style.bottom = `6px`;
-                        tooltip.style.left = `${tooltipLeft}px`;
+                        // const tooltipLeft = buttonWidth + neckPx;
+                        tooltip.style.bottom = '6px';
+                        tooltip.style.left = buttonWidth + neckPx + 'px';
                     } else if(tooltip.classList.contains('leftcenter')) {
-                        const tooltipTop = (buttonHeight / 2) - (tooltipHeight / 2);
-                        const tooltipLeft = buttonWidth + 6;
-                        tooltip.style.top = `${tooltipTop}px`;
-                        tooltip.style.left = `${tooltipLeft}px`;
+                        // const tooltipTop = (buttonHeight / 2) - (tooltipHeight / 2);
+                        // const tooltipLeft = buttonWidth + neckPx;
+                        tooltip.style.top = (buttonHeight / 2) - (tooltipHeight / 2) + 'px';
+                        tooltip.style.left = buttonWidth + neckPx + 'px';
 
                     } 
                     
                     
                     
-                    else {
-                        const tooltipLeft = buttonWidth - 35;
-                        tooltip.style.left = `${tooltipLeft}px`;
-                    }
+                    else if (tooltip.classList.contains('righttop')) {
+                        // const tooltipLeft = -1 * tooltipWidth - neckPx;
+                        tooltip.style.top = '6px';
+                        tooltip.style.left = -1 * tooltipWidth - neckPx + 'px';
+                    } else if(tooltip.classList.contains('rightbottom')) {
+                        // const tooltipLeft = -1 * tooltipWidth - neckPx;
+                        tooltip.style.bottom = '6px';
+                        tooltip.style.left = -1 * tooltipWidth - neckPx + 'px';
+                    } else if(tooltip.classList.contains('rightcenter')) {
+                        // const tooltipTop = (buttonHeight / 2) - (tooltipHeight / 2);
+                        // const tooltipLeft = -1 * tooltipWidth - neckPx;
+                        tooltip.style.top = (buttonHeight / 2) - (tooltipHeight / 2) + 'px';
+                        tooltip.style.left = -1 * tooltipWidth - neckPx + 'px';
+
+                    } 
                 });
 
                 if (closeButton) {
