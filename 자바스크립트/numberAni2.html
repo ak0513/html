@@ -50,19 +50,23 @@
       const element = numberElements[index];
       const targetValue = element.getAttribute('data-target');
 
-      // 난수 표시 속도: 0.3초 간격으로 숫자 표시
-      let randomInterval = setInterval(() => {
-        element.textContent = Math.floor(Math.random() * 10); // 난수 표시
-      }, 300); // 0.3초 간격
+      let randomCount = 0; // 난수 표시 횟수
+      let intervalDuration = 30; // 0.3초 동안 10개의 난수 생성
+      let intervalTime = intervalDuration / 10; // 난수 간격 (30ms 간격으로 10번)
+      
+      const randomInterval = setInterval(() => {
+        if (randomCount < 10) {
+          element.textContent = Math.floor(Math.random() * 10); // 난수 표시
+          randomCount++;
+        } else {
+          clearInterval(randomInterval); // 10개 난수 후 인터벌 종료
+          element.textContent = targetValue; // 목표 숫자로 설정
+        }
+      }, intervalTime); // 30ms 간격으로 10개 난수
 
-      // 목표 숫자로 고정 (0.2초 후)
-      setTimeout(() => {
-        clearInterval(randomInterval); // 난수 애니메이션 멈춤
-        element.textContent = targetValue; // 목표 숫자로 설정
-      }, 200 + (1500 * index)); // 0.2초 딜레이 후 목표 숫자로 설정
     }
 
-    // 모든 숫자 애니메이션 시작
+    // 각 숫자에 대해 애니메이션 시작
     numberElements.forEach((_, index) => startAnimation(index));
   </script>
 </body>
