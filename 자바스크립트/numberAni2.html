@@ -57,38 +57,39 @@
   </div>
 
   <script>
-    const toast = document.getElementById('toast');
-    const showToastButton = document.getElementById('showToastButton');
-    const closeToastButton = document.getElementById('closeToastButton');
+    // 토스트 팝업을 표시하는 함수
+    function showToastPopup(popupId, autoCloseTime) {
+      const toast = document.getElementById(popupId);
+      const closeToastButton = toast.querySelector('button');
+      const showToastButton = document.getElementById('showToastButton');
 
-    let toastTimer;
+      let toastTimer;
 
-    function showToast(autoCloseTime) {
+      // 팝업 열기
       toast.classList.add('show');
-      toast.focus(); // 토스트 팝업이 열리면 포커스를 토스트에 이동
+      toast.focus(); // 토스트 팝업에 포커스를 이동
 
-      // 자동 닫기 설정
-      toastTimer = setTimeout(() => {
-        closeToast();
-      }, autoCloseTime);
+      // 자동 닫기 처리 (autoCloseTime이 없으면 닫지 않음)
+      if (autoCloseTime) {
+        toastTimer = setTimeout(() => {
+          closeToast();
+        }, autoCloseTime);
+      }
 
       // 닫기 버튼 클릭 시 토스트 닫기
       closeToastButton.addEventListener('click', closeToast);
 
       // 닫힌 후에 열었던 버튼으로 포커스 이동
-      setTimeout(() => {
+      function closeToast() {
+        toast.classList.remove('show');
+        clearTimeout(toastTimer);
         showToastButton.focus();
-      }, autoCloseTime);
-    }
-
-    function closeToast() {
-      toast.classList.remove('show');
-      clearTimeout(toastTimer);
+      }
     }
 
     // 토스트 팝업 열기 버튼 클릭 시
-    showToastButton.addEventListener('click', () => {
-      showToast(5000); // 5초 후 자동 닫기
+    document.getElementById('showToastButton').addEventListener('click', () => {
+      showToastPopup('toast', 5000); // 5초 후 자동 닫기
     });
   </script>
 </body>
