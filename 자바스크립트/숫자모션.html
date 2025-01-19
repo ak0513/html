@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Transform Effect</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    .container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .number-div {
+      width: 100px;
+      height: 50px;
+      margin: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #4caf50;
+      color: white;
+      font-size: 20px;
+      border-radius: 5px;
+      transform: translateY(-100%);
+      opacity: 0;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+    .number-div.active {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="container">
+    <div class="number-div">5</div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = document.getElementById("container");
+      const initialDiv = container.querySelector(".number-div");
+      const initialNumber = parseInt(initialDiv.textContent);
+
+      if (!isNaN(initialNumber)) {
+        for (let i = initialNumber - 1; i >= 0; i--) {
+          const newDiv = document.createElement("div");
+          newDiv.classList.add("number-div");
+          newDiv.textContent = i;
+          container.appendChild(newDiv);
+        }
+
+        const allDivs = container.querySelectorAll(".number-div");
+        allDivs.forEach((div, index) => {
+          const height = div.offsetHeight;
+          const translateY = height * index;
+
+          // Apply transform with a delay for animation effect
+          setTimeout(() => {
+            div.style.transform = `translateY(${translateY}px)`;
+            div.classList.add("active");
+          }, index * 200); // Staggered delay for better visual effect
+        });
+      }
+    });
+  </script>
+</body>
+</html>
