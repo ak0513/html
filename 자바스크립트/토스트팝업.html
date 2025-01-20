@@ -50,8 +50,8 @@
 </head>
 <body>
   <!-- 버튼들 -->
-  <button onclick="showToastPopup('autoCloseToast', 5000, this)">자동으로 닫히는 토스트 열기</button>
-  <button onclick="showToastPopup('closeButtonToast', null, this)">닫기 버튼이 있는 토스트 열기</button>
+  <button onclick="showToastPopup('autoCloseToast', 5000)">자동으로 닫히는 토스트 열기 this제거</button>
+  <button onclick="showToastPopup('closeButtonToast', null)">닫기 버튼이 있는 토스트 열기</button>
 
   <!-- 자동으로 닫히는 토스트 팝업 -->
   <div id="autoCloseToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1">
@@ -66,8 +66,9 @@
 
   <script>
     // 토스트 팝업 표시 함수
-    function showToastPopup(popupId, autoCloseTime, triggerButton) {
+    function showToastPopup(popupId, autoCloseTime) {
       const toast = document.getElementById(popupId);
+      const triggerButton = event.target; // 이벤트가 발생한 버튼 참조
       let toastTimer;
 
       // 팝업 열기
