@@ -1,3 +1,58 @@
-<label for="email">Email</label>
-<input type="email" id="email" aria-describedby="email-error" />
-<span id="email-error" class="error-message" role="alert">이메일 형식이 올바르지 않습니다.</span>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오류 메시지 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .error {
+            border-color: red;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>오류 메시지 테스트</h1>
+    <form id="testForm">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" aria-describedby="email-error" />
+            <span id="email-error" class="error-message" role="alert" hidden>이메일 형식이 올바르지 않습니다.</span>
+        </div>
+        <button type="button" id="submitBtn">제출</button>
+    </form>
+
+    <script>
+        const form = document.getElementById('testForm');
+        const emailInput = document.getElementById('email');
+        const emailError = document.getElementById('email-error');
+        const submitBtn = document.getElementById('submitBtn');
+
+        submitBtn.addEventListener('click', () => {
+            const emailValue = emailInput.value;
+
+            // 간단한 이메일 형식 검증
+            if (!emailValue || !/\S+@\S+\.\S+/.test(emailValue)) {
+                emailError.hidden = false;
+                emailInput.classList.add('error');
+                emailInput.setAttribute('aria-invalid', 'true');
+            } else {
+                emailError.hidden = true;
+                emailInput.classList.remove('error');
+                emailInput.setAttribute('aria-invalid', 'false');
+            }
+        });
+    </script>
+</body>
+</html>
