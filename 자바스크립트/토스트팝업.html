@@ -73,7 +73,9 @@
 
       // 팝업 열기
       toast.classList.add('show');
-      toast.focus(); // 토스트 팝업에 포커스를 이동
+      if(autoCloseTime === null) {
+        toast.focus(); // 토스트 팝업에 포커스를 이동
+      }
 
       // 자동 닫기 처리 (autoCloseTime이 없으면 닫지 않음)
       if (autoCloseTime) {
