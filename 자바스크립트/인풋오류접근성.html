@@ -30,16 +30,19 @@
             <input type="email" id="email" aria-describedby="email-error" />
             <span id="email-error" class="error-message" role="alert" hidden>이메일 형식이 올바르지 않습니다.</span>
         </div>
+        <div class="form-group">
+            <label for="email2">Email</label>
+            <input type="email" id="email2" aria-describedby="email-error2" />
+            <span id="email-error2" class="error-message" role="alert" hidden>이메일 형식이 올바르지 않습니다.</span>
+        </div>
         <button type="button" id="submitBtn">제출</button>
     </form>
 
     <script>
-        const form = document.getElementById('testForm');
         const emailInput = document.getElementById('email');
         const emailError = document.getElementById('email-error');
-        const submitBtn = document.getElementById('submitBtn');
 
-        submitBtn.addEventListener('click', () => {
+        emailInput.addEventListener('blur', () => {
             const emailValue = emailInput.value;
 
             // 간단한 이메일 형식 검증
