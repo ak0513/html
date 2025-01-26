@@ -28,7 +28,7 @@
         <div class="form-group">
             <label for="email">Email</label>
             <input type="email" id="email" aria-describedby="email-error" />
-            <span id="email-error" class="error-message" role="alert" hidden>이메일 형식이 올바르지 않습니다.</span>
+            <span id="email-error" class="error-message" role="alert" hidden>이메일 형식이 올바르지 않습니다1.</span>
         </div>
         <div class="form-group">
             <label for="email2">Email</label>
@@ -42,7 +42,7 @@
         const emailInput = document.getElementById('email');
         const emailError = document.getElementById('email-error');
 
-        emailInput.addEventListener('blur', () => {
+        emailInput.addEventListener('focusout', () => {
             const emailValue = emailInput.value;
 
             // 간단한 이메일 형식 검증
