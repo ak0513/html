@@ -86,55 +86,55 @@
     <div id="section3" class="section">Section 3 Content</div>
 
     <script>
-        function scrollToSection(targetId) {
-            const headerHeight = document.querySelector(".header").offsetHeight;
-            const navbarHeight = document.querySelector(".navbar").offsetHeight;
-            const targetSection = document.querySelector(targetId);
+        // 섹션 활성화 상태 업데이트 함수
+function updateActiveButton() {
+    const sections = document.querySelectorAll(".section");
+    const buttons = document.querySelectorAll(".navbar button");
+    const headerHeight = document.querySelector(".header").offsetHeight;
+    const navbarHeight = document.querySelector(".navbar").offsetHeight;
+    let currentSectionId = "";
 
-            if (targetSection) {
-                const targetPosition = targetSection.getBoundingClientRect().top + window.scrollY;
-                const offsetPosition = targetPosition - headerHeight - navbarHeight;
+    // 현재 활성 섹션 찾기
+    sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
 
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: "smooth"
-                });
-
-                // 버튼 스타일 업데이트
-                const buttons = document.querySelectorAll(".navbar button");
-                buttons.forEach(button => {
-                    if (button.getAttribute("onclick").includes(targetId)) {
-                        button.classList.add("active");
-                    } else {
-                        button.classList.remove("active");
-                    }
-                });
-            }
+        if (rect.top <= headerHeight + navbarHeight && rect.bottom > headerHeight + navbarHeight) {
+            currentSectionId = `#${section.id}`;
         }
+    });
 
-        window.addEventListener("scroll", () => {
-            const sections = document.querySelectorAll(".section");
-            const buttons = document.querySelectorAll(".navbar button");
-            let currentSectionId = "";
+    // 버튼 활성 상태 업데이트
+    buttons.forEach(button => {
+        if (button.getAttribute("onclick").includes(currentSectionId)) {
+            button.classList.add("active");
+        } else {
+            button.classList.remove("active");
+        }
+    });
+}
 
-            sections.forEach(section => {
-                const rect = section.getBoundingClientRect();
-                const headerHeight = document.querySelector(".header").offsetHeight;
-                const navbarHeight = document.querySelector(".navbar").offsetHeight;
+// 스크롤 이벤트
+window.addEventListener("scroll", updateActiveButton);
 
-                if (rect.top <= headerHeight + navbarHeight && rect.bottom > headerHeight + navbarHeight) {
-                    currentSectionId = `#${section.id}`;
-                }
-            });
+// 버튼 클릭 시 스크롤 이동 함수
+function scrollToSection(targetId) {
+    const headerHeight = document.querySelector(".header").offsetHeight;
+    const navbarHeight = document.querySelector(".navbar").offsetHeight;
+    const targetSection = document.querySelector(targetId);
 
-            buttons.forEach(button => {
-                if (button.getAttribute("onclick").includes(currentSectionId)) {
-                    button.classList.add("active");
-                } else {
-                    button.classList.remove("active");
-                }
-            });
+    if (targetSection) {
+        const targetPosition = targetSection.getBoundingClientRect().top + window.scrollY;
+        const offsetPosition = targetPosition - headerHeight - navbarHeight;
+
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
         });
+
+        // 클릭 후 활성화 상태 동기화
+        updateActiveButton();
+    }
+}
     </script>
 </body>
 
