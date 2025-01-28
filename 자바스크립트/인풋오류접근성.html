@@ -40,9 +40,10 @@
 
     <script>
         const emailInput = document.getElementById('email');
+        const emailInput2 = document.getElementById('email2');
         const emailError = document.getElementById('email-error');
 
-        emailInput.addEventListener('focusout', () => {
+        emailInput2.addEventListener('focus', () => {
             const emailValue = emailInput.value;
 
             // 간단한 이메일 형식 검증
