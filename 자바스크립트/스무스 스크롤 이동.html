@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smooth Scroll with Header</title>
+    <title>Smooth Scroll with Fixed Header and Sticky Navbar</title>
     <style>
         body {
             margin: 0;
@@ -13,19 +13,26 @@
         }
 
         .header {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             background-color: #555;
             color: white;
             text-align: center;
             padding: 20px 0;
             font-size: 1.5rem;
+            z-index: 1000;
         }
 
         .navbar {
+            position: sticky;
+            top: 60px; /* 헤더 높이 */
             display: flex;
             justify-content: center;
             background-color: #333;
             padding: 10px 0;
+            z-index: 999;
         }
 
         .navbar button {
@@ -81,12 +88,11 @@
     <script>
         function scrollToSection(targetId) {
             const headerHeight = document.querySelector(".header").offsetHeight;
-            const navbarHeight = document.querySelector(".navbar").offsetHeight;
             const targetSection = document.querySelector(targetId);
 
             if (targetSection) {
                 const targetPosition = targetSection.getBoundingClientRect().top + window.scrollY;
-                const offsetPosition = targetPosition - headerHeight - navbarHeight;
+                const offsetPosition = targetPosition - headerHeight;
 
                 window.scrollTo({
                     top: offsetPosition,
@@ -113,9 +119,8 @@
             sections.forEach(section => {
                 const rect = section.getBoundingClientRect();
                 const headerHeight = document.querySelector(".header").offsetHeight;
-                const navbarHeight = document.querySelector(".navbar").offsetHeight;
 
-                if (rect.top <= headerHeight + navbarHeight && rect.bottom > headerHeight + navbarHeight) {
+                if (rect.top <= headerHeight && rect.bottom > headerHeight) {
                     currentSectionId = `#${section.id}`;
                 }
             });
