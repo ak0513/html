@@ -114,7 +114,7 @@ function updateActiveButton() {
 }
 
 // 스크롤 이벤트
-// window.addEventListener("scroll", updateActiveButton);
+window.addEventListener("scroll", updateActiveButton);
 
 // 버튼 클릭 시 스크롤 이동 함수
 function scrollToSection(targetId) {
@@ -132,8 +132,23 @@ function scrollToSection(targetId) {
         });
 
         // 클릭 후 활성화 상태 동기화
-        // updateActiveButton();
-    }
+        updateActiveButton();
+
+ let tabBar = tabList.querySelector(".tab-bar")
+const updateTabBar = () => {
+                    const activeTab = tabList.querySelector(".tab_list_li.active");
+                    if (activeTab) {
+                        const tabIndex = Array.from(tabs).indexOf(activeTab);
+                        const tabWidth = 100 / tabs.length;
+                        tabBar.style.width = `${tabWidth}%`;
+                        tabBar.style.left = `${tabWidth * tabIndex}%`;
+                    }
+                }
+                
+                
+    };
+    
+    // updateTabBar()
 }
     </script>
 </body>
