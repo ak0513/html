@@ -77,7 +77,7 @@
 <body>
     <div class="header">Header Content</div>
     <div class="navbar">
-        <button onclick="scrollToSection('#section1')">Section 1</button>
+        <button onclick="scrollToSection('#section1')">Section1</button>
         <button onclick="scrollToSection('#section2')">Section 2</button>
         <button onclick="scrollToSection('#section3')">Section 3</button>
     </div>
@@ -124,7 +124,7 @@ function scrollToSection(targetId) {
 
     if (targetSection) {
         const targetPosition = targetSection.getBoundingClientRect().top + window.scrollY;
-        const offsetPosition = targetPosition - headerHeight - navbarHeight;
+        const offsetPosition = Math.round(targetPosition - headerHeight - navbarHeight);
 
         window.scrollTo({
             top: offsetPosition,
