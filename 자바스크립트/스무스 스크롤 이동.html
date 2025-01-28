@@ -88,11 +88,12 @@
     <script>
         function scrollToSection(targetId) {
             const headerHeight = document.querySelector(".header").offsetHeight;
+            const navbarHeight = document.querySelector(".navbar").offsetHeight;
             const targetSection = document.querySelector(targetId);
 
             if (targetSection) {
                 const targetPosition = targetSection.getBoundingClientRect().top + window.scrollY;
-                const offsetPosition = targetPosition - headerHeight;
+                const offsetPosition = targetPosition - headerHeight - navbarHeight;
 
                 window.scrollTo({
                     top: offsetPosition,
@@ -119,8 +120,9 @@
             sections.forEach(section => {
                 const rect = section.getBoundingClientRect();
                 const headerHeight = document.querySelector(".header").offsetHeight;
+                const navbarHeight = document.querySelector(".navbar").offsetHeight;
 
-                if (rect.top <= headerHeight && rect.bottom > headerHeight) {
+                if (rect.top <= headerHeight + navbarHeight && rect.bottom > headerHeight + navbarHeight) {
                     currentSectionId = `#${section.id}`;
                 }
             });
