@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smooth Scroll & Active Button</title>
+    <title>Smooth Scroll with Header</title>
     <style>
         body {
             margin: 0;
@@ -12,16 +12,20 @@
             scroll-behavior: smooth;
         }
 
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .header {
             width: 100%;
+            background-color: #555;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 1.5rem;
+        }
+
+        .navbar {
             display: flex;
             justify-content: center;
             background-color: #333;
             padding: 10px 0;
-            z-index: 1000;
         }
 
         .navbar button {
@@ -64,6 +68,7 @@
 </head>
 
 <body>
+    <div class="header">Header Content</div>
     <div class="navbar">
         <button onclick="scrollToSection('#section1')">Section 1</button>
         <button onclick="scrollToSection('#section2')">Section 2</button>
@@ -75,9 +80,18 @@
 
     <script>
         function scrollToSection(targetId) {
+            const headerHeight = document.querySelector(".header").offsetHeight;
+            const navbarHeight = document.querySelector(".navbar").offsetHeight;
             const targetSection = document.querySelector(targetId);
+
             if (targetSection) {
-                targetSection.scrollIntoView({ behavior: "smooth" });
+                const targetPosition = targetSection.getBoundingClientRect().top + window.scrollY;
+                const offsetPosition = targetPosition - headerHeight - navbarHeight;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
 
                 // 버튼 스타일 업데이트
                 const buttons = document.querySelectorAll(".navbar button");
@@ -98,7 +112,10 @@
 
             sections.forEach(section => {
                 const rect = section.getBoundingClientRect();
-                if (rect.top <= 0 && rect.bottom >= 0) {
+                const headerHeight = document.querySelector(".header").offsetHeight;
+                const navbarHeight = document.querySelector(".navbar").offsetHeight;
+
+                if (rect.top <= headerHeight + navbarHeight && rect.bottom > headerHeight + navbarHeight) {
                     currentSectionId = `#${section.id}`;
                 }
             });
