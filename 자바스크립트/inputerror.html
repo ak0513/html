@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aria-describedby 예제</title>
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.875em;
+            display: none;
+        }
+        .error {
+            border-color: red;
+        }
+    </style>
+</head>
+<body>
+    <form id="user-form">
+        <label for="username">사용자 이름:</label>
+        <input type="text" id="username" name="username" aria-describedby="username-error" />
+        <div id="username-error" class="error-message">
+            사용자 이름을 3자 이상 입력해주세요.
+        </div>
+        <br>
+        <button type="submit">제출</button>
+    </form>
+
+    <script>
+        document.getElementById('user-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const usernameInput = document.getElementById('username');
+            const usernameError = document.getElementById('username-error');
+            
+            if (usernameInput.value.length < 3) {
+                usernameError.style.display = 'block';  // 오류 메시지 표시
+                usernameInput.classList.add('error');  // 입력 필드에 오류 스타일 적용
+            } else {
+                usernameError.style.display = 'none';  // 오류 메시지 숨김
+                usernameInput.classList.remove('error');  // 오류 스타일 제거
+                alert('폼이 제출되었습니다!');
+            }
+        });
+    </script>
+</body>
+</html>
