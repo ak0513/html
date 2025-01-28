@@ -103,37 +103,29 @@
     <div style="height:2000px"></div>
 
     <script>
-    let scrollEventEnabled = true; // scroll 이벤트가 활성화된 상태를 추적
+    let scrollToSectionEventEnabled = true; // scroll 이벤트가 활성화된 상태를 추적
 
 // 버튼 클릭 시 스크롤 이동 함수
 function scrollToSection(targetId) {
     event.preventDefault();
     var headerHeight = document.querySelector("#header").offsetHeight;
     var button = event.target;
-    var li = button.closest('.tab_list_li'); // 클릭한 버튼의 부모 li 요소
-    var tabSticky = li.closest('.tab_sticky'); // 현재 tab_sticky
+    var tabListLi = button.closest('.tab_list_li'); // 클릭한 버튼의 부모 li 요소
+    var tabSticky = tabListLi.closest('.tab_sticky'); // 현재 tab_sticky
     var tabList = tabSticky.querySelector('.tab_list'); // ul 요소
-    var tabListLi = tabList.querySelectorAll('.tab_list_li'); // 모든 li 요소
+    var tabListLies = tabList.querySelectorAll('.tab_list_li'); // 모든 li 요소
     var tabListHeight = tabList.offsetHeight;
     var targetSection = document.querySelector(targetId);
     
     // 모든 li에서 active 제거 후 클릭한 li에 active 추가
-    tabListLi.forEach(function (item) {
+    tabListLies.forEach(function (item) {
         item.classList.remove('active');
     });
-    li.classList.add('active');
+    tabListLi.classList.add('active');
     
     if (targetSection) {
         var targetPosition = targetSection.getBoundingClientRect().top + window.scrollY;
         var offsetPosition = targetPosition - headerHeight - tabListHeight;
-        // var offsetPosition = targetPosition;
-
-        console.group()
-        console.log('targetPosition', targetPosition)
-        console.log('headerHeight', headerHeight)
-        console.log('tabListHeight', tabListHeight)
-        console.log('offsetPosition', offsetPosition)
-    console.groupEnd()
         window.scrollTo({
             top: offsetPosition,
             behavior: "smooth"
@@ -164,21 +156,21 @@ function scrollToSection(targetId) {
     }, 300); // smooth scroll이 끝날 때쯤 호출
 
     // 스크롤 이벤트 비활성화
-    scrollEventEnabled = false;
+    scrollToSectionEventEnabled = false;
     
     // 일정 시간 후 스크롤 이벤트를 다시 활성화
     setTimeout(function() {
-        scrollEventEnabled = true;
+        scrollToSectionEventEnabled = true;
     }, 500); // 500ms 후에 스크롤 이벤트 활성화
 }
 
 // 특정 tab_sticky의 active 클래스를 업데이트하는 함수
 function updateActiveTab(tabSticky) {
-    if (!scrollEventEnabled) return; // 스크롤 이벤트 비활성화 상태에서는 동작하지 않음
+    if (!scrollToSectionEventEnabled) return; // 스크롤 이벤트 비활성화 상태에서는 동작하지 않음
 
     var headerHeight = document.querySelector("#header").offsetHeight;
     var tabList = tabSticky.querySelector('.tab_list'); // ul 요소
-    var tabListLi = tabList.querySelectorAll('.tab_list_li'); // 모든 li 요소
+    var tabListLies = tabList.querySelectorAll('.tab_list_li'); // 모든 li 요소
     var sections = tabSticky.querySelectorAll('.tab_cont'); // tab_sticky 내부의 섹션들
     var tabListHeight = tabList.offsetHeight;
 
@@ -188,10 +180,10 @@ function updateActiveTab(tabSticky) {
 
         if (window.scrollY >= sectionTop && window.scrollY < sectionBottom) {
             // 모든 li에서 active 제거 후 현재 섹션에 해당하는 li에 active 추가
-            tabListLi.forEach(function (item) {
+            tabListLies.forEach(function (item) {
                 item.classList.remove('active');
             });
-            tabListLi[index].classList.add('active');
+            tabListLies[index].classList.add('active');
         }
     });
 }
@@ -199,13 +191,13 @@ function updateActiveTab(tabSticky) {
 // tab-bar 위치를 업데이트하는 함수
 function updateTabBar(tabSticky) {
     var tabList = tabSticky.querySelector('.tab_list');
-    var tabListLi = tabList.querySelectorAll('.tab_list_li');
+    var tabListLies = tabList.querySelectorAll('.tab_list_li');
     var tabBar = tabSticky.querySelector(".tab-bar");
     const activeTab = tabList.querySelector(".tab_list_li.active");
     
     if (activeTab) {
-        var tabIndex = Array.from(tabListLi).indexOf(activeTab);
-        var tabWidth = 100 / tabListLi.length;
+        var tabIndex = Array.from(tabListLies).indexOf(activeTab);
+        var tabWidth = 100 / tabListLies.length;
         var tabHeight = activeTab.offsetHeight;
 
         tabBar.style.width = `${tabWidth}%`;
@@ -216,7 +208,7 @@ function updateTabBar(tabSticky) {
 
 // 윈도우 스크롤 이벤트
 window.addEventListener('scroll', function () {
-    if (!scrollEventEnabled) return; // 스크롤 이벤트 비활성화 상태에서는 동작하지 않음
+    if (!scrollToSectionEventEnabled) return; // 스크롤 이벤트 비활성화 상태에서는 동작하지 않음
 
     // 모든 tab_sticky에 대해 처리
     document.querySelectorAll('.tab_sticky').forEach(function (tabSticky) {
