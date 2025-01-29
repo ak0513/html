@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role Button Example</title>
+    <style>
+        a {
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        a[role="button"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Role Button Example</h1>
+
+    <!-- 기존의 a 태그 -->
+    <a href="#">Existing Link 1</a>
+    <a href="#">Existing Link 2</a>
+
+    <br><br>
+
+    <!-- 버튼처럼 동작할 a 태그 추가하기 위한 버튼 -->
+    <button id="addLinkButton">Add Link</button>
+
+    <script>
+        // 페이지 로딩 시 모든 a 태그에 role="button" 추가
+        document.querySelectorAll('a').forEach(anchor => {
+            anchor.setAttribute('role', 'button');
+        });
+
+        // MutationObserver를 사용하여 동적으로 추가되는 a 태그에 role="button" 추가
+        const observer = new MutationObserver((mutationsList) => {
+            for (let mutation of mutationsList) {
+                if (mutation.type === 'childList') {
+                    mutation.addedNodes.forEach(node => {
+                        if (node.tagName === 'A') {
+                            node.setAttribute('role', 'button');
+                        }
+                    });
+                }
+            }
+        });
+
+        // DOM 변경 감지 설정
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // 동적으로 a 태그를 추가하는 함수
+        document.getElementById('addLinkButton').addEventListener('click', () => {
+            const newLink = document.createElement('a');
+            newLink.href = "#";
+            newLink.textContent = "New Dynamic Link";
+            document.body.appendChild(newLink);
+        });
+    </script>
+</body>
+</html>
