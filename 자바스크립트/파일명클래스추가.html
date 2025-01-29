@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>파일명을 body 클래스에 추가</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let path = window.location.pathname;
+            let fileName = path.substring(path.lastIndexOf("/") + 1).split(".")[0];
+
+            if (fileName) {
+                document.body.classList.add(fileName);
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>파일명을 body 클래스에 추가하는 예제</h1>
+</body>
+</html>
