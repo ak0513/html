@@ -7,43 +7,51 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <style>
+        #aa {background-color: antiquewhite;padding:8px;border-radius:16px;}
+        #aa div {padding:20px 4px;margin-top:4px;border-top:1px solid #ddd;display:flex;}
+        /* [data-bx-hidden='true'] {display:none;} */
+    </style>
     <div id="aa">
-        <div class="bx-hidden" data-bx-hidden="true">111</div>
+        <div data-bx-hidden="true">111</div>
         <div>222</div>
         <div>222</div>
-        <div class="bx-hidden" data-bx-hidden="true">111</div>
+        <div data-bx-hidden="true">111</div>
         <div>222</div>
+        <div data-bx-hidden="true">111</div>
     </div>
-    <button type="button" id="toggleButton" onclick="toggle('#aa')">btn</button>
+    <button type="button" class="toggleButton" aria-expanded="false" onclick="toggle('#aa')">btn</button>
 
     <script>
+window.addEventListener('load', function() {
+  const elements = document.querySelectorAll('[data-bx-hidden="true"]');
+  
+  elements.forEach(function(element) {
+    element.style.display = 'none';
+  });
+});
         function toggle(selector) {
             const container = $(selector);
-            let hasVisibleHiddenElement = false;
+            let slideAnimationCount = 0;
 
-            // 자식 중 data-bx-hidden이 true인 요소에 대해서만 슬라이드 효과 적용
-            container.children('.bx-hidden').each(function() {
+            // data-bx-hidden 속성을 가진 요소에 대해서만 슬라이드 효과 적용
+            container.children('[data-bx-hidden]').each(function() {
                 const element = $(this);
-                if (element.data('bx-hidden') === 'true') {
-                    element.data('bx-hidden', 'false');
-                    element.stop(true, true).slideDown();
-                } else {
-                    element.data('bx-hidden', 'true');
-                    element.stop(true, true).slideUp();
-                }
+                const currentValue = element.attr('data-bx-hidden');
+                slideAnimationCount++;
 
-                // 요소가 보이게 되면 aria-expanded 값을 true로 변경
-                if (element.data('bx-hidden') === 'false') {
-                    hasVisibleHiddenElement = true;
-                }
+                // 슬라이드 효과와 data-bx-hidden 값을 toggle
+                element.stop(true, true).slideToggle(function() {
+                    slideAnimationCount--;
+                    // data-bx-hidden 값을 변경
+                    element.attr('data-bx-hidden', currentValue === 'true' ? 'false' : 'true');
+                    // aria-expanded 값 갱신
+                    if (slideAnimationCount === 0) {
+                        const button = $('button.toggleButton');
+                        button.attr('aria-expanded', element.attr('data-bx-hidden') === 'true' ? 'false' : 'true');
+                    }
+                });
             });
-
-            // 버튼의 aria-expanded 속성 업데이트
-            if (hasVisibleHiddenElement) {
-                $('#toggleButton').attr('aria-expanded', 'true');
-            } else {
-                $('#toggleButton').attr('aria-expanded', 'false');
-            }
         }
     </script>
 </body>

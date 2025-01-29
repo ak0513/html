@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <style>
+        #aa {background-color: antiquewhite;padding:8px;border-radius:16px;}
+        #aa div {padding:20px 4px;margin-top:4px;border-top:1px solid #ddd;display:flex;}
+        #aa [data-bx-hidden] {display:none;}
+    </style>
+    <div id="aa">
+        <div data-bx-hidden="true">111</div>
+        <div>222</div>
+        <div>222</div>
+        <div data-bx-hidden="true">111</div>
+        <div>222</div>
+        <div data-bx-hidden="true">111</div>
+    </div>
+    <button type="button" class="toggleButton" aria-expanded="false" onclick="toggle('#aa')">btn</button>
+
+    <script>
+        function toggle(selector) {
+            const container = $(selector);
+            let hasVisibleHiddenElement = false;
+            let slideAnimationCount = 0;
+
+            // data-bx-hidden 속성을 가진 요소에 대해서만 슬라이드 효과 적용
+            container.children('[data-bx-hidden]').each(function() {
+                const element = $(this);
+                const currentValue = element.attr('data-bx-hidden');
+                slideAnimationCount++;
+
+                if (currentValue === 'true') {
+                    element.attr('data-bx-hidden', 'false');
+                    element.stop(true, true).slideDown(function() {
+                        slideAnimationCount--;
+                        // 애니메이션이 끝난 후 aria-expanded 값을 갱신
+                        if (slideAnimationCount === 0) {
+                            // 클릭된 버튼 참조
+                            const button = $('button.toggleButton');
+                            button.attr('aria-expanded', 'true');
+                        }
+                    });
+                } else {
+                    element.attr('data-bx-hidden', 'true');
+                    element.stop(true, true).slideUp(function() {
+                        slideAnimationCount--;
+                        // 애니메이션이 끝난 후 aria-expanded 값을 갱신
+                        if (slideAnimationCount === 0) {
+                            // 클릭된 버튼 참조
+                            const button = $('button.toggleButton');
+                            button.attr('aria-expanded', 'false');
+                        }
+                    });
+                }
+            });
+
+            // 애니메이션이 없을 경우 바로 aria-expanded 갱신
+            if (slideAnimationCount === 0) {
+                const button = $('button.toggleButton');
+                button.attr('aria-expanded', hasVisibleHiddenElement ? 'true' : 'false');
+            }
+        }
+    </script>
+</body>
+</html>
