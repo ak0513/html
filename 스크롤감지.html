@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스크롤 감지</title>
+    <style>
+        body {
+            transition: background-color 0.3s ease;
+        }
+
+        body.scroll-down {
+            background-color: lightcoral;
+        }
+
+        body.scroll-up {
+            background-color: lightblue;
+        }
+    </style>
+</head>
+<body>
+    <h1>스크롤을 올리거나 내려보세요!</h1>
+    <div style="height: 2000px;"></div> <!-- 스크롤 테스트용 -->
+    
+    <script>
+        let lastScrollTop = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+            const body = document.body;
+
+            if (currentScroll > lastScrollTop) {
+                body.classList.add('scroll-down');
+                body.classList.remove('scroll-up');
+            } else {
+                body.classList.add('scroll-up');
+                body.classList.remove('scroll-down');
+            }
+
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // 음수 방지
+        });
+    </script>
+</body>
+</html>
