@@ -16,6 +16,10 @@
         body.scroll-up {
             background-color: lightblue;
         }
+
+        body.reached-bottom {
+            background-color: lightgreen; /* 최하단에 도달했을 때의 배경 색 */
+        }
     </style>
 </head>
 <body>
@@ -36,12 +40,21 @@
             const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
             const body = document.body;
 
+            // 스크롤 방향 감지
             if (currentScroll > lastScrollTop) {
                 body.classList.add('scroll-down');
                 body.classList.remove('scroll-up');
             } else {
                 body.classList.add('scroll-up');
                 body.classList.remove('scroll-down');
+            }
+
+            // 최하단에 도달한 경우
+            if ((window.innerHeight + currentScroll) >= document.documentElement.scrollHeight) {
+                body.classList.add('reached-bottom');
+            } else {
+                body.classList.remove('reached-bottom');
+                console.log('b')
             }
 
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // 음수 방지

@@ -19,9 +19,16 @@
     </style>
 </head>
 <body>
-    <h1>스크롤을 올리거나 내려보세요!</h1>
-    <div style="height: 2000px;"></div> <!-- 스크롤 테스트용 -->
-    
+    <div id="wrap">
+        <header id="header">header</header>
+        <h1>스크롤을 올리거나 내려보세요!</h1>
+        <div style="height: 2000px;"></div> <!-- 스크롤 테스트용 -->
+    </div>
+    <style>
+        #wrap {padding-top:50px;}
+        #header {position:fixed;top:0;left:0;right:0;height:50px;background-color: antiquewhite;transition:all 0.4s;}
+        body.scroll-down #header {top:-50px;}
+    </style>
     <script>
         let lastScrollTop = 0;
 
@@ -29,12 +36,18 @@
             const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
             const body = document.body;
 
+            // 스크롤 방향 감지
             if (currentScroll > lastScrollTop) {
                 body.classList.add('scroll-down');
                 body.classList.remove('scroll-up');
             } else {
                 body.classList.add('scroll-up');
                 body.classList.remove('scroll-down');
+            }
+
+            // 스크롤이 최하단에 도달한 경우 콘솔 출력
+            if ((window.innerHeight + currentScroll) >= document.documentElement.scrollHeight) {
+                console.log('스크롤이 최하단에 도달했습니다!');
             }
 
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // 음수 방지
