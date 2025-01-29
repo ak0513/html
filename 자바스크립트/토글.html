@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,7 +20,7 @@
         <div>222</div>
         <div data-bx-hidden="true" style="display:none;">111</div>
     </div>
-    <button type="button" class="toggleButton" aria-expanded="false" onclick="toggle('#aa')">btn</button>
+    <button type="button" aria-expanded="false" onclick="toggle('#aa')">btn</button>
 
     <script>
 window.addEventListener('load', function() {
@@ -28,29 +28,30 @@ window.addEventListener('load', function() {
     element.style.display = 'none';
   });
 });
-        function toggle(selector) {
-            const container = $(selector);
-            let slideAnimationCount = 0;
 
-            // data-bx-hidden 속성을 가진 요소에 대해서만 슬라이드 효과 적용
-            container.children('[data-bx-hidden]').each(function() {
-                const element = $(this);
-                const currentValue = element.attr('data-bx-hidden');
-                slideAnimationCount++;
+function toggle(selector) {
+    var _this = event.target;
+    var container = $(selector);
+    var slideAnimationCount = 0;
 
-                // 슬라이드 효과와 data-bx-hidden 값을 toggle
-                element.stop(true, true).slideToggle(function() {
-                    slideAnimationCount--;
-                    // data-bx-hidden 값을 변경
-                    element.attr('data-bx-hidden', currentValue === 'true' ? 'false' : 'true');
-                    // aria-expanded 값 갱신
-                    if (slideAnimationCount === 0) {
-                        const button = $('button.toggleButton');
-                        button.attr('aria-expanded', element.attr('data-bx-hidden') === 'true' ? 'false' : 'true');
-                    }
-                });
-            });
-        }
+    // data-bx-hidden 속성을 가진 요소에 대해서만 슬라이드 효과 적용
+    container.children('[data-bx-hidden]').each(function() {
+        var element = $(this);
+        var currentValue = element.attr('data-bx-hidden');
+        slideAnimationCount++;
+
+        // 슬라이드 효과와 data-bx-hidden 값을 toggle
+        element.stop(true, true).slideToggle(function() {
+            slideAnimationCount--;
+            // data-bx-hidden 값을 변경
+            element.attr('data-bx-hidden', currentValue === 'true' ? 'false' : 'true');
+            // aria-expanded 값 갱신
+            if (slideAnimationCount === 0) {
+                $(_this).attr('aria-expanded', container.children('[data-bx-hidden="true"]:hidden').length === 0 ? 'true' : 'false');
+            }
+        });
+    });
+}
     </script>
 </body>
 </html>
