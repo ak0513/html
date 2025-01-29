@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div id="aa">
+        <div class="bx-hidden" data-bx-hidden="true">111</div>
+        <div>222</div>
+        <div>222</div>
+        <div class="bx-hidden" data-bx-hidden="true">111</div>
+        <div>222</div>
+    </div>
+    <button type="button" id="toggleButton" onclick="toggle('#aa')">btn</button>
+
+    <script>
+        function toggle(selector) {
+            const container = $(selector);
+            let hasVisibleHiddenElement = false;
+
+            // 자식 중 data-bx-hidden이 true인 요소에 대해서만 슬라이드 효과 적용
+            container.children('.bx-hidden').each(function() {
+                const element = $(this);
+                if (element.data('bx-hidden') === 'true') {
+                    element.data('bx-hidden', 'false');
+                    element.stop(true, true).slideDown();
+                } else {
+                    element.data('bx-hidden', 'true');
+                    element.stop(true, true).slideUp();
+                }
+
+                // 요소가 보이게 되면 aria-expanded 값을 true로 변경
+                if (element.data('bx-hidden') === 'false') {
+                    hasVisibleHiddenElement = true;
+                }
+            });
+
+            // 버튼의 aria-expanded 속성 업데이트
+            if (hasVisibleHiddenElement) {
+                $('#toggleButton').attr('aria-expanded', 'true');
+            } else {
+                $('#toggleButton').attr('aria-expanded', 'false');
+            }
+        }
+    </script>
+</body>
+</html>
