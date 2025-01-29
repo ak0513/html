@@ -54,7 +54,7 @@
 
         .tab_cont {
             display: block;
-            height: 1000px;
+            height: 5000px;
             padding: 10px;
             border: 1px solid #ccc;
             border-top: none;
@@ -116,6 +116,7 @@ function scrollToSection(targetId) {
     var tabListLies = tabList.querySelectorAll('.tab_list_li'); // 모든 li 요소
     var tabListHeight = tabList.offsetHeight;
     var targetSection = document.querySelector(targetId);
+    var timer = 300;
     
     // 모든 li에서 active 제거 후 클릭한 li에 active 추가
     tabListLies.forEach(function (item) {
@@ -131,6 +132,10 @@ function scrollToSection(targetId) {
             behavior: "smooth"
         });
     }
+    if(targetSection.offsetHeight > 1500) {
+        timer = 600;
+    }
+    console.log(timer)
 
     // scroll 완료 후 tab-bar 위치 업데이트
     setTimeout(() => {
@@ -142,18 +147,18 @@ function scrollToSection(targetId) {
             document.querySelectorAll('.tab_cont').forEach(function (section) {
                 var firstElement = section.querySelector('*');
                 if (firstElement) {
-                    // firstElement.removeAttribute('tabindex');
+                    firstElement.removeAttribute('tabindex');
                 }
             });
             
             // targetSection의 첫 번째 자식 요소에 tabindex 0을 추가하고 포커스를 이동
             var firstElement = targetSection.querySelector('*');
             if (firstElement) {
-                // firstElement.setAttribute('tabindex', '0');
+                firstElement.setAttribute('tabindex', '0');
                 firstElement.focus();  // 포커스를 해당 요소로 이동
             }
         }
-    }, 300); // smooth scroll이 끝날 때쯤 호출
+    }, timer); // smooth scroll이 끝날 때쯤 호출
 
     // 스크롤 이벤트 비활성화
     scrollToSectionEventEnabled = false;
@@ -161,7 +166,7 @@ function scrollToSection(targetId) {
     // 일정 시간 후 스크롤 이벤트를 다시 활성화
     setTimeout(function() {
         scrollToSectionEventEnabled = true;
-    }, 500); // 500ms 후에 스크롤 이벤트 활성화
+    }, timer + 200); // 500ms 후에 스크롤 이벤트 활성화
 }
 
 // 특정 tab_sticky의 active 클래스를 업데이트하는 함수
