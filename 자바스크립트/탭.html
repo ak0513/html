@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>실시간 오류 메시지 예제</title>
+    <title>실시간 오류 메시지 개선</title>
     <style>
         .error-message {
             color: red;
             font-size: 0.9em;
+            display: none; /* 기본적으로 숨김 */
         }
         .input-error {
             border: 2px solid red;
@@ -19,7 +20,7 @@
     <form>
         <label for="email">이메일</label>
         <input type="email" id="email" aria-describedby="emailError">
-        <span id="emailError" class="error-message" aria-live="polite"></span>
+        <span id="emailError" class="error-message">올바른 이메일 주소를 입력하세요.</span>
     </form>
 
     <script>
@@ -27,13 +28,12 @@
             const emailField = event.target;
             const errorSpan = document.getElementById("emailError");
             const emailValue = emailField.value;
-            
-            // 이메일 유효성 검사 (간단한 형식 체크)
+
             if (emailValue.length > 0 && !emailValue.includes("@")) {
-                errorSpan.textContent = "올바른 이메일 주소를 입력하세요.";
+                errorSpan.style.display = "inline";  // 오류 메시지 표시
                 emailField.classList.add("input-error");
             } else {
-                errorSpan.textContent = "";
+                errorSpan.style.display = "none";  // 오류 메시지 숨김
                 emailField.classList.remove("input-error");
             }
         });
