@@ -3,60 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>오류 메시지 테스트</title>
+    <title>동적 인풋 유효성 검사</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .error {
-            border-color: red;
-        }
         .error-message {
             color: red;
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-        }
-        .form-group {
-            margin-bottom: 1.5rem;
+            font-size: 14px;
+            display: block;
         }
     </style>
 </head>
 <body>
-    <h1>오류 메시지 테스트</h1>
-    <form id="testForm">
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" aria-describedby="email-error" />
-            <span id="email-error" class="error-message" role="alert" hidden>이메일 형식이 올바르지 않습니다1.</span>
+
+    <div id="form-container">
+        <div class="input-group">
+            <input type="text" id="username4" name="username4" />
+            <div id="username-error4" class="error-message">
+                사용자 이름을 3자 이상 입력해주세요.
+            </div>
         </div>
-        <div class="form-group">
-            <label for="email2">Email</label>
-            <input type="email" id="email2" aria-describedby="email-error2" />
-            <span id="email-error2" class="error-message" role="alert" hidden>이메일 형식이 올바르지 않습니다.</span>
-        </div>
-        <button type="button" id="submitBtn">제출</button>
-    </form>
+    </div>
+
+    <button id="add-input">새로운 입력 추가</button>
 
     <script>
-        const emailInput = document.getElementById('email');
-        const emailInput2 = document.getElementById('email2');
-        const emailError = document.getElementById('email-error');
+    document.addEventListener("DOMContentLoaded", function () {
+        function setupValidation(input) {
+            const errorBox = document.getElementById(input.getAttribute("aria-describedby"));
 
-        emailInput2.addEventListener('focus', () => {
-            const emailValue = emailInput.value;
+            input.addEventListener("input", function () {
+                if (input.value.length < 3) {
+                    errorBox.setAttribute("role", "alert");
+                } else {
+                    errorBox.removeAttribute("role");
+                }
+            });
+        }
 
-            // 간단한 이메일 형식 검증
-            if (!emailValue || !/\S+@\S+\.\S+/.test(emailValue)) {
-                emailError.hidden = false;
-                emailInput.classList.add('error');
-                emailInput.setAttribute('aria-invalid', 'true');
-            } else {
-                emailError.hidden = true;
-                emailInput.classList.remove('error');
-                emailInput.setAttribute('aria-invalid', 'false');
+        function initializeInput(input, errorBox) {
+            if (!input.hasAttribute("aria-describedby")) {
+                input.setAttribute("aria-describedby", errorBox.id);
+                setupValidation(input);
+            }
+        }
+
+        // 초기 로드된 요소에 적용
+        document.querySelectorAll(".input-group").forEach(group => {
+            const input = group.querySelector("input[type='text']");
+            const errorBox = group.querySelector(".error-message");
+            if (input && errorBox) {
+                initializeInput(input, errorBox);
             }
         });
+
+        // MutationObserver 설정 (새로운 인풋 감지)
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === 1 && node.classList.contains("input-group")) {
+                        const input = node.querySelector("input[type='text']");
+                        const errorBox = node.querySelector(".error-message");
+
+                        if (input && errorBox) {
+                            initializeInput(input, errorBox);
+                        }
+                    }
+                });
+            });
+        });
+
+        observer.observe(document.getElementById("form-container"), { childList: true, subtree: true });
+
+        // 새로운 입력 필드 추가 버튼 이벤트
+        document.getElementById("add-input").addEventListener("click", function () {
+            const container = document.createElement("div");
+            container.classList.add("input-group");
+            const inputId = `username${Date.now()}`;
+            container.innerHTML = `
+                <input type="text" id="${inputId}" name="${inputId}" />
+                <div id="${inputId}-error" class="error-message">
+                    사용자 이름을 3자 이상 입력해주세요.
+                </div>
+            `;
+            document.getElementById("form-container").appendChild(container);
+        });
+    });
     </script>
+
 </body>
 </html>
