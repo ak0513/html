@@ -17,26 +17,74 @@
 <body>
 
     <form id="myForm">
-        <label for="email">이메일</label>
-        <input type="email" id="email">
-        <span id="emailError" class="error-message" aria-live="assertive"></span>
+        <div>
+            <label for="name">이름</label>
+            <input type="text" id="name">
+            <span id="nameError" class="error-message" aria-live="assertive"></span>
+        </div>
+
+        <div>
+            <label for="email">이메일</label>
+            <input type="email" id="email">
+            <span id="emailError" class="error-message" aria-live="assertive"></span>
+        </div>
+
+        <div>
+            <label for="password">비밀번호</label>
+            <input type="password" id="password">
+            <span id="passwordError" class="error-message" aria-live="assertive"></span>
+        </div>
+
         <button type="submit">제출</button>
     </form>
 
     <script>
         document.getElementById("myForm").addEventListener("submit", function(event) {
             event.preventDefault();  // 실제 제출 방지 (테스트용)
-            
-            const emailField = document.getElementById("email");
-            const errorSpan = document.getElementById("emailError");
-            const emailValue = emailField.value.trim();
 
-            if (!emailValue.includes("@")) {
-                errorSpan.textContent = "올바른 이메일 주소를 입력하세요.";
-                emailField.classList.add("input-error");
+            const nameField = document.getElementById("name");
+            const emailField = document.getElementById("email");
+            const passwordField = document.getElementById("password");
+
+            const nameError = document.getElementById("nameError");
+            const emailError = document.getElementById("emailError");
+            const passwordError = document.getElementById("passwordError");
+
+            let isValid = true;
+
+            // 이름 검증 (공백 여부)
+            if (nameField.value.trim() === "") {
+                nameError.textContent = "이름을 입력하세요.";
+                nameField.classList.add("input-error");
+                isValid = false;
             } else {
-                errorSpan.textContent = "";  // 오류 메시지 제거
+                nameError.textContent = "";
+                nameField.classList.remove("input-error");
+            }
+
+            // 이메일 검증 (@ 포함 여부)
+            if (!emailField.value.includes("@")) {
+                emailError.textContent = "올바른 이메일 주소를 입력하세요.";
+                emailField.classList.add("input-error");
+                isValid = false;
+            } else {
+                emailError.textContent = "";
                 emailField.classList.remove("input-error");
+            }
+
+            // 비밀번호 검증 (8자 이상)
+            if (passwordField.value.length < 8) {
+                passwordError.textContent = "비밀번호는 8자 이상이어야 합니다.";
+                passwordField.classList.add("input-error");
+                isValid = false;
+            } else {
+                passwordError.textContent = "";
+                passwordField.classList.remove("input-error");
+            }
+
+            // 모든 필드가 유효하면 폼 제출 (여기서는 단순히 메시지 출력)
+            if (isValid) {
+                alert("폼이 성공적으로 제출되었습니다!");
             }
         });
     </script>
