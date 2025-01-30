@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>실시간 오류 메시지 개선</title>
+    <title>폼 제출 후 오류 메시지 (aria-live)</title>
     <style>
         .error-message {
             color: red;
             font-size: 0.9em;
-            display: none; /* 기본적으로 숨김 */
         }
         .input-error {
             border: 2px solid red;
@@ -17,23 +16,26 @@
 </head>
 <body>
 
-    <form>
+    <form id="myForm">
         <label for="email">이메일</label>
-        <input type="email" id="email" aria-describedby="emailError">
-        <span id="emailError" class="error-message">올바른 이메일 주소를 입력하세요.</span>
+        <input type="email" id="email">
+        <span id="emailError" class="error-message" aria-live="assertive"></span>
+        <button type="submit">제출</button>
     </form>
 
     <script>
-        document.getElementById("email").addEventListener("input", function(event) {
-            const emailField = event.target;
+        document.getElementById("myForm").addEventListener("submit", function(event) {
+            event.preventDefault();  // 실제 제출 방지 (테스트용)
+            
+            const emailField = document.getElementById("email");
             const errorSpan = document.getElementById("emailError");
-            const emailValue = emailField.value;
+            const emailValue = emailField.value.trim();
 
-            if (emailValue.length > 0 && !emailValue.includes("@")) {
-                errorSpan.style.display = "inline";  // 오류 메시지 표시
+            if (!emailValue.includes("@")) {
+                errorSpan.textContent = "올바른 이메일 주소를 입력하세요.";
                 emailField.classList.add("input-error");
             } else {
-                errorSpan.style.display = "none";  // 오류 메시지 숨김
+                errorSpan.textContent = "";  // 오류 메시지 제거
                 emailField.classList.remove("input-error");
             }
         });
