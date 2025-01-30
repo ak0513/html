@@ -1,139 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>jQuery Nested Tab Bar</title>
+    <title>실시간 오류 메시지 예제</title>
     <style>
-        .tab_wrap {
-            position: relative;
-            width: 100%;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
+        .error-message {
+            color: red;
+            font-size: 0.9em;
         }
-
-        .tab_list {
-            display: flex;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .tab_list_li {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            cursor: pointer;
-            position: relative;
-            border-bottom: 2px solid transparent;
-        }
-
-        .tab_list_li.active {
-            font-weight: bold;
-        }
-
-        .tab-bar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 2px;
-            background-color: #007bff;
-            transition: left 0.3s ease, width 0.3s ease;
-        }
-
-        .tab_cont {
-            display: none;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-top: none;
-        }
-
-        .tab_cont.active {
-            display: block;
+        .input-error {
+            border: 2px solid red;
         }
     </style>
 </head>
 <body>
-    <div class="tab_wrap">
-        <ul class="tab_list">
-            <li class="tab_list_li"><a href="#">버튼 A</a></li>
-            <li class="tab_list_li active"><a href="#">버튼 B</a></li>
-        </ul>
-        <div class="tab_cont">
-            <div class="tab_wrap">
-                <ul class="tab_list">
-                    <li class="tab_list_li"><a href="#">버튼 A</a></li>
-                    <li class="tab_list_li active"><a href="#">버튼 B</a></li>
-                </ul>
-                <div class="tab_cont">버튼 A 내용</div>
-                <div class="tab_cont active">버튼 B 내용</div>
-            </div>
-        </div>
-        <div class="tab_cont active">버튼 B 내용</div>
-    </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <form>
+        <label for="email">이메일</label>
+        <input type="email" id="email" aria-describedby="emailError">
+        <span id="emailError" class="error-message" aria-live="polite"></span>
+    </form>
+
     <script>
-        $(document).ready(function () {
-            function initializeTabs($container) {
-                $container.find(".tab_wrap").each(function () {
-                    const $tabWrap = $(this);
-                    const $tabList = $tabWrap.find("> .tab_list");
-                    const $tabs = $tabList.find("> .tab_list_li");
-                    const $links = $tabs.find("> a");
-                    const $contents = $tabWrap.find("> .tab_cont");
-    
-                    // tab-bar 생성
-                    let $tabBar = $tabList.find(".tab-bar");
-                    if ($tabBar.length === 0) {
-                        $tabBar = $("<div class='tab-bar'></div>");
-                        $tabList.append($tabBar);
-                    }
-    
-                    const updateTabBar = () => {
-                        const $activeTab = $tabs.filter(".active");
-                        if ($activeTab.length) {
-                            const tabIndex = $tabs.index($activeTab);
-                            const tabWidth = 100 / $tabs.length;
-                            $tabBar.css({
-                                width: `${tabWidth}%`,
-                                left: `${tabWidth * tabIndex}%`,
-                            });
-                        }
-                    };
-    
-                    // 초기화: 로드 시 active 클래스에 따라 tab-bar 설정
-                    updateTabBar();
-    
-                    // 탭 클릭 이벤트
-                    $links.on("click", function (e) {
-                        e.preventDefault();
-    
-                        const $clickedLink = $(this);
-                        const $clickedTab = $clickedLink.closest(".tab_list_li");
-                        const tabIndex = $tabs.index($clickedTab);
-    
-                        // active 클래스 갱신
-                        $tabs.removeClass("active");
-                        $clickedTab.addClass("active");
-    
-                        // 탭 본문 표시 갱신
-                        $contents.removeClass("active");
-                        $contents.eq(tabIndex).addClass("active");
-    
-                        // tab-bar 위치 갱신
-                        updateTabBar();
-    
-                        // 중첩된 tab_wrap 초기화
-                        initializeTabs($contents.eq(tabIndex));
-                    });
-                });
+        document.getElementById("email").addEventListener("input", function(event) {
+            const emailField = event.target;
+            const errorSpan = document.getElementById("emailError");
+            const emailValue = emailField.value;
+            
+            // 이메일 유효성 검사 (간단한 형식 체크)
+            if (emailValue.length > 0 && !emailValue.includes("@")) {
+                errorSpan.textContent = "올바른 이메일 주소를 입력하세요.";
+                emailField.classList.add("input-error");
+            } else {
+                errorSpan.textContent = "";
+                emailField.classList.remove("input-error");
             }
-    
-            // 초기화 호출
-            initializeTabs($(document.body));
         });
     </script>
-    
+
 </body>
 </html>
