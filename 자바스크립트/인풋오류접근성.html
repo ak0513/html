@@ -8,7 +8,7 @@
         .error-message {
             color: red;
             font-size: 14px;
-            display: block;
+            display: none; /* 초기에는 숨김 */
         }
     </style>
 </head>
@@ -24,6 +24,7 @@
     </div>
 
     <button id="add-input">새로운 입력 추가</button>
+    <button id="validate">유효성 검사</button>
 
     <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -32,8 +33,9 @@
 
             input.addEventListener("input", function () {
                 if (input.value.length < 3) {
-                    errorBox.setAttribute("role", "alert");
+                    errorBox.style.display = "block"; // 오류 메시지 보이기
                 } else {
+                    errorBox.style.display = "none"; // 유효하면 숨기기
                     errorBox.removeAttribute("role");
                 }
             });
@@ -85,6 +87,19 @@
                 </div>
             `;
             document.getElementById("form-container").appendChild(container);
+        });
+
+        // 유효성 검사 버튼 클릭 시 오류 메시지에 role="alert" 추가
+        document.getElementById("validate").addEventListener("click", function () {
+            document.querySelectorAll(".input-group").forEach(group => {
+                const input = group.querySelector("input[type='text']");
+                const errorBox = group.querySelector(".error-message");
+
+                if (input.value.length < 3) {
+                    errorBox.style.display = "block"; // 오류 메시지 보이기
+                    errorBox.setAttribute("role", "alert");
+                }
+            });
         });
     });
     </script>
