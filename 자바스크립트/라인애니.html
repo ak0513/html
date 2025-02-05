@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seamless Gradient Border Animation</title>
+    <title>50px Moving Border Line</title>
     <style>
         body {
             display: flex;
@@ -37,14 +37,14 @@
             stroke: url(#gradient);
             stroke-width: 4;
             stroke-linecap: round;
-            stroke-dasharray: 1000;
+            stroke-dasharray: 50 600; /* 50px 선 + 600px 공백 */
             stroke-dashoffset: 0;
-            animation: animateBorder 4s linear infinite;
+            animation: animateBorder 3s linear infinite;
         }
 
         @keyframes animateBorder {
-            0% { stroke-dashoffset: 1000; }
-            100% { stroke-dashoffset: 0; }
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -650; } /* 전체 길이만큼 이동 */
         }
     </style>
 </head>
@@ -64,7 +64,7 @@
                 </linearGradient>
             </defs>
 
-            <!-- 사각형 테두리를 따라 움직이는 라인 -->
+            <!-- 사각형 테두리를 따라 움직이는 50px 길이의 라인 -->
             <rect x="10" y="10" width="300" height="150" rx="20" ry="20" class="border-path"/>
         </svg>
     </div>
