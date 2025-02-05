@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>50px Moving Border Line</title>
+    <title>Seamless Single Line Border Animation</title>
     <style>
         body {
             display: flex;
@@ -37,14 +37,14 @@
             stroke: url(#gradient);
             stroke-width: 4;
             stroke-linecap: round;
-            stroke-dasharray: 50 600; /* 50px 선 + 600px 공백 */
+            stroke-dasharray: 50 850; /* 50px 라인 + 나머지 공백 */
             stroke-dashoffset: 0;
-            animation: animateBorder 3s linear infinite;
+            animation: animateBorder 4s linear infinite;
         }
 
         @keyframes animateBorder {
             0% { stroke-dashoffset: 0; }
-            100% { stroke-dashoffset: -650; } /* 전체 길이만큼 이동 */
+            100% { stroke-dashoffset: -900; } /* 사각형 전체 길이만큼 이동 */
         }
     </style>
 </head>
