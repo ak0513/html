@@ -37,13 +37,13 @@
             stroke: url(#gradient);
             stroke-width: 4;
             stroke-linecap: round;
-            stroke-dasharray: 600;
+            stroke-dasharray: 1000;
             stroke-dashoffset: 0;
-            animation: animateBorder 3s linear infinite;
+            animation: animateBorder 4s linear infinite;
         }
 
         @keyframes animateBorder {
-            0% { stroke-dashoffset: 600; }
+            0% { stroke-dashoffset: 1000; }
             100% { stroke-dashoffset: 0; }
         }
     </style>
@@ -64,7 +64,7 @@
                 </linearGradient>
             </defs>
 
-            <!-- 외곽을 따라가는 패스 -->
+            <!-- 사각형 테두리를 따라 움직이는 라인 -->
             <rect x="10" y="10" width="300" height="150" rx="20" ry="20" class="border-path"/>
         </svg>
     </div>
