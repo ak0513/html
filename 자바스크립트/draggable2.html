@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi Drag and Drop</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .list-container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .sortable-list {
+            list-style: none;
+            padding: 10px;
+            margin: 0;
+            width: 200px;
+            background: #f9f9f9;
+            border: 1px solid #ccc;
+        }
+
+        li {
+            padding: 15px;
+            margin: 5px 0;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .dragging {
+            position: absolute;
+            z-index: 1000;
+            opacity: 0.7;
+            background-color: #d0d0d0;
+            pointer-events: none;
+        }
+
+        .placeholder {
+            background: #e0e0e0;
+            border: 2px dashed #ccc;
+            height: 30px;
+            margin: 5px 0;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="list-container">
+        <ul class="sortable-list" id="list1">
+            <li><div>Item A1</div> <button class="move-btn">버튼</button></li>
+            <li><div>Item A2</div> <button class="move-btn">버튼</button></li>
+            <li><div>Item A3</div> <button class="move-btn">버튼</button></li>
+        </ul>
+
+        <ul class="sortable-list" id="list2">
+            <li><div>Item B1</div> <button class="move-btn">버튼</button></li>
+            <li><div>Item B2</div> <button class="move-btn">버튼</button></li>
+            <li><div>Item B3</div> <button class="move-btn">버튼</button></li>
+        </ul>
+    </div>
+
+    <script>
+        let draggingElement = null;
+        let placeholder = null;
+        let startY = 0;
+        let initialLeft = 0;
+
+        document.addEventListener("touchstart", (e) => {
+            const button = e.target.closest(".move-btn");
+            if (!button) return;
+
+            const target = button.parentElement;
+            if (!target) return;
+
+            const touch = e.touches[0];
+            const rect = target.getBoundingClientRect();
+
+            draggingElement = target;
+            startY = touch.clientY;
+            initialLeft = rect.left;
+
+            placeholder = document.createElement("li");
+            placeholder.classList.add("placeholder");
+            placeholder.style.height = `${rect.height * 0.7}px`;
+
+            target.parentNode.insertBefore(placeholder, target.nextSibling);
+
+            target.classList.add("dragging");
+            target.style.width = `${rect.width}px`;
+            target.style.top = `${rect.top}px`;
+            target.style.left = `${initialLeft}px`;
+        });
+
+        document.addEventListener("touchmove", (e) => {
+            if (!draggingElement) return;
+
+            e.preventDefault(); // 기본 스크롤 방지
+
+            const touch = e.touches[0];
+            const deltaY = touch.clientY - startY;
+
+            draggingElement.style.top = `${parseFloat(draggingElement.style.top) + deltaY}px`;
+            draggingElement.style.left = `${initialLeft}px`;
+
+            startY = touch.clientY;
+
+            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            const closestLi = elementBelow?.closest("li");
+            const closestList = elementBelow?.closest(".sortable-list");
+
+            if (!closestList) return;
+
+            if (closestLi && closestLi !== placeholder && closestLi !== draggingElement) {
+                const rect = closestLi.getBoundingClientRect();
+                const midpoint = rect.top + rect.height / 2;
+
+                if (touch.clientY < midpoint) {
+                    closestList.insertBefore(placeholder, closestLi);
+                } else {
+                    closestList.insertBefore(placeholder, closestLi.nextSibling);
+                }
+            } else if (closestList && closestList !== placeholder.parentNode) {
+                closestList.appendChild(placeholder);
+            }
+        });
+
+        document.addEventListener("touchend", () => {
+            if (!draggingElement) return;
+
+            placeholder.parentNode.insertBefore(draggingElement, placeholder);
+            placeholder.remove();
+
+            draggingElement.classList.remove("dragging");
+            draggingElement.style.removeProperty("top");
+            draggingElement.style.removeProperty("left");
+            draggingElement.style.removeProperty("width");
+            draggingElement = null;
+            placeholder = null;
+        });
+    </script>
+
+</body>
+</html>
