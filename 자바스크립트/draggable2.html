@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi Drag and Drop</title>
+    <title>Multi-list Drag and Drop</title>
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            overscroll-behavior: contain; /* iOS 새로고침 방지 */
-        }
-
-        .list-container {
             display: flex;
             gap: 20px;
             padding: 20px;
         }
 
-        .sortable-list {
-            list-style: none;
-            padding: 10px;
-            margin: 0;
+        .list-container {
             width: 200px;
-            background: #f9f9f9;
             border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background: #fafafa;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
         li {
@@ -34,8 +35,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            user-select: none; /* 텍스트 선택 방지 */
-            transition: transform 0.2s ease-in-out;
+            position: relative;
         }
 
         button {
@@ -45,7 +45,6 @@
             color: white;
             border-radius: 3px;
             cursor: pointer;
-            user-select: none;
         }
 
         button:hover {
@@ -53,13 +52,11 @@
         }
 
         .dragging {
-            position: relative;
+            position: absolute;
             z-index: 1000;
             opacity: 0.7;
             background-color: #d0d0d0;
             pointer-events: none;
-            user-select: none;
-            transition: none; /* 이동 시 애니메이션 제거 */
         }
 
         .placeholder {
@@ -74,72 +71,95 @@
     </style>
 </head>
 <body>
+    <div class="list-container">
+        <ul class="sortable-list">
+            <li><div>Item 1</div><button class="move-btn">버튼</button></li>
+            <li><div>Item 2</div><button class="move-btn">버튼</button></li>
+        </ul>
+    </div>
 
     <div class="list-container">
-        <ul class="sortable-list" id="list1">
-            <li><div>Item A1</div> <button class="move-btn">버튼</button></li>
-            <li><div>Item A2</div> <button class="move-btn">버튼</button></li>
-            <li><div>Item A3</div> <button class="move-btn">버튼</button></li>
-        </ul>
-
-        <ul class="sortable-list" id="list2">
-            <li><div>Item B1</div> <button class="move-btn">버튼</button></li>
-            <li><div>Item B2</div> <button class="move-btn">버튼</button></li>
-            <li><div>Item B3</div> <button class="move-btn">버튼</button></li>
+        <ul class="sortable-list">
+            <li><div>Item 3</div><button class="move-btn">버튼</button></li>
+            <li><div>Item 4</div><button class="move-btn">버튼</button></li>
         </ul>
     </div>
 
     <script>
+        const lists = document.querySelectorAll(".sortable-list");
         let draggingElement = null;
         let placeholder = null;
         let startY = 0;
-        let offsetY = 0;
+        let initialLeft = 0;
+        let currentList = null;
 
-        document.addEventListener("touchstart", (e) => {
+        function handleTouchStart(e) {
             const button = e.target.closest(".move-btn");
             if (!button) return;
-
-            e.preventDefault(); // 버튼 클릭 시 기본 동작 방지 (텍스트 선택, 더블탭 확대 등 방지)
 
             const target = button.parentElement;
             if (!target) return;
 
+            currentList = target.parentElement;
             const touch = e.touches[0];
             const rect = target.getBoundingClientRect();
 
             draggingElement = target;
             startY = touch.clientY;
-            offsetY = 0; // 초기 offset 설정
+            initialLeft = rect.left;
 
             placeholder = document.createElement("li");
             placeholder.classList.add("placeholder");
             placeholder.style.height = `${rect.height * 0.7}px`;
-
             target.parentNode.insertBefore(placeholder, target.nextSibling);
 
             target.classList.add("dragging");
-        });
+            target.style.width = `${rect.width}px`;
+            target.style.top = `${rect.top}px`;
+            target.style.left = `${initialLeft}px`;
+        }
 
-        document.addEventListener("touchmove", (e) => {
+        function handleTouchMove(e) {
             if (!draggingElement) return;
 
-            e.preventDefault(); // iOS에서 드래그 중 화면 스크롤 방지
+            e.preventDefault();
 
             const touch = e.touches[0];
             const deltaY = touch.clientY - startY;
-            offsetY += deltaY;
 
-            draggingElement.style.transform = `translateY(${offsetY}px)`;
+            draggingElement.style.top = `${parseFloat(draggingElement.style.top) + deltaY}px`;
+            draggingElement.style.left = `${initialLeft}px`;
 
             startY = touch.clientY;
 
-            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
-            const closestLi = elementBelow?.closest("li");
-            const closestList = elementBelow?.closest(".sortable-list");
+            let closestList = null;
+            let elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            let closestLi = elementBelow?.closest("li");
+
+            // 리스트 영역 감지
+            lists.forEach(list => {
+                const rect = list.getBoundingClientRect();
+                if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+                    touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+                    closestList = list;
+                }
+            });
 
             if (!closestList) return;
 
-            if (closestLi && closestLi !== placeholder && closestLi !== draggingElement) {
+            if (currentList !== closestList) {
+                currentList.removeChild(placeholder);
+                closestList.appendChild(placeholder);
+                currentList = closestList;
+            }
+
+            const listRect = closestList.getBoundingClientRect();
+
+            if (touch.clientY < listRect.top) {
+                closestList.insertBefore(placeholder, closestList.firstChild);
+            } else if (touch.clientY > listRect.bottom) {
+                closestList.appendChild(placeholder);
+            } else if (closestLi && closestLi !== placeholder && closestLi !== draggingElement) {
                 const rect = closestLi.getBoundingClientRect();
                 const midpoint = rect.top + rect.height / 2;
 
@@ -148,23 +168,30 @@
                 } else {
                     closestList.insertBefore(placeholder, closestLi.nextSibling);
                 }
-            } else if (closestList && closestList !== placeholder.parentNode) {
-                closestList.appendChild(placeholder);
             }
-        });
+        }
 
-        document.addEventListener("touchend", () => {
+        function handleTouchEnd() {
             if (!draggingElement) return;
 
             placeholder.parentNode.insertBefore(draggingElement, placeholder);
             placeholder.remove();
 
             draggingElement.classList.remove("dragging");
-            draggingElement.style.transform = "translateY(0)"; // 원래 위치로 복귀
+            draggingElement.style.removeProperty("top");
+            draggingElement.style.removeProperty("left");
+            draggingElement.style.removeProperty("width");
+
             draggingElement = null;
             placeholder = null;
+            currentList = null;
+        }
+
+        lists.forEach(list => {
+            list.addEventListener("touchstart", handleTouchStart);
+            list.addEventListener("touchmove", handleTouchMove);
+            list.addEventListener("touchend", handleTouchEnd);
         });
     </script>
-
 </body>
 </html>
