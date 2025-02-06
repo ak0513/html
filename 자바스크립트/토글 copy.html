@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mouse Drag and Drop</title>
+    <title>Drag or Link</title>
     <style>
         body {
             margin: 0;
@@ -74,15 +74,15 @@
 <body>
     <div class="list-container">
         <ul class="sortable-list">
-            <li><div>Item 1</div><button class="move-btn">버튼</button></li>
-            <li><div>Item 2</div><button class="move-btn">버튼</button></li>
+            <li><div>Item 1</div><button class="move-btn" data-link="https://example.com/1">버튼</button></li>
+            <li><div>Item 2</div><button class="move-btn" data-link="https://example.com/2">버튼</button></li>
         </ul>
     </div>
 
     <div class="list-container">
         <ul class="sortable-list">
-            <li><div>Item 3</div><button class="move-btn">버튼</button></li>
-            <li><div>Item 4</div><button class="move-btn">버튼</button></li>
+            <li><div>Item 3</div><button class="move-btn" data-link="https://example.com/3">버튼</button></li>
+            <li><div>Item 4</div><button class="move-btn" data-link="https://example.com/4">버튼</button></li>
         </ul>
     </div>
 
@@ -93,11 +93,31 @@
         let startY = 0;
         let initialLeft = 0;
         let currentList = null;
+        let isDragging = false;
+        let holdTimer = null;
 
         function handleMouseDown(e) {
             const button = e.target.closest(".move-btn");
             if (!button) return;
 
+            // 2초 동안 누르면 드래그 모드 시작
+            holdTimer = setTimeout(() => {
+                startDrag(button);
+            }, 2000);
+
+            function handleMouseUp() {
+                clearTimeout(holdTimer);
+                if (!isDragging) {
+                    // 짧게 눌렀다면 링크 이동
+                    window.location.href = button.dataset.link;
+                }
+                document.removeEventListener("mouseup", handleMouseUp);
+            }
+
+            document.addEventListener("mouseup", handleMouseUp);
+        }
+
+        function startDrag(button) {
             const target = button.parentElement;
             if (!target) return;
 
@@ -105,8 +125,9 @@
             const rect = target.getBoundingClientRect();
 
             draggingElement = target;
-            startY = e.clientY;
+            startY = rect.top;
             initialLeft = rect.left;
+            isDragging = true;
 
             placeholder = document.createElement("li");
             placeholder.classList.add("placeholder");
@@ -119,7 +140,7 @@
             target.style.left = `${initialLeft}px`;
 
             document.addEventListener("mousemove", handleMouseMove);
-            document.addEventListener("mouseup", handleMouseUp);
+            document.addEventListener("mouseup", handleMouseUpDrag);
         }
 
         function handleMouseMove(e) {
@@ -153,7 +174,7 @@
             }
         }
 
-        function handleMouseUp() {
+        function handleMouseUpDrag() {
             if (!draggingElement) return;
 
             placeholder.parentNode.insertBefore(draggingElement, placeholder);
@@ -167,9 +188,10 @@
             draggingElement = null;
             placeholder = null;
             currentList = null;
+            isDragging = false;
 
             document.removeEventListener("mousemove", handleMouseMove);
-            document.removeEventListener("mouseup", handleMouseUp);
+            document.removeEventListener("mouseup", handleMouseUpDrag);
         }
 
         lists.forEach(list => {
