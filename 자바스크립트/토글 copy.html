@@ -3,68 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Mouse Drag and Drop</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .list-container {
+            width: 200px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background: #fafafa;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            padding: 15px;
+            margin: 5px 0;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            cursor: grab;
+        }
+
+        button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .dragging {
+            position: absolute;
+            z-index: 1000;
+            opacity: 0.7;
+            background-color: #d0d0d0;
+            pointer-events: none;
+        }
+
+        .placeholder {
+            background: #e0e0e0;
+            border: 2px dashed #ccc;
+            height: 30px;
+            margin: 5px 0;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
 </head>
 <body>
-    <style>
-        #aa {background-color: antiquewhite;padding:8px;border-radius:16px;}
-        #aa div {padding:20px 4px;margin-top:4px;border-top:1px solid #ddd;display:flex;}
-        #aa [data-bx-hidden] {display:none;}
-    </style>
-    <div id="aa">
-        <div data-bx-hidden="true">111</div>
-        <div>222</div>
-        <div>222</div>
-        <div data-bx-hidden="true">111</div>
-        <div>222</div>
-        <div data-bx-hidden="true">111</div>
+    <div class="list-container">
+        <ul class="sortable-list">
+            <li><div>Item 1</div><button class="move-btn">버튼</button></li>
+            <li><div>Item 2</div><button class="move-btn">버튼</button></li>
+        </ul>
     </div>
-    <button type="button" class="toggleButton" aria-expanded="false" onclick="toggle('#aa')">btn</button>
+
+    <div class="list-container">
+        <ul class="sortable-list">
+            <li><div>Item 3</div><button class="move-btn">버튼</button></li>
+            <li><div>Item 4</div><button class="move-btn">버튼</button></li>
+        </ul>
+    </div>
 
     <script>
-        function toggle(selector) {
-            const container = $(selector);
-            let hasVisibleHiddenElement = false;
-            let slideAnimationCount = 0;
+        const lists = document.querySelectorAll(".sortable-list");
+        let draggingElement = null;
+        let placeholder = null;
+        let startY = 0;
+        let initialLeft = 0;
+        let currentList = null;
 
-            // data-bx-hidden 속성을 가진 요소에 대해서만 슬라이드 효과 적용
-            container.children('[data-bx-hidden]').each(function() {
-                const element = $(this);
-                const currentValue = element.attr('data-bx-hidden');
-                slideAnimationCount++;
+        function handleMouseDown(e) {
+            const button = e.target.closest(".move-btn");
+            if (!button) return;
 
-                if (currentValue === 'true') {
-                    element.attr('data-bx-hidden', 'false');
-                    element.stop(true, true).slideDown(function() {
-                        slideAnimationCount--;
-                        // 애니메이션이 끝난 후 aria-expanded 값을 갱신
-                        if (slideAnimationCount === 0) {
-                            // 클릭된 버튼 참조
-                            const button = $('button.toggleButton');
-                            button.attr('aria-expanded', 'true');
-                        }
-                    });
+            const target = button.parentElement;
+            if (!target) return;
+
+            currentList = target.parentElement;
+            const rect = target.getBoundingClientRect();
+
+            draggingElement = target;
+            startY = e.clientY;
+            initialLeft = rect.left;
+
+            placeholder = document.createElement("li");
+            placeholder.classList.add("placeholder");
+            placeholder.style.height = `${rect.height * 0.7}px`;
+            target.parentNode.insertBefore(placeholder, target.nextSibling);
+
+            target.classList.add("dragging");
+            target.style.width = `${rect.width}px`;
+            target.style.top = `${rect.top}px`;
+            target.style.left = `${initialLeft}px`;
+
+            document.addEventListener("mousemove", handleMouseMove);
+            document.addEventListener("mouseup", handleMouseUp);
+        }
+
+        function handleMouseMove(e) {
+            if (!draggingElement) return;
+
+            e.preventDefault();
+
+            const deltaY = e.clientY - startY;
+            draggingElement.style.top = `${parseFloat(draggingElement.style.top) + deltaY}px`;
+            draggingElement.style.left = `${initialLeft}px`;
+
+            startY = e.clientY;
+
+            const listRect = currentList.getBoundingClientRect();
+            const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+            const closestLi = elementBelow?.closest("li");
+
+            if (e.clientY < listRect.top) {
+                currentList.insertBefore(placeholder, currentList.firstChild);
+            } else if (e.clientY > listRect.bottom) {
+                currentList.appendChild(placeholder);
+            } else if (closestLi && closestLi !== placeholder && closestLi !== draggingElement) {
+                const rect = closestLi.getBoundingClientRect();
+                const midpoint = rect.top + rect.height / 2;
+
+                if (e.clientY < midpoint) {
+                    currentList.insertBefore(placeholder, closestLi);
                 } else {
-                    element.attr('data-bx-hidden', 'true');
-                    element.stop(true, true).slideUp(function() {
-                        slideAnimationCount--;
-                        // 애니메이션이 끝난 후 aria-expanded 값을 갱신
-                        if (slideAnimationCount === 0) {
-                            // 클릭된 버튼 참조
-                            const button = $('button.toggleButton');
-                            button.attr('aria-expanded', 'false');
-                        }
-                    });
+                    currentList.insertBefore(placeholder, closestLi.nextSibling);
                 }
-            });
-
-            // 애니메이션이 없을 경우 바로 aria-expanded 갱신
-            if (slideAnimationCount === 0) {
-                const button = $('button.toggleButton');
-                button.attr('aria-expanded', hasVisibleHiddenElement ? 'true' : 'false');
             }
         }
+
+        function handleMouseUp() {
+            if (!draggingElement) return;
+
+            placeholder.parentNode.insertBefore(draggingElement, placeholder);
+            placeholder.remove();
+
+            draggingElement.classList.remove("dragging");
+            draggingElement.style.removeProperty("top");
+            draggingElement.style.removeProperty("left");
+            draggingElement.style.removeProperty("width");
+
+            draggingElement = null;
+            placeholder = null;
+            currentList = null;
+
+            document.removeEventListener("mousemove", handleMouseMove);
+            document.removeEventListener("mouseup", handleMouseUp);
+        }
+
+        lists.forEach(list => {
+            list.addEventListener("mousedown", handleMouseDown);
+        });
     </script>
 </body>
 </html>
