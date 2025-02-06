@@ -8,6 +8,7 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
+            overscroll-behavior: contain; /* iOS 새로고침 방지 */
         }
 
         .list-container {
@@ -34,6 +35,7 @@
             justify-content: space-between;
             align-items: center;
             position: relative;
+            user-select: none; /* 텍스트 선택 방지 */
         }
 
         button {
@@ -43,6 +45,7 @@
             color: white;
             border-radius: 3px;
             cursor: pointer;
+            user-select: none; /* 버튼 텍스트 선택 방지 */
         }
 
         button:hover {
@@ -55,6 +58,7 @@
             opacity: 0.7;
             background-color: #d0d0d0;
             pointer-events: none;
+            user-select: none; /* 드래그 중 텍스트 선택 방지 */
         }
 
         .placeholder {
@@ -94,6 +98,8 @@
             const button = e.target.closest(".move-btn");
             if (!button) return;
 
+            e.preventDefault(); // 버튼 클릭 시 기본 동작 방지 (텍스트 선택 방지)
+
             const target = button.parentElement;
             if (!target) return;
 
@@ -119,7 +125,7 @@
         document.addEventListener("touchmove", (e) => {
             if (!draggingElement) return;
 
-            e.preventDefault(); // 기본 스크롤 방지
+            e.preventDefault(); // iOS에서 드래그 중 화면 스크롤 방지
 
             const touch = e.touches[0];
             const deltaY = touch.clientY - startY;
