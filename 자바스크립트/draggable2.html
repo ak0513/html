@@ -34,8 +34,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
             user-select: none; /* 텍스트 선택 방지 */
+            transition: transform 0.2s ease-in-out;
         }
 
         button {
@@ -45,7 +45,7 @@
             color: white;
             border-radius: 3px;
             cursor: pointer;
-            user-select: none; /* 버튼 텍스트 선택 방지 */
+            user-select: none;
         }
 
         button:hover {
@@ -53,12 +53,13 @@
         }
 
         .dragging {
-            position: absolute;
+            position: relative;
             z-index: 1000;
             opacity: 0.7;
             background-color: #d0d0d0;
             pointer-events: none;
-            user-select: none; /* 드래그 중 텍스트 선택 방지 */
+            user-select: none;
+            transition: none; /* 이동 시 애니메이션 제거 */
         }
 
         .placeholder {
@@ -92,13 +93,13 @@
         let draggingElement = null;
         let placeholder = null;
         let startY = 0;
-        let initialLeft = 0;
+        let offsetY = 0;
 
         document.addEventListener("touchstart", (e) => {
             const button = e.target.closest(".move-btn");
             if (!button) return;
 
-            e.preventDefault(); // 버튼 클릭 시 기본 동작 방지 (텍스트 선택 방지)
+            e.preventDefault(); // 버튼 클릭 시 기본 동작 방지 (텍스트 선택, 더블탭 확대 등 방지)
 
             const target = button.parentElement;
             if (!target) return;
@@ -108,7 +109,7 @@
 
             draggingElement = target;
             startY = touch.clientY;
-            initialLeft = rect.left;
+            offsetY = 0; // 초기 offset 설정
 
             placeholder = document.createElement("li");
             placeholder.classList.add("placeholder");
@@ -117,9 +118,6 @@
             target.parentNode.insertBefore(placeholder, target.nextSibling);
 
             target.classList.add("dragging");
-            target.style.width = `${rect.width}px`;
-            target.style.top = `${rect.top}px`;
-            target.style.left = `${initialLeft}px`;
         });
 
         document.addEventListener("touchmove", (e) => {
@@ -129,9 +127,9 @@
 
             const touch = e.touches[0];
             const deltaY = touch.clientY - startY;
+            offsetY += deltaY;
 
-            draggingElement.style.top = `${parseFloat(draggingElement.style.top) + deltaY}px`;
-            draggingElement.style.left = `${initialLeft}px`;
+            draggingElement.style.transform = `translateY(${offsetY}px)`;
 
             startY = touch.clientY;
 
@@ -162,9 +160,7 @@
             placeholder.remove();
 
             draggingElement.classList.remove("dragging");
-            draggingElement.style.removeProperty("top");
-            draggingElement.style.removeProperty("left");
-            draggingElement.style.removeProperty("width");
+            draggingElement.style.transform = "translateY(0)"; // 원래 위치로 복귀
             draggingElement = null;
             placeholder = null;
         });
