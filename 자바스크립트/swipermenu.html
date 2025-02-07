@@ -48,11 +48,9 @@
             font-size: 18px;
             text-align: center;
         }
-        /* 기본적으로 모든 내용 숨김 */
         .content-item {
             display: none;
         }
-        /* 활성화된 내용만 표시 */
         .content-item.active {
             display: block;
         }
@@ -62,14 +60,15 @@
 
     <div class="swiper">
         <div class="swiper-wrapper">
-            <div class="swiper-slide"><button class="slide-button" data-index="0">Button 1</button></div>
-            <div class="swiper-slide"><button class="slide-button" data-index="1">Button 2</button></div>
-            <div class="swiper-slide"><button class="slide-button" data-index="2">Button 3</button></div>
-            <div class="swiper-slide"><button class="slide-button" data-index="3">Button 4</button></div>
-            <div class="swiper-slide"><button class="slide-button" data-index="4">Button 5</button></div>
-            <div class="swiper-slide"><button class="slide-button" data-index="5">Button 6</button></div>
-            <div class="swiper-slide"><button class="slide-button" data-index="6">Button 7</button></div>
-            <div class="swiper-slide"> <!-- 8번째 슬라이드는 버튼 없음 --> </div>
+            <div class="swiper-slide"><button class="slide-button" data-index="0" aria-selected="true">Button 1</button></div>
+            <div class="swiper-slide"><button class="slide-button" data-index="1" aria-selected="false">Button 2</button></div>
+            <div class="swiper-slide"><button class="slide-button" data-index="2" aria-selected="false">Button 3</button></div>
+            <div class="swiper-slide"><button class="slide-button" data-index="3" aria-selected="false">Button 4</button></div>
+            <div class="swiper-slide"><button class="slide-button" data-index="4" aria-selected="false">Button 5</button></div>
+            <div class="swiper-slide"><button class="slide-button" data-index="5" aria-selected="false">Button 6</button></div>
+            <div class="swiper-slide"><button class="slide-button" data-index="6" aria-selected="false">Button 7</button></div>
+            <div class="swiper-slide"></div> <!-- 8번째 슬라이드 -->
+            <div class="swiper-slide"></div> <!-- 9번째 슬라이드 -->
         </div>
     </div>
 
@@ -98,9 +97,14 @@
                 slide.classList.remove('custom-active'); // 기존 active 제거
             });
 
+            document.querySelectorAll('.slide-button').forEach(button => {
+                button.setAttribute('aria-selected', 'false'); // 모든 버튼의 aria-selected 초기화
+            });
+
             const clickedButton = event.currentTarget;
             const clickedSlide = clickedButton.closest('.swiper-slide');
             clickedSlide.classList.add('custom-active'); // 클릭한 슬라이드에 스타일 적용
+            clickedButton.setAttribute('aria-selected', 'true'); // 클릭한 버튼만 aria-selected="true"
 
             // Swiper의 slides 배열에서 클릭된 슬라이드의 인덱스 찾기
             const slideIndex = Array.from(swiper.slides).indexOf(clickedSlide);
