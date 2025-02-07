@@ -11,7 +11,7 @@
             height: 200px;
         }
         .swiper-slide {
-            width: auto; /* auto 크기 유지 */
+            width: auto;
             padding: 20px;
             text-align: center;
             background: #ddd;
@@ -19,21 +19,21 @@
             align-items: center;
             justify-content: center;
             transition: background 0.3s, transform 0.3s;
-            cursor: pointer; /* 클릭 가능하게 변경 */
+            cursor: pointer;
         }
-        /* Swiper 기본 active 스타일 */
+        /* 기본 active 스타일 */
         .swiper-slide-active {
-            background: #007bff !important; /* 활성화된 슬라이드 색상 변경 */
+            background: #007bff !important;
             color: white;
             font-weight: bold;
-            transform: scale(1.1); /* 약간 확대 효과 */
+            transform: scale(1.1);
         }
         /* 직접 추가하는 active 스타일 */
         .custom-active {
-            background: #ff5722 !important; /* 클릭된 슬라이드 색상 변경 */
+            background: #ff5722 !important;
             color: white;
             font-weight: bold;
-            transform: scale(1.2); /* 클릭된 슬라이드 더 확대 */
+            transform: scale(1.2);
         }
         .slide-button {
             padding: 10px 15px;
@@ -41,32 +41,61 @@
             border: 1px solid #007bff;
             cursor: pointer;
         }
+        /* 하단 콘텐츠 영역 스타일 */
+        .content-area {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            min-height: 100px;
+            font-size: 18px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
     <div class="swiper">
         <div class="swiper-wrapper">
-            <div class="swiper-slide"><button class="slide-button">Slide 1</button></div>
-            <div class="swiper-slide"><button class="slide-button">Slide 2</button></div>
-            <div class="swiper-slide"><button class="slide-button">Slide 3</button></div>
-            <div class="swiper-slide"><button class="slide-button">Slide 4</button></div>
-            <div class="swiper-slide"><button class="slide-button">Slide 5</button></div>
-            <div class="swiper-slide"><button class="slide-button">Slide 6</button></div>
-            <div class="swiper-slide"><button class="slide-button">Slide 7</button></div>
-            <div class="swiper-slide"><button class="slide-button">Slide 8</button></div>
+            <div class="swiper-slide" data-content="내용 1: 첫 번째 슬라이드의 정보입니다.">
+                <button class="slide-button">Slide 1</button>
+            </div>
+            <div class="swiper-slide" data-content="내용 2: 두 번째 슬라이드의 정보입니다.">
+                <button class="slide-button">Slide 2</button>
+            </div>
+            <div class="swiper-slide" data-content="내용 3: 세 번째 슬라이드의 정보입니다.">
+                <button class="slide-button">Slide 3</button>
+            </div>
+            <div class="swiper-slide" data-content="내용 4: 네 번째 슬라이드의 정보입니다.">
+                <button class="slide-button">Slide 4</button>
+            </div>
+            <div class="swiper-slide" data-content="내용 5: 다섯 번째 슬라이드의 정보입니다.">
+                <button class="slide-button">Slide 5</button>
+            </div>
+            <div class="swiper-slide" data-content="내용 6: 여섯 번째 슬라이드의 정보입니다.">
+                <button class="slide-button">Slide 6</button>
+            </div>
+            <div class="swiper-slide" data-content="내용 7: 일곱 번째 슬라이드의 정보입니다.">
+                <button class="slide-button">Slide 7</button>
+            </div>
+            <div class="swiper-slide" data-content="내용 8: 여덟 번째 슬라이드의 정보입니다.">
+                <button class="slide-button">Slide 8</button>
+            </div>
         </div>
     </div>
+
+    <!-- 하단 영역 -->
+    <div class="content-area" id="contentArea">슬라이드를 클릭하면 내용이 표시됩니다.</div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         // Swiper 초기화
         const swiper = new Swiper('.swiper', {
             slidesPerView: 'auto',
-            slideToClickedSlide: false, // 기본 클릭 이동 비활성화
+            slideToClickedSlide: false, // Swiper 자동 이동 비활성화
         });
 
-        // 클릭한 슬라이드에 custom-active 클래스 추가 & 직접 slideTo 실행
+        // 클릭한 슬라이드의 스타일 변경 & 하단 콘텐츠 변경
         function updateClickedSlide(event) {
             document.querySelectorAll('.swiper-slide').forEach(slide => {
                 slide.classList.remove('custom-active'); // 기존 active 제거
@@ -78,6 +107,10 @@
             // Swiper의 slides 배열에서 클릭된 슬라이드의 인덱스 찾기
             const slideIndex = Array.from(swiper.slides).indexOf(clickedSlide);
             swiper.slideTo(slideIndex); // 해당 인덱스로 이동
+
+            // 클릭한 슬라이드의 data-content 값을 가져와 하단 영역 변경
+            const contentText = clickedSlide.getAttribute('data-content');
+            document.getElementById('contentArea').textContent = contentText;
         }
 
         // 모든 슬라이드에 클릭 이벤트 추가
