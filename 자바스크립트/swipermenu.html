@@ -63,16 +63,21 @@
         // Swiper 초기화
         const swiper = new Swiper('.swiper', {
             slidesPerView: 'auto',
-            slideToClickedSlide: true, // 클릭한 슬라이드로 이동
+            slideToClickedSlide: false, // 기본 클릭 이동 비활성화
         });
 
-        // 클릭한 슬라이드에 custom-active 클래스 추가
+        // 클릭한 슬라이드에 custom-active 클래스 추가 & 직접 slideTo 실행
         function updateClickedSlide(event) {
             document.querySelectorAll('.swiper-slide').forEach(slide => {
                 slide.classList.remove('custom-active'); // 기존 active 제거
             });
 
-            event.currentTarget.classList.add('custom-active'); // 클릭한 슬라이드에 추가
+            const clickedSlide = event.currentTarget;
+            clickedSlide.classList.add('custom-active'); // 클릭한 슬라이드에 추가
+
+            // Swiper의 slides 배열에서 클릭된 슬라이드의 인덱스 찾기
+            const slideIndex = Array.from(swiper.slides).indexOf(clickedSlide);
+            swiper.slideTo(slideIndex); // 해당 인덱스로 이동
         }
 
         // 모든 슬라이드에 클릭 이벤트 추가
