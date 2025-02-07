@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swiper SlideTo 버튼</title>
+    <title>Swiper Clickable Slide</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
         .swiper {
@@ -19,13 +19,21 @@
             align-items: center;
             justify-content: center;
             transition: background 0.3s, transform 0.3s;
+            cursor: pointer; /* 클릭 가능하게 변경 */
         }
-        /* Swiper에서 제공하는 active 클래스를 활용 */
+        /* Swiper 기본 active 스타일 */
         .swiper-slide-active {
             background: #007bff !important; /* 활성화된 슬라이드 색상 변경 */
             color: white;
             font-weight: bold;
             transform: scale(1.1); /* 약간 확대 효과 */
+        }
+        /* 직접 추가하는 active 스타일 */
+        .custom-active {
+            background: #ff5722 !important; /* 클릭된 슬라이드 색상 변경 */
+            color: white;
+            font-weight: bold;
+            transform: scale(1.2); /* 클릭된 슬라이드 더 확대 */
         }
         .slide-button {
             padding: 10px 15px;
@@ -54,16 +62,22 @@
     <script>
         // Swiper 초기화
         const swiper = new Swiper('.swiper', {
-            slidesPerView: 'auto'
+            slidesPerView: 'auto',
+            slideToClickedSlide: true, // 클릭한 슬라이드로 이동
         });
 
-        // 버튼 클릭 이벤트 추가
-        document.querySelectorAll('.slide-button').forEach(button => {
-            button.addEventListener('click', function () {
-                const slideElement = this.closest('.swiper-slide'); // 클릭된 버튼이 속한 슬라이드
-                const slideIndex = swiper.slides.indexOf(slideElement); // Swiper에서 해당 슬라이드의 인덱스 가져오기
-                swiper.slideTo(slideIndex);
+        // 클릭한 슬라이드에 custom-active 클래스 추가
+        function updateClickedSlide(event) {
+            document.querySelectorAll('.swiper-slide').forEach(slide => {
+                slide.classList.remove('custom-active'); // 기존 active 제거
             });
+
+            event.currentTarget.classList.add('custom-active'); // 클릭한 슬라이드에 추가
+        }
+
+        // 모든 슬라이드에 클릭 이벤트 추가
+        document.querySelectorAll('.swiper-slide').forEach(slide => {
+            slide.addEventListener('click', updateClickedSlide);
         });
     </script>
 
