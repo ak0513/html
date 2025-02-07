@@ -18,12 +18,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background 0.3s;
+        }
+        .swiper-slide.active {
+            background: #007bff; /* 활성화된 슬라이드의 배경색 */
+            color: white;
+            font-weight: bold;
         }
         .slide-button {
             padding: 10px 15px;
-            background: #007bff;
-            color: white;
-            border: none;
+            background: white;
+            border: 1px solid #007bff;
             cursor: pointer;
         }
     </style>
@@ -51,10 +56,23 @@
     <script>
         // Swiper 초기화
         const swiper = new Swiper('.swiper', {
-            slidesPerView: 'auto',
-            spaceBetween: 10,
-            centeredSlides: true, // 선택된 슬라이드가 가운데 오도록 설정
+            slidesPerView: 'auto'
         });
+
+        // 현재 활성화된 슬라이드에 클래스 추가
+        function updateActiveSlide() {
+            document.querySelectorAll('.swiper-slide').forEach(slide => {
+                slide.classList.remove('active'); // 기존 active 제거
+            });
+
+            swiper.slides[swiper.activeIndex].classList.add('active'); // 새로운 active 추가
+        }
+
+        // 초기 활성 슬라이드 업데이트
+        updateActiveSlide();
+
+        // 슬라이드 변경될 때마다 업데이트
+        swiper.on('slideChange', updateActiveSlide);
 
         // 버튼 클릭 이벤트 추가
         document.querySelectorAll('.slide-button').forEach(button => {
