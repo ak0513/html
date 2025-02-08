@@ -3,59 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swiper Clickable Slide</title>
+    <title>Multiple Swipers</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
-        *{margin:0;padding:0;box-sizing: border-box;}
-        body,html {font-size:62.5%}
-        #header{position:fixed;top:0;left:0;right:0;background-color: #666;height:56px;}
-        #container {padding-top:56px;}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { font-size: 62.5%; }
+        #header { position: fixed; top: 0; left: 0; right: 0; background-color: #666; height: 56px; }
+        #container { padding-top: 56px; }
 
-
-        
-        
-        #menuSwiper {
-            overflow:hidden;
-            border-bottom:1px solid #ddd;
+        .menu_swiper {
+            overflow: hidden;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
         }
-        #menuSwiper .swiper-slide {
+        .menu_swiper .swiper-slide {
             width: auto;
         }
-        #menuSwiper .menu_swiper_btn {
-            position:relative;
-            font-size:1.8rem;
-            padding:1.2rem 1.6rem;
-            background-color:#fff;
-            color:#666;
-            border:none;
-            line-height:2.4rem;
+        .menu_swiper .menu_swiper_btn {
+            position: relative;
+            font-size: 1.8rem;
+            padding: 1.2rem 1.6rem;
+            background-color: #fff;
+            color: #666;
+            border: none;
             cursor: pointer;
         }
-        
-        #menuSwiper .swiper-slide.is_active .menu_swiper_btn {
-            color:#000;
+        .menu_swiper .swiper-slide.is_active .menu_swiper_btn {
+            color: #000;
         }
-        #menuSwiper .swiper-slide.is_active .menu_swiper_btn::after {content:'';display:block;position:absolute;left:0;right:0;bottom:-1px;height:3px;background:#000;}
-
+        .menu_swiper .swiper-slide.is_active .menu_swiper_btn::after {
+            content: ''; display: block; position: absolute;
+            left: 0; right: 0; bottom: -1px; height: 3px; background: #000;
+        }
         /* fixed */
-        #menuSwiper.menu_swiper_fixed {
+        .menu_swiper.menu_swiper_fixed {
             padding-top:4.8rem;
         }
 
-        #menuSwiper.menu_swiper_fixed .swiper-wrapper {
+        .menu_swiper.menu_swiper_fixed .swiper-wrapper {
             position:fixed;top:5.6rem;left:0;right:0;
         }
         /* sticky */
-        #menuSwiper.menu_swiper_sticky {
+        .menu_swiper.menu_swiper_sticky {
             position:sticky;top:5.6rem;left:0;right:0;
         }
 
 
         .menu_swiper_cont {
             display: none;
-            margin-top:20px;
-            font-size:2.0rem;
-            height:2000px;
+            font-size: 2.0rem;
+            padding: 200px 20px;
+            border: 1px solid #ddd;
+            margin-top: 10px;
         }
         .menu_swiper_cont.is_active {
             display: block;
@@ -63,81 +62,91 @@
     </style>
 </head>
 <body>
-    <header id="header">Header</header>
-    <div id="container">
-        <div style="height:100px"></div>
-        <div id="menuSwiper" class="menu_swiper_fixed">
-            <div class="swiper-wrapper" role="tablist">
-                <div class="swiper-slide is_active" role="presentation"><button class="menu_swiper_btn" role="tab" data-target="step1" aria-selected="true">비만</button></div>
-                <div class="swiper-slide" role="presentation"><button class="menu_swiper_btn" role="tab" data-target="step2" data-link="true" aria-selected="false">고혈압</button></div>
-                <div class="swiper-slide" role="presentation"><button class="menu_swiper_btn" role="tab" data-target="step3" aria-selected="false">빈혈</button></div>
-                <div class="swiper-slide" role="presentation"><button class="menu_swiper_btn" role="tab" data-target="step4" aria-selected="false">당뇨병</button></div>
-                <div class="swiper-slide" role="presentation"><button class="menu_swiper_btn" role="tab" data-target="step5" aria-selected="false">이상지질혈증</button></div>
-                <div class="swiper-slide" role="presentation"><button class="menu_swiper_btn" role="tab" data-target="step6" aria-selected="false">Button6</button></div>
-                <div class="swiper-slide" role="presentation"><button class="menu_swiper_btn" role="tab" data-target="step7" aria-selected="false">Button7</button></div>
-                <div class="swiper-slide" role="presentation"><button class="menu_swiper_btn" role="tab" data-target="step8" aria-selected="false">Button8</button></div>
-                <div class="swiper-slide" role="presentation"><button class="menu_swiper_btn" role="tab" data-target="step9" aria-selected="false">Button9</button></div>
-            </div>
+
+<header id="header">Header</header>
+<div id="container">
+    <div style="height:100px"></div>
+    <div class="menu_swiper menu_swiper_sticky">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide is_active"><button class="menu_swiper_btn" data-target="step1">비만</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step2" data-link="true" onclick="test()">고혈압</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step3">빈혈</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step4">당뇨병</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step5">이상지질혈증</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step6">심장병</button></div>
         </div>
-
-        <!-- 하단 내용 영역 -->
-        <div id="step">
-            <div class="menu_swiper_cont is_active" id="step1">내용 1: 첫 번째 버튼의 내용입니다.</div>
-            <div class="menu_swiper_cont" id="step2">내용 2: 두 번째 버튼의 내용입니다.</div>
-            <div class="menu_swiper_cont" id="step3">내용 3: 세 번째 버튼의 내용입니다.</div>
-            <div class="menu_swiper_cont" id="step4">내용 4: 네 번째 버튼의 내용입니다.</div>
-            <div class="menu_swiper_cont" id="step5">내용 5: 다섯 번째 버튼의 내용입니다.</div>
-            <div class="menu_swiper_cont" id="step6">내용 6: 여섯 번째 버튼의 내용입니다.</div>
-            <div class="menu_swiper_cont" id="step7">내용 7: 일곱 번째 버튼의 내용입니다.</div>
-            <div class="menu_swiper_cont" id="step8">내용 8: 일곱 번째 버튼의 내용입니다.</div>
-            <div class="menu_swiper_cont" id="step9">내용 9: 일곱 번째 버튼의 내용입니다.</div>
-        </div>
-
-
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script>
-        // Swiper 초기화
-        var swiper = new Swiper('#menuSwiper', {
+    <div class="menu_swiper_contents">
+        <div class="menu_swiper_cont is_active" id="step1">비만 관련 내용</div>
+        <div class="menu_swiper_cont" id="step2">고혈압 관련 내용</div>
+        <div class="menu_swiper_cont" id="step3">빈혈 관련 내용</div>
+        <div class="menu_swiper_cont" id="step4">당뇨병 관련 내용</div>
+        <div class="menu_swiper_cont" id="step5">이상지질혈증 관련 내용</div>
+        <div class="menu_swiper_cont" id="step6">심장병 관련 내용</div>
+    </div>
+
+    <div class="menu_swiper">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide is_active"><button class="menu_swiper_btn" data-target="step11">비만</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step12">고혈압</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step13">빈혈</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step14">당뇨병</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step15">이상지질혈증</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step16">심장병</button></div>
+        </div>
+    </div>
+    <div class="menu_swiper_contents">
+        <div class="menu_swiper_cont is_active" id="step11">비만 관련 내용</div>
+        <div class="menu_swiper_cont" id="step12">고혈압 관련 내용</div>
+        <div class="menu_swiper_cont" id="step13">빈혈 관련 내용</div>
+        <div class="menu_swiper_cont" id="step14">당뇨병 관련 내용</div>
+        <div class="menu_swiper_cont" id="step15">이상지질혈증 관련 내용</div>
+        <div class="menu_swiper_cont" id="step16">심장병 관련 내용</div>
+    </div>
+    <div style="height:1000px"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    document.querySelectorAll('.menu_swiper').forEach(menuSwiper => {
+        // 개별 Swiper 인스턴스 생성
+        const swiper = new Swiper(menuSwiper, {
             slidesPerView: 'auto',
         });
 
-        // 버튼 클릭 시 스타일 변경 & 하단 내용 변경
-        function updateMenuSwiperSlide(event) {
-            document.querySelectorAll('.swiper-slide').forEach(function(slide) {
-                slide.classList.remove('is_active'); // 기존 active 제거
+        menuSwiper.querySelectorAll('.menu_swiper_btn').forEach(button => {
+            button.addEventListener('click', function () {
+                if(button.dataset.link) {
+                    return false;
+                }
+                // 현재 Swiper 내부의 모든 slide에서 active 제거
+                menuSwiper.querySelectorAll('.menu_swiper .swiper-slide').forEach(slide => slide.classList.remove('is_active'));
+                menuSwiper.querySelectorAll('.menu_swiper .menu_swiper_btn').forEach(btn => btn.setAttribute('aria-selected', 'false'));
+
+                // 클릭한 요소에 active 추가
+                const clickedSlide = button.closest('.swiper-slide');
+                clickedSlide.classList.add('is_active');
+                button.setAttribute('aria-selected', 'true');
+
+                // Swiper 내 슬라이드 인덱스를 찾아 이동
+                const slideIndex = Array.from(menuSwiper.querySelectorAll('.swiper-slide')).indexOf(clickedSlide);
+                swiper.slideTo(slideIndex);
+
+                // 현재 Swiper와 연결된 콘텐츠 컨테이너 찾기
+                const contentContainer = menuSwiper.nextElementSibling;
+                contentContainer.querySelectorAll('.menu_swiper_cont').forEach(cont => cont.classList.remove('is_active'));
+
+                // 클릭한 버튼에 해당하는 콘텐츠 활성화
+                const contentId = button.dataset.target;
+                document.getElementById(contentId).classList.add('is_active');
             });
-
-            document.querySelectorAll('#menuSwiper .menu_swiper_btn').forEach(function(button) {
-                button.setAttribute('aria-selected', 'false'); // 모든 버튼의 aria-selected 초기화
-            });
-
-            var clickedButton = event.currentTarget;
-            var clickedSlide = clickedButton.closest('.swiper-slide');
-            clickedSlide.classList.add('is_active'); // 클릭한 슬라이드에 스타일 적용
-            clickedButton.setAttribute('aria-selected', 'true'); // 클릭한 버튼만 aria-selected="true"
-
-            // Swiper의 slides 배열에서 클릭된 슬라이드의 인덱스 찾기
-            var slideIndex = Array.from(swiper.slides).indexOf(clickedSlide);
-            swiper.slideTo(slideIndex); // 해당 인덱스로 이동
-
-            // 모든 내용을 숨기고, 선택된 내용만 보이도록 변경
-            document.querySelectorAll('.menu_swiper_cont').forEach(function(item) {
-                item.classList.remove('is_active');
-            });
-
-            // 클릭한 버튼에 해당하는 내용 보이기
-            var contentId = clickedButton.dataset.target;
-            document.getElementById(contentId).classList.add('is_active');
-        }
-
-        // 모든 버튼에 클릭 이벤트 추가
-        document.querySelectorAll('#menuSwiper .menu_swiper_btn').forEach(function(button) {
-            if(!button.dataset.link) {
-                button.addEventListener('click', updateMenuSwiperSlide);
-            }
         });
-    </script>
+    });
+
+    function test() {
+        console.log('test')
+    }
+</script>
 
 </body>
 </html>
