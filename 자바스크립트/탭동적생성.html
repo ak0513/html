@@ -27,6 +27,7 @@
             padding: 10px;
             cursor: grab;
             user-select: none;
+            touch-action: none; /* ✅ 모바일 터치 방지 */
         }
         .right-panel {
             flex-grow: 1;
@@ -75,12 +76,8 @@
             <button draggable="true">Tab 3</button>
         </div>
         <div class="right-panel">
-            <div class="tabs">
-                <!-- 동적으로 탭이 추가됨 -->
-            </div>
-            <div class="content-container">
-                <!-- 동적으로 내용 영역이 추가됨 -->
-            </div>
+            <div class="tabs"></div>
+            <div class="content-container"></div>
         </div>
     </div>
 
@@ -136,10 +133,6 @@
                 })
                 .catch(error => console.error('데이터 로드 실패:', error));
 
-            if (tab.getAttribute('data-name') === 'Tab 1') {
-                executeCustomLogic(content);
-            }
-
             if (!content.dataset.loaded) {
                 loadCustomUI(content);
                 content.dataset.loaded = "true";
@@ -154,12 +147,6 @@
             if (firstTab) setActiveTab(firstTab);
         }
 
-        function executeCustomLogic(content) {
-            const div = document.createElement('div');
-            div.textContent = '개발 스크립트 실행 결과';
-            content.appendChild(div);
-        }
-
         function loadCustomUI(content) {
             const div = document.createElement('div');
             div.style.background = '#f0f0f0';
@@ -168,11 +155,12 @@
             content.appendChild(div);
         }
 
-        // ✅ 드래그 이벤트 추가 함수 (탭 & 버튼 공용)
+        // ✅ 드래그 이벤트 추가 (탭 & 버튼 공용)
         function addDragEvents(element, container) {
             element.addEventListener('dragstart', (e) => {
                 e.dataTransfer.setData('text/plain', element.textContent.trim());
                 element.classList.add('dragging');
+                e.preventDefault(); // ✅ 모바일 새 창 검색 방지
             });
 
             element.addEventListener('dragend', () => {
