@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동적 탭 생성</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+        }
+        .left-panel {
+            width: 150px;
+            background: #f4f4f4;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .left-panel button {
+            margin-bottom: 10px;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .right-panel {
+            flex-grow: 1;
+            padding: 10px;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            background: #f9f9f9;
+            margin-right: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .tab.active {
+            background: white;
+            font-weight: bold;
+        }
+        .tab .close {
+            margin-left: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .tab-content {
+            padding: 10px;
+            border: 1px solid #ddd;
+            height: 300px; /* 고정된 높이 */
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <button onclick="addTab('Tab 1')">Tab 1</button>
+            <button onclick="addTab('Tab 2')">Tab 2</button>
+            <button onclick="addTab('Tab 3')">Tab 3</button>
+        </div>
+        <div class="right-panel">
+            <div class="tabs">
+                <!-- 동적으로 탭이 추가됨 -->
+            </div>
+            <div class="content-container">
+                <!-- 동적으로 내용 영역이 추가됨 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tabsContainer = document.querySelector('.tabs');
+        const contentContainer = document.querySelector('.content-container');
+
+        function addTab(tabName) {
+            // 중복된 탭이 있는지 확인
+            let existingTab = document.querySelector(`.tab[data-name="${tabName}"]`);
+            if (existingTab) {
+                setActiveTab(existingTab);
+                return;
+            }
+
+            // 탭 생성
+            const tab = document.createElement('div');
+            tab.classList.add('tab');
+            tab.setAttribute('data-name', tabName);
+            tab.innerHTML = `${tabName} <span class="close">×</span>`;
+            tab.onclick = () => setActiveTab(tab);
+
+            // 닫기 버튼 이벤트
+            tab.querySelector('.close').onclick = (e) => {
+                e.stopPropagation();
+                removeTab(tabName);
+            };
+
+            // 내용 영역 생성
+            const tabContent = document.createElement('div');
+            tabContent.classList.add('tab-content');
+            tabContent.setAttribute('data-name', tabName);
+
+            // 추가
+            tabsContainer.appendChild(tab);
+            contentContainer.appendChild(tabContent);
+
+            // 활성화
+            setActiveTab(tab);
+        }
+
+        function setActiveTab(tab) {
+            // 모든 탭과 내용 비활성화
+            document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
+
+            // 선택된 탭 활성화
+            tab.classList.add('active');
+            document.querySelector(`.tab-content[data-name="${tab.getAttribute('data-name')}"]`).classList.add('active');
+        }
+
+        function removeTab(tabName) {
+            document.querySelector(`.tab[data-name="${tabName}"]`)?.remove();
+            document.querySelector(`.tab-content[data-name="${tabName}"]`)?.remove();
+
+            // 다른 탭이 있으면 첫 번째 탭 활성화
+            const firstTab = document.querySelector('.tab');
+            if (firstTab) setActiveTab(firstTab);
+        }
+    </script>
+</body>
+</html>
