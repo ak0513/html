@@ -1,178 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Single List Drag and Drop</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            gap: 20px;
-            padding: 20px;
-        }
-
-        .list-container {
-            width: 200px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            background: #fafafa;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        li {
-            padding: 15px;
-            margin: 5px 0;
-            background: #f0f0f0;
-            border: 1px solid #ccc;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-        }
-
-        button {
-            padding: 5px 10px;
-            border: none;
-            background-color: #007BFF;
-            color: white;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .dragging {
-            position: absolute;
-            z-index: 1000;
-            opacity: 0.7;
-            background-color: #d0d0d0;
-            pointer-events: none;
-        }
-
-        .placeholder {
-            background: #e0e0e0;
-            border: 2px dashed #ccc;
-            height: 30px;
-            margin: 5px 0;
-            width: 90%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-    </style>
-</head>
-<body>
-    <div class="list-container">
-        <ul class="sortable-list">
-            <li><div>Item 1</div><button class="move-btn">버튼</button></li>
-            <li><div>Item 2</div><button class="move-btn">버튼</button></li>
-        </ul>
-    </div>
-
-    <div class="list-container">
-        <ul class="sortable-list">
-            <li><div>Item 3</div><button class="move-btn">버튼</button></li>
-            <li><div>Item 4</div><button class="move-btn">버튼</button></li>
-        </ul>
-    </div>
-
+    <title>파일명을 body 클래스에 추가</title>
     <script>
-        const lists = document.querySelectorAll(".sortable-list");
-        let draggingElement = null;
-        let placeholder = null;
-        let startY = 0;
-        let initialLeft = 0;
-        let currentList = null;
+        document.addEventListener("DOMContentLoaded", function () {
+            let path = window.location.pathname;
+            let fileName = path.substring(path.lastIndexOf("/") + 1).split(".")[0];
 
-        function handleTouchStart(e) {
-            const button = e.target.closest(".move-btn");
-            if (!button) return;
-
-            const target = button.parentElement;
-            if (!target) return;
-
-            currentList = target.parentElement;
-            const touch = e.touches[0];
-            const rect = target.getBoundingClientRect();
-
-            draggingElement = target;
-            startY = touch.clientY;
-            initialLeft = rect.left;
-
-            placeholder = document.createElement("li");
-            placeholder.classList.add("placeholder");
-            placeholder.style.height = `${rect.height * 0.7}px`;
-            target.parentNode.insertBefore(placeholder, target.nextSibling);
-
-            target.classList.add("dragging");
-            target.style.width = `${rect.width}px`;
-            target.style.top = `${rect.top}px`;
-            target.style.left = `${initialLeft}px`;
-        }
-
-        function handleTouchMove(e) {
-            if (!draggingElement) return;
-
-            e.preventDefault();
-
-            const touch = e.touches[0];
-            const deltaY = touch.clientY - startY;
-
-            draggingElement.style.top = `${parseFloat(draggingElement.style.top) + deltaY}px`;
-            draggingElement.style.left = `${initialLeft}px`;
-
-            startY = touch.clientY;
-
-            const listRect = currentList.getBoundingClientRect();
-            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
-            const closestLi = elementBelow?.closest("li");
-
-            if (touch.clientY < listRect.top) {
-                currentList.insertBefore(placeholder, currentList.firstChild);
-            } else if (touch.clientY > listRect.bottom) {
-                currentList.appendChild(placeholder);
-            } else if (closestLi && closestLi !== placeholder && closestLi !== draggingElement) {
-                const rect = closestLi.getBoundingClientRect();
-                const midpoint = rect.top + rect.height / 2;
-
-                if (touch.clientY < midpoint) {
-                    currentList.insertBefore(placeholder, closestLi);
-                } else {
-                    currentList.insertBefore(placeholder, closestLi.nextSibling);
-                }
+            if (fileName) {
+                document.body.classList.add(fileName);
             }
-        }
-
-        function handleTouchEnd() {
-            if (!draggingElement) return;
-
-            placeholder.parentNode.insertBefore(draggingElement, placeholder);
-            placeholder.remove();
-
-            draggingElement.classList.remove("dragging");
-            draggingElement.style.removeProperty("top");
-            draggingElement.style.removeProperty("left");
-            draggingElement.style.removeProperty("width");
-
-            draggingElement = null;
-            placeholder = null;
-            currentList = null;
-        }
-
-        lists.forEach(list => {
-            list.addEventListener("touchstart", handleTouchStart);
-            list.addEventListener("touchmove", handleTouchMove);
-            list.addEventListener("touchend", handleTouchEnd);
         });
     </script>
+</head>
+<body>
+    <h1>파일명을 body 클래스에 추가하는 예제</h1>
 </body>
 </html>
