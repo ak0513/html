@@ -126,7 +126,31 @@
 
             // 선택된 탭 활성화
             tab.classList.add('active');
-            document.querySelector(`.tab-content[data-name="${tab.getAttribute('data-name')}"]`).classList.add('active');
+            const content = document.querySelector(`.tab-content[data-name="${tab.getAttribute('data-name')}"]`);
+            content.classList.add('active');
+
+            // ✅ 개발 로직 추가 위치
+            console.log(`탭 활성화됨: ${tab.getAttribute('data-name')}`);
+
+            // ✅ 예제 1: API에서 데이터를 불러와 본문에 출력
+            fetch('/api/data?tab=' + tab.getAttribute('data-name'))  // 예제 API
+                .then(response => response.json())
+                .then(data => {
+                    content.innerHTML = `<p>불러온 데이터: ${data.message}</p>`;
+                })
+                .catch(error => console.error('데이터 로드 실패:', error));
+
+            // ✅ 예제 2: 특정 탭에서만 실행할 추가 기능
+            if (tab.getAttribute('data-name') === 'Tab 1') {
+                console.log('Tab 1에서만 실행되는 로직');
+                executeCustomLogic(content);
+            }
+
+            // ✅ 예제 3: 차트 같은 UI 라이브러리 적용 (한 번만 실행)
+            if (!content.dataset.loaded) {
+                loadCustomUI(content);
+                content.dataset.loaded = "true";  // 중복 실행 방지
+            }
         }
 
         function removeTab(tabName) {
@@ -136,6 +160,22 @@
             // 다른 탭이 있으면 첫 번째 탭 활성화
             const firstTab = document.querySelector('.tab');
             if (firstTab) setActiveTab(firstTab);
+        }
+
+        // ✅ 개발 스크립트 예제 1: 특정 로직 실행
+        function executeCustomLogic(content) {
+            const div = document.createElement('div');
+            div.textContent = '이곳에 개발 스크립트 실행 결과 표시';
+            content.appendChild(div);
+        }
+
+        // ✅ 개발 스크립트 예제 2: UI 라이브러리 적용 (예: 차트)
+        function loadCustomUI(content) {
+            const div = document.createElement('div');
+            div.style.background = '#f0f0f0';
+            div.style.padding = '20px';
+            div.innerHTML = '<p>UI 요소가 여기에 로드됨</p>';
+            content.appendChild(div);
         }
     </script>
 </body>
