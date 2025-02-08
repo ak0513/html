@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>동적 탭 + 드래그 이동</title>
+    <title>동적 탭 + 버튼 드래그 이동</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,7 +25,8 @@
         .left-panel button {
             margin-bottom: 10px;
             padding: 10px;
-            cursor: pointer;
+            cursor: grab;
+            user-select: none;
         }
         .right-panel {
             flex-grow: 1;
@@ -69,9 +70,9 @@
 <body>
     <div class="container">
         <div class="left-panel">
-            <button onclick="addTab('Tab 1')">Tab 1</button>
-            <button onclick="addTab('Tab 2')">Tab 2</button>
-            <button onclick="addTab('Tab 3')">Tab 3</button>
+            <button draggable="true">Tab 1</button>
+            <button draggable="true">Tab 2</button>
+            <button draggable="true">Tab 3</button>
         </div>
         <div class="right-panel">
             <div class="tabs">
@@ -86,6 +87,7 @@
     <script>
         const tabsContainer = document.querySelector('.tabs');
         const contentContainer = document.querySelector('.content-container');
+        const leftPanel = document.querySelector('.left-panel');
 
         function addTab(tabName) {
             let existingTab = document.querySelector(`.tab[data-name="${tabName}"]`);
@@ -94,33 +96,27 @@
                 return;
             }
 
-            // 탭 생성
             const tab = document.createElement('div');
             tab.classList.add('tab');
             tab.setAttribute('data-name', tabName);
-            tab.setAttribute('draggable', true);  // ✅ 드래그 가능 설정
+            tab.setAttribute('draggable', true);
             tab.innerHTML = `${tabName} <span class="close">×</span>`;
             tab.onclick = () => setActiveTab(tab);
 
-            // 닫기 버튼 이벤트
             tab.querySelector('.close').onclick = (e) => {
                 e.stopPropagation();
                 removeTab(tabName);
             };
 
-            // 드래그 이벤트 추가
-            addDragEvents(tab);
+            addDragEvents(tab, tabsContainer);
 
-            // 내용 영역 생성
             const tabContent = document.createElement('div');
             tabContent.classList.add('tab-content');
             tabContent.setAttribute('data-name', tabName);
 
-            // 추가
             tabsContainer.appendChild(tab);
             contentContainer.appendChild(tabContent);
 
-            // 활성화
             setActiveTab(tab);
         }
 
@@ -133,7 +129,6 @@
 
             console.log(`탭 활성화됨: ${tab.getAttribute('data-name')}`);
 
-            // ✅ API 데이터 로드
             fetch('/api/data?tab=' + tab.getAttribute('data-name'))
                 .then(response => response.json())
                 .then(data => {
@@ -141,12 +136,10 @@
                 })
                 .catch(error => console.error('데이터 로드 실패:', error));
 
-            // ✅ 특정 탭에서 실행할 로직
             if (tab.getAttribute('data-name') === 'Tab 1') {
                 executeCustomLogic(content);
             }
 
-            // ✅ UI 요소 로드 (한 번만 실행)
             if (!content.dataset.loaded) {
                 loadCustomUI(content);
                 content.dataset.loaded = "true";
@@ -175,36 +168,36 @@
             content.appendChild(div);
         }
 
-        // ✅ 드래그 & 드롭 기능 추가
-        function addDragEvents(tab) {
-            tab.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text/plain', tab.getAttribute('data-name'));
-                tab.classList.add('dragging');
+        // ✅ 드래그 이벤트 추가 함수 (탭 & 버튼 공용)
+        function addDragEvents(element, container) {
+            element.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', element.textContent.trim());
+                element.classList.add('dragging');
             });
 
-            tab.addEventListener('dragend', () => {
-                tab.classList.remove('dragging');
+            element.addEventListener('dragend', () => {
+                element.classList.remove('dragging');
             });
 
-            tabsContainer.addEventListener('dragover', (e) => {
+            container.addEventListener('dragover', (e) => {
                 e.preventDefault();
-                const draggingTab = document.querySelector('.dragging');
-                const afterElement = getDragAfterElement(e.clientX);
+                const draggingElement = document.querySelector('.dragging');
+                const afterElement = getDragAfterElement(e.clientY, container);
 
                 if (afterElement == null) {
-                    tabsContainer.appendChild(draggingTab);
+                    container.appendChild(draggingElement);
                 } else {
-                    tabsContainer.insertBefore(draggingTab, afterElement);
+                    container.insertBefore(draggingElement, afterElement);
                 }
             });
         }
 
-        function getDragAfterElement(x) {
-            const tabs = [...document.querySelectorAll('.tab:not(.dragging)')];
+        function getDragAfterElement(y, container) {
+            const elements = [...container.querySelectorAll(':scope > *:not(.dragging)')];
 
-            return tabs.reduce((closest, child) => {
+            return elements.reduce((closest, child) => {
                 const box = child.getBoundingClientRect();
-                const offset = x - box.left - box.width / 2;
+                const offset = y - box.top - box.height / 2;
 
                 if (offset < 0 && offset > closest.offset) {
                     return { offset, element: child };
@@ -213,6 +206,12 @@
                 }
             }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
+
+        // ✅ 초기 왼쪽 버튼에 드래그 기능 적용
+        document.querySelectorAll('.left-panel button').forEach(button => {
+            addDragEvents(button, leftPanel);
+            button.onclick = () => addTab(button.textContent.trim());
+        });
     </script>
 </body>
 </html>
