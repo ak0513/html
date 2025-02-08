@@ -100,10 +100,10 @@
             const button = e.target.closest(".move-btn");
             if (!button) return;
 
-            // 2초 동안 누르면 드래그 모드 시작
+            // 1초 동안 누르면 드래그 모드 시작
             holdTimer = setTimeout(() => {
                 startDrag(button);
-            }, 2000);
+            }, 1000);
 
             function handleMouseUp() {
                 clearTimeout(holdTimer);
