@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>동적 탭 생성</title>
+    <title>동적 탭 + 드래그 이동</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -37,13 +37,14 @@
         }
         .tab {
             padding: 10px 15px;
-            cursor: pointer;
+            cursor: grab;
             border: 1px solid #ddd;
             border-bottom: none;
             background: #f9f9f9;
             margin-right: 5px;
             display: flex;
             align-items: center;
+            user-select: none;
         }
         .tab.active {
             background: white;
@@ -57,7 +58,7 @@
         .tab-content {
             padding: 10px;
             border: 1px solid #ddd;
-            height: 300px; /* 고정된 높이 */
+            height: 300px;
             display: none;
         }
         .tab-content.active {
@@ -87,7 +88,6 @@
         const contentContainer = document.querySelector('.content-container');
 
         function addTab(tabName) {
-            // 중복된 탭이 있는지 확인
             let existingTab = document.querySelector(`.tab[data-name="${tabName}"]`);
             if (existingTab) {
                 setActiveTab(existingTab);
@@ -98,6 +98,7 @@
             const tab = document.createElement('div');
             tab.classList.add('tab');
             tab.setAttribute('data-name', tabName);
+            tab.setAttribute('draggable', true);  // ✅ 드래그 가능 설정
             tab.innerHTML = `${tabName} <span class="close">×</span>`;
             tab.onclick = () => setActiveTab(tab);
 
@@ -106,6 +107,9 @@
                 e.stopPropagation();
                 removeTab(tabName);
             };
+
+            // 드래그 이벤트 추가
+            addDragEvents(tab);
 
             // 내용 영역 생성
             const tabContent = document.createElement('div');
@@ -121,35 +125,31 @@
         }
 
         function setActiveTab(tab) {
-            // 모든 탭과 내용 비활성화
             document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
 
-            // 선택된 탭 활성화
             tab.classList.add('active');
             const content = document.querySelector(`.tab-content[data-name="${tab.getAttribute('data-name')}"]`);
             content.classList.add('active');
 
-            // ✅ 개발 로직 추가 위치
             console.log(`탭 활성화됨: ${tab.getAttribute('data-name')}`);
 
-            // ✅ 예제 1: API에서 데이터를 불러와 본문에 출력
-            fetch('/api/data?tab=' + tab.getAttribute('data-name'))  // 예제 API
+            // ✅ API 데이터 로드
+            fetch('/api/data?tab=' + tab.getAttribute('data-name'))
                 .then(response => response.json())
                 .then(data => {
                     content.innerHTML = `<p>불러온 데이터: ${data.message}</p>`;
                 })
                 .catch(error => console.error('데이터 로드 실패:', error));
 
-            // ✅ 예제 2: 특정 탭에서만 실행할 추가 기능
+            // ✅ 특정 탭에서 실행할 로직
             if (tab.getAttribute('data-name') === 'Tab 1') {
-                console.log('Tab 1에서만 실행되는 로직');
                 executeCustomLogic(content);
             }
 
-            // ✅ 예제 3: 차트 같은 UI 라이브러리 적용 (한 번만 실행)
+            // ✅ UI 요소 로드 (한 번만 실행)
             if (!content.dataset.loaded) {
                 loadCustomUI(content);
-                content.dataset.loaded = "true";  // 중복 실행 방지
+                content.dataset.loaded = "true";
             }
         }
 
@@ -157,25 +157,61 @@
             document.querySelector(`.tab[data-name="${tabName}"]`)?.remove();
             document.querySelector(`.tab-content[data-name="${tabName}"]`)?.remove();
 
-            // 다른 탭이 있으면 첫 번째 탭 활성화
             const firstTab = document.querySelector('.tab');
             if (firstTab) setActiveTab(firstTab);
         }
 
-        // ✅ 개발 스크립트 예제 1: 특정 로직 실행
         function executeCustomLogic(content) {
             const div = document.createElement('div');
-            div.textContent = '이곳에 개발 스크립트 실행 결과 표시';
+            div.textContent = '개발 스크립트 실행 결과';
             content.appendChild(div);
         }
 
-        // ✅ 개발 스크립트 예제 2: UI 라이브러리 적용 (예: 차트)
         function loadCustomUI(content) {
             const div = document.createElement('div');
             div.style.background = '#f0f0f0';
             div.style.padding = '20px';
-            div.innerHTML = '<p>UI 요소가 여기에 로드됨</p>';
+            div.innerHTML = '<p>UI 요소 로드</p>';
             content.appendChild(div);
+        }
+
+        // ✅ 드래그 & 드롭 기능 추가
+        function addDragEvents(tab) {
+            tab.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', tab.getAttribute('data-name'));
+                tab.classList.add('dragging');
+            });
+
+            tab.addEventListener('dragend', () => {
+                tab.classList.remove('dragging');
+            });
+
+            tabsContainer.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const draggingTab = document.querySelector('.dragging');
+                const afterElement = getDragAfterElement(e.clientX);
+
+                if (afterElement == null) {
+                    tabsContainer.appendChild(draggingTab);
+                } else {
+                    tabsContainer.insertBefore(draggingTab, afterElement);
+                }
+            });
+        }
+
+        function getDragAfterElement(x) {
+            const tabs = [...document.querySelectorAll('.tab:not(.dragging)')];
+
+            return tabs.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = x - box.left - box.width / 2;
+
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
     </script>
 </body>
