@@ -33,6 +33,9 @@
         .left-panel .button-list {
             padding-left: 10px;
         }
+        .left-panel li {
+            list-style-type: none;
+        }
         .left-panel button {
             margin: 5px 0;
             padding: 10px;
@@ -40,6 +43,10 @@
             cursor: grab;
             user-select: none;
             touch-action: none;
+        }
+        .left-panel button.is_active {
+            background-color: #ddd;
+            font-weight: bold;
         }
         .right-panel {
             flex-grow: 1;
@@ -61,7 +68,7 @@
             align-items: center;
             user-select: none;
         }
-        .tab.active {
+        .tab.is_active {
             background: white;
             font-weight: bold;
         }
@@ -76,7 +83,7 @@
             height: 300px;
             display: none;
         }
-        .tab-content.active {
+        .tab-content.is_active {
             display: block;
         }
         .dragging {
@@ -90,17 +97,17 @@
         <div class="left-panel">
             <div class="group">
                 <div class="group-title">Group 1</div>
-                <div class="button-list">
-                    <button draggable="true">Tab 1-1</button>
-                    <button draggable="true">Tab 1-2</button>
-                </div>
+                <ul class="button-list">
+                    <li><button type="button" draggable="true" data-name="Tab 1-1">Tab 1-1</button></li>
+                    <li><button type="button" draggable="true" data-name="Tab 1-2">Tab 1-2</button></li>
+                </ul>
             </div>
             <div class="group">
                 <div class="group-title">Group 2</div>
-                <div class="button-list">
-                    <button draggable="true">Tab 2-1</button>
-                    <button draggable="true">Tab 2-2</button>
-                </div>
+                <ul class="button-list">
+                    <li><button type="button" draggable="true" data-name="Tab 2-1">Tab 2-1</button></li>
+                    <li><button type="button" draggable="true" data-name="Tab 2-2">Tab 2-2</button></li>
+                </ul>
             </div>
         </div>
         <div class="right-panel">
@@ -117,14 +124,12 @@
 
         // 새로운 탭을 추가하는 함수
         function addTab(tabName) {
-            // 이미 존재하는 탭인지 확인
             let existingTab = document.querySelector(`.tab[data-name="${tabName}"]`);
             if (existingTab) {
-                setActiveTab(existingTab); // 기존 탭을 활성화
+                setActiveTab(existingTab);
                 return;
             }
 
-            // 새로운 탭 생성
             const tab = document.createElement('div');
             tab.classList.add('tab');
             tab.setAttribute('data-name', tabName);
@@ -132,16 +137,13 @@
             tab.innerHTML = `${tabName} <span class="close">×</span>`;
             tab.onclick = () => setActiveTab(tab);
 
-            // 닫기 버튼 이벤트 추가
             tab.querySelector('.close').onclick = (e) => {
                 e.stopPropagation();
                 removeTab(tabName);
             };
 
-            // 드래그 기능 추가
             addDragEvents(tab, tabsContainer, false);
 
-            // 탭 콘텐츠 추가
             const tabContent = document.createElement('div');
             tabContent.classList.add('tab-content');
             tabContent.setAttribute('data-name', tabName);
@@ -149,44 +151,52 @@
             tabsContainer.appendChild(tab);
             contentContainer.appendChild(tabContent);
 
-            // 새로 추가된 탭을 활성화
             setActiveTab(tab);
         }
 
-        // 탭을 활성화하는 함수
         function setActiveTab(tab) {
-            document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
+            const tabName = tab.getAttribute('data-name');
 
-            tab.classList.add('active');
-            const content = document.querySelector(`.tab-content[data-name="${tab.getAttribute('data-name')}"]`);
-            content.classList.add('active');
+            // 모든 탭과 콘텐츠 비활성화
+            document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('is_active'));
 
-            // UI 로딩 로직 (최초 1회 실행)
+            // 활성화된 탭과 콘텐츠
+            tab.classList.add('is_active');
+            const content = document.querySelector(`.tab-content[data-name="${tabName}"]`);
+            content.classList.add('is_active');
+
+            // 왼쪽 버튼 활성화
+            const leftButton = document.querySelector(`.left-panel button[data-name="${tabName}"]`);
+            if (leftButton) {
+                // 모든 왼쪽 버튼 비활성화
+                document.querySelectorAll('.left-panel button').forEach(button => button.classList.remove('is_active'));
+
+                // 현재 탭에 해당하는 버튼 활성화
+                leftButton.classList.add('is_active');
+            }
+
+            // 콘텐츠 로드
             if (!content.dataset.loaded) {
-                console.log(`탭 활성화됨: ${tab.getAttribute('data-name')}`);
+                console.log(`탭 활성화됨: ${tabName}`);
                 loadCustomUI(content);
                 content.dataset.loaded = "true";
             }
         }
 
-        // 탭을 삭제하는 함수
         function removeTab(tabName) {
             document.querySelector(`.tab[data-name="${tabName}"]`)?.remove();
             document.querySelector(`.tab-content[data-name="${tabName}"]`)?.remove();
 
-            // 첫 번째 탭을 자동으로 활성화
             const firstTab = document.querySelector('.tab');
             if (firstTab) setActiveTab(firstTab);
         }
 
-        // 탭 콘텐츠에 UI를 로드하는 함수(샘플로 보여주기 용도)
         function loadCustomUI(content) {
             const div = document.createElement('div');
             div.innerHTML = content.dataset.name;
             content.appendChild(div);
         }
 
-        // 요소의 드래그 기능을 추가하는 함수
         function addDragEvents(element, container, isVertical) {
             element.addEventListener('dragstart', (e) => {
                 draggedItem = element;
@@ -199,7 +209,6 @@
                 element.classList.remove('dragging');
             });
 
-            // 드래그 중인 위치 계산하여 재배치
             container.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 const afterElement = isVertical
@@ -214,14 +223,11 @@
             });
         }
 
-        // X 좌표 기준으로 가장 가까운 요소 찾기
         function getClosestElementX(x, container) {
             const elements = [...container.querySelectorAll(':scope > *:not(.dragging)')];
-
             return elements.reduce((closest, child) => {
                 const box = child.getBoundingClientRect();
                 const offset = x - box.left - box.width / 2;
-
                 if (offset < 0 && offset > closest.offset) {
                     return { offset, element: child };
                 } else {
@@ -230,14 +236,11 @@
             }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
-        // Y 좌표 기준으로 가장 가까운 요소 찾기
         function getClosestElementY(y, container) {
             const elements = [...container.querySelectorAll(':scope > *:not(.dragging)')];
-
             return elements.reduce((closest, child) => {
                 const box = child.getBoundingClientRect();
                 const offset = y - box.top - box.height / 2;
-
                 if (offset < 0 && offset > closest.offset) {
                     return { offset, element: child };
                 } else {
@@ -246,15 +249,18 @@
             }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
-        // 왼쪽 패널의 버튼 클릭 시 탭 추가
         leftPanelLists.forEach(list => {
             list.querySelectorAll('button').forEach(button => {
                 addDragEvents(button, list, true);
                 button.onclick = () => addTab(button.textContent.trim());
             });
+
+            // <ul> 안의 <button> 드래그 이벤트 추가
+            list.querySelectorAll('li').forEach(item => {
+                addDragEvents(item, list, true);
+            });
         });
 
-        // 첫 번째 버튼 자동 클릭하여 기본 탭 활성화
         document.addEventListener("DOMContentLoaded", () => {
             const firstButton = document.querySelector('.left-panel .button-list button');
             if (firstButton) firstButton.click();
