@@ -68,12 +68,12 @@
     <div style="height:100px"></div>
     <div class="menu_swiper menu_swiper_sticky">
         <div class="swiper-wrapper">
-            <div class="swiper-slide is_active"><button class="menu_swiper_btn" data-target="step1">비만</button></div>
-            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step2" data-link="true" onclick="test()">고혈압</button></div>
-            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step3">빈혈</button></div>
-            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step4">당뇨병</button></div>
-            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step5">이상지질혈증</button></div>
-            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step6">심장병</button></div>
+            <div class="swiper-slide is_active"><button class="menu_swiper_btn" data-step="step1">비만</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-step="step2" data-link="true" onclick="test()">고혈압</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-step="step3">빈혈</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-step="step4">당뇨병</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-step="step5">이상지질혈증</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-step="step6">심장병</button></div>
         </div>
     </div>
     <div class="menu_swiper_contents">
@@ -87,12 +87,12 @@
 
     <div class="menu_swiper">
         <div class="swiper-wrapper">
-            <div class="swiper-slide is_active"><button class="menu_swiper_btn" data-target="step11">비만</button></div>
-            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step12">고혈압</button></div>
-            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step13">빈혈</button></div>
-            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step14">당뇨병</button></div>
-            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step15">이상지질혈증</button></div>
-            <div class="swiper-slide"><button class="menu_swiper_btn" data-target="step16">심장병</button></div>
+            <div class="swiper-slide is_active"><button class="menu_swiper_btn" data-step="step11">비만</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-step="step12">고혈압</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-step="step13">빈혈</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-step="step14">당뇨병</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-step="step15">이상지질혈증</button></div>
+            <div class="swiper-slide"><button class="menu_swiper_btn" data-step="step16">심장병</button></div>
         </div>
     </div>
     <div class="menu_swiper_contents">
@@ -137,8 +137,8 @@
                 contentContainer.querySelectorAll('.menu_swiper_cont').forEach(cont => cont.classList.remove('is_active'));
 
                 // 클릭한 버튼에 해당하는 콘텐츠 활성화
-                const contentId = button.dataset.target;
-                document.getElementById(contentId).classList.add('is_active');
+                const stepId = button.dataset.step;
+                document.getElementById(stepId).classList.add('is_active');
             });
         });
     });
