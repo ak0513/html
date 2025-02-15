@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>탭 & 2뎁스 버튼 드래그</title>
+    <title>탭 & 3뎁스 버튼 드래그</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -40,7 +40,7 @@
             margin: 5px 0;
             padding: 10px;
             width: 100%;
-            cursor: grab;
+            cursor: pointer;
             user-select: none;
             touch-action: none;
         }
@@ -56,6 +56,7 @@
             display: flex;
             border-bottom: 2px solid #ddd;
             min-height: 40px;
+            flex-wrap: nowrap;
         }
         .tab {
             padding: 10px 15px;
@@ -88,7 +89,18 @@
         }
         .dragging {
             opacity: 0.5;
-            color:red
+            color: red;
+        }
+        .three-level {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        .right-panel .three-level-button {
+            margin: 10px;
+            padding: 10px;
+            background: #ddd;
+            cursor: grab;
+            user-select: none;
         }
     </style>
 </head>
@@ -98,31 +110,45 @@
             <div class="group">
                 <div class="group-title">Group 1</div>
                 <ul class="button-list">
-                    <li><button type="button" draggable="true" data-name="Tab 1-1">Tab 1-1</button></li>
-                    <li><button type="button" draggable="true" data-name="Tab 1-2">Tab 1-2</button></li>
+                    <li><button type="button" data-name="Tab 1-1">Tab 1-1</button></li>
+                    <li><button type="button" data-name="Tab 1-2">Tab 1-2</button></li>
                 </ul>
             </div>
             <div class="group">
                 <div class="group-title">Group 2</div>
                 <ul class="button-list">
-                    <li><button type="button" draggable="true" data-name="Tab 2-1">Tab 2-1</button></li>
-                    <li><button type="button" draggable="true" data-name="Tab 2-2">Tab 2-2</button></li>
+                    <li><button type="button" data-name="Tab 2-1">Tab 2-1</button></li>
+                    <li><button type="button" data-name="Tab 2-2">Tab 2-2</button></li>
+                </ul>
+            </div>
+            <div class="group">
+                <div class="group-title">Group 3 (3뎁스)</div>
+                <ul class="button-list">
+                    <li><button type="button" data-name="Tab 3-1">Tab 3-1</button></li>
+                    <li><button type="button" data-name="Tab 3-2">Tab 3-2</button></li>
+                    <li><button type="button" data-name="Tab 3-3">Tab 3-3</button></li>
                 </ul>
             </div>
         </div>
         <div class="right-panel">
             <div class="tabs"></div>
             <div class="content-container"></div>
+            <div class="three-level-buttons">
+                <!-- 3뎁스 버튼들 추가 -->
+                <div class="three-level-button" data-name="3-Button 1">3-Button 1</div>
+                <div class="three-level-button" data-name="3-Button 2">3-Button 2</div>
+                <div class="three-level-button" data-name="3-Button 3">3-Button 3</div>
+            </div>
         </div>
     </div>
 
     <script>
         const tabsContainer = document.querySelector('.tabs');
         const contentContainer = document.querySelector('.content-container');
-        const leftPanelLists = document.querySelectorAll('.button-list');
-        let draggedItem = null;
+        const leftPanelButtons = document.querySelectorAll('.left-panel button');
+        const rightPanelButtons = document.querySelectorAll('.right-panel .three-level-button');
+        let draggedTab = null;
 
-        // 새로운 탭을 추가하는 함수
         function addTab(tabName) {
             let existingTab = document.querySelector(`.tab[data-name="${tabName}"]`);
             if (existingTab) {
@@ -142,128 +168,107 @@
                 removeTab(tabName);
             };
 
-            addDragEvents(tab, tabsContainer, false);
+            // 드래그 시작
+            tab.addEventListener('dragstart', (e) => {
+                draggedTab = tab;
+                setTimeout(() => tab.style.opacity = '0.5', 0); // 드래그 시작 시 탭이 반투명해짐
+            });
 
+            // 드래그 종료
+            tab.addEventListener('dragend', () => {
+                setTimeout(() => {
+                    draggedTab.style.opacity = '1';
+                    draggedTab = null;
+                }, 0);
+            });
+
+            // 드래그한 탭이 드롭될 위치 계산
+            tab.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const currentTab = e.target;
+                if (currentTab !== draggedTab) {
+                    const bounding = currentTab.getBoundingClientRect();
+                    const offset = bounding.y + bounding.height / 2;
+                    if (e.clientY - offset > 0) {
+                        tabsContainer.insertBefore(draggedTab, currentTab.nextSibling);
+                    } else {
+                        tabsContainer.insertBefore(draggedTab, currentTab);
+                    }
+                }
+            });
+
+            tabsContainer.appendChild(tab);
+            
             const tabContent = document.createElement('div');
             tabContent.classList.add('tab-content');
             tabContent.setAttribute('data-name', tabName);
-
-            tabsContainer.appendChild(tab);
             contentContainer.appendChild(tabContent);
 
             setActiveTab(tab);
         }
 
         function setActiveTab(tab) {
-            const tabName = tab.getAttribute('data-name');
-
-            // 모든 탭과 콘텐츠 비활성화
             document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('is_active'));
-
-            // 활성화된 탭과 콘텐츠
             tab.classList.add('is_active');
-            const content = document.querySelector(`.tab-content[data-name="${tabName}"]`);
-            content.classList.add('is_active');
+            document.querySelector(`.tab-content[data-name="${tab.getAttribute('data-name')}"]`).classList.add('is_active');
 
-            // 왼쪽 버튼 활성화
-            const leftButton = document.querySelector(`.left-panel button[data-name="${tabName}"]`);
-            if (leftButton) {
-                // 모든 왼쪽 버튼 비활성화
-                document.querySelectorAll('.left-panel button').forEach(button => button.classList.remove('is_active'));
-
-                // 현재 탭에 해당하는 버튼 활성화
-                leftButton.classList.add('is_active');
-            }
-
-            // 콘텐츠 로드
-            if (!content.dataset.loaded) {
-                console.log(`탭 활성화됨: ${tabName}`);
-                loadCustomUI(content);
-                content.dataset.loaded = "true";
-            }
+            document.querySelectorAll('.left-panel button').forEach(button => button.classList.remove('is_active'));
+            const leftButton = document.querySelector(`.left-panel button[data-name="${tab.getAttribute('data-name')}"]`);
+            if (leftButton) leftButton.classList.add('is_active');
         }
 
         function removeTab(tabName) {
             document.querySelector(`.tab[data-name="${tabName}"]`)?.remove();
             document.querySelector(`.tab-content[data-name="${tabName}"]`)?.remove();
-
-            const firstTab = document.querySelector('.tab');
-            if (firstTab) setActiveTab(firstTab);
         }
 
-        function loadCustomUI(content) {
-            const div = document.createElement('div');
-            div.innerHTML = content.dataset.name;
-            content.appendChild(div);
-        }
+        function addRightPanelButton(buttonName) {
+            const button = document.createElement('div');
+            button.classList.add('three-level-button');
+            button.setAttribute('data-name', buttonName);
+            button.textContent = buttonName;
+            button.setAttribute('draggable', true);
 
-        function addDragEvents(element, container, isVertical) {
-            element.addEventListener('dragstart', (e) => {
-                draggedItem = element;
-                setTimeout(() => element.classList.add('dragging'), 0);
-                e.dataTransfer.effectAllowed = "move";
+            // 드래그 시작
+            button.addEventListener('dragstart', (e) => {
+                draggedTab = button;
+                setTimeout(() => button.style.opacity = '0.5', 0); // 드래그 시작 시 버튼이 반투명해짐
             });
 
-            element.addEventListener('dragend', () => {
-                draggedItem = null;
-                element.classList.remove('dragging');
+            // 드래그 종료
+            button.addEventListener('dragend', () => {
+                setTimeout(() => {
+                    button.style.opacity = '1';
+                    draggedTab = null;
+                }, 0);
             });
 
-            container.addEventListener('dragover', (e) => {
+            // 드래그한 버튼이 드롭될 위치 계산
+            button.addEventListener('dragover', (e) => {
                 e.preventDefault();
-                const afterElement = isVertical
-                    ? getClosestElementY(e.clientY, container)
-                    : getClosestElementX(e.clientX, container);
-
-                if (afterElement == null) {
-                    container.appendChild(draggedItem);
-                } else {
-                    container.insertBefore(draggedItem, afterElement);
+                const currentButton = e.target;
+                if (currentButton !== draggedTab) {
+                    const bounding = currentButton.getBoundingClientRect();
+                    const offset = bounding.y + bounding.height / 2;
+                    if (e.clientY - offset > 0) {
+                        currentButton.parentElement.insertBefore(draggedTab, currentButton.nextSibling);
+                    } else {
+                        currentButton.parentElement.insertBefore(draggedTab, currentButton);
+                    }
                 }
             });
+
+            document.querySelector('.three-level-buttons').appendChild(button);
         }
 
-        function getClosestElementX(x, container) {
-            const elements = [...container.querySelectorAll(':scope > *:not(.dragging)')];
-            return elements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = x - box.left - box.width / 2;
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset, element: child };
-                } else {
-                    return closest;
-                }
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
-        }
-
-        function getClosestElementY(y, container) {
-            const elements = [...container.querySelectorAll(':scope > *:not(.dragging)')];
-            return elements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset, element: child };
-                } else {
-                    return closest;
-                }
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
-        }
-
-        leftPanelLists.forEach(list => {
-            list.querySelectorAll('button').forEach(button => {
-                addDragEvents(button, list, true);
-                button.onclick = () => addTab(button.textContent.trim());
-            });
-
-            // <ul> 안의 <button> 드래그 이벤트 추가
-            list.querySelectorAll('li').forEach(item => {
-                addDragEvents(item, list, true);
-            });
+        // 왼쪽 패널 버튼 클릭 시 탭 추가
+        leftPanelButtons.forEach(button => {
+            button.onclick = () => addTab(button.textContent.trim());
         });
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const firstButton = document.querySelector('.left-panel .button-list button');
-            if (firstButton) firstButton.click();
+        // 오른쪽 패널에 3뎁스 버튼들을 동적으로 추가
+        rightPanelButtons.forEach(button => {
+            addRightPanelButton(button.textContent.trim());
         });
     </script>
 </body>

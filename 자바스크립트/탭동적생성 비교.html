@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>탭 & 2뎁스 버튼 드래그</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+        }
+        .left-panel {
+            width: 200px;
+            background: #f4f4f4;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .left-panel .group {
+            margin-bottom: 10px;
+        }
+        .left-panel .group-title {
+            font-weight: bold;
+            padding: 5px;
+            background: #ddd;
+        }
+        .left-panel .button-list {
+            padding-left: 10px;
+        }
+        .left-panel li {
+            list-style-type: none;
+        }
+        .left-panel button {
+            margin: 5px 0;
+            padding: 10px;
+            width: 100%;
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+        }
+        .left-panel button.is_active {
+            background-color: #ddd;
+            font-weight: bold;
+        }
+        .right-panel {
+            flex-grow: 1;
+            padding: 10px;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            min-height: 40px;
+        }
+        .tab {
+            padding: 10px 15px;
+            cursor: grab;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            background: #f9f9f9;
+            margin-right: 5px;
+            display: flex;
+            align-items: center;
+            user-select: none;
+        }
+        .tab.is_active {
+            background: white;
+            font-weight: bold;
+        }
+        .tab .close {
+            margin-left: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .tab-content {
+            padding: 10px;
+            border: 1px solid #ddd;
+            height: 300px;
+            display: none;
+        }
+        .tab-content.is_active {
+            display: block;
+        }
+        .dragging {
+            opacity: 0.5;
+            color:red
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="group">
+                <div class="group-title">Group 1</div>
+                <ul class="button-list">
+                    <li><button type="button" draggable="true" data-name="Tab 1-1">Tab 1-1</button></li>
+                    <li><button type="button" draggable="true" data-name="Tab 1-2">Tab 1-2</button></li>
+                </ul>
+            </div>
+            <div class="group">
+                <div class="group-title">Group 2</div>
+                <ul class="button-list">
+                    <li><button type="button" draggable="true" data-name="Tab 2-1">Tab 2-1</button></li>
+                    <li><button type="button" draggable="true" data-name="Tab 2-2">Tab 2-2</button></li>
+                </ul>
+            </div>
+        </div>
+        <div class="right-panel">
+            <div class="tabs"></div>
+            <div class="content-container"></div>
+        </div>
+    </div>
+
+    <script>
+        const tabsContainer = document.querySelector('.tabs');
+        const contentContainer = document.querySelector('.content-container');
+        const leftPanelLists = document.querySelectorAll('.button-list');
+        let draggedItem = null;
+
+        // 새로운 탭을 추가하는 함수
+        function addTab(tabName) {
+            let existingTab = document.querySelector(`.tab[data-name="${tabName}"]`);
+            if (existingTab) {
+                setActiveTab(existingTab);
+                return;
+            }
+
+            const tab = document.createElement('div');
+            tab.classList.add('tab');
+            tab.setAttribute('data-name', tabName);
+            tab.setAttribute('draggable', true);
+            tab.innerHTML = `${tabName} <span class="close">×</span>`;
+            tab.onclick = () => setActiveTab(tab);
+
+            tab.querySelector('.close').onclick = (e) => {
+                e.stopPropagation();
+                removeTab(tabName);
+            };
+
+            addDragEvents(tab, tabsContainer, false);
+
+            const tabContent = document.createElement('div');
+            tabContent.classList.add('tab-content');
+            tabContent.setAttribute('data-name', tabName);
+
+            tabsContainer.appendChild(tab);
+            contentContainer.appendChild(tabContent);
+
+            setActiveTab(tab);
+        }
+
+        function setActiveTab(tab) {
+            const tabName = tab.getAttribute('data-name');
+
+            // 모든 탭과 콘텐츠 비활성화
+            document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('is_active'));
+
+            // 활성화된 탭과 콘텐츠
+            tab.classList.add('is_active');
+            const content = document.querySelector(`.tab-content[data-name="${tabName}"]`);
+            content.classList.add('is_active');
+
+            // 왼쪽 버튼 활성화
+            const leftButton = document.querySelector(`.left-panel button[data-name="${tabName}"]`);
+            if (leftButton) {
+                // 모든 왼쪽 버튼 비활성화
+                document.querySelectorAll('.left-panel button').forEach(button => button.classList.remove('is_active'));
+
+                // 현재 탭에 해당하는 버튼 활성화
+                leftButton.classList.add('is_active');
+            }
+
+            // 콘텐츠 로드
+            if (!content.dataset.loaded) {
+                console.log(`탭 활성화됨: ${tabName}`);
+                loadCustomUI(content);
+                content.dataset.loaded = "true";
+            }
+        }
+
+        function removeTab(tabName) {
+            document.querySelector(`.tab[data-name="${tabName}"]`)?.remove();
+            document.querySelector(`.tab-content[data-name="${tabName}"]`)?.remove();
+
+            const firstTab = document.querySelector('.tab');
+            if (firstTab) setActiveTab(firstTab);
+        }
+
+        function loadCustomUI(content) {
+            const div = document.createElement('div');
+            div.innerHTML = content.dataset.name;
+            content.appendChild(div);
+        }
+
+        function addDragEvents(element, container, isVertical) {
+            element.addEventListener('dragstart', (e) => {
+                draggedItem = element;
+                setTimeout(() => element.classList.add('dragging'), 0);
+                e.dataTransfer.effectAllowed = "move";
+            });
+
+            element.addEventListener('dragend', () => {
+                draggedItem = null;
+                element.classList.remove('dragging');
+            });
+
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const afterElement = isVertical
+                    ? getClosestElementY(e.clientY, container)
+                    : getClosestElementX(e.clientX, container);
+
+                if (afterElement == null) {
+                    container.appendChild(draggedItem);
+                } else {
+                    container.insertBefore(draggedItem, afterElement);
+                }
+            });
+        }
+
+        function getClosestElementX(x, container) {
+            const elements = [...container.querySelectorAll(':scope > *:not(.dragging)')];
+            return elements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = x - box.left - box.width / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function getClosestElementY(y, container) {
+            const elements = [...container.querySelectorAll(':scope > *:not(.dragging)')];
+            return elements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        leftPanelLists.forEach(list => {
+            list.querySelectorAll('button').forEach(button => {
+                addDragEvents(button, list, true);
+                button.onclick = () => addTab(button.textContent.trim());
+            });
+
+            // <ul> 안의 <button> 드래그 이벤트 추가
+            list.querySelectorAll('li').forEach(item => {
+                addDragEvents(item, list, true);
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const firstButton = document.querySelector('.left-panel .button-list button');
+            if (firstButton) firstButton.click();
+        });
+    </script>
+</body>
+</html>
