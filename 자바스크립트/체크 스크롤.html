@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>섹션별 체크 이동</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding-top: 60px; /* 헤더 높이만큼 패딩 */
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            z-index: 1000;
+        }
+        .section {
+            height: 3000px;
+            padding:30px;
+            border: 10px solid #ccc;
+            text-align: center;
+        }
+        .checkbox-container {
+            margin-top: 20px;
+        }
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">고정 헤더</div>
+
+    <div class="section" id="section1">
+        <h2>섹션 1</h2>
+        <p>이곳은 섹션 1의 내용입니다.</p>
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox" class="scroll-checkbox" data-target="section2">
+                동의
+                <span class="visually-hidden">다음 영역으로 스크롤 이동</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="section" id="section2" tabindex="-1">
+        <h2>섹션 2</h2>
+        <p>이곳은 섹션 2의 내용입니다.</p>
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox" class="scroll-checkbox" data-target="section3">
+                동의
+                <span class="visually-hidden">다음 영역으로 스크롤 이동</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="section" id="section3" tabindex="-1">
+        <h2>섹션 3</h2>
+        <p>이곳은 섹션 3의 내용입니다.</p>
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox" class="scroll-checkbox" data-target="section4">
+                동의
+                <span class="visually-hidden">다음 영역으로 스크롤 이동</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="section" id="section4" tabindex="-1">
+        <h2>섹션 4</h2>
+        <p>이곳은 섹션 4의 내용입니다.</p>
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox" class="scroll-checkbox" data-target="section5">
+                동의
+                <span class="visually-hidden">다음 영역으로 스크롤 이동</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="section" id="section5" tabindex="-1">
+        <h2>섹션 5</h2>
+        <p>이곳은 섹션 5의 내용입니다.</p>
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox">
+                동의
+            </label>
+        </div>
+    </div>
+
+    <script>
+    document.querySelectorAll('.scroll-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                const targetId = this.getAttribute('data-target');
+                const targetSection = document.getElementById(targetId);
+                const headerHeight = document.querySelector('.header').offsetHeight; // 헤더 높이 가져오기
+
+                if (targetSection) {
+                    const targetPosition = targetSection.getBoundingClientRect().top + window.scrollY - headerHeight;
+                    
+                    // 부드러운 스크롤 이동
+                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+
+                    // 포커스 이동 (추가 스크롤 방지)
+                    setTimeout(() => {
+                        targetSection.setAttribute('tabindex', '-1'); // 포커스 가능하도록 설정
+                        targetSection.focus({ preventScroll: true }); // 포커스 이동, 추가 스크롤 방지
+                    }, 500); // 부드러운 스크롤이 끝난 후 실행
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
