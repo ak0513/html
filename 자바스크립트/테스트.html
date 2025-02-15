@@ -1,1 +1,23 @@
-q
+document.querySelectorAll('.aa').forEach(div => {
+    // div의 display 스타일이 설정되지 않았는지 확인
+    if (!div.style.display) {
+        div.querySelectorAll('*').forEach(child => {
+            if (child.style.display === 'none') {
+                child.style.removeProperty('display');
+            }
+        });
+    }
+});
+
+
+document.querySelectorAll('.aa').forEach(div => {
+    // div의 display 스타일이 설정되지 않았는지 확인
+    if (!div.style.display) {
+        div.querySelectorAll('*').forEach(child => {
+            const displayValue = getComputedStyle(child).getPropertyValue('display');
+            if (displayValue.trim() === 'none') {
+                child.style.removeProperty('display');
+            }
+        });
+    }
+});
