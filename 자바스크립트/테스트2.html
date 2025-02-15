@@ -8,7 +8,7 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding-top: 60px; /* 헤더 높이만큼 body 상단 패딩 추가 */
+            padding-top: 60px; /* 헤더 높이만큼 패딩 */
         }
         .header {
             position: fixed;
@@ -25,7 +25,7 @@
             z-index: 1000;
         }
         .section {
-            height: 1000px;
+            height: 3000px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -35,6 +35,16 @@
         }
         .checkbox-container {
             margin-top: 20px;
+        }
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
         }
     </style>
 </head>
@@ -47,47 +57,56 @@
         <p>이곳은 섹션 1의 내용입니다.</p>
         <div class="checkbox-container">
             <label>
-                <input type="checkbox" class="scroll-checkbox" data-target="section2"> 다음 섹션으로 이동
+                <input type="checkbox" class="scroll-checkbox" data-target="section2">
+                동의
+                <span class="visually-hidden">다음 영역으로 스크롤 이동</span>
             </label>
         </div>
     </div>
 
-    <div class="section" id="section2">
+    <div class="section" id="section2" tabindex="-1">
         <h2>섹션 2</h2>
         <p>이곳은 섹션 2의 내용입니다.</p>
         <div class="checkbox-container">
             <label>
-                <input type="checkbox" class="scroll-checkbox" data-target="section3"> 다음 섹션으로 이동
+                <input type="checkbox" class="scroll-checkbox" data-target="section3">
+                동의
+                <span class="visually-hidden">다음 영역으로 스크롤 이동</span>
             </label>
         </div>
     </div>
 
-    <div class="section" id="section3">
+    <div class="section" id="section3" tabindex="-1">
         <h2>섹션 3</h2>
         <p>이곳은 섹션 3의 내용입니다.</p>
         <div class="checkbox-container">
             <label>
-                <input type="checkbox" class="scroll-checkbox" data-target="section4"> 다음 섹션으로 이동
+                <input type="checkbox" class="scroll-checkbox" data-target="section4">
+                동의
+                <span class="visually-hidden">다음 영역으로 스크롤 이동</span>
             </label>
         </div>
     </div>
 
-    <div class="section" id="section4">
+    <div class="section" id="section4" tabindex="-1">
         <h2>섹션 4</h2>
         <p>이곳은 섹션 4의 내용입니다.</p>
         <div class="checkbox-container">
             <label>
-                <input type="checkbox" class="scroll-checkbox" data-target="section5"> 다음 섹션으로 이동
+                <input type="checkbox" class="scroll-checkbox" data-target="section5">
+                동의
+                <span class="visually-hidden">다음 영역으로 스크롤 이동</span>
             </label>
         </div>
     </div>
 
-    <div class="section" id="section5">
+    <div class="section" id="section5" tabindex="-1">
         <h2>섹션 5</h2>
         <p>이곳은 섹션 5의 내용입니다.</p>
         <div class="checkbox-container">
             <label>
-                <input type="checkbox"> 완료
+                <input type="checkbox">
+                동의
             </label>
         </div>
     </div>
@@ -99,10 +118,16 @@
                     const targetId = this.getAttribute('data-target');
                     const targetSection = document.getElementById(targetId);
                     const headerHeight = document.querySelector('.header').offsetHeight; // 헤더 높이 가져오기
-                    
+
                     if (targetSection) {
                         const targetPosition = targetSection.getBoundingClientRect().top + window.scrollY - headerHeight;
                         window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+
+                        // 포커스 이동 (스크롤이 끝난 후 실행되도록 setTimeout 사용)
+                        setTimeout(() => {
+                            targetSection.setAttribute('tabindex', '-1'); // 포커스 가능한 요소로 설정
+                            targetSection.focus(); // 포커스 이동
+                        }, 500); // 부드러운 스크롤이 끝난 후 실행
                     }
                 }
             });
