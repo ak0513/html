@@ -109,27 +109,29 @@
     </div>
 
     <script>
-        document.querySelectorAll('.scroll-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    const targetId = this.getAttribute('data-target');
-                    const targetSection = document.getElementById(targetId);
-                    const headerHeight = document.querySelector('.header').offsetHeight; // 헤더 높이 가져오기
+    document.querySelectorAll('.scroll-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                const targetId = this.getAttribute('data-target');
+                const targetSection = document.getElementById(targetId);
+                const headerHeight = document.querySelector('.header').offsetHeight; // 헤더 높이 가져오기
 
-                    if (targetSection) {
-                        const targetPosition = targetSection.getBoundingClientRect().top + window.scrollY - headerHeight;
-                        window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                if (targetSection) {
+                    const targetPosition = targetSection.getBoundingClientRect().top + window.scrollY - headerHeight;
+                    
+                    // 부드러운 스크롤 이동
+                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
 
-                        // 포커스 이동 (스크롤이 끝난 후 실행되도록 setTimeout 사용)
-                        setTimeout(() => {
-                            targetSection.setAttribute('tabindex', '-1'); // 포커스 가능한 요소로 설정
-                            // targetSection.focus(); // 포커스 이동
-                        }, 500); // 부드러운 스크롤이 끝난 후 실행
-                    }
+                    // 포커스 이동 (추가 스크롤 방지)
+                    setTimeout(() => {
+                        targetSection.setAttribute('tabindex', '-1'); // 포커스 가능하도록 설정
+                        targetSection.focus({ preventScroll: true }); // 포커스 이동, 추가 스크롤 방지
+                    }, 500); // 부드러운 스크롤이 끝난 후 실행
                 }
-            });
+            }
         });
-    </script>
+    });
+</script>
 
 </body>
 </html>
