@@ -1,1 +1,94 @@
-2
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>섹션별 체크 이동</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+            text-align: center;
+        }
+        .checkbox-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="section" id="section1">
+        <h2>섹션 1</h2>
+        <p>이곳은 섹션 1의 내용입니다.</p>
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox" class="scroll-checkbox" data-target="section2"> 다음 섹션으로 이동
+            </label>
+        </div>
+    </div>
+
+    <div class="section" id="section2">
+        <h2>섹션 2</h2>
+        <p>이곳은 섹션 2의 내용입니다.</p>
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox" class="scroll-checkbox" data-target="section3"> 다음 섹션으로 이동
+            </label>
+        </div>
+    </div>
+
+    <div class="section" id="section3">
+        <h2>섹션 3</h2>
+        <p>이곳은 섹션 3의 내용입니다.</p>
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox" class="scroll-checkbox" data-target="section4"> 다음 섹션으로 이동
+            </label>
+        </div>
+    </div>
+
+    <div class="section" id="section4">
+        <h2>섹션 4</h2>
+        <p>이곳은 섹션 4의 내용입니다.</p>
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox" class="scroll-checkbox" data-target="section5"> 다음 섹션으로 이동
+            </label>
+        </div>
+    </div>
+
+    <div class="section" id="section5">
+        <h2>섹션 5</h2>
+        <p>이곳은 섹션 5의 내용입니다.</p>
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox"> 완료
+            </label>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.scroll-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    const targetId = this.getAttribute('data-target');
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
