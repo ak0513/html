@@ -1,23 +1,55 @@
-document.querySelectorAll('.aa').forEach(div => {
-    // div의 display 스타일이 설정되지 않았는지 확인
-    if (!div.style.display) {
-        div.querySelectorAll('*').forEach(child => {
-            if (child.style.display === 'none') {
-                child.style.removeProperty('display');
-            }
-        });
-    }
-});
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>숫자 → 한글 변환</title>
+    <script>
+        function numberToKorean(num) {
+            const units = ["", "만", "억", "조", "경"];
+            const digits = ["", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"];
+            const smallUnits = ["", "십", "백", "천"];
 
+            if (isNaN(num) || num < 0) return "유효한 숫자를 입력하세요.";
 
-document.querySelectorAll('.aa').forEach(div => {
-    // div의 display 스타일이 설정되지 않았는지 확인
-    if (!div.style.display) {
-        div.querySelectorAll('*').forEach(child => {
-            const displayValue = getComputedStyle(child).getPropertyValue('display');
-            if (displayValue.trim() === 'none') {
-                child.style.removeProperty('display');
+            if (num === 0) return "영";
+
+            let result = "";
+            let unitIndex = 0;
+
+            while (num > 0) {
+                let part = num % 10000;
+                num = Math.floor(num / 10000);
+
+                let partStr = "";
+                for (let i = 0; i < 4; i++) {
+                    let digit = part % 10;
+                    if (digit !== 0) {
+                        partStr = digits[digit] + smallUnits[i] + partStr;
+                    }
+                    part = Math.floor(part / 10);
+                }
+
+                if (partStr) {
+                    result = partStr + units[unitIndex] + result;
+                }
+
+                unitIndex++;
             }
-        });
-    }
-});
+
+            return result;
+        }
+
+        function updateKoreanNumber() {
+            const input = document.getElementById("numberInput").value;
+            const koreanNumber = numberToKorean(parseInt(input, 10));
+            document.getElementById("result").innerText = koreanNumber;
+        }
+    </script>
+</head>
+<body>
+    <h2>숫자를 한글로 변환</h2>
+    <input type="number" id="numberInput" oninput="updateKoreanNumber()" placeholder="숫자를 입력하세요">
+    <span id="result"></span>
+</body>
+</html>
