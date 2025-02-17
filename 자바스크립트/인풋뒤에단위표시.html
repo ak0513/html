@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Currency Display</title>
+    <style>
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .currency {
+            margin-left: 5px;
+            display: none; /* 기본적으로 숨김 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="input-wrapper">
+        <input type="text" class="price-input">
+        <div class="currency">원</div>
+    </div>
+
+    <div class="input-wrapper">
+        <input type="text" class="price-input">
+        <div class="currency">원</div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.price-input').forEach(input => {
+            input.addEventListener('input', function () {
+                let currencyDiv = this.nextElementSibling;
+                if (currencyDiv && currencyDiv.classList.contains('currency')) {
+                    currencyDiv.style.display = this.value.trim() ? 'inline' : 'none';
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
