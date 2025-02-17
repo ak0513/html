@@ -46,28 +46,6 @@
             const inputValue = parseInt(event.target.value, 10);
             document.getElementById(resultId).innerText = numberToKorean(inputValue);
         }
-
-        function addInputField() {
-            const container = document.getElementById("inputContainer");
-            const index = container.children.length;  // 인덱스 관리
-
-            const div = document.createElement("div");
-            div.className = "input-group";
-
-            const input = document.createElement("input");
-            input.type = "number";
-            input.id = "input_" + index;
-            input.placeholder = "숫자를 입력하세요";
-            input.oninput = updateKoreanNumber;
-
-            const result = document.createElement("span");
-            result.id = "result_" + index;
-            result.className = "result";
-
-            div.appendChild(input);
-            div.appendChild(result);
-            container.appendChild(div);
-        }
     </script>
     <style>
         .input-group {
@@ -80,9 +58,8 @@
 </head>
 <body>
     <h2>숫자를 한글로 변환</h2>
-    <button onclick="addInputField()">입력 추가</button>
     <div id="inputContainer">
-        <!-- 초기 입력 필드 2개 추가 -->
+        <!-- 초기 입력 필드 2개 -->
         <div class="input-group">
             <input type="number" id="input_0" oninput="updateKoreanNumber(event)" placeholder="숫자를 입력하세요">
             <span id="result_0" class="result"></span>
