@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkbox Count</title>
+</head>
+<body>
+
+    <!-- 첫 번째 체크박스 그룹 -->
+    <label><input type="checkbox" class="chk" data-target="count1"> 옵션 1</label>
+    <label><input type="checkbox" class="chk" data-target="count1"> 옵션 2</label>
+    <label><input type="checkbox" class="chk" data-target="count1"> 옵션 3</label>
+    <span id="count1">선택: 0개</span>
+
+    <hr>
+
+    <!-- 두 번째 체크박스 그룹 -->
+    <label><input type="checkbox" class="chk" data-target="count2"> 옵션 A</label>
+    <label><input type="checkbox" class="chk" data-target="count2"> 옵션 B</label>
+    <span id="count2">선택: 0개</span>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // 모든 체크박스에 이벤트 리스너 등록
+            document.querySelectorAll(".chk").forEach(checkbox => {
+                checkbox.addEventListener("change", function () {
+                    let targetId = this.getAttribute("data-target"); // 표시할 요소 ID 가져오기
+                    let output = document.getElementById(targetId); // 해당 ID의 요소 찾기
+
+                    if (!output) return; // 표시할 요소가 없으면 종료
+
+                    // 같은 target을 가진 체크박스 중 체크된 개수 계산
+                    let checkedCount = document.querySelectorAll(`.chk[data-target="${targetId}"]:checked`).length;
+                    output.textContent = `선택: ${checkedCount}개`;
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
