@@ -30,33 +30,14 @@
                 numStr = numStr.slice(0, -4);
             }
 
-            // 그룹마다 '천', '백', '십' 단위로 처리
             groups.forEach((group, index) => {
                 let num = parseInt(group, 10);
                 if (num > 0) {
-                    let groupStr = convertToUnit(num);
-                    result.push(`${groupStr}${units[groups.length - 1 - index]}`);
+                    result.push(`${num.toLocaleString()}${units[groups.length - 1 - index]}`);
                 }
             });
 
             return result.join(" ") + "원";
-        }
-
-        // 1,000 단위로 '천', '백', '십' 변환
-        function convertToUnit(number) {
-            const units = ["", "십", "백", "천"];
-            let str = "";
-            let numStr = number.toString();
-            let length = numStr.length;
-
-            for (let i = 0; i < length; i++) {
-                let digit = numStr[i];
-                if (digit !== "0") {
-                    str += digit + units[length - i - 1];
-                }
-            }
-
-            return str;
         }
 
         function formatNumberWithCommas(value) {
