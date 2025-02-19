@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swiper 선택적 Autoplay Control</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <style>
+        .swiper {
+            width: 600px;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+        .autoplay-btn {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 첫 번째 Swiper (버튼 O) -->
+    <div class="swiper-container">
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" style="background: lightcoral;">Slide 1</div>
+                <div class="swiper-slide" style="background: lightblue;">Slide 2</div>
+                <div class="swiper-slide" style="background: lightgreen;">Slide 3</div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+        <button class="autoplay-btn" data-index="0" onclick="toggleAutoplay(this)">일시정지</button>
+    </div>
+
+    <!-- 두 번째 Swiper (버튼 X) -->
+    <div class="swiper-container">
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" style="background: orange;">Slide A</div>
+                <div class="swiper-slide" style="background: violet;">Slide B</div>
+                <div class="swiper-slide" style="background: yellow;">Slide C</div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+        <!-- 버튼 없음 -->
+    </div>
+
+    <!-- 세 번째 Swiper (버튼 O) -->
+    <div class="swiper-container">
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" style="background: lightgray;">Slide X</div>
+                <div class="swiper-slide" style="background: cyan;">Slide Y</div>
+                <div class="swiper-slide" style="background: pink;">Slide Z</div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+        <button class="autoplay-btn" data-index="1" onclick="toggleAutoplay(this)">일시정지</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // Swiper를 저장할 배열 (버튼이 있는 Swiper만 저장)
+        const swipers = [];
+
+        // 모든 swiper-container를 찾아서 개별적으로 Swiper 생성
+        document.querySelectorAll('.swiper-container').forEach((container, index) => {
+            const swiperElement = container.querySelector('.swiper');
+            const swiper = new Swiper(swiperElement, {
+                loop: true,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: container.querySelector('.swiper-pagination'),
+                    clickable: true,
+                }
+            });
+
+            // 해당 Swiper에 버튼이 있는 경우만 저장
+            const button = container.querySelector('.autoplay-btn');
+            if (button) {
+                button.dataset.index = swipers.length; // 버튼에 Swiper 인덱스 부여
+                swipers.push(swiper); // Swiper 저장
+            }
+        });
+
+        // 재생/일시정지 토글 함수 (선택한 Swiper만 제어)
+        function toggleAutoplay(button) {
+            const index = button.dataset.index; // 버튼의 data-index 값을 가져옴
+            const swiperInstance = swipers[index]; // 해당 인덱스의 Swiper 인스턴스를 가져옴
+
+            if (swiperInstance.autoplay.running) {
+                swiperInstance.autoplay.stop();
+                button.textContent = '재생';
+            } else {
+                swiperInstance.autoplay.start();
+                button.textContent = '일시정지';
+            }
+        }
+    </script>
+
+</body>
+</html>
