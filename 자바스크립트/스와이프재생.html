@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swiper Autoplay Control</title>
+    <title>Swiper 접근성 개선</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <style>
         .swiper {
@@ -22,35 +22,34 @@
 </head>
 <body>
 
-    <!-- 첫 번째 Swiper -->
+    <!-- 첫 번째 Swiper (버튼 O) -->
     <div class="swiper-container">
         <div class="swiper">
             <div class="swiper-wrapper">
-                <div class="swiper-slide" style="background: lightcoral;">Slide 1</div>
-                <div class="swiper-slide" style="background: lightblue;">Slide 2</div>
-                <div class="swiper-slide" style="background: lightgreen;">Slide 3</div>
+                <div class="swiper-slide">Slide 1</div>
+                <div class="swiper-slide">Slide 2</div>
+                <div class="swiper-slide">Slide 3</div>
             </div>
             <div class="swiper-pagination"></div>
         </div>
         <button class="autoplay-btn" data-index="0" onclick="toggleAutoplay(this)">일시정지</button>
     </div>
 
-    <!-- 두 번째 Swiper -->
+    <!-- 두 번째 Swiper (버튼 X) -->
     <div class="swiper-container">
         <div class="swiper">
             <div class="swiper-wrapper">
-                <div class="swiper-slide" style="background: orange;">Slide A</div>
-                <div class="swiper-slide" style="background: violet;">Slide B</div>
-                <div class="swiper-slide" style="background: yellow;">Slide C</div>
+                <div class="swiper-slide">Slide A</div>
+                <div class="swiper-slide">Slide B</div>
+                <div class="swiper-slide">Slide C</div>
             </div>
             <div class="swiper-pagination"></div>
         </div>
-        <button class="autoplay-btn" data-index="1" onclick="toggleAutoplay(this)">일시정지</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // 모든 Swiper 인스턴스를 저장할 배열
+        // Swiper를 저장할 배열 (버튼이 있는 Swiper만 저장)
         const swipers = [];
 
         // 모든 swiper-container를 찾아서 개별적으로 Swiper 생성
@@ -65,18 +64,32 @@
                 pagination: {
                     el: container.querySelector('.swiper-pagination'),
                     clickable: true,
-                },a11y: {
-                    enabled: false,  // 접근성 기능 비활성화
+                },
+                a11y: {
+                    enabled: false, // Swiper 기본 접근성 기능 비활성화
+                },
+                on: {
+                    init: function () {
+                        updateAriaHidden(this);
+                    },
+                    slideChange: function () {
+                        updateAriaHidden(this);
+                    }
                 }
             });
 
-            swipers.push(swiper); // 배열에 Swiper 인스턴스 저장
+            // 버튼이 있는 경우만 Swiper 저장
+            const button = container.querySelector('.autoplay-btn');
+            if (button) {
+                button.dataset.index = swipers.length; // 버튼에 Swiper 인덱스 부여
+                swipers.push(swiper);
+            }
         });
 
-        // 재생/일시정지 토글 함수 (this 활용)
+        // 재생/일시정지 토글 함수 (선택한 Swiper만 제어)
         function toggleAutoplay(button) {
-            const index = button.dataset.index; // 버튼의 data-index 값을 가져옴
-            const swiperInstance = swipers[index]; // 해당 인덱스의 Swiper 인스턴스를 가져옴
+            const index = button.dataset.index;
+            const swiperInstance = swipers[index];
 
             if (swiperInstance.autoplay.running) {
                 swiperInstance.autoplay.stop();
@@ -85,6 +98,17 @@
                 swiperInstance.autoplay.start();
                 button.textContent = '일시정지';
             }
+        }
+
+        // 현재 보이는 슬라이드의 aria-hidden을 false로, 나머지는 true로 설정
+        function updateAriaHidden(swiper) {
+            swiper.slides.forEach((slide, index) => {
+                if (index === swiper.realIndex) {
+                    slide.setAttribute('aria-hidden', 'false');
+                } else {
+                    slide.setAttribute('aria-hidden', 'true');
+                }
+            });
         }
     </script>
 
