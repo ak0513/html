@@ -78,10 +78,14 @@
             return index;
         }
 
-        function updateButtonVisibility() {
-            let currentIndex = getVisibleSectionIndex();
+        function isLastSectionFullyVisible() {
+            const lastSection = sections[sections.length - 1];
+            const lastSectionBottom = lastSection.offsetTop + lastSection.offsetHeight;
+            return window.scrollY + window.innerHeight >= lastSectionBottom;
+        }
 
-            if (currentIndex >= sections.length - 1) {
+        function updateButtonVisibility() {
+            if (isLastSectionFullyVisible()) {
                 scrollDownBtn.style.display = 'none';
                 confirmBtn.style.display = 'inline-block';
             } else {
@@ -96,19 +100,14 @@
 
             sections[nextIndex].scrollIntoView({ behavior: 'smooth' });
 
-            setTimeout(updateButtonVisibility, 500); // 부드러운 전환 후 버튼 업데이트
+            setTimeout(updateButtonVisibility, 500);
         });
 
         confirmBtn.addEventListener('click', () => {
             alert("확인 버튼이 클릭되었습니다.");
         });
 
-        window.addEventListener('scroll', () => {
-            updateButtonVisibility();
-        });
-
-        // 초기 버튼 상태 설정
-        updateButtonVisibility();
+        window.addEventListener('scroll', updateButtonVisibility);
     </script>
 
 </body>
