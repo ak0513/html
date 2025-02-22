@@ -95,9 +95,10 @@
 
             let customButtonText = scrollButton.dataset.finalText || "완료"; // data-final-text 값
 
+            // 🔹 버튼 클릭 시 다음 섹션으로 이동
             scrollButton.addEventListener("click", () => {
                 if (currentIndex < sections.length) {
-                    currentIndex++;
+                    currentIndex++; // 현재 섹션 인덱스 증가
 
                     let offset = header.offsetHeight; // 기본 헤더 높이
                     if (tab) offset += tab.offsetHeight; // 탭이 있으면 추가 높이 반영
