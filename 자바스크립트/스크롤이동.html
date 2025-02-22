@@ -95,6 +95,7 @@
 
             let customButtonText = scrollButton.dataset.finalText || "확인"; // data-final-text 값
 
+            // 스크롤 버튼 클릭 시 동작
             scrollButton.addEventListener("click", () => {
                 if (currentIndex < sections.length) {
                     currentIndex++;
@@ -115,19 +116,24 @@
                 }
             });
 
-            // 🔹 버튼이 마지막 섹션의 버튼 영역에 도달하면 버튼명 변경
+            // 🔹 버튼이 마지막 섹션에 도달했을 때 버튼명 변경
             const observer = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
-                    // 마지막 섹션에 도달한 경우만 버튼명을 "확인"으로 변경
                     if (entry.isIntersecting && !isButtonTextChanged) {
-                        scrollButton.textContent = customButtonText;
-                    } else if (!entry.isIntersecting && !isButtonTextChanged) {
-                        scrollButton.textContent = "아래로 스크롤";
+                        scrollButton.textContent = customButtonText; // 버튼명을 커스텀 값으로 변경
+                        isButtonTextChanged = true; // 버튼명이 변경되었으므로 상태 추적
                     }
                 });
             }, { threshold: 1.0 });
 
             observer.observe(lastSection);
+
+            // 마지막 섹션이 보이지 않으면 버튼명을 원래대로 변경
+            window.addEventListener('scroll', () => {
+                if (!isButtonTextChanged && window.scrollY < lastSection.offsetTop) {
+                    scrollButton.textContent = "아래로 스크롤";
+                }
+            });
         });
     </script>
 
