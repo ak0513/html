@@ -31,7 +31,6 @@
         .section:nth-child(1) { background-color: #ff9999; } /* 빨강 */
         .section:nth-child(2) { background-color: #99ccff; } /* 파랑 */
         .section:nth-child(3) { background-color: #99ff99; } /* 초록 */
-        .section:nth-child(4) { background-color: #ffcc99; } /* 주황 */
 
         .section {
             height: 2000px; display: flex;
@@ -40,9 +39,10 @@
             border-bottom: 1px solid #ccc;
         }
 
-        /* 🔹 마지막 섹션에서 버튼이 위치할 영역 */
-        .button-container {
-            height: 80px;
+        /* 🔹 마지막 섹션 (버튼 영역만큼 높이 설정) */
+        .last-section {
+            height: 80px; /* 버튼 높이만큼만 유지 */
+            background-color: #ffcc99; /* 주황색 */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -75,8 +75,7 @@
         <section class="section">Section 1</section>
         <section class="section">Section 2</section>
         <section class="section">Section 3</section>
-        <section class="section">
-            Last Section
+        <section class="last-section">
             <div class="button-container"></div>
         </section>
     </div>
@@ -87,8 +86,8 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const sections = document.querySelectorAll(".section");
+            const lastSection = document.querySelector(".last-section");
             const scrollButton = document.getElementById("scrollButton");
-            const buttonContainer = document.querySelector(".button-container");
             const header = document.querySelector(".header");
             const tab = document.querySelector(".tab");
             let currentIndex = 0;
@@ -96,13 +95,16 @@
             let customButtonText = scrollButton.dataset.finalText || "확인"; // data-final-text 값
 
             scrollButton.addEventListener("click", () => {
-                if (currentIndex < sections.length - 1) {
+                if (currentIndex < sections.length) {
                     currentIndex++;
 
                     let offset = header.offsetHeight; // 기본 헤더 높이
                     if (tab) offset += tab.offsetHeight; // 탭이 있으면 추가 높이 반영
 
-                    const targetPosition = sections[currentIndex].offsetTop - offset;
+                    const targetPosition = (currentIndex === sections.length)
+                        ? lastSection.offsetTop - offset
+                        : sections[currentIndex].offsetTop - offset;
+
                     window.scrollTo({ top: targetPosition, behavior: "smooth" });
                 }
             });
@@ -118,7 +120,7 @@
                 });
             }, { threshold: 1.0 });
 
-            observer.observe(buttonContainer);
+            observer.observe(lastSection);
         });
     </script>
 
