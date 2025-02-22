@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스크롤 버튼</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* 🔹 헤더 스타일 */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            z-index: 1000;
+        }
+
+        /* 🔹 탭 스타일 (존재할 수도, 없을 수도 있음) */
+        .tab {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: #555;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            z-index: 999;
+        }
+
+        /* 🔹 컨테이너 스타일 */
+        .container {
+            margin-top: 60px; /* 기본적으로 헤더 높이만큼 여백 */
+        }
+
+        .section {
+            height: 2000px; /* 요청한 높이 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        /* 🔹 아래로 스크롤 버튼 */
+        .scroll-button {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+        }
+
+        .scroll-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🔹 헤더 -->
+    <div class="header">Fixed Header</div>
+
+    <!-- 🔹 탭 (필요한 경우만 활성화) -->
+    <div class="tab">Fixed Tab</div>
+
+    <!-- 🔹 섹션 컨테이너 -->
+    <div class="container">
+        <section class="section">Section 1</section>
+        <section class="section">Section 2</section>
+        <section class="section">Section 3</section>
+        <section class="section">Last Section</section>
+    </div>
+
+    <!-- 🔹 아래로 스크롤 버튼 -->
+    <button id="scrollButton" class="scroll-button">아래로 스크롤</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const sections = document.querySelectorAll(".section");
+            const scrollButton = document.getElementById("scrollButton");
+            const header = document.querySelector(".header");
+            const tab = document.querySelector(".tab");
+            let currentIndex = 0;
+
+            scrollButton.addEventListener("click", () => {
+                if (currentIndex < sections.length - 1) {
+                    currentIndex++;
+                    
+                    let offset = header.offsetHeight; // 기본 헤더 높이
+                    if (tab) offset += tab.offsetHeight; // 탭이 있으면 추가 높이 반영
+                    
+                    const targetPosition = sections[currentIndex].offsetTop - offset;
+                    
+                    window.scrollTo({ top: targetPosition, behavior: "smooth" });
+                }
+
+                if (currentIndex === sections.length - 1) {
+                    scrollButton.textContent = "확인";
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
