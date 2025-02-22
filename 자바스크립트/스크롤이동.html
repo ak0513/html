@@ -16,7 +16,7 @@
             font-size: 18px; z-index: 1000;
         }
 
-        /* 🔹 탭 (필요한 경우 존재) */
+        /* 🔹 탭 */
         .tab {
             position: fixed; top: 60px; left: 0; width: 100%; height: 50px;
             background: #555; color: white; display: flex;
@@ -25,54 +25,48 @@
         }
 
         /* 🔹 컨테이너 */
-        .container { margin-top: 60px; }
+        .container { margin-top: 110px; }
 
-        /* 🔹 각 섹션 별 배경색 */
+        /* 🔹 각 섹션 스타일 */
         .section:nth-child(1) { background-color: #ff9999; } /* 빨강 */
         .section:nth-child(2) { background-color: #99ccff; } /* 파랑 */
         .section:nth-child(3) { background-color: #99ff99; } /* 초록 */
 
         .section {
-            height: 2000px; display: flex;
+            height: 100vh; display: flex;
             align-items: center; justify-content: center;
             font-size: 2rem; font-weight: bold;
             border-bottom: 1px solid #ccc;
         }
 
-        /* 🔹 마지막 섹션 (버튼 영역만큼 높이 설정) */
+        /* 🔹 마지막 섹션 */
         .last-section {
-            height: 80px; /* 버튼 높이만큼만 유지 */
+            height: 80px;
             background-color: #ffcc99; /* 주황색 */
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* 🔹 아래로 스크롤 버튼 (화면 하단 고정) */
-        .scroll-button {
+        /* 🔹 버튼 스타일 */
+        .scroll-button, .complete-button {
             position: fixed; bottom: 20px; left: 50%;
             transform: translateX(-50%);
             padding: 15px 30px; font-size: 16px;
-            background-color: #007bff; color: white;
             border: none; border-radius: 5px;
             cursor: pointer; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             z-index: 1001;
         }
 
+        .scroll-button {
+            background-color: #007bff; color: white;
+        }
         .scroll-button:hover { background-color: #0056b3; }
 
-        /* 🔹 완료 버튼 (초기에는 숨김) */
         .complete-button {
-            display: none; /* 처음에는 숨김 */
-            position: fixed; bottom: 20px; left: 50%;
-            transform: translateX(-50%);
-            padding: 15px 30px; font-size: 16px;
             background-color: #28a745; color: white;
-            border: none; border-radius: 5px;
-            cursor: pointer; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            z-index: 1001;
+            display: none;
         }
-
         .complete-button:hover { background-color: #218838; }
     </style>
 </head>
@@ -81,7 +75,7 @@
     <!-- 🔹 헤더 -->
     <div class="header">Fixed Header</div>
 
-    <!-- 🔹 탭 (필요한 경우만 존재) -->
+    <!-- 🔹 탭 -->
     <div class="tab">Fixed Tab</div>
 
     <!-- 🔹 섹션 컨테이너 -->
@@ -89,15 +83,13 @@
         <section class="section">Section 1</section>
         <section class="section">Section 2</section>
         <section class="section">Section 3</section>
-        <section class="last-section">
-            <div class="button-container"></div>
-        </section>
+        <section class="last-section">마지막 섹션</section>
     </div>
 
-    <!-- 🔹 아래로 스크롤 버튼 (하단 고정) -->
+    <!-- 🔹 아래로 스크롤 버튼 -->
     <button id="scrollButton" class="scroll-button">아래로 스크롤</button>
 
-    <!-- 🔹 완료 버튼 (하단 고정) -->
+    <!-- 🔹 완료 버튼 -->
     <button id="completeButton" class="complete-button">완료</button>
 
     <script>
@@ -109,39 +101,46 @@
             const header = document.querySelector(".header");
             const tab = document.querySelector(".tab");
 
-            // 아래로 스크롤 버튼 클릭 시 동작
-            scrollButton.addEventListener("click", () => {
-                // 현재 화면에 보이는 섹션을 찾는다
-                const currentSection = Array.from(sections).find(section => {
+            // 현재 보이는 섹션 찾기 (가장 중앙에 있는 섹션 찾기)
+            function getCurrentSectionIndex() {
+                let minDiff = Number.MAX_VALUE;
+                let currentIndex = 0;
+
+                sections.forEach((section, index) => {
                     const rect = section.getBoundingClientRect();
-                    return rect.top <= window.innerHeight && rect.bottom >= 0;
+                    const diff = Math.abs(rect.top); // 화면 상단과의 거리
+
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        currentIndex = index;
+                    }
                 });
 
-                if (currentSection) {
-                    // 현재 섹션의 다음 섹션을 찾아서 이동
-                    const currentIndex = Array.from(sections).indexOf(currentSection);
-                    const nextSection = sections[currentIndex + 1];
+                return currentIndex;
+            }
 
-                    if (nextSection) {
-                        let offset = header.offsetHeight; // 기본 헤더 높이
-                        if (tab) offset += tab.offsetHeight; // 탭이 있으면 추가 높이 반영
+            // 버튼 클릭 시 다음 섹션으로 이동
+            scrollButton.addEventListener("click", () => {
+                let currentIndex = getCurrentSectionIndex();
+                let nextIndex = currentIndex + 1;
 
-                        const targetPosition = nextSection.offsetTop - offset;
-                        window.scrollTo({ top: targetPosition, behavior: "smooth" });
-                    }
+                if (nextIndex < sections.length) {
+                    let offset = header.offsetHeight + tab.offsetHeight; // 헤더 + 탭 높이
+                    let targetPosition = sections[nextIndex].offsetTop - offset;
+
+                    window.scrollTo({ top: targetPosition, behavior: "smooth" });
                 }
             });
 
-            // 완료 버튼 클릭 시 동작
+            // 완료 버튼 클릭 이벤트
             completeButton.addEventListener("click", () => {
                 alert("완료 버튼 클릭됨");
             });
 
-            // 🔹 버튼이 마지막 섹션에 도달하면 버튼 상태 변경
+            // 마지막 섹션 도달 시 버튼 상태 변경
             const observer = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // 마지막 섹션에 도달하면
                         scrollButton.style.display = "none";  // 아래로 스크롤 버튼 숨기기
                         completeButton.style.display = "block"; // 완료 버튼 보이기
                     }
