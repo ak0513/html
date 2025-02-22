@@ -40,15 +40,20 @@
             border-bottom: 1px solid #ccc;
         }
 
+        /* 🔹 마지막 섹션에서 버튼이 위치할 영역 */
+        .button-container {
+            height: 80px; /* 버튼 높이만큼 영역 유지 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         /* 🔹 아래로 스크롤 버튼 */
         .scroll-button {
-            position: fixed; bottom: 20px; left: 50%;
-            transform: translateX(-50%);
             padding: 15px 30px; font-size: 16px;
             background-color: #007bff; color: white;
             border: none; border-radius: 5px;
             cursor: pointer; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            z-index: 1001;
         }
 
         .scroll-button:hover { background-color: #0056b3; }
@@ -69,23 +74,21 @@
         <section class="section">Section 3</section>
         <section class="section">
             Last Section
-            <button id="finalScrollButton" class="scroll-button" style="position: static; margin-top: 20px;">
-                마지막 버튼
-            </button>
+            <div class="button-container">
+                <button id="scrollButton" class="scroll-button" data-final-text="확인">아래로 스크롤</button>
+            </div>
         </section>
     </div>
-
-    <!-- 🔹 아래로 스크롤 버튼 (data-final-text로 원하는 버튼명 설정 가능) -->
-    <button id="scrollButton" class="scroll-button" data-final-text="확인">아래로 스크롤</button>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const sections = document.querySelectorAll(".section");
             const scrollButton = document.getElementById("scrollButton");
-            const finalScrollButton = document.getElementById("finalScrollButton");
             const header = document.querySelector(".header");
             const tab = document.querySelector(".tab");
             let currentIndex = 0;
+
+            let customButtonText = scrollButton.dataset.finalText || "확인"; // data-final-text 값
 
             scrollButton.addEventListener("click", () => {
                 if (currentIndex < sections.length - 1) {
@@ -97,16 +100,18 @@
                     const targetPosition = sections[currentIndex].offsetTop - offset;
                     window.scrollTo({ top: targetPosition, behavior: "smooth" });
                 }
-
-                if (currentIndex === sections.length - 1) {
-                    scrollButton.style.display = "none"; // 마지막 섹션 도착 시 버튼 숨김
-                }
             });
 
-            // 🔹 마지막 버튼 동작 설정 (원하는 기능으로 변경 가능)
-            finalScrollButton.addEventListener("click", () => {
-                alert("마지막 섹션에서 실행할 동작을 여기에 추가하세요!");
-            });
+            // 🔹 버튼이 화면에 도달하면 버튼명 변경
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        scrollButton.textContent = customButtonText;
+                    }
+                });
+            }, { threshold: 1.0 });
+
+            observer.observe(document.querySelector(".button-container"));
         });
     </script>
 
