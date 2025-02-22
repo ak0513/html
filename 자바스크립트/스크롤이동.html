@@ -81,7 +81,7 @@
     </div>
 
     <!-- 🔹 아래로 스크롤 버튼 (하단 고정) -->
-    <button id="scrollButton" class="scroll-button" data-final-text="확인">아래로 스크롤</button>
+    <button id="scrollButton" class="scroll-button" data-final-text="완료">아래로 스크롤</button>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -93,9 +93,8 @@
             let currentIndex = 0;
             let isButtonTextChanged = false; // 버튼명이 변경된 상태 추적
 
-            let customButtonText = scrollButton.dataset.finalText || "확인"; // data-final-text 값
+            let customButtonText = scrollButton.dataset.finalText || "완료"; // data-final-text 값
 
-            // 스크롤 버튼 클릭 시 동작
             scrollButton.addEventListener("click", () => {
                 if (currentIndex < sections.length) {
                     currentIndex++;
@@ -108,32 +107,20 @@
                         : sections[currentIndex].offsetTop - offset;
 
                     window.scrollTo({ top: targetPosition, behavior: "smooth" });
-
-                    // 버튼명이 변경되었을 때 상태 추적
-                    if (currentIndex === sections.length) {
-                        isButtonTextChanged = true;
-                    }
                 }
             });
 
-            // 🔹 버튼이 마지막 섹션에 도달했을 때 버튼명 변경
+            // 🔹 버튼이 마지막 섹션의 버튼 영역에 도달하면 버튼명 변경
             const observer = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting && !isButtonTextChanged) {
-                        scrollButton.textContent = customButtonText; // 버튼명을 커스텀 값으로 변경
-                        isButtonTextChanged = true; // 버튼명이 변경되었으므로 상태 추적
+                        scrollButton.textContent = customButtonText; // 버튼명을 "완료"로 변경
+                        isButtonTextChanged = true; // 버튼명이 변경된 상태로 추적
                     }
                 });
-            }, { threshold: 0.8 });  // threshold 값 증가: 섹션이 화면에 거의 다 보일 때까지 기다림
+            }, { threshold: 1.0 });
 
             observer.observe(lastSection);
-
-            // 마지막 섹션이 화면에서 보이지 않으면 버튼명을 원래대로 변경
-            window.addEventListener('scroll', () => {
-                if (!isButtonTextChanged && window.scrollY < lastSection.offsetTop) {
-                    scrollButton.textContent = "아래로 스크롤";
-                }
-            });
         });
     </script>
 
