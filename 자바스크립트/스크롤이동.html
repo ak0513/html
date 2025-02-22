@@ -95,71 +95,78 @@
     <button id="completeButton" class="complete-button">완료</button>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const sections = document.querySelectorAll(".section");
-            const lastSection = document.querySelector(".last-section");
-            const scrollButton = document.getElementById("scrollButton");
-            const completeButton = document.getElementById("completeButton");
-            const header = document.querySelector(".header");
-            const tab = document.querySelector(".tab");
+    document.addEventListener("DOMContentLoaded", () => {
+        const sections = document.querySelectorAll(".section");
+        const lastSection = document.querySelector(".last-section");
+        const scrollButton = document.getElementById("scrollButton");
+        const completeButton = document.getElementById("completeButton");
+        const header = document.querySelector(".header");
+        const tab = document.querySelector(".tab");
 
-            scrollButton.addEventListener("click", () => {
-                let visibleSections = [];
+        scrollButton.addEventListener("click", () => {
+            let visibleSections = getVisibleSections();
 
-                // 🔹 현재 화면에 보이는 섹션 찾기
-                sections.forEach((section, index) => {
-                    const rect = section.getBoundingClientRect();
-                    if (rect.top >= 0 && rect.top < window.innerHeight) {
-                        visibleSections.push({ index, top: rect.top });
-                    }
-                });
+            if (visibleSections.length >= 2) {
+                // 🔹 두 번째 보이는 섹션으로 이동
+                scrollToSection(visibleSections[1]);
+            } else {
+                // 🔹 현재 보이는 섹션의 다음 섹션으로 이동
+                let currentIndex = getCurrentSectionIndex();
+                let nextIndex = currentIndex + 1;
 
-                if (visibleSections.length >= 2) {
-                    // 🔹 두 번째 보이는 섹션으로 이동
-                    let nextIndex = visibleSections[1].index;
-                    let offset = header.offsetHeight + (tab ? tab.offsetHeight : 0);
-                    let targetPosition = sections[nextIndex].offsetTop - offset;
+                if (nextIndex < sections.length) {
+                    scrollToSection(sections[nextIndex]);
+                }
+            }
+        });
 
-                    window.scrollTo({ top: targetPosition, behavior: "smooth" });
-                } else {
-                    // 🔹 현재 보이는 섹션의 다음 섹션으로 이동
-                    let currentIndex = getCurrentSectionIndex();
-                    let nextIndex = currentIndex + 1;
-
-                    if (nextIndex < sections.length) {
-                        let offset = header.offsetHeight + (tab ? tab.offsetHeight : 0);
-                        let targetPosition = sections[nextIndex].offsetTop - offset;
-
-                        window.scrollTo({ top: targetPosition, behavior: "smooth" });
-                    }
+        // 🔹 현재 화면에 보이는 섹션 목록 반환
+        function getVisibleSections() {
+            let visible = [];
+            sections.forEach((section) => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top >= 0 && rect.top < window.innerHeight) {
+                    visible.push(section);
                 }
             });
+            return visible;
+        }
 
-            // 🔹 현재 위치한 섹션의 인덱스 반환
-            function getCurrentSectionIndex() {
-                let index = 0;
-                sections.forEach((section, i) => {
-                    const rect = section.getBoundingClientRect();
-                    if (rect.top >= 0 && rect.top < window.innerHeight / 2) {
-                        index = i;
-                    }
-                });
-                return index;
-            }
+        // 🔹 현재 가장 가까운(위쪽) 섹션의 인덱스 반환
+        function getCurrentSectionIndex() {
+            let index = 0;
+            sections.forEach((section, i) => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top >= 0 && rect.top < window.innerHeight / 2) {
+                    index = i;
+                }
+            });
+            return index;
+        }
 
-            // 🔹 마지막 섹션 도달 감지
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        scrollButton.style.display = "none";
-                        completeButton.style.display = "block";
-                    }
-                });
-            }, { threshold: 1.0 });
+        // 🔹 특정 섹션으로 스크롤 이동
+        function scrollToSection(section) {
+            let offset = header.offsetHeight + (tab ? tab.offsetHeight : 0);
+            let targetPosition = section.offsetTop - offset;
+            window.scrollTo({ top: targetPosition, behavior: "smooth" });
+        }
 
-            observer.observe(lastSection);
-        });
-    </script>
+        // 🔹 마지막 섹션 도달 감지
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    scrollButton.style.display = "none";
+                    completeButton.style.display = "block";
+                } else {
+                    scrollButton.style.display = "block";
+                    completeButton.style.display = "none";
+                }
+            });
+        }, { threshold: 1.0 });
+
+        observer.observe(lastSection);
+    });
+</script>
 
 </body>
 </html>
