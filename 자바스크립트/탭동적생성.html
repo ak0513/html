@@ -329,10 +329,22 @@
         }
 
         function removeTab(tabName) {
-            document.querySelector(`.tab[data-name="${tabName}"]`)?.remove();
-            document.querySelector(`.tab-content[data-name="${tabName}"]`)?.remove();
+            const tab = document.querySelector(`.tab[data-name="${tabName}"]`);
+            const tabContent = document.querySelector(`.tab-content[data-name="${tabName}"]`);
+            
+            tab?.remove();
+            tabContent?.remove();
+            
+            // 모든 탭이 닫혔을 때
+            const remainingTabs = document.querySelectorAll('.tab');
+            if (remainingTabs.length > 0) {
+                // 첫 번째 탭을 활성화
+                setActiveTab(remainingTabs[0]);
+            }
+            
             checkCloseAllTabsButton();
         }
+
 
         function checkCloseAllTabsButton() {
             const tabs = document.querySelectorAll('.tab');
