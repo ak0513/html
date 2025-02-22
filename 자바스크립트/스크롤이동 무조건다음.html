@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스크롤 버튼</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; overflow-x: hidden; }
+
+        /* 🔹 헤더 */
+        .header {
+            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+            background: #333; color: white; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 18px; z-index: 1000;
+        }
+
+        /* 🔹 탭 (필요할 경우 존재) */
+        .tab {
+            position: fixed; top: 60px; left: 0; width: 100%; height: 50px;
+            background: #555; color: white; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 16px; z-index: 999;
+        }
+
+        /* 🔹 컨테이너 */
+        .container { margin-top: 60px; }
+
+        /* 🔹 각 섹션 별 배경색 */
+        .section:nth-child(1) { background-color: #ff9999; } /* 빨강 */
+        .section:nth-child(2) { background-color: #99ccff; } /* 파랑 */
+        .section:nth-child(3) { background-color: #99ff99; } /* 초록 */
+
+        .section {
+            height: 2000px; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 2rem; font-weight: bold;
+            border-bottom: 1px solid #ccc;
+        }
+
+        /* 🔹 마지막 섹션 (버튼 영역만큼 높이 설정) */
+        .last-section {
+            height: 80px; /* 버튼 높이만큼만 유지 */
+            background-color: #ffcc99; /* 주황색 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 🔹 아래로 스크롤 버튼 (화면 하단 고정) */
+        .scroll-button {
+            position: fixed; bottom: 20px; left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px; font-size: 16px;
+            background-color: #007bff; color: white;
+            border: none; border-radius: 5px;
+            cursor: pointer; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+        }
+
+        .scroll-button:hover { background-color: #0056b3; }
+
+        /* 🔹 완료 버튼 (초기에는 숨김) */
+        .complete-button {
+            display: none; /* 처음에는 숨김 */
+            position: fixed; bottom: 20px; left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px; font-size: 16px;
+            background-color: #28a745; color: white;
+            border: none; border-radius: 5px;
+            cursor: pointer; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+        }
+
+        .complete-button:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+
+    <!-- 🔹 헤더 -->
+    <div class="header">Fixed Header</div>
+
+    <!-- 🔹 탭 (필요한 경우만 존재) -->
+    <div class="tab">Fixed Tab</div>
+
+    <!-- 🔹 섹션 컨테이너 -->
+    <div class="container">
+        <section class="section">Section 1</section>
+        <section class="section">Section 2</section>
+        <section class="section">Section 3</section>
+        <section class="last-section">
+            <div class="button-container"></div>
+        </section>
+    </div>
+
+    <!-- 🔹 아래로 스크롤 버튼 (하단 고정) -->
+    <button id="scrollButton" class="scroll-button">아래로 스크롤</button>
+
+    <!-- 🔹 완료 버튼 (하단 고정) -->
+    <button id="completeButton" class="complete-button">완료</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const sections = document.querySelectorAll(".section");
+            const lastSection = document.querySelector(".last-section");
+            const scrollButton = document.getElementById("scrollButton");
+            const completeButton = document.getElementById("completeButton");
+            const header = document.querySelector(".header");
+            const tab = document.querySelector(".tab");
+            let currentIndex = 0;
+
+            // 아래로 스크롤 버튼 클릭 시 동작
+            scrollButton.addEventListener("click", () => {
+                if (currentIndex < sections.length) {
+                    currentIndex++;
+
+                    let offset = header.offsetHeight; // 기본 헤더 높이
+                    if (tab) offset += tab.offsetHeight; // 탭이 있으면 추가 높이 반영
+
+                    const targetPosition = (currentIndex === sections.length)
+                        ? lastSection.offsetTop - offset
+                        : sections[currentIndex].offsetTop - offset;
+
+                    window.scrollTo({ top: targetPosition, behavior: "smooth" });
+                }
+            });
+
+            // 완료 버튼 클릭 시 동작
+            completeButton.addEventListener("click", () => {
+                alert("완료 버튼 클릭됨");
+            });
+
+            // 🔹 버튼이 마지막 섹션에 도달하면 버튼 상태 변경
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // 마지막 섹션에 도달하면
+                        scrollButton.style.display = "none";  // 아래로 스크롤 버튼 숨기기
+                        completeButton.style.display = "block"; // 완료 버튼 보이기
+                    }
+                });
+            }, { threshold: 1.0 });
+
+            observer.observe(lastSection);
+        });
+    </script>
+
+</body>
+</html>
