@@ -10,15 +10,49 @@
             padding: 0;
             scroll-behavior: smooth;
         }
+
+        /* 상단 고정 헤더 */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: black;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 1000;
+        }
+
+        /* 고정된 탭 (옵션) */
+        .tabs {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background-color: gray;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            z-index: 999;
+        }
+
+        /* 컨텐츠 영역 */
         section {
-            height: 1000px; /* 각 섹션 높이를 1000px로 고정 */
+            height: 1000px;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 2rem;
             text-align: center;
         }
-        #section1 { background-color: lightblue; }
+        #section1 { background-color: lightblue; margin-top: 110px; }
         #section2 { background-color: lightgreen; }
         #section3 { background-color: lightcoral; }
         #section4 { background-color: lightyellow; }
@@ -37,17 +71,23 @@
             cursor: pointer;
         }
         #confirmBtn {
-            display: none; /* 처음에는 확인 버튼 숨김 */
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <section id="section1">섹션 1<br>아래로 스크롤 버튼을 클릭하세요.</section>
-    <section id="section2">섹션 2<br>스크롤 위치에 따라 이동합니다.</section>
-    <section id="section3">섹션 3<br>내용이 바뀝니다.</section>
+    <!-- 상단 고정 헤더 -->
+    <div class="header">고정된 헤더</div>
+
+    <!-- 선택적 고정 탭 -->
+    <div class="tabs">고정된 탭</div>
+
+    <section id="section1">섹션 1</section>
+    <section id="section2">섹션 2</section>
+    <section id="section3">섹션 3</section>
     <section id="section4">
-        섹션 4<br>마지막 섹션입니다. 확인 버튼을 클릭해 주세요.
+        섹션 4<br>마지막 섹션입니다.
         <div style="height: 500px;"></div> <!-- 추가 콘텐츠 시뮬레이션 -->
     </section>
 
@@ -60,6 +100,20 @@
         const sections = document.querySelectorAll('section');
         const scrollDownBtn = document.getElementById('scrollDownBtn');
         const confirmBtn = document.getElementById('confirmBtn');
+        const header = document.querySelector('.header');
+        const tabs = document.querySelector('.tabs');
+
+        function getFixedHeight() {
+            let headerHeight = header ? header.offsetHeight : 0;
+            let tabsHeight = tabs ? tabs.offsetHeight : 0;
+            return headerHeight + tabsHeight;
+        }
+
+        function scrollToSection(index) {
+            const fixedHeight = getFixedHeight();
+            const targetPosition = sections[index].offsetTop - fixedHeight;
+            window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+        }
 
         function getVisibleSectionIndex() {
             let index = 0;
@@ -67,7 +121,7 @@
             const windowCenter = window.scrollY + window.innerHeight / 2;
 
             sections.forEach((section, i) => {
-                const sectionTop = section.offsetTop;
+                const sectionTop = section.offsetTop - getFixedHeight();
                 const sectionBottom = sectionTop + section.offsetHeight;
                 const sectionCenter = (sectionTop + sectionBottom) / 2;
 
@@ -101,10 +155,8 @@
             let currentIndex = getVisibleSectionIndex();
             
             if (currentIndex < sections.length - 1) {
-                // 다음 섹션으로 이동
-                sections[currentIndex + 1].scrollIntoView({ behavior: 'smooth' });
+                scrollToSection(currentIndex + 1);
             } else {
-                // 마지막 섹션에서는 최하단으로 스크롤
                 window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
             }
 
