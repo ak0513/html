@@ -67,22 +67,25 @@
         <section class="section">Section 1</section>
         <section class="section">Section 2</section>
         <section class="section">Section 3</section>
-        <section class="section">Last Section</section>
+        <section class="section">
+            Last Section
+            <button id="finalScrollButton" class="scroll-button" style="position: static; margin-top: 20px;">
+                마지막 버튼
+            </button>
+        </section>
     </div>
 
     <!-- 🔹 아래로 스크롤 버튼 (data-final-text로 원하는 버튼명 설정 가능) -->
-    <button id="scrollButton" class="scroll-button" data-final-text="완료">아래로 스크롤</button>
+    <button id="scrollButton" class="scroll-button" data-final-text="확인">아래로 스크롤</button>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const sections = document.querySelectorAll(".section");
             const scrollButton = document.getElementById("scrollButton");
+            const finalScrollButton = document.getElementById("finalScrollButton");
             const header = document.querySelector(".header");
             const tab = document.querySelector(".tab");
             let currentIndex = 0;
-
-            // 🔹 기본값: 확인 (data-final-text 값이 없으면 적용)
-            let customButtonText = scrollButton.dataset.finalText || "확인";
 
             scrollButton.addEventListener("click", () => {
                 if (currentIndex < sections.length - 1) {
@@ -96,8 +99,13 @@
                 }
 
                 if (currentIndex === sections.length - 1) {
-                    scrollButton.textContent = customButtonText;
+                    scrollButton.style.display = "none"; // 마지막 섹션 도착 시 버튼 숨김
                 }
+            });
+
+            // 🔹 마지막 버튼 동작 설정 (원하는 기능으로 변경 가능)
+            finalScrollButton.addEventListener("click", () => {
+                alert("마지막 섹션에서 실행할 동작을 여기에 추가하세요!");
             });
         });
     </script>
