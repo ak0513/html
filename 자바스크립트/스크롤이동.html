@@ -91,6 +91,7 @@
             const header = document.querySelector(".header");
             const tab = document.querySelector(".tab");
             let currentIndex = 0;
+            let isButtonTextChanged = false; // 버튼명이 변경된 상태를 추적
 
             let customButtonText = scrollButton.dataset.finalText || "확인"; // data-final-text 값
 
@@ -106,15 +107,20 @@
                         : sections[currentIndex].offsetTop - offset;
 
                     window.scrollTo({ top: targetPosition, behavior: "smooth" });
+
+                    // 버튼명이 변경되었을 때 상태 추적
+                    if (currentIndex === sections.length) {
+                        isButtonTextChanged = true;
+                    }
                 }
             });
 
             // 🔹 버튼이 마지막 섹션의 버튼 영역에 도달하면 버튼명 변경
             const observer = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
+                    if (entry.isIntersecting && !isButtonTextChanged) {
                         scrollButton.textContent = customButtonText;
-                    } else {
+                    } else if (!entry.isIntersecting && !isButtonTextChanged) {
                         scrollButton.textContent = "아래로 스크롤";
                     }
                 });
