@@ -8,27 +8,21 @@
         body, html {
             margin: 0;
             padding: 0;
+            scroll-behavior: smooth;
         }
         section {
-            height: 1000px; /* 각 섹션의 높이를 1000px로 고정 */
+            height: 1000px; /* 각 섹션 높이 고정 */
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 2rem;
             text-align: center;
         }
-        #section1 {
-            background-color: lightblue;
-        }
-        #section2 {
-            background-color: lightgreen;
-        }
-        #section3 {
-            background-color: lightcoral;
-        }
-        #section4 {
-            background-color: lightyellow;
-        }
+        #section1 { background-color: lightblue; }
+        #section2 { background-color: lightgreen; }
+        #section3 { background-color: lightcoral; }
+        #section4 { background-color: lightyellow; }
+        
         .fixed-buttons {
             position: fixed;
             bottom: 20px;
@@ -49,9 +43,9 @@
 </head>
 <body>
 
-    <section id="section1">섹션 1<br>내용이 많아질 수 있습니다. 아래로 스크롤 버튼을 클릭하세요.</section>
-    <section id="section2">섹션 2<br>다른 내용이 추가될 수 있습니다.</section>
-    <section id="section3">섹션 3<br>내용에 따라 크기가 바뀝니다.</section>
+    <section id="section1">섹션 1<br>아래로 스크롤 버튼을 클릭하세요.</section>
+    <section id="section2">섹션 2<br>스크롤 위치에 따라 이동합니다.</section>
+    <section id="section3">섹션 3<br>내용이 바뀝니다.</section>
     <section id="section4">섹션 4<br>마지막 섹션입니다. 확인 버튼을 클릭해 주세요.</section>
 
     <div class="fixed-buttons">
@@ -60,29 +54,54 @@
     </div>
 
     <script>
-        let currentSectionIndex = 0;
         const sections = document.querySelectorAll('section');
         const scrollDownBtn = document.getElementById('scrollDownBtn');
         const confirmBtn = document.getElementById('confirmBtn');
 
-        // 아래로 스크롤 버튼 클릭 시, 섹션 하나씩 이동
-        scrollDownBtn.addEventListener('click', () => {
-            currentSectionIndex++;
-            if (currentSectionIndex >= sections.length) {
-                currentSectionIndex = sections.length - 1; // 마지막 섹션에 도달
-            }
-            sections[currentSectionIndex].scrollIntoView({ behavior: 'smooth' });
+        function getVisibleSectionIndex() {
+            let index = 0;
+            let minDifference = Infinity;
+            const windowCenter = window.scrollY + window.innerHeight / 2;
 
-            // 마지막 섹션에 도달하면 아래로 스크롤 버튼 숨기고 확인 버튼 표시
-            if (currentSectionIndex === sections.length - 1) {
+            sections.forEach((section, i) => {
+                const sectionTop = section.offsetTop;
+                const sectionBottom = sectionTop + section.offsetHeight;
+                const sectionCenter = (sectionTop + sectionBottom) / 2;
+
+                const difference = Math.abs(windowCenter - sectionCenter);
+                if (difference < minDifference) {
+                    minDifference = difference;
+                    index = i;
+                }
+            });
+
+            return index;
+        }
+
+        scrollDownBtn.addEventListener('click', () => {
+            let currentSectionIndex = getVisibleSectionIndex();
+            let nextSectionIndex = currentSectionIndex + 1;
+
+            if (nextSectionIndex < sections.length) {
+                sections[nextSectionIndex].scrollIntoView({ behavior: 'smooth' });
+            }
+
+            if (nextSectionIndex === sections.length - 1) {
                 scrollDownBtn.style.display = 'none';
                 confirmBtn.style.display = 'inline-block';
             }
         });
 
-        // 확인 버튼 클릭 시, 알림을 띄우는 예시
         confirmBtn.addEventListener('click', () => {
             alert("확인 버튼이 클릭되었습니다.");
+        });
+
+        window.addEventListener('scroll', () => {
+            let currentSectionIndex = getVisibleSectionIndex();
+            if (currentSectionIndex < sections.length - 1) {
+                scrollDownBtn.style.display = 'inline-block';
+                confirmBtn.style.display = 'none';
+            }
         });
     </script>
 
