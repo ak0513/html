@@ -91,7 +91,7 @@
             const header = document.querySelector(".header");
             const tab = document.querySelector(".tab");
             let currentIndex = 0;
-            let isButtonTextChanged = false; // 버튼명이 변경된 상태를 추적
+            let isButtonTextChanged = false; // 버튼명이 변경된 상태 추적
 
             let customButtonText = scrollButton.dataset.finalText || "확인"; // data-final-text 값
 
@@ -118,6 +118,7 @@
             // 🔹 버튼이 마지막 섹션의 버튼 영역에 도달하면 버튼명 변경
             const observer = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
+                    // 마지막 섹션에 도달한 경우만 버튼명을 "확인"으로 변경
                     if (entry.isIntersecting && !isButtonTextChanged) {
                         scrollButton.textContent = customButtonText;
                     } else if (!entry.isIntersecting && !isButtonTextChanged) {
