@@ -43,6 +43,9 @@
             font-size: 1rem;
             cursor: pointer;
         }
+        #confirmBtn {
+            display: none; /* 처음에는 확인 버튼 숨김 */
+        }
     </style>
 </head>
 <body>
@@ -61,6 +64,7 @@
         let currentSectionIndex = 0;
         const sections = document.querySelectorAll('section');
         const scrollDownBtn = document.getElementById('scrollDownBtn');
+        const confirmBtn = document.getElementById('confirmBtn');
 
         // 아래로 스크롤 버튼 클릭 시, 섹션 하나씩 이동
         scrollDownBtn.addEventListener('click', () => {
@@ -69,10 +73,16 @@
                 currentSectionIndex = sections.length - 1; // 마지막 섹션에 도달
             }
             sections[currentSectionIndex].scrollIntoView({ behavior: 'smooth' });
+
+            // 마지막 섹션에 도달하면 아래로 스크롤 버튼 숨기고 확인 버튼 표시
+            if (currentSectionIndex === sections.length - 1) {
+                scrollDownBtn.style.display = 'none';
+                confirmBtn.style.display = 'inline-block';
+            }
         });
 
-        // 확인 버튼 클릭 시, 현재 섹션에서 아무 작업을 하지 않음 (예시)
-        document.getElementById('confirmBtn').addEventListener('click', () => {
+        // 확인 버튼 클릭 시, 알림을 띄우는 예시
+        confirmBtn.addEventListener('click', () => {
             alert("확인 버튼이 클릭되었습니다.");
         });
     </script>
