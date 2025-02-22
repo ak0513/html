@@ -92,6 +92,7 @@
             const tab = document.querySelector(".tab");
             let customButtonText = scrollButton.dataset.finalText || "완료"; // data-final-text 값
 
+            let currentIndex = 0; // 현재 섹션 인덱스
             let isButtonTextChanged = false; // 버튼명이 변경된 상태 추적
 
             // 현재 화면에 보이는 섹션을 찾는 함수
@@ -120,6 +121,11 @@
 
                 const targetPosition = sections[targetIndex].offsetTop - offset;
                 window.scrollTo({ top: targetPosition, behavior: "smooth" });
+
+                // 클릭 후에는 버튼의 상태를 변경
+                if (targetIndex === sections.length - 1) {
+                    isButtonTextChanged = true; // 마지막 섹션에 도달하면 버튼명 변경
+                }
             });
 
             // 🔹 버튼이 마지막 섹션의 버튼 영역에 도달하면 버튼명 변경
@@ -133,6 +139,14 @@
             }, { threshold: 1.0 });
 
             observer.observe(lastSection);
+
+            // 화면이 다시 위로 스크롤 될 때 버튼명 초기화 방지
+            window.addEventListener('scroll', () => {
+                if (window.scrollY === 0) {
+                    isButtonTextChanged = false; // 페이지 맨 위로 가면 버튼 상태 초기화
+                    scrollButton.textContent = "아래로 스크롤"; // 버튼명 초기화
+                }
+            });
         });
     </script>
 
