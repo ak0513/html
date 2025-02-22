@@ -124,11 +124,11 @@
                         isButtonTextChanged = true; // 버튼명이 변경되었으므로 상태 추적
                     }
                 });
-            }, { threshold: 1.0 });
+            }, { threshold: 0.8 });  // threshold 값 증가: 섹션이 화면에 거의 다 보일 때까지 기다림
 
             observer.observe(lastSection);
 
-            // 마지막 섹션이 보이지 않으면 버튼명을 원래대로 변경
+            // 마지막 섹션이 화면에서 보이지 않으면 버튼명을 원래대로 변경
             window.addEventListener('scroll', () => {
                 if (!isButtonTextChanged && window.scrollY < lastSection.offsetTop) {
                     scrollButton.textContent = "아래로 스크롤";
