@@ -46,7 +46,10 @@
     <section id="section1">섹션 1<br>아래로 스크롤 버튼을 클릭하세요.</section>
     <section id="section2">섹션 2<br>스크롤 위치에 따라 이동합니다.</section>
     <section id="section3">섹션 3<br>내용이 바뀝니다.</section>
-    <section id="section4">섹션 4<br>마지막 섹션입니다. 확인 버튼을 클릭해 주세요.</section>
+    <section id="section4">
+        섹션 4<br>마지막 섹션입니다. 확인 버튼을 클릭해 주세요.
+        <div style="height: 500px;"></div> <!-- 추가 콘텐츠 시뮬레이션 -->
+    </section>
 
     <div class="fixed-buttons">
         <button id="scrollDownBtn">아래로 스크롤</button>
@@ -96,9 +99,14 @@
 
         scrollDownBtn.addEventListener('click', () => {
             let currentIndex = getVisibleSectionIndex();
-            let nextIndex = Math.min(currentIndex + 1, sections.length - 1);
-
-            sections[nextIndex].scrollIntoView({ behavior: 'smooth' });
+            
+            if (currentIndex < sections.length - 1) {
+                // 다음 섹션으로 이동
+                sections[currentIndex + 1].scrollIntoView({ behavior: 'smooth' });
+            } else {
+                // 마지막 섹션에서는 최하단으로 스크롤
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }
 
             setTimeout(updateButtonVisibility, 500);
         });
