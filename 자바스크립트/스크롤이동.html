@@ -11,12 +11,13 @@
             height: 100%;
         }
         section {
-            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 2rem;
             text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
         #section1 {
             background-color: lightblue;
@@ -50,10 +51,10 @@
 </head>
 <body>
 
-    <section id="section1">섹션 1</section>
-    <section id="section2">섹션 2</section>
-    <section id="section3">섹션 3</section>
-    <section id="section4">섹션 4</section>
+    <section id="section1">섹션 1<br>내용이 많아질 수 있습니다. 아래로 스크롤 버튼을 클릭하세요.</section>
+    <section id="section2">섹션 2<br>다른 내용이 추가될 수 있습니다.</section>
+    <section id="section3">섹션 3<br>내용에 따라 크기가 바뀝니다.</section>
+    <section id="section4">섹션 4<br>마지막 섹션입니다. 확인 버튼을 클릭해 주세요.</section>
 
     <div class="fixed-buttons">
         <button id="scrollDownBtn">아래로 스크롤</button>
