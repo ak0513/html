@@ -11,7 +11,7 @@
             scroll-behavior: smooth;
         }
         section {
-            height: 1000px; /* 각 섹션 높이 고정 */
+            height: 1000px; /* 각 섹션 높이를 1000px로 고정 */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -22,7 +22,7 @@
         #section2 { background-color: lightgreen; }
         #section3 { background-color: lightcoral; }
         #section4 { background-color: lightyellow; }
-        
+
         .fixed-buttons {
             position: fixed;
             bottom: 20px;
@@ -60,7 +60,7 @@
 
         function getVisibleSectionIndex() {
             let index = 0;
-            let minDifference = Infinity;
+            let minDiff = Infinity;
             const windowCenter = window.scrollY + window.innerHeight / 2;
 
             sections.forEach((section, i) => {
@@ -68,9 +68,9 @@
                 const sectionBottom = sectionTop + section.offsetHeight;
                 const sectionCenter = (sectionTop + sectionBottom) / 2;
 
-                const difference = Math.abs(windowCenter - sectionCenter);
-                if (difference < minDifference) {
-                    minDifference = difference;
+                const diff = Math.abs(windowCenter - sectionCenter);
+                if (diff < minDiff) {
+                    minDiff = diff;
                     index = i;
                 }
             });
@@ -78,18 +78,25 @@
             return index;
         }
 
-        scrollDownBtn.addEventListener('click', () => {
-            let currentSectionIndex = getVisibleSectionIndex();
-            let nextSectionIndex = currentSectionIndex + 1;
+        function updateButtonVisibility() {
+            let currentIndex = getVisibleSectionIndex();
 
-            if (nextSectionIndex < sections.length) {
-                sections[nextSectionIndex].scrollIntoView({ behavior: 'smooth' });
-            }
-
-            if (nextSectionIndex === sections.length - 1) {
+            if (currentIndex >= sections.length - 1) {
                 scrollDownBtn.style.display = 'none';
                 confirmBtn.style.display = 'inline-block';
+            } else {
+                scrollDownBtn.style.display = 'inline-block';
+                confirmBtn.style.display = 'none';
             }
+        }
+
+        scrollDownBtn.addEventListener('click', () => {
+            let currentIndex = getVisibleSectionIndex();
+            let nextIndex = Math.min(currentIndex + 1, sections.length - 1);
+
+            sections[nextIndex].scrollIntoView({ behavior: 'smooth' });
+
+            setTimeout(updateButtonVisibility, 500); // 부드러운 전환 후 버튼 업데이트
         });
 
         confirmBtn.addEventListener('click', () => {
@@ -97,12 +104,11 @@
         });
 
         window.addEventListener('scroll', () => {
-            let currentSectionIndex = getVisibleSectionIndex();
-            if (currentSectionIndex < sections.length - 1) {
-                scrollDownBtn.style.display = 'inline-block';
-                confirmBtn.style.display = 'none';
-            }
+            updateButtonVisibility();
         });
+
+        // 초기 버튼 상태 설정
+        updateButtonVisibility();
     </script>
 
 </body>
