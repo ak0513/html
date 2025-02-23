@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>빈 태그 찾기</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { margin: 20px; }
+        div, span, p { border: 1px solid #ccc; padding: 10px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>빈 태그 자동 채우기</h2>
+        <div></div>
+        <span></span>
+        <p></p>
+        <div>내용 있음</div>
+        <span> </span>
+        <p></p>
+        아래 피태그 내부에 스팬2개
+                <p>
+                            <span> </span>
+                            <span></span>
+                </p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll("*").forEach(el => {
+                if (el.children.length === 0 && el.textContent.trim() === "") {
+                    el.textContent = "빈태그";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
