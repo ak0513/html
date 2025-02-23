@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>원 분리 애니메이션</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .circle {
+            width: 80px;
+            height: 80px;
+            background-color: #3498db;
+            border-radius: 50%;
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .small-circle {
+            width: 40px;
+            height: 40px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+            position: absolute;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        /* 분리 애니메이션 */
+        .explode .small-circle {
+            animation: explode 0.6s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) translate(var(--x), var(--y));
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="circle" id="mainCircle"></div>
+
+    <script>
+        document.getElementById('mainCircle').addEventListener('click', function(event) {
+            const mainCircle = this;
+            const rect = mainCircle.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            // 3개의 작은 원 좌표 (각도를 이용해 배치)
+            const positions = [
+                { x: -50, y: -50 },  // 좌상단
+                { x: 60, y: -30 },   // 우상단
+                { x: 0, y: 60 }      // 하단
+            ];
+
+            positions.forEach((pos, index) => {
+                const smallCircle = document.createElement('div');
+                smallCircle.classList.add('small-circle');
+                smallCircle.style.left = `${centerX - 20}px`; // 작은 원 초기 위치 설정
+                smallCircle.style.top = `${centerY - 20}px`;
+                smallCircle.style.setProperty('--x', `${pos.x}px`);
+                smallCircle.style.setProperty('--y', `${pos.y}px`);
+
+                document.body.appendChild(smallCircle);
+
+                // 애니메이션 적용
+                setTimeout(() => {
+                    smallCircle.classList.add('explode');
+                }, 10);
+            });
+        });
+    </script>
+
+</body>
+</html>
