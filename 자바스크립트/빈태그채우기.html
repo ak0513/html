@@ -28,8 +28,7 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll("*").forEach(el => {
+        document.addEventListener("DOMContentLoaded",  document.querySelectorAll("[data-aaa] *").forEach(el => {
                 if (el.children.length === 0 && el.textContent.trim() === "") {
                     el.textContent = "빈태그";
                 }
