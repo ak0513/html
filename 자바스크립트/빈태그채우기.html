@@ -80,7 +80,26 @@
         
         
         document.addEventListener("DOMContentLoaded", function () {
+    // 모든 data-aaa 속성을 가진 부모 요소들을 찾음
+const parentElements = document.querySelectorAll('[data-aaa]');
+
+// 각 부모 요소에 대해 반복
+parentElements.forEach((parent, parentIndex) => {
+  // 해당 부모 안에서 tab_cont 클래스를 가진 모든 div 요소를 찾음
+  const tabContElements = parent.querySelectorAll('.tab_cont');
+
+  // 각 tab_cont div에 대해 반복
+  tabContElements.forEach((tabCont, index) => {
+    // 새로운 태그 생성 (예: <div> 태그)
+    const newElement = document.createElement('div');
     
+    // 텍스트 삽입 (탭1, 탭2, 탭3 등)
+    newElement.textContent = `탭${parentIndex + 1}-${index + 1}`;
+    
+    // tab_cont div의 첫 번째 자식 요소로 추가
+    tabCont.prepend(newElement);
+  });
+});
 });
     </script>
 </body>
