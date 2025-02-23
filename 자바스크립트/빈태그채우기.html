@@ -105,7 +105,7 @@ parentElements.forEach((parent, parentIndex) => {
     const newElement = document.createElement('div');
     
     // 텍스트 삽입 (탭1, 탭2, 탭3 등)
-    newElement.textContent = `탭${parentIndex + 1}-${index + 1}`;
+    newElement.textContent = `${parent.id} 탭${parentIndex + 1}-${index + 1}`;
     
     // tab_cont div의 첫 번째 자식 요소로 추가
     tabCont.prepend(newElement);
