@@ -75,21 +75,7 @@
             // ID 값을 첫 번째 자식 요소에 표시
             firstChild.textContent = id;
 
-            // 동적으로 CSS 생성
-            const style = document.createElement("style");
-            style.innerHTML = `
-                #${id} {
-                    margin-top: 20px;
-                    border: 2px solid black;
-                    position: relative; /* 부모 요소가 기준 */
-                }
-                #${id} > *:first-child {
-                    position: relative;
-                    
-                    font-weight: bold;
-                }
-            `;
-            document.head.appendChild(style);
+            
             
         }
     });
