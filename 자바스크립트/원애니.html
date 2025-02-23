@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>원 분리 애니메이션</title>
+    <title>땅콩 모양 분리 애니메이션</title>
     <style>
         body {
             display: flex;
@@ -41,26 +41,29 @@
             transform: scale(0);
         }
 
-        /* 원이 분리되기 전 꿀렁이는 효과 */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            30% { transform: scale(1.1); }
-            60% { transform: scale(0.9); }
-            100% { transform: scale(1); }
+        /* 땅콩처럼 늘어나는 효과 */
+        @keyframes peanut {
+            0% { transform: scaleX(1); }
+            30% { transform: scaleX(1.4) scaleY(0.8); }
+            60% { transform: scaleX(0.9) scaleY(1.1); }
+            100% { transform: scaleX(1); }
         }
 
-        /* 작은 원이 퍼지는 애니메이션 */
-        @keyframes explode {
+        /* 작은 원이 튕기면서 분리되는 효과 */
+        @keyframes bounce-out {
             0% {
                 transform: scale(0);
                 opacity: 0;
             }
-            40% {
+            50% {
+                transform: scale(1.2);
                 opacity: 1;
+            }
+            70% {
+                transform: scale(0.9) translate(var(--x), var(--y));
             }
             100% {
                 transform: scale(1) translate(var(--x), var(--y));
-                opacity: 1;
             }
         }
     </style>
@@ -76,34 +79,34 @@
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
 
-            // 꿀렁이는 애니메이션 추가
-            mainCircle.style.animation = "pulse 0.4s ease-in-out";
+            // 원이 땅콩처럼 변형되는 애니메이션 적용
+            mainCircle.style.animation = "peanut 0.3s ease-in-out";
 
-            // 3개의 작은 원 좌표 (각도를 이용해 배치)
+            // 3개의 작은 원 좌표
             const positions = [
-                { x: -50, y: -50 },  // 좌상단
-                { x: 60, y: -30 },   // 우상단
-                { x: 0, y: 60 }      // 하단
+                { x: -50, y: -20 },  // 왼쪽
+                { x: 50, y: -20 },   // 오른쪽
+                { x: 0, y: 60 }      // 아래쪽
             ];
 
             setTimeout(() => {
                 positions.forEach((pos, index) => {
                     const smallCircle = document.createElement('div');
                     smallCircle.classList.add('small-circle');
-                    smallCircle.style.left = `${centerX - 20}px`; // 작은 원 초기 위치 설정
+                    smallCircle.style.left = `${centerX - 20}px`; 
                     smallCircle.style.top = `${centerY - 20}px`;
                     smallCircle.style.setProperty('--x', `${pos.x}px`);
                     smallCircle.style.setProperty('--y', `${pos.y}px`);
 
                     document.body.appendChild(smallCircle);
 
-                    // 애니메이션 적용
+                    // 바운스 효과 적용
                     setTimeout(() => {
-                        smallCircle.classList.add('explode');
-                        smallCircle.style.animation = 'explode 0.6s ease-out forwards';
+                        smallCircle.classList.add('bounce-out');
+                        smallCircle.style.animation = 'bounce-out 0.6s ease-out forwards';
                     }, 50);
                 });
-            }, 300); // 꿀렁거리는 애니메이션 이후 실행
+            }, 300);
         });
     </script>
 
