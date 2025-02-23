@@ -44,13 +44,25 @@
         const firstChild = element.firstElementChild;
         const id = element.id;
 
+        // data-aaa가 있는 태그 자체에 스타일 적용
+        element.style.marginTop = "20px"; // 원하는 margin-top 값
+        element.style.border = "2px solid black"; // 원하는 border 스타일
+
         if (firstChild && id) {
             // 첫 번째 자식 요소에 position: absolute 적용
             firstChild.style.position = "absolute";
 
             // 동적으로 CSS 생성
             const style = document.createElement("style");
-            style.innerHTML = `#${id} > *:first-child { position: absolute; }`;
+            style.innerHTML = `
+                #${id} {
+                    margin-top: 20px;
+                    border: 2px solid black;
+                }
+                #${id} > *:first-child {
+                    position: absolute;
+                }
+            `;
             document.head.appendChild(style);
         }
     });
