@@ -111,6 +111,20 @@ parentElements.forEach((parent, parentIndex) => {
     tabCont.prepend(newElement);
   });
 });
+
+const style = document.createElement("style");
+            style.innerHTML = `
+                .tab_cont {
+display:block !omportant
+                }
+           
+            `;
+            document.head.appendChild(style);
+ 
+
+
+
+
 });
     </script>
 </body>
