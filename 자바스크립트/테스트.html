@@ -6,10 +6,13 @@
     <title>여러 개의 토글 버튼</title>
     <style>
         .hide-target {
-            display: block;
             margin: 10px;
             padding: 10px;
             background-color: lightgray;
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -30,10 +33,10 @@
 <script>
     function toggleVisibility(groupClass, button) {
         const elements = document.querySelectorAll(`.${groupClass}`);
-        let isHidden = Array.from(elements).every(el => el.style.display === "none");
+        let isHidden = Array.from(elements).every(el => el.classList.contains('hidden'));
 
         elements.forEach(element => {
-            element.style.display = isHidden ? "block" : "none";
+            element.classList.toggle('hidden', !isHidden);
         });
 
         button.textContent = isHidden ? "접기" : "열기";
