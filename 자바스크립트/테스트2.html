@@ -3,67 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>실시간 금액 변환</title>
+    <title>MutationObserver Example</title>
     <style>
-        input { margin-bottom: 10px; display: block; }
-        span { font-weight: bold; margin-left: 10px; }
+        .a {
+            display: none;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        body.a {
+            background-color: #f0f8ff;
+        }
     </style>
 </head>
 <body>
 
-    <label>금액 1: <input type="text" class="moneyInput" data-target="result1"> <span id="result1"></span></label>
-    <label>금액 2: <input type="text" class="moneyInput" data-target="result2"> <span id="result2"></span></label>
-    <label>금액 3: <input type="text" class="moneyInput" data-target="result3"> <span id="result3"></span></label>
+    <button onclick="toggleDiv()">Toggle Div</button>
+
+    <div class="a">
+        <button>버튼 있음</button>
+    </div>
 
     <script>
-        function convertToKoreanMoney(number) {
-            if (typeof number !== "number" || isNaN(number)) return "0원";
-
-            const units = ["", "만", "억", "조", "경"];
-            let result = [];
-            let numStr = number.toString();
-
-            // 4자리씩 나누기 위해 끝에서부터 그룹화
-            let groups = [];
-            while (numStr.length > 0) {
-                groups.unshift(numStr.slice(-4));
-                numStr = numStr.slice(0, -4);
-            }
-
-            groups.forEach((group, index) => {
-                let num = parseInt(group, 10);
-                if (num > 0) {
-                    result.push(`${num.toLocaleString()}${units[groups.length - 1 - index]}`);
-                }
+        document.addEventListener("DOMContentLoaded", function () {
+            const elements = document.querySelectorAll(".a");
+            const observer = new MutationObserver(() => {
+                elements.forEach(element => {
+                    const style = getComputedStyle(element);
+                    if (style.display === "block") {
+                        const hasButton = element.querySelector("button") !== null;
+                        document.body.classList.toggle("a", hasButton);
+                    }
+                });
             });
 
-            return result.join(" ") + "원";
-        }
-
-        function formatNumberWithCommas(value) {
-            return value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-
-        function handleInputChange(event) {
-            let input = event.target;
-            let rawValue = input.value.replace(/,/g, "").replace(/\D/g, ""); // 숫자만 허용
-            let number = parseInt(rawValue, 10) || 0;
-
-            // 천 단위 콤마 추가된 값 표시
-            input.value = formatNumberWithCommas(rawValue);
-
-            // 변환된 한글 금액 적용
-            let targetSpanId = input.getAttribute("data-target");
-            let targetSpan = document.getElementById(targetSpanId);
-            if (targetSpan) {
-                targetSpan.textContent = convertToKoreanMoney(number);
-            }
-        }
-
-        // 모든 입력 필드에 이벤트 리스너 추가
-        document.querySelectorAll(".moneyInput").forEach(input => {
-            input.addEventListener("input", handleInputChange);
+            elements.forEach(element => {
+                observer.observe(element, { attributes: true, attributeFilter: ["style"] });
+            });
         });
+
+        function toggleDiv() {
+            const div = document.querySelector(".a");
+            div.style.display = div.style.display === "none" ? "block" : "none";
+        }
     </script>
 
 </body>
