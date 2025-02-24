@@ -3,72 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>숫자 → 한글 변환</title>
-    <script>
-        function numberToKorean(num) {
-            const units = ["", "만", "억", "조", "경"];
-            const digits = ["", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"];
-            const smallUnits = ["", "십", "백", "천"];
-
-            if (isNaN(num) || num < 0) return "유효한 숫자를 입력하세요.";
-
-            if (num === 0) return "영";
-
-            let result = "";
-            let unitIndex = 0;
-
-            while (num > 0) {
-                let part = num % 10000;
-                num = Math.floor(num / 10000);
-
-                let partStr = "";
-                for (let i = 0; i < 4; i++) {
-                    let digit = part % 10;
-                    if (digit !== 0) {
-                        partStr = digits[digit] + smallUnits[i] + partStr;
-                    }
-                    part = Math.floor(part / 10);
-                }
-
-                if (partStr) {
-                    result = partStr + units[unitIndex] + result;
-                }
-
-                unitIndex++;
-            }
-
-            return result;
-        }
-
-        function updateKoreanNumber(event) {
-            const inputId = event.target.id;
-            const resultId = "result_" + inputId.split("_")[1];
-            const inputValue = parseInt(event.target.value, 10);
-            document.getElementById(resultId).innerText = numberToKorean(inputValue);
-        }
-    </script>
+    <title>여러 개의 토글 버튼</title>
     <style>
-        .input-group {
-            margin-bottom: 10px;
-        }
-        input {
-            margin-right: 10px;
+        .hide-target {
+            display: block;
+            margin: 10px;
+            padding: 10px;
+            background-color: lightgray;
         }
     </style>
 </head>
 <body>
-    <h2>숫자를 한글로 변환</h2>
-    <input type="text" id="username" aria-label="사용자 이름" placeholder="이름 입력">
-    <div id="inputContainer">
-        <!-- 초기 입력 필드 2개 -->
-        <div class="input-group">
-            <input type="number" id="input_0" oninput="updateKoreanNumber(event)" placeholder="숫자를 입력하세요">
-            <span id="result_0" class="result"></span>
-        </div>
-        <div class="input-group">
-            <input type="number" id="input_1" oninput="updateKoreanNumber(event)" placeholder="숫자를 입력하세요">
-            <span id="result_1" class="result"></span>
-        </div>
-    </div>
+
+<!-- 첫 번째 그룹 -->
+<button onclick="toggleVisibility('group1', this)">접기</button>
+<div class="hide-target group1">첫 번째 그룹 - 요소 1</div>
+<div class="hide-target group1">첫 번째 그룹 - 요소 2</div>
+<div class="hide-target group1">첫 번째 그룹 - 요소 3</div>
+
+<!-- 두 번째 그룹 -->
+<button onclick="toggleVisibility('group2', this)">접기</button>
+<div class="hide-target group2">두 번째 그룹 - 요소 1</div>
+<div class="hide-target group2">두 번째 그룹 - 요소 2</div>
+<div class="hide-target group2">두 번째 그룹 - 요소 3</div>
+
+<script>
+    function toggleVisibility(groupClass, button) {
+        const elements = document.querySelectorAll(`.${groupClass}`);
+        let isHidden = Array.from(elements).every(el => el.hidden);
+
+        elements.forEach(element => {
+            element.hidden = !isHidden;
+        });
+
+        button.textContent = isHidden ? "접기" : "열기";
+    }
+</script>
+
 </body>
 </html>
