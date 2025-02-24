@@ -30,10 +30,10 @@
 <script>
     function toggleVisibility(groupClass, button) {
         const elements = document.querySelectorAll(`.${groupClass}`);
-        let isHidden = Array.from(elements).every(el => el.hidden);
+        let isHidden = Array.from(elements).every(el => el.style.display === "none");
 
         elements.forEach(element => {
-            element.hidden = !isHidden;
+            element.style.display = isHidden ? "block" : "none";
         });
 
         button.textContent = isHidden ? "접기" : "열기";
