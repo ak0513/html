@@ -40,7 +40,7 @@
         }
         .toggle-button {
             display: none;
-            padding: 10px 20px;
+            padding: 10px;
             background: #28a745;
             color: white;
             border: none;
@@ -61,7 +61,7 @@
         <button class="tab-button" role="tab" aria-selected="false" data-target="content7">탭 7</button>
         <button class="tab-button" role="tab" aria-selected="false" data-target="content8">탭 8</button>
     </div>
-    <button class="toggle-button" id="toggleButton">열고 접기</button>
+    <button class="toggle-button" id="toggleButton" aria-label="목록 열기">열고 접기</button>
 </div>
 
 <div id="tabContents">
@@ -85,11 +85,21 @@
         } else {
             toggleBtn.style.display = "none";
             container.classList.remove("toggle");
+            toggleBtn.setAttribute("aria-label", "목록 열기"); // 닫힌 상태 유지
         }
     }
 
     document.getElementById("toggleButton").addEventListener("click", function () {
-        document.getElementById("tabContainer").classList.toggle("toggle");
+        const container = document.getElementById("tabContainer");
+        const toggleBtn = document.getElementById("toggleButton");
+
+        container.classList.toggle("toggle");
+
+        if (container.classList.contains("toggle")) {
+            toggleBtn.setAttribute("aria-label", "목록 접기");
+        } else {
+            toggleBtn.setAttribute("aria-label", "목록 열기");
+        }
     });
 
     const tabButtons = document.querySelectorAll(".tab-button");
