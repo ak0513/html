@@ -3,32 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>버튼 토글</title>
+    <title>탭 UI</title>
     <style>
-        .button-container {
+        .tab-container {
             display: flex;
             overflow: hidden;
             white-space: nowrap;
-            border: 1px solid #ccc;
-            padding: 10px;
+            border-bottom: 2px solid #ddd;
             max-width: 100%;
             transition: max-height 0.3s ease-in-out;
         }
-        .button-container.toggle {
+        .tab-container.toggle {
             overflow: visible;
             flex-wrap: wrap;
         }
-        .button-container button {
-            margin-right: 10px;
-            padding: 8px 12px;
+        .tab-button {
+            padding: 10px 16px;
             border: none;
+            background: #f1f1f1;
+            color: black;
+            cursor: pointer;
+            outline: none;
+        }
+        .tab-button.active {
             background: #007bff;
             color: white;
-            cursor: pointer;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+        .tab-content.active {
+            display: block;
         }
         .toggle-button {
             display: none;
-            padding: 8px 12px;
+            padding: 10px;
             background: #28a745;
             color: white;
             border: none;
@@ -38,39 +50,68 @@
 </head>
 <body>
 
-<div id="wrapper">
-    <div class="button-container" id="buttonContainer">
-        <button>버튼 1</button>
-        <button>버튼 2</button>
-        <button>버튼 3</button>
-        <button>버튼 4</button>
-        <button>버튼 5</button>
-        <button>버튼 6</button>
-        <button>버튼 7</button>
-        <button>버튼 8</button>
-        <button>버튼 9</button>
-        <button>버튼 10</button>
+<div id="tabWrapper">
+    <div class="tab-container" id="tabContainer" role="tablist">
+        <button class="tab-button" role="tab" aria-selected="true" data-target="content1">탭 1</button>
+        <button class="tab-button" role="tab" aria-selected="false" data-target="content2">탭 2</button>
+        <button class="tab-button" role="tab" aria-selected="false" data-target="content3">탭 3</button>
+        <button class="tab-button" role="tab" aria-selected="false" data-target="content4">탭 4</button>
+        <button class="tab-button" role="tab" aria-selected="false" data-target="content5">탭 5</button>
+        <button class="tab-button" role="tab" aria-selected="false" data-target="content6">탭 6</button>
+        <button class="tab-button" role="tab" aria-selected="false" data-target="content7">탭 7</button>
+        <button class="tab-button" role="tab" aria-selected="false" data-target="content8">탭 8</button>
     </div>
     <button class="toggle-button" id="toggleButton">열고 접기</button>
 </div>
 
+<div id="tabContents">
+    <div class="tab-content active" id="content1">탭 1 내용</div>
+    <div class="tab-content" id="content2">탭 2 내용</div>
+    <div class="tab-content" id="content3">탭 3 내용</div>
+    <div class="tab-content" id="content4">탭 4 내용</div>
+    <div class="tab-content" id="content5">탭 5 내용</div>
+    <div class="tab-content" id="content6">탭 6 내용</div>
+    <div class="tab-content" id="content7">탭 7 내용</div>
+    <div class="tab-content" id="content8">탭 8 내용</div>
+</div>
+
 <script>
     function checkOverflow() {
-        const container = document.getElementById("buttonContainer");
+        const container = document.getElementById("tabContainer");
         const toggleBtn = document.getElementById("toggleButton");
 
-        // 부모 요소 너비보다 버튼들이 더 많아서 넘치는 경우 감지
         if (container.scrollWidth > container.clientWidth) {
             toggleBtn.style.display = "inline-block";
         } else {
             toggleBtn.style.display = "none";
-            container.classList.remove("toggle"); // 넘치지 않으면 토글 해제
+            container.classList.remove("toggle");
         }
     }
 
     document.getElementById("toggleButton").addEventListener("click", function () {
-        document.getElementById("buttonContainer").classList.toggle("toggle");
+        document.getElementById("tabContainer").classList.toggle("toggle");
     });
+
+    const tabButtons = document.querySelectorAll(".tab-button");
+    const tabContents = document.querySelectorAll(".tab-content");
+
+    tabButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            activateTab(button);
+        });
+    });
+
+    function activateTab(selectedButton) {
+        tabButtons.forEach(btn => {
+            btn.classList.remove("active");
+            btn.setAttribute("aria-selected", "false");
+        });
+        tabContents.forEach(content => content.classList.remove("active"));
+
+        selectedButton.classList.add("active");
+        selectedButton.setAttribute("aria-selected", "true");
+        document.getElementById(selectedButton.getAttribute("data-target")).classList.add("active");
+    }
 
     window.addEventListener("resize", checkOverflow);
     window.addEventListener("load", checkOverflow);
