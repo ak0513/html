@@ -39,6 +39,7 @@
             display: block;
         }
         .toggle-button {
+            display: none;
             padding: 10px;
             background: #28a745;
             color: white;
@@ -73,6 +74,8 @@
         <button class="tab-button" role="tab" aria-selected="true" data-target="content2-1">탭 2-1</button>
         <button class="tab-button" role="tab" aria-selected="false" data-target="content2-2">탭 2-2</button>
         <button class="tab-button" role="tab" aria-selected="false" data-target="content2-3">탭 2-3</button>
+        <button class="tab-button" role="tab" aria-selected="false" data-target="content2-4">탭 2-4</button>
+        <button class="tab-button" role="tab" aria-selected="false" data-target="content2-5">탭 2-5</button>
     </div>
     <button class="toggle-button" onclick="toggleTabs('tabContainer2', this)" aria-label="목록 열기">열고 접기</button>
 </div>
@@ -81,9 +84,24 @@
     <div class="tab-content active" id="content2-1">탭 2-1 내용</div>
     <div class="tab-content" id="content2-2">탭 2-2 내용</div>
     <div class="tab-content" id="content2-3">탭 2-3 내용</div>
+    <div class="tab-content" id="content2-4">탭 2-4 내용</div>
+    <div class="tab-content" id="content2-5">탭 2-5 내용</div>
 </div>
 
 <script>
+    function checkOverflow(containerId) {
+        const container = document.getElementById(containerId);
+        const toggleBtn = container.nextElementSibling;
+
+        if (container.scrollWidth > container.clientWidth) {
+            toggleBtn.style.display = "inline-block";
+        } else {
+            toggleBtn.style.display = "none";
+            container.classList.remove("toggle");
+            toggleBtn.setAttribute("aria-label", "목록 열기");
+        }
+    }
+
     function toggleTabs(containerId, button) {
         const container = document.getElementById(containerId);
 
@@ -96,14 +114,27 @@
         }
     }
 
-    const tabButtons = document.querySelectorAll(".tab-button");
-    const tabContents = document.querySelectorAll(".tab-content");
+    function initTabUI() {
+        const tabContainers = document.querySelectorAll(".tab-container");
 
-    tabButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            activateTab(button);
+        tabContainers.forEach(container => {
+            checkOverflow(container.id);
         });
-    });
+
+        window.addEventListener("resize", () => {
+            tabContainers.forEach(container => {
+                checkOverflow(container.id);
+            });
+        });
+
+        const tabButtons = document.querySelectorAll(".tab-button");
+
+        tabButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                activateTab(button);
+            });
+        });
+    }
 
     function activateTab(selectedButton) {
         const container = selectedButton.closest(".tab-container");
@@ -121,6 +152,8 @@
         selectedButton.setAttribute("aria-selected", "true");
         document.getElementById(selectedButton.getAttribute("data-target")).classList.add("active");
     }
+
+    window.addEventListener("load", initTabUI);
 </script>
 
 </body>
