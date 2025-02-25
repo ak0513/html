@@ -39,7 +39,6 @@
             display: block;
         }
         .toggle-button {
-            display: none;
             padding: 10px;
             background: #28a745;
             color: white;
@@ -50,57 +49,52 @@
 </head>
 <body>
 
-<div id="tabWrapper">
-    <div class="tab-container" id="tabContainer" role="tablist">
-        <button class="tab-button" role="tab" aria-selected="true" data-target="content1">탭 1</button>
-        <button class="tab-button" role="tab" aria-selected="false" data-target="content2">탭 2</button>
-        <button class="tab-button" role="tab" aria-selected="false" data-target="content3">탭 3</button>
-        <button class="tab-button" role="tab" aria-selected="false" data-target="content4">탭 4</button>
-        <button class="tab-button" role="tab" aria-selected="false" data-target="content5">탭 5</button>
-        <button class="tab-button" role="tab" aria-selected="false" data-target="content6">탭 6</button>
-        <button class="tab-button" role="tab" aria-selected="false" data-target="content7">탭 7</button>
-        <button class="tab-button" role="tab" aria-selected="false" data-target="content8">탭 8</button>
+<!-- 첫 번째 탭 -->
+<div id="tabWrapper1">
+    <div class="tab-container" id="tabContainer1" role="tablist">
+        <button class="tab-button" role="tab" aria-selected="true" data-target="content1-1">탭 1-1</button>
+        <button class="tab-button" role="tab" aria-selected="false" data-target="content1-2">탭 1-2</button>
+        <button class="tab-button" role="tab" aria-selected="false" data-target="content1-3">탭 1-3</button>
     </div>
-    <button class="toggle-button" id="toggleButton" aria-label="목록 열기">열고 접기</button>
+    <button class="toggle-button" onclick="toggleTabs('tabContainer1', this)" aria-label="목록 열기">열고 접기</button>
 </div>
 
-<div id="tabContents">
-    <div class="tab-content active" id="content1">탭 1 내용</div>
-    <div class="tab-content" id="content2">탭 2 내용</div>
-    <div class="tab-content" id="content3">탭 3 내용</div>
-    <div class="tab-content" id="content4">탭 4 내용</div>
-    <div class="tab-content" id="content5">탭 5 내용</div>
-    <div class="tab-content" id="content6">탭 6 내용</div>
-    <div class="tab-content" id="content7">탭 7 내용</div>
-    <div class="tab-content" id="content8">탭 8 내용</div>
+<div id="tabContents1">
+    <div class="tab-content active" id="content1-1">탭 1-1 내용</div>
+    <div class="tab-content" id="content1-2">탭 1-2 내용</div>
+    <div class="tab-content" id="content1-3">탭 1-3 내용</div>
+</div>
+
+<hr>
+
+<!-- 두 번째 탭 (독립적으로 동작) -->
+<div id="tabWrapper2">
+    <div class="tab-container" id="tabContainer2" role="tablist">
+        <button class="tab-button" role="tab" aria-selected="true" data-target="content2-1">탭 2-1</button>
+        <button class="tab-button" role="tab" aria-selected="false" data-target="content2-2">탭 2-2</button>
+        <button class="tab-button" role="tab" aria-selected="false" data-target="content2-3">탭 2-3</button>
+    </div>
+    <button class="toggle-button" onclick="toggleTabs('tabContainer2', this)" aria-label="목록 열기">열고 접기</button>
+</div>
+
+<div id="tabContents2">
+    <div class="tab-content active" id="content2-1">탭 2-1 내용</div>
+    <div class="tab-content" id="content2-2">탭 2-2 내용</div>
+    <div class="tab-content" id="content2-3">탭 2-3 내용</div>
 </div>
 
 <script>
-    function checkOverflow() {
-        const container = document.getElementById("tabContainer");
-        const toggleBtn = document.getElementById("toggleButton");
-
-        if (container.scrollWidth > container.clientWidth) {
-            toggleBtn.style.display = "inline-block";
-        } else {
-            toggleBtn.style.display = "none";
-            container.classList.remove("toggle");
-            toggleBtn.setAttribute("aria-label", "목록 열기"); // 닫힌 상태 유지
-        }
-    }
-
-    document.getElementById("toggleButton").addEventListener("click", function () {
-        const container = document.getElementById("tabContainer");
-        const toggleBtn = document.getElementById("toggleButton");
+    function toggleTabs(containerId, button) {
+        const container = document.getElementById(containerId);
 
         container.classList.toggle("toggle");
 
         if (container.classList.contains("toggle")) {
-            toggleBtn.setAttribute("aria-label", "목록 접기");
+            button.setAttribute("aria-label", "목록 접기");
         } else {
-            toggleBtn.setAttribute("aria-label", "목록 열기");
+            button.setAttribute("aria-label", "목록 열기");
         }
-    });
+    }
 
     const tabButtons = document.querySelectorAll(".tab-button");
     const tabContents = document.querySelectorAll(".tab-content");
@@ -112,19 +106,21 @@
     });
 
     function activateTab(selectedButton) {
-        tabButtons.forEach(btn => {
+        const container = selectedButton.closest(".tab-container");
+        const allButtons = container.querySelectorAll(".tab-button");
+        const tabGroup = container.id.replace("tabContainer", "tabContents");
+        const allContents = document.getElementById(tabGroup).querySelectorAll(".tab-content");
+
+        allButtons.forEach(btn => {
             btn.classList.remove("active");
             btn.setAttribute("aria-selected", "false");
         });
-        tabContents.forEach(content => content.classList.remove("active"));
+        allContents.forEach(content => content.classList.remove("active"));
 
         selectedButton.classList.add("active");
         selectedButton.setAttribute("aria-selected", "true");
         document.getElementById(selectedButton.getAttribute("data-target")).classList.add("active");
     }
-
-    window.addEventListener("resize", checkOverflow);
-    window.addEventListener("load", checkOverflow);
 </script>
 
 </body>
