@@ -37,7 +37,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: blue;
+            background: blue; /* 전체 배경 파란색 */
             z-index: 1; /* 최상단 배치 */
             transition: top 0.7s ease-in-out;
             display: flex;
@@ -49,11 +49,12 @@
         .popup-blue-layer .circle {
             width: 200vw;
             height: 200vw;
-            background: white;
+            background: blue; /* 원도 파란색 */
             border-radius: 50%;
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
+            opacity: 0.8; /* 원이 배경과 구분될 수 있도록 투명도 추가 */
         }
 
         /* 본문 레이어 */
@@ -105,7 +106,7 @@
         
         <!-- 파란색 전체 레이어 -->
         <div class="popup-blue-layer">
-            <div class="circle"></div> <!-- 내부 원 -->
+            <div class="circle"></div> <!-- 내부 파란색 원 -->
         </div>
 
         <div class="popup-content">
