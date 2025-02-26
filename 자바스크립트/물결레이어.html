@@ -3,98 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>불규칙한 물결</title>
+    <title>레이어 팝업</title>
     <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: #0099ff; /* 파란색 배경 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* 전체 화면을 덮는 팝업 컨테이너 */
+        .popup-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            visibility: hidden; /* 기본 숨김 */
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s;
         }
 
-        /* 버튼 스타일 */
-        .wave-button {
+        /* 배경 레이어 */
+        .popup-bg {
             position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 15px 30px;
-            font-size: 18px;
-            background-color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 1); /* 초기 상태 100% */
+            transition: background 0.5s ease-in-out;
         }
 
-        .wave-button:hover {
-            background-color: #f0f0f0;
-        }
-
-        /* 물결 컨테이너 */
-        .wave-container {
+        /* 파란색 원 */
+        .popup-circle {
             position: absolute;
-            bottom: -100%;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            transition: bottom 2s ease-in-out;
+            width: 300vw; /* 디바이스 가로 크기의 3배 */
+            height: 300vw;
+            background: blue;
+            border-radius: 50%;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
         }
 
-        .wave-container.active {
-            bottom: 0;
-        }
-
-        /* 물결 애니메이션 */
-        .wave-move {
-            position: absolute;
-            width: 200%;
-            height: 30%;
+        /* 본문 레이어 */
+        .popup-content {
+            position: relative;
             background: white;
-            clip-path: url(#waveClip);
-            animation: wave-flow 1s linear infinite;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 2;
+            opacity: 0; /* 초기 상태 투명 */
+            transition: opacity 0.5s ease-in-out;
         }
 
-        /* 물결 흐르는 애니메이션 */
-        @keyframes wave-flow {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
+        /* 버튼 */
+        .open-popup {
+            margin-top: 50px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* 팝업 활성화 클래스 */
+        .popup-container.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .popup-container.active .popup-bg {
+            background: rgba(0, 0, 0, 0); /* 100% → 0% */
+        }
+
+        .popup-container.active .popup-content {
+            opacity: 1; /* 0 → 100% */
         }
     </style>
 </head>
 <body>
 
-    <!-- 버튼 -->
-    <button class="wave-button" onclick="moveWave()">물결 올리기</button>
+    <button class="open-popup">팝업 열기</button>
 
-    <!-- 물결 애니메이션 -->
-    <svg width="0" height="0">
-        <defs>
-            <clipPath id="waveClip">
-                <path d="M 0 60 Q 50 20, 100 50 
-                         Q 150 80, 200 40 
-                         Q 250 20, 300 60 
-                         Q 350 100, 400 50 
-                         Q 450 30, 500 70 
-                         Q 550 90, 600 40 
-                         Q 650 20, 700 60 
-                         Q 750 100, 800 50 
-                         Q 850 30, 900 70 
-                         Q 950 90, 1000 40 
-                         V 300 H 0 Z"
-                      fill="black"/>
-            </clipPath>
-        </defs>
-    </svg>
-
-    <div class="wave-container">
-        <div class="wave-move"></div>
+    <!-- 팝업 컨테이너 -->
+    <div class="popup-container" id="popup">
+        <div class="popup-bg"></div>
+        <div class="popup-circle"></div>
+        <div class="popup-content">
+            <h2>팝업 제목</h2>
+            <p>팝업 내용입니다.</p>
+            <button class="close-popup">닫기</button>
+        </div>
     </div>
 
     <script>
-        function moveWave() {
-            document.querySelector('.wave-container').classList.add('active');
-        }
+        document.querySelector(".open-popup").addEventListener("click", function() {
+            document.getElementById("popup").classList.add("active");
+        });
+
+        document.querySelector(".close-popup").addEventListener("click", function() {
+            document.getElementById("popup").classList.remove("active");
+        });
     </script>
 
 </body>
