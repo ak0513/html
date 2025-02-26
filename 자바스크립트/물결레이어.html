@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>빠르게 올라가는 물결</title>
+    <title>빠르게 흐르는 물결</title>
     <style>
         body {
             margin: 0;
@@ -38,7 +38,7 @@
             width: 100%;
             height: 200px;
             overflow: hidden;
-            transition: bottom 1s ease-in-out;
+            transition: bottom 2s ease-in-out; /* 올라가는 속도를 2초로 설정 (절반 속도) */
         }
 
         /* 물결이 활성화되면 화면 최상단까지 이동 */
@@ -53,7 +53,7 @@
             height: 100%;
             background: white;
             clip-path: url(#waveClip);
-            animation: wave-flow 2s linear infinite;
+            animation: wave-flow 1s linear infinite; /* 흐르는 속도를 1초로 설정 (더 빠르게) */
         }
 
         /* 물결이 좌우로 흐르는 애니메이션 */
