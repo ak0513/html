@@ -37,7 +37,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: white; /* 물결과 같은 색상 */
+            background: white;
             transition: bottom 2s ease-in-out;
         }
 
@@ -48,11 +48,11 @@
         /* 물결 SVG */
         .wave-svg {
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
             width: 200%;
-            height: 30%;
-            animation: wave-flow 1s linear infinite;
+            height: 20%;
+            animation: wave-flow 0.8s linear infinite;
         }
 
         /* 물결 흐르는 애니메이션 */
@@ -69,6 +69,7 @@
 
     <!-- 물결 컨테이너 -->
     <div class="wave-container">
+        <!-- 물결을 컨테이너의 최상단으로 배치 -->
         <svg class="wave-svg" viewBox="0 0 1000 100" preserveAspectRatio="none">
             <path d="M 0 60 Q 50 20, 100 50 
                      Q 150 80, 200 40 
