@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>버튼으로 물결 올리기</title>
+    <title>빠르게 올라가는 물결</title>
     <style>
         body {
             margin: 0;
@@ -30,36 +30,36 @@
             background-color: #f0f0f0;
         }
 
-        /* 물결 애니메이션 레이어 */
+        /* 물결 컨테이너 (초기 위치: 아래) */
         .wave-container {
             position: absolute;
-            top: 0;
+            bottom: -200px; /* 초기에 화면 아래 숨김 */
             left: 0;
             width: 100%;
-            height: 200px; /* 물결 높이 */
-            background: white;
-            clip-path: url(#waveClip);
-            transform: translateY(100%); /* 처음에는 아래쪽에 숨김 */
-            transition: transform 1.5s ease-in-out;
+            height: 200px;
+            overflow: hidden;
+            transition: bottom 1s ease-in-out;
         }
 
+        /* 물결이 활성화되면 화면 최상단까지 이동 */
+        .wave-container.active {
+            bottom: 100vh; /* 화면 최상단까지 이동 */
+        }
+
+        /* 물결 애니메이션 */
         .wave-move {
-            width: 200%;
+            position: absolute;
+            width: 200%; /* 2배 크기로 설정하여 부드러운 반복 */
             height: 100%;
             background: white;
             clip-path: url(#waveClip);
-            animation: wave-flow 4s linear infinite;
+            animation: wave-flow 2s linear infinite;
         }
 
         /* 물결이 좌우로 흐르는 애니메이션 */
         @keyframes wave-flow {
             from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
-        }
-
-        /* 활성화 상태일 때 물결 올라가는 애니메이션 */
-        .wave-container.active {
-            transform: translateY(0);
+            to { transform: translateX(-50%); } /* 50%만 이동하여 반복 */
         }
     </style>
 </head>
