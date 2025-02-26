@@ -45,26 +45,20 @@
             bottom: 0;
         }
 
-        /* 물결 애니메이션 */
-        .wave-move {
+        /* 물결 SVG */
+        .wave-svg {
             position: absolute;
+            bottom: 0;
+            left: 0;
             width: 200%;
             height: 30%;
-            background: linear-gradient(white, white);
-            clip-path: url(#waveClip);
-            animation: wave-flow 1s linear infinite, move-wave 4s linear infinite;
+            animation: wave-flow 1s linear infinite;
         }
 
-        /* 물결 좌우로 흐르는 애니메이션 */
+        /* 물결 흐르는 애니메이션 */
         @keyframes wave-flow {
             from { transform: translateX(0); }
             to { transform: translateX(-50%); }
-        }
-
-        /* 물결 위아래 흔들리는 효과 추가 */
-        @keyframes move-wave {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(10px); }
         }
     </style>
 </head>
@@ -73,28 +67,22 @@
     <!-- 버튼 -->
     <button class="wave-button" onclick="moveWave()">물결 올리기</button>
 
-    <!-- 물결 애니메이션 -->
-    <svg width="0" height="0">
-        <defs>
-            <clipPath id="waveClip">
-                <path d="M 0 60 Q 50 20, 100 50 
-                         Q 150 80, 200 40 
-                         Q 250 20, 300 60 
-                         Q 350 100, 400 50 
-                         Q 450 30, 500 70 
-                         Q 550 90, 600 40 
-                         Q 650 20, 700 60 
-                         Q 750 100, 800 50 
-                         Q 850 30, 900 70 
-                         Q 950 90, 1000 40 
-                         V 300 H 0 Z"
-                      fill="black"/>
-            </clipPath>
-        </defs>
-    </svg>
-
+    <!-- 물결 컨테이너 -->
     <div class="wave-container">
-        <div class="wave-move"></div>
+        <svg class="wave-svg" viewBox="0 0 1000 100" preserveAspectRatio="none">
+            <path d="M 0 60 Q 50 20, 100 50 
+                     Q 150 80, 200 40 
+                     Q 250 20, 300 60 
+                     Q 350 100, 400 50 
+                     Q 450 30, 500 70 
+                     Q 550 90, 600 40 
+                     Q 650 20, 700 60 
+                     Q 750 100, 800 50 
+                     Q 850 30, 900 70 
+                     Q 950 90, 1000 40 
+                     V 100 H 0 Z"
+                 fill="white"/>
+        </svg>
     </div>
 
     <script>
