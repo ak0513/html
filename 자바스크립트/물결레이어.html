@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>물결 효과 레이어</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: #f0f0f0;
+        }
+
+        /* 버튼 스타일 */
+        .open-btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            background: #007BFF;
+            color: white;
+            border-radius: 5px;
+            position: absolute;
+            bottom: 20px;
+        }
+
+        /* 레이어 기본 스타일 */
+        .layer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50vh;
+            background: white;
+            transform: translateY(100%);
+            transition: transform 0.6s ease-out;
+            box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 활성화 시 화면 위로 이동 */
+        .layer.active {
+            transform: translateY(0);
+        }
+
+        /* 물결 SVG 스타일 */
+        .wave-container {
+            position: absolute;
+            top: -20px;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            overflow: hidden;
+        }
+
+        .wave {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 물결 애니메이션 */
+        .wave path {
+            stroke-dasharray: 500;
+            stroke-dashoffset: 500;
+            animation: wave-animation 1s ease-out forwards;
+        }
+
+        @keyframes wave-animation {
+            from {
+                stroke-dashoffset: 500;
+            }
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="open-btn">열기</button>
+
+    <div class="layer">
+        <div class="wave-container">
+            <svg class="wave" viewBox="0 0 100 20" preserveAspectRatio="none">
+                <path d="M0 10 Q 25 0, 50 10 T 100 10" stroke="blue" stroke-width="2" fill="none"/>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        const button = document.querySelector(".open-btn");
+        const layer = document.querySelector(".layer");
+
+        button.addEventListener("click", () => {
+            layer.classList.toggle("active");
+        });
+    </script>
+
+</body>
+</html>
