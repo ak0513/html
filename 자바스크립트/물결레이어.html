@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>다양한 크기의 물결</title>
+    <title>불규칙한 물결</title>
     <style>
         body {
             margin: 0;
@@ -30,7 +30,7 @@
             background-color: #f0f0f0;
         }
 
-        /* 물결 컨테이너 (초기 상태: 화면 아래) */
+        /* 물결 컨테이너 */
         .wave-container {
             position: absolute;
             bottom: -100%;
@@ -38,49 +38,24 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            transition: bottom 2s ease-in-out; /* 올라가는 속도를 2초로 설정 */
+            transition: bottom 2s ease-in-out;
         }
 
-        /* 활성화 시 화면을 가득 채움 */
         .wave-container.active {
             bottom: 0;
         }
 
-        /* 물결 공통 스타일 */
-        .wave {
+        /* 물결 애니메이션 */
+        .wave-move {
             position: absolute;
             width: 200%;
+            height: 30%;
             background: white;
+            clip-path: url(#waveClip);
             animation: wave-flow 1s linear infinite;
         }
 
-        /* 첫 번째 물결 (큰 물결) */
-        .wave1 {
-            height: 30%;
-            bottom: 0;
-            clip-path: url(#waveClip1);
-            animation-duration: 1.5s; /* 살짝 느리게 */
-        }
-
-        /* 두 번째 물결 (중간 크기) */
-        .wave2 {
-            height: 20%;
-            bottom: 10%;
-            clip-path: url(#waveClip2);
-            opacity: 0.7;
-            animation-duration: 1.2s; /* 속도 조정 */
-        }
-
-        /* 세 번째 물결 (가장 작은 물결) */
-        .wave3 {
-            height: 15%;
-            bottom: 20%;
-            clip-path: url(#waveClip3);
-            opacity: 0.5;
-            animation-duration: 1s; /* 가장 빠르게 */
-        }
-
-        /* 물결이 좌우로 흐르는 애니메이션 */
+        /* 물결 흐르는 애니메이션 */
         @keyframes wave-flow {
             from { transform: translateX(0); }
             to { transform: translateX(-50%); }
@@ -95,33 +70,25 @@
     <!-- 물결 애니메이션 -->
     <svg width="0" height="0">
         <defs>
-            <!-- 첫 번째 큰 물결 -->
-            <clipPath id="waveClip1">
-                <path d="M 0 50 Q 50 0, 100 50 T 200 50 T 300 50 T 400 50 T 500 50 
-                         T 600 50 T 700 50 T 800 50 T 900 50 T 1000 50 V 300 H 0 Z" 
-                      fill="black"/>
-            </clipPath>
-
-            <!-- 두 번째 중간 물결 -->
-            <clipPath id="waveClip2">
-                <path d="M 0 30 Q 40 -10, 80 30 T 160 30 T 240 30 T 320 30 T 400 30 
-                         T 480 30 T 560 30 T 640 30 T 720 30 T 800 30 V 300 H 0 Z" 
-                      fill="black"/>
-            </clipPath>
-
-            <!-- 세 번째 작은 물결 -->
-            <clipPath id="waveClip3">
-                <path d="M 0 20 Q 30 -10, 60 20 T 120 20 T 180 20 T 240 20 T 300 20 
-                         T 360 20 T 420 20 T 480 20 T 540 20 T 600 20 V 300 H 0 Z" 
+            <clipPath id="waveClip">
+                <path d="M 0 60 Q 50 20, 100 50 
+                         Q 150 80, 200 40 
+                         Q 250 20, 300 60 
+                         Q 350 100, 400 50 
+                         Q 450 30, 500 70 
+                         Q 550 90, 600 40 
+                         Q 650 20, 700 60 
+                         Q 750 100, 800 50 
+                         Q 850 30, 900 70 
+                         Q 950 90, 1000 40 
+                         V 300 H 0 Z"
                       fill="black"/>
             </clipPath>
         </defs>
     </svg>
 
     <div class="wave-container">
-        <div class="wave wave1"></div>
-        <div class="wave wave2"></div>
-        <div class="wave wave3"></div>
+        <div class="wave-move"></div>
     </div>
 
     <script>
