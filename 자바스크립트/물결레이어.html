@@ -30,17 +30,30 @@
             transition: background 0.5s ease-in-out;
         }
 
-        /* 파란색 원 */
-        .popup-circle {
+        /* 파란색 레이어 (최상단) */
+        .popup-blue-layer {
             position: absolute;
-            width: 200vw; /* 디바이스 가로 크기의 2배 */
-            height: 200vw;
+            top: 100%; /* 초기에는 화면 아래 */
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: blue;
-            border-radius: 50%;
-            left: 50%;
-            transform: translateX(-50%);
-            top: 100%; /* 초기에는 화면 아래에 위치 */
+            z-index: 1; /* 최상단 배치 */
             transition: top 0.7s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 내부 원 */
+        .popup-blue-layer .circle {
+            width: 200vw;
+            height: 200vw;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         /* 본문 레이어 */
@@ -73,7 +86,7 @@
             background: rgba(0, 0, 0, 0); /* 100% → 0% */
         }
 
-        .popup-container.active .popup-circle {
+        .popup-container.active .popup-blue-layer {
             top: -100%; /* 화면 위쪽으로 이동 */
         }
 
@@ -89,7 +102,12 @@
     <!-- 팝업 컨테이너 -->
     <div class="popup-container" id="popup">
         <div class="popup-bg"></div>
-        <div class="popup-circle"></div>
+        
+        <!-- 파란색 전체 레이어 -->
+        <div class="popup-blue-layer">
+            <div class="circle"></div> <!-- 내부 원 -->
+        </div>
+
         <div class="popup-content">
             <h2>팝업 제목</h2>
             <p>팝업 내용입니다.</p>
