@@ -35,8 +35,8 @@
             position: absolute;
             top: 100%; /* 초기에는 화면 아래 */
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vh;
+            height: 100vh;
             background: blue; /* 전체 배경 파란색 */
             z-index: 1; /* 최상단 배치 */
             transition: top 0.7s ease-in-out;
@@ -52,7 +52,7 @@
             background: blue; /* 원도 파란색 */
             border-radius: 50%;
             position: absolute;
-            top: 50%; left: 50%;
+            top: 0%; left: 50%;
             transform: translate(-50%, -50%);
             opacity: 0.8; /* 원이 배경과 구분될 수 있도록 투명도 추가 */
         }
