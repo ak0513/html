@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>빠르게 흐르는 물결</title>
+    <title>화면을 꽉 채우는 물결</title>
     <style>
         body {
             margin: 0;
@@ -30,36 +30,36 @@
             background-color: #f0f0f0;
         }
 
-        /* 물결 컨테이너 (초기 위치: 아래) */
+        /* 물결 컨테이너 (초기 위치: 화면 아래) */
         .wave-container {
             position: absolute;
-            bottom: -200px; /* 초기에 화면 아래 숨김 */
+            bottom: -100%; /* 처음에는 화면 아래 숨김 */
             left: 0;
             width: 100%;
-            height: 200px;
+            height: 100%; /* 전체 화면 높이 */
             overflow: hidden;
-            transition: bottom 2s ease-in-out; /* 올라가는 속도를 2초로 설정 (절반 속도) */
+            transition: bottom 2s ease-in-out; /* 올라가는 속도를 2초로 설정 */
         }
 
-        /* 물결이 활성화되면 화면 최상단까지 이동 */
+        /* 물결이 활성화되면 화면을 가득 채움 */
         .wave-container.active {
-            bottom: 100vh; /* 화면 최상단까지 이동 */
+            bottom: 0; /* 화면 전체를 덮도록 설정 */
         }
 
         /* 물결 애니메이션 */
         .wave-move {
             position: absolute;
-            width: 200%; /* 2배 크기로 설정하여 부드러운 반복 */
+            width: 200%;
             height: 100%;
             background: white;
             clip-path: url(#waveClip);
-            animation: wave-flow 1s linear infinite; /* 흐르는 속도를 1초로 설정 (더 빠르게) */
+            animation: wave-flow 1s linear infinite;
         }
 
         /* 물결이 좌우로 흐르는 애니메이션 */
         @keyframes wave-flow {
             from { transform: translateX(0); }
-            to { transform: translateX(-50%); } /* 50%만 이동하여 반복 */
+            to { transform: translateX(-50%); }
         }
     </style>
 </head>
@@ -73,7 +73,7 @@
         <defs>
             <clipPath id="waveClip">
                 <path d="M 0 100 Q 50 50, 100 100 T 200 100 T 300 100 T 400 100 T 500 100 
-                         T 600 100 T 700 100 T 800 100 T 900 100 T 1000 100 V 200 H 0 Z"
+                         T 600 100 T 700 100 T 800 100 T 900 100 T 1000 100 V 2000 H 0 Z"
                       fill="black"/>
             </clipPath>
         </defs>
