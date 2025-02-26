@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>물결 효과 레이어</title>
+    <title>출렁이는 물결 효과</title>
     <style>
         body {
             margin: 0;
@@ -39,6 +39,7 @@
             transform: translateY(100%);
             transition: transform 0.6s ease-out;
             box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
         }
 
         /* 활성화 시 화면 위로 이동 */
@@ -46,7 +47,7 @@
             transform: translateY(0);
         }
 
-        /* 물결 SVG 스타일 */
+        /* 물결 애니메이션 컨테이너 */
         .wave-container {
             position: absolute;
             top: -20px;
@@ -56,25 +57,20 @@
             overflow: hidden;
         }
 
+        /* 물결 SVG */
         .wave {
-            width: 100%;
+            position: absolute;
+            width: 200%;
             height: 100%;
+            top: 0;
+            left: 0;
+            animation: wave-animation 3s infinite linear;
         }
 
         /* 물결 애니메이션 */
-        .wave path {
-            stroke-dasharray: 500;
-            stroke-dashoffset: 500;
-            animation: wave-animation 1s ease-out forwards;
-        }
-
         @keyframes wave-animation {
-            from {
-                stroke-dashoffset: 500;
-            }
-            to {
-                stroke-dashoffset: 0;
-            }
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
         }
     </style>
 </head>
@@ -84,8 +80,9 @@
 
     <div class="layer">
         <div class="wave-container">
-            <svg class="wave" viewBox="0 0 100 20" preserveAspectRatio="none">
-                <path d="M0 10 Q 25 0, 50 10 T 100 10" stroke="blue" stroke-width="2" fill="none"/>
+            <svg class="wave" viewBox="0 0 1200 100" preserveAspectRatio="none">
+                <path d="M0,50 Q150,100 300,50 T600,50 T900,50 T1200,50 V100 H0 Z" 
+                      fill="blue" opacity="0.6"/>
             </svg>
         </div>
     </div>
