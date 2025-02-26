@@ -33,12 +33,14 @@
         /* 파란색 원 */
         .popup-circle {
             position: absolute;
-            width: 300vw; /* 디바이스 가로 크기의 3배 */
-            height: 300vw;
+            width: 200vw; /* 디바이스 가로 크기의 2배 */
+            height: 200vw;
             background: blue;
             border-radius: 50%;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
+            left: 50%;
+            transform: translateX(-50%);
+            top: 100%; /* 초기에는 화면 아래에 위치 */
+            transition: top 0.7s ease-in-out;
         }
 
         /* 본문 레이어 */
@@ -69,6 +71,10 @@
 
         .popup-container.active .popup-bg {
             background: rgba(0, 0, 0, 0); /* 100% → 0% */
+        }
+
+        .popup-container.active .popup-circle {
+            top: -100%; /* 화면 위쪽으로 이동 */
         }
 
         .popup-container.active .popup-content {
