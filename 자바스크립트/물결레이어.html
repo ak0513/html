@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>불규칙한 물결</title>
+    <title>흐르는 물결</title>
     <style>
         body {
             margin: 0;
@@ -50,15 +50,21 @@
             position: absolute;
             width: 200%;
             height: 30%;
-            background: white; /* 물결 색상을 배경과 동일하게 설정 */
+            background: linear-gradient(white, white);
             clip-path: url(#waveClip);
-            animation: wave-flow 1s linear infinite;
+            animation: wave-flow 1s linear infinite, move-wave 4s linear infinite;
         }
 
-        /* 물결 흐르는 애니메이션 */
+        /* 물결 좌우로 흐르는 애니메이션 */
         @keyframes wave-flow {
             from { transform: translateX(0); }
             to { transform: translateX(-50%); }
+        }
+
+        /* 물결 위아래 흔들리는 효과 추가 */
+        @keyframes move-wave {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
         }
     </style>
 </head>
