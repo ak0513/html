@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Dock Bar</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="dock-bar">
+        <button class="dock-btn">📊</button>
+        <button class="dock-btn">🏠</button>
+        
+        <!-- 중앙 버튼 (SVG 포함) -->
+        <div class="dock-center">
+            <svg width="100" height="50" viewBox="0 0 100 50">
+                <path d="M0,50 Q50,-10 100,50" fill="white"/>
+            </svg>
+            <button class="center-btn">🛍️</button>
+        </div>
+
+        <button class="dock-btn">🎁</button>
+        <button class="dock-btn">📈</button>
+    </div>
+
+</body>
+</html>
