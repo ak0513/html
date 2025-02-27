@@ -29,8 +29,8 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 200px;  /* 원 크기와 동일 */
-            height: 200px; /* 원 크기와 동일 */
+            width: 200px;
+            height: 200px;
             transform: translate(-50%, -50%);
         }
 
@@ -55,11 +55,11 @@
 
     <script>
         const container = document.getElementById('buttonContainer');
-        const buttonCount = 5;  // 버튼 개수
+        const buttonCount = 5;  // 버튼 개수 5개 고정
         const radius = 100;  // 원의 반지름 (원의 크기가 200px이므로)
-
+        
         for (let i = 0; i < buttonCount; i++) {
-            // -π ~ π 범위에서 균등한 간격으로 버튼 배치
+            // -π ~ π 범위에서 균등한 간격으로 5개 배치
             const angle = (-Math.PI) + (i / (buttonCount - 1)) * (2 * Math.PI);
 
             const x = 100 + Math.cos(angle) * radius;  // x 좌표 (100 보정: 원 중심)
