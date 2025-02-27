@@ -29,8 +29,9 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 0;
-            height: 0;
+            width: 200px;  /* 원 크기와 동일 */
+            height: 200px; /* 원 크기와 동일 */
+            transform: translate(-50%, -50%);
         }
 
         .button-container button {
@@ -58,11 +59,11 @@
         const radius = 100;  // 원의 반지름 (원의 크기가 200px이므로)
 
         for (let i = 0; i < buttonCount; i++) {
-            // -π/2 ~ π/2 범위에서 균등한 간격으로 버튼 배치
-            const angle = (-Math.PI / 2) + (i / (buttonCount - 1)) * Math.PI; 
+            // -π ~ π 범위에서 균등한 간격으로 버튼 배치
+            const angle = (-Math.PI) + (i / (buttonCount - 1)) * (2 * Math.PI);
 
-            const x = Math.cos(angle) * radius;  // x 좌표
-            const y = Math.sin(angle) * radius;  // y 좌표
+            const x = 100 + Math.cos(angle) * radius;  // x 좌표 (100 보정: 원 중심)
+            const y = 100 + Math.sin(angle) * radius;  // y 좌표 (100 보정: 원 중심)
 
             const button = document.createElement('button');
             button.textContent = i + 1;
