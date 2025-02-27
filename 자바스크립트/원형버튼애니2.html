@@ -48,6 +48,7 @@
             width: 200px;
             height: 200px;
             transform: translate(-50%, -50%);
+            display: none; /* 버튼 처음엔 숨김 */
         }
 
         .button-container button {
@@ -106,15 +107,24 @@
         // 버튼 표시/숨김 애니메이션
         function toggleButtons() {
             buttonsVisible = !buttonsVisible;
-            buttons.forEach(button => {
-                if (buttonsVisible) {
-                    button.style.opacity = "1";
-                    button.style.transform = "translate(-50%, -50%) scale(1)";
-                } else {
+
+            if (buttonsVisible) {
+                container.style.display = "block"; // 먼저 display를 활성화
+                setTimeout(() => {
+                    buttons.forEach(button => {
+                        button.style.opacity = "1";
+                        button.style.transform = "translate(-50%, -50%) scale(1)";
+                    });
+                }, 10); // 약간의 지연을 줘서 애니메이션 적용
+            } else {
+                buttons.forEach(button => {
                     button.style.opacity = "0";
                     button.style.transform = "translate(-50%, -50%) scale(0.5)";
-                }
-            });
+                });
+                setTimeout(() => {
+                    container.style.display = "none"; // 애니메이션 후 숨김 처리
+                }, 500);
+            }
         }
 
         // 지름 회전 기능
