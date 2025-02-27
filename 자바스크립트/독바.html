@@ -25,7 +25,7 @@
             position: fixed;
             bottom: 0;
             width: 100%;
-            height: 80px;
+            height: 90px;
             background: white;
             display: flex;
             justify-content: space-around;
@@ -48,8 +48,9 @@
             cursor: pointer;
         }
 
-        /* 아이콘을 감싸는 원 */
+        /* 아이콘을 감싸는 원 (더 위로 배치) */
         .btn-circle {
+            position: relative;
             width: 50px;
             height: 50px;
             background: white;
@@ -58,7 +59,8 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            margin-bottom: 5px;
+            margin-bottom: 0px; /* 여백 조정 */
+            transform: translateY(-15px); /* 더 위로 이동 */
         }
 
         .icon {
@@ -67,6 +69,7 @@
 
         .label {
             font-size: 12px;
+            margin-top: -5px; /* 텍스트 위치 조정 */
         }
 
         /* 중앙 버튼 컨테이너 */
@@ -75,14 +78,14 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
+            width: 140px;
             height: 80px;
         }
 
         /* 중앙 버튼 (큰 원) */
         .center-btn {
             position: absolute;
-            bottom: 12px;
+            bottom: 14px;
             left: 50%;
             transform: translateX(-50%);
             width: 60px;
@@ -104,8 +107,8 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 120px;
-            height: 50px;
+            width: 140px;
+            height: 60px;
         }
     </style>
 </head>
@@ -127,8 +130,8 @@
 
         <!-- 중앙 버튼 (움푹 패인 효과 포함) -->
         <div class="dock-center">
-            <svg class="dock-svg" viewBox="0 0 120 50">
-                <path d="M0,50 Q60,-10 120,50" fill="white"/>
+            <svg class="dock-svg" viewBox="0 0 140 60">
+                <path d="M0,60 Q70,-20 140,60" fill="white"/>
             </svg>
             <button class="center-btn">
                 <span class="icon">🏠</span>
