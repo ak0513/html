@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>버튼 애니메이션 노출</title>
+    <title>원 버튼 애니메이션</title>
     <style>
         body {
             display: flex;
@@ -117,7 +117,51 @@
             });
         }
 
+        // 지름 회전 기능
+        function startRotate(event) {
+            if (!buttonsVisible) return; // 버튼이 보일 때만 회전 가능
+            isDragging = true;
+            const touch = event.touches ? event.touches[0] : event;
+            startAngle = getTouchAngle(touch.clientX, touch.clientY);
+        }
+
+        function rotate(event) {
+            if (!isDragging) return;
+            const touch = event.touches ? event.touches[0] : event;
+            const currentAngle = getTouchAngle(touch.clientX, touch.clientY);
+            rotationAngle += currentAngle - startAngle;
+            startAngle = currentAngle;
+            updateButtonPositions();
+        }
+
+        function stopRotate() {
+            isDragging = false;
+        }
+
+        function getTouchAngle(x, y) {
+            const dx = x - window.innerWidth / 2;
+            const dy = y - window.innerHeight / 2;
+            return Math.atan2(dy, dx);
+        }
+
+        // 버튼 위치 업데이트 (회전 적용)
+        function updateButtonPositions() {
+            buttons.forEach(button => {
+                let angle = parseFloat(button.dataset.angle) + rotationAngle;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                button.style.left = `${x}px`;
+                button.style.top = `${y}px`;
+            });
+        }
+
         // 이벤트 리스너 추가
+        document.addEventListener('mousedown', startRotate);
+        document.addEventListener('mousemove', rotate);
+        document.addEventListener('mouseup', stopRotate);
+        document.addEventListener('touchstart', startRotate);
+        document.addEventListener('touchmove', rotate);
+        document.addEventListener('touchend', stopRotate);
         toggleButton.addEventListener('click', toggleButtons);
 
         createButtons();
