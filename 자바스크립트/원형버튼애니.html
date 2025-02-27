@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>원의 지름을 따라 터치 이동</title>
+    <title>터치로 원의 지름 회전</title>
     <style>
         body {
             display: flex;
@@ -60,75 +60,77 @@
         const radius = 100;  // 원의 반지름
         const centerX = 100; // 원의 중심 X 좌표
         const centerY = 100; // 원의 중심 Y 좌표
+        let rotationAngle = 0; // 현재 회전 각도
+        let startAngle = 0; // 터치 시작 각도
+        let isDragging = false;
+
         const buttons = [];
 
         // 버튼 생성 및 원 테두리 배치
-        for (let i = 0; i < buttonCount; i++) {
-            const angle = (i / buttonCount) * (2 * Math.PI);
-            const x = centerX + Math.cos(angle) * radius;
-            const y = centerY + Math.sin(angle) * radius;
+        function createButtons() {
+            for (let i = 0; i < buttonCount; i++) {
+                const angle = (i / buttonCount) * (2 * Math.PI);
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
 
-            const button = document.createElement('button');
-            button.textContent = i + 1;
-            button.style.left = `${x}px`;
-            button.style.top = `${y}px`;
-            button.dataset.angle = angle; // 초기 각도 저장
-
-            container.appendChild(button);
-            buttons.push(button);
-
-            // 터치 및 마우스 이벤트 추가
-            button.addEventListener('mousedown', startMove);
-            button.addEventListener('touchstart', startMove);
-        }
-
-        let activeButton = null;
-        let offsetX = 0;
-
-        function startMove(event) {
-            event.preventDefault(); // 기본 동작 방지 (특히 모바일)
-            activeButton = event.target;
-            offsetX = (event.touches ? event.touches[0].clientX : event.clientX) - activeButton.offsetLeft;
-
-            document.addEventListener('mousemove', moveButton);
-            document.addEventListener('mouseup', stopMove);
-            document.addEventListener('touchmove', moveButton);
-            document.addEventListener('touchend', stopMove);
-        }
-
-        function moveButton(event) {
-            if (!activeButton) return;
-
-            let clientX = event.touches ? event.touches[0].clientX : event.clientX;
-            let newX = clientX - offsetX; // 마우스/터치 위치를 기반으로 이동
-            newX = Math.max(centerX - radius, Math.min(centerX + radius, newX)); // 지름 안에서만 이동
-
-            activeButton.style.left = `${newX}px`;
-            activeButton.style.top = `${centerY}px`; // Y축 고정
-        }
-
-        function stopMove() {
-            if (!activeButton) return;
-
-            // 현재 버튼 위치에서 원 테두리에 가장 가까운 위치 찾기
-            let newAngle = Math.acos((activeButton.offsetLeft - centerX) / radius);
-            if (activeButton.offsetTop > centerY) {
-                newAngle = 2 * Math.PI - newAngle; // 하단부 조정
+                const button = document.createElement('button');
+                button.textContent = i + 1;
+                button.dataset.angle = angle; // 초기 각도 저장
+                container.appendChild(button);
+                buttons.push(button);
             }
-
-            const newX = centerX + Math.cos(newAngle) * radius;
-            const newY = centerY + Math.sin(newAngle) * radius;
-
-            activeButton.style.left = `${newX}px`;
-            activeButton.style.top = `${newY}px`;
-            activeButton.dataset.angle = newAngle; // 새 위치 저장
-
-            activeButton = null;
-            document.removeEventListener('mousemove', moveButton);
-            document.removeEventListener('mouseup', stopMove);
-            document.removeEventListener('touchmove', moveButton);
-            document.removeEventListener('touchend', stopMove);
+            updateButtonPositions();
         }
+
+        // 버튼 위치 업데이트 (회전 적용)
+        function updateButtonPositions() {
+            buttons.forEach(button => {
+                let angle = parseFloat(button.dataset.angle) + rotationAngle;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                button.style.left = `${x}px`;
+                button.style.top = `${y}px`;
+            });
+        }
+
+        // 터치 시작
+        function startRotate(event) {
+            isDragging = true;
+            const touch = event.touches ? event.touches[0] : event;
+            startAngle = getTouchAngle(touch.clientX, touch.clientY);
+        }
+
+        // 터치 이동
+        function rotate(event) {
+            if (!isDragging) return;
+            const touch = event.touches ? event.touches[0] : event;
+            const currentAngle = getTouchAngle(touch.clientX, touch.clientY);
+            rotationAngle += currentAngle - startAngle;
+            startAngle = currentAngle; // 현재 각도를 새로운 기준으로 설정
+            updateButtonPositions();
+        }
+
+        // 터치 종료
+        function stopRotate() {
+            isDragging = false;
+        }
+
+        // 터치 위치를 각도로 변환
+        function getTouchAngle(x, y) {
+            const dx = x - window.innerWidth / 2;
+            const dy = y - window.innerHeight / 2;
+            return Math.atan2(dy, dx);
+        }
+
+        // 이벤트 리스너 추가
+        document.addEventListener('mousedown', startRotate);
+        document.addEventListener('mousemove', rotate);
+        document.addEventListener('mouseup', stopRotate);
+        document.addEventListener('touchstart', startRotate);
+        document.addEventListener('touchmove', rotate);
+        document.addEventListener('touchend', stopRotate);
+
+        createButtons();
     </script>
 
 </body>
