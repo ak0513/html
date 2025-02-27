@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>원 위의 버튼</title>
+    <title>원의 지름 위 버튼</title>
     <style>
         body {
             display: flex;
@@ -30,10 +30,7 @@
             top: 50%;
             left: 50%;
             width: 200px;
-            height: 40px;
-            display: flex;
-            justify-content: space-between;
-            transform: translate(-50%, -50%);
+            height: 200px;
         }
 
         .button-container button {
@@ -45,6 +42,8 @@
             color: white;
             font-size: 14px;
             cursor: pointer;
+            position: absolute;
+            transform: translate(-50%, -50%);
         }
     </style>
 </head>
@@ -56,15 +55,20 @@
     <script>
         const container = document.getElementById('buttonContainer');
         const buttonCount = 5;
-        const diameter = 200;
-        const buttonSize = 40;
-        const spacing = (diameter - buttonSize) / (buttonCount - 1);
+        const radius = 100;  // 원의 반지름 (200px 원이므로)
+        const centerX = radius;  // 중앙 x좌표 (container 기준)
+        const centerY = radius;  // 중앙 y좌표 (container 기준)
 
         for (let i = 0; i < buttonCount; i++) {
+            const angle = (i / (buttonCount - 1)) * Math.PI;  // 0 ~ π 사이 각도
+            const x = centerX + Math.cos(angle) * radius;  // 원의 지름 상 x좌표
+            const y = centerY + Math.sin(angle) * radius;  // 원의 지름 상 y좌표
+
             const button = document.createElement('button');
             button.textContent = i + 1;
-            button.style.position = 'absolute';
-            button.style.left = `${i * spacing}px`;
+            button.style.left = `${x}px`;
+            button.style.top = `${y}px`;
+
             container.appendChild(button);
         }
     </script>
