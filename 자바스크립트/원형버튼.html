@@ -54,17 +54,15 @@
 
     <script>
         const container = document.getElementById('buttonContainer');
-        const buttonCount = 5;
-        const radius = 100;  // 원의 반지름 (200px 원이므로)
-        const buttonSize = 40; // 버튼 크기
-
-        const centerX = 0; // 버튼 컨테이너 자체가 (50%, 50%) 중심이므로 0,0이 원 중심
-        const centerY = 0;
+        const buttonCount = 5;  // 버튼 개수
+        const radius = 100;  // 원의 반지름 (원의 크기가 200px이므로)
 
         for (let i = 0; i < buttonCount; i++) {
-            const angle = (i / (buttonCount - 1)) * Math.PI;  // 0 ~ π 사이 각도
-            const x = centerX + Math.cos(angle) * radius;  // 원의 지름 상 x좌표
-            const y = centerY + Math.sin(angle) * radius;  // 원의 지름 상 y좌표
+            // -π/2 ~ π/2 범위에서 균등한 간격으로 버튼 배치
+            const angle = (-Math.PI / 2) + (i / (buttonCount - 1)) * Math.PI; 
+
+            const x = Math.cos(angle) * radius;  // x 좌표
+            const y = Math.sin(angle) * radius;  // y 좌표
 
             const button = document.createElement('button');
             button.textContent = i + 1;
