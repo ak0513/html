@@ -29,8 +29,8 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 200px;
-            height: 200px;
+            width: 0;
+            height: 0;
         }
 
         .button-container button {
@@ -56,8 +56,10 @@
         const container = document.getElementById('buttonContainer');
         const buttonCount = 5;
         const radius = 100;  // 원의 반지름 (200px 원이므로)
-        const centerX = radius;  // 중앙 x좌표 (container 기준)
-        const centerY = radius;  // 중앙 y좌표 (container 기준)
+        const buttonSize = 40; // 버튼 크기
+
+        const centerX = 0; // 버튼 컨테이너 자체가 (50%, 50%) 중심이므로 0,0이 원 중심
+        const centerY = 0;
 
         for (let i = 0; i < buttonCount; i++) {
             const angle = (i / (buttonCount - 1)) * Math.PI;  // 0 ~ π 사이 각도
