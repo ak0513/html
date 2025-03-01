@@ -79,8 +79,6 @@
         const toggleButton = document.getElementById('toggleButton');
         const buttonCount = 5;  // 버튼 개수
         const radius = 100;  // 원의 반지름
-        const centerX = 100; // 원의 중심 X 좌표
-        const centerY = 100; // 원의 중심 Y 좌표
         let rotationAngle = 0; // 현재 회전 각도
         let isDragging = false;
         let buttonsVisible = false;
@@ -93,17 +91,13 @@
         function createButtons() {
             for (let i = 0; i < buttonCount; i++) {
                 const angle = (i / buttonCount) * (2 * Math.PI);
-                const x = centerX + Math.cos(angle) * radius;
-                const y = centerY + Math.sin(angle) * radius;
-
                 const button = document.createElement('button');
                 button.textContent = i + 1;
-                button.dataset.angle = angle; // 초기 각도 저장
-                button.style.left = `${x}px`;
-                button.style.top = `${y}px`;
+                button.dataset.baseAngle = angle; // 초기 각도 저장
                 container.appendChild(button);
                 buttons.push(button);
             }
+            updateButtonPositions(); // 초기 버튼 위치 설정
         }
 
         // 버튼 표시/숨김 애니메이션
@@ -164,10 +158,12 @@
 
         // 버튼 위치 업데이트 (부드럽게 회전 적용)
         function updateButtonPositions() {
-            buttons.forEach(button => {
-                let angle = parseFloat(button.dataset.angle) + rotationAngle;
-                const x = centerX + Math.cos(angle) * radius;
-                const y = centerY + Math.sin(angle) * radius;
+            buttons.forEach((button, index) => {
+                let baseAngle = parseFloat(button.dataset.baseAngle); // 초기 각도 유지
+                let newAngle = baseAngle + rotationAngle; // 회전 적용
+
+                const x = 100 + Math.cos(newAngle) * radius;
+                const y = 100 + Math.sin(newAngle) * radius;
                 button.style.left = `${x}px`;
                 button.style.top = `${y}px`;
             });
