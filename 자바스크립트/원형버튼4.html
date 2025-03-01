@@ -67,7 +67,7 @@
             position: absolute;
             transform: translate(-50%, -50%) scale(0.5);
             opacity: 0;
-            transition: opacity 0.3s, transform 0.3s ease-out;
+            transition: opacity 0.3s, transform 0.3s ease-out, left 0.5s ease-out, top 0.5s ease-out;
         }
     </style>
 </head>
@@ -148,49 +148,56 @@
             updateButtonPositions(); // 버튼 위치 업데이트
         }
 
-        // 드래그 종료 시 호출
+        // 드래그 종료 후 가장 가까운 초기 각도로 스냅
         function stopRotate() {
-            if (!isDragging) return;
             isDragging = false;
-            snapToNearestPosition(); // 가장 가까운 초기 위치로 이동
+            snapToClosest();
         }
 
-        // 버튼들의 위치를 가장 가까운 초기 위치로 맞춤
-        function snapToNearestPosition() {
-            let minDiff = Infinity;
+        // 특정 좌표에서 중앙까지의 각도 계산
+        function getTouchAngle(x, y) {
+            const dx = x - window.innerWidth / 2;
+            const dy = y - window.innerHeight / 2;
+            return Math.atan2(dy, dx);
+        }
+
+        // 각도를 -π ~ π 범위로 변환하여 급격한 값 변동 방지
+        function normalizeAngle(angle) {
+            while (angle > Math.PI) angle -= 2 * Math.PI;
+            while (angle < -Math.PI) angle += 2 * Math.PI;
+            return angle;
+        }
+
+        // 가장 가까운 초기 위치로 스냅
+        function snapToClosest() {
+            let minDifference = Infinity;
             let closestAngle = 0;
 
+            // 가장 가까운 초기 각도를 찾음
             buttons.forEach(button => {
                 const initialAngle = parseFloat(button.dataset.initialAngle);
-                const diff = Math.abs(normalizeAngle(rotationAngle + initialAngle));
-                if (diff < minDiff) {
-                    minDiff = diff;
+                const difference = Math.abs(normalizeAngle(rotationAngle - initialAngle));
+                if (difference < minDifference) {
+                    minDifference = difference;
                     closestAngle = initialAngle;
                 }
             });
 
+            // 회전 각도를 조정하여 스냅 적용
             rotationAngle = closestAngle;
-            updateButtonPositionsWithAnimation();
+            updateButtonPositions();
         }
 
-        // 버튼 위치를 애니메이션과 함께 업데이트
-        function updateButtonPositionsWithAnimation() {
+        // 버튼들의 위치를 원의 지름을 따라 배치
+        function updateButtonPositions() {
             buttons.forEach(button => {
                 const initialAngle = parseFloat(button.dataset.initialAngle);
-                const angle = initialAngle + rotationAngle;
+                const angle = initialAngle + rotationAngle; // 현재 회전값 적용
                 const x = centerX + Math.cos(angle) * radius;
                 const y = centerY + Math.sin(angle) * radius;
-                
-                button.style.transition = "left 0.3s ease-out, top 0.3s ease-out";
                 button.style.left = `${x}px`;
                 button.style.top = `${y}px`;
             });
-
-            setTimeout(() => {
-                buttons.forEach(button => {
-                    button.style.transition = "";
-                });
-            }, 300);
         }
 
         // 이벤트 리스너 등록
@@ -202,6 +209,7 @@
         document.addEventListener('touchend', stopRotate);
         toggleButton.addEventListener('click', toggleButtons);
 
+        // 버튼 생성 후 초기 위치 설정
         createButtons();
     </script>
 
