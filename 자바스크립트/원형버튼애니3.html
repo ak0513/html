@@ -12,9 +12,10 @@
             height: 100vh;
             margin: 0;
             position: relative;
-            touch-action: none;
+            touch-action: none; /* 터치 이벤트 기본 동작 방지 */
         }
 
+        /* 큰 원 컨테이너 */
         .circle {
             width: 200px;
             height: 200px;
@@ -29,6 +30,7 @@
             align-items: center;
         }
 
+        /* 중앙 버튼 스타일 */
         .center-button {
             width: 60px;
             height: 60px;
@@ -41,6 +43,7 @@
             position: absolute;
         }
 
+        /* 지름 위 버튼들을 감싸는 컨테이너 */
         .button-container {
             position: absolute;
             top: 50%;
@@ -48,9 +51,10 @@
             width: 200px;
             height: 200px;
             transform: translate(-50%, -50%);
-            display: none;
+            display: none; /* 기본적으로 숨김 */
         }
 
+        /* 지름 위의 버튼 스타일 */
         .button-container button {
             width: 60px;
             height: 60px;
@@ -69,103 +73,105 @@
 </head>
 <body>
 
+    <!-- 중앙 버튼을 포함하는 원 -->
     <div class="circle">
         <button class="center-button" id="toggleButton">+</button>
     </div>
+
+    <!-- 지름 위의 버튼들을 포함하는 컨테이너 -->
     <div class="button-container" id="buttonContainer"></div>
 
     <script>
         const container = document.getElementById('buttonContainer');
         const toggleButton = document.getElementById('toggleButton');
-        const buttonCount = 5;
-        const radius = 100;
-        const centerX = 100;
-        const centerY = 100;
-        let rotationAngle = 0;
-        let isDragging = false;
-        let lastAngle = 0;
-        const buttons = [];
+        const buttonCount = 5;  // 버튼 개수
+        const radius = 100;  // 버튼들이 배치될 원의 반지름
+        const centerX = 100, centerY = 100; // 원의 중심 좌표
+        let rotationAngle = 0; // 회전 각도 누적 값
+        let isDragging = false; // 드래그 상태 여부
+        let lastAngle = 0; // 마지막 터치/마우스 위치 각도
+        const buttons = []; // 버튼 배열
 
-        // 버튼 생성
+        // 버튼 생성 및 초기 배치
         function createButtons() {
             for (let i = 0; i < buttonCount; i++) {
-                const angle = (i / buttonCount) * (2 * Math.PI);
+                const angle = (i / buttonCount) * (2 * Math.PI); // 버튼의 초기 각도 계산
                 const button = document.createElement('button');
-                button.textContent = i + 1;
+                button.textContent = i + 1; // 버튼에 숫자 표시
                 button.dataset.initialAngle = angle; // 초기 각도 저장
                 container.appendChild(button);
                 buttons.push(button);
             }
-            updateButtonPositions(); // 초기에 버튼 배치
+            updateButtonPositions(); // 초기 위치 설정
         }
 
         // 버튼 표시/숨김 애니메이션
         function toggleButtons() {
             if (container.style.display === "none" || container.style.display === "") {
-                container.style.display = "block";
+                container.style.display = "block"; // 버튼 컨테이너 표시
                 setTimeout(() => {
                     buttons.forEach(button => {
-                        button.style.opacity = "1";
-                        button.style.transform = `translate(-50%, -50%) scale(1)`;
+                        button.style.opacity = "1"; // 서서히 나타남
+                        button.style.transform = `translate(-50%, -50%) scale(1)`; // 크기 증가
                     });
                 }, 10);
             } else {
                 buttons.forEach(button => {
-                    button.style.opacity = "0";
-                    button.style.transform = `translate(-50%, -50%) scale(0.5)`;
+                    button.style.opacity = "0"; // 서서히 사라짐
+                    button.style.transform = `translate(-50%, -50%) scale(0.5)`; // 크기 축소
                 });
                 setTimeout(() => {
-                    container.style.display = "none";
+                    container.style.display = "none"; // 애니메이션 후 컨테이너 숨김
                 }, 300);
             }
         }
 
-        // 회전 시작
+        // 터치 또는 마우스 드래그 시작 시 호출
         function startRotate(event) {
-            if (container.style.display === "none") return;
+            if (container.style.display === "none") return; // 버튼이 숨겨져 있으면 회전 방지
             isDragging = true;
-            const touch = event.touches ? event.touches[0] : event;
+            const touch = event.touches ? event.touches[0] : event; // 터치 또는 마우스 이벤트 처리
             lastAngle = getTouchAngle(touch.clientX, touch.clientY);
         }
 
-        // 회전 (무한 회전 가능)
+        // 드래그 중 회전 처리
         function rotate(event) {
             if (!isDragging) return;
             const touch = event.touches ? event.touches[0] : event;
             const currentAngle = getTouchAngle(touch.clientX, touch.clientY);
             
-            // 각도 차이를 -π ~ π 범위로 조정하여 급격한 값 변경 방지
+            // 급격한 값 변경 방지를 위한 보정
             const deltaAngle = normalizeAngle(currentAngle - lastAngle);
             
             rotationAngle += deltaAngle * 0.5; // 회전 속도 조정
             lastAngle = currentAngle;
-            updateButtonPositions();
+            updateButtonPositions(); // 버튼 위치 업데이트
         }
 
-        // 회전 종료
+        // 드래그 종료
         function stopRotate() {
             isDragging = false;
         }
 
-        // 터치 좌표에서 각도 계산
+        // 특정 좌표에서 중앙까지의 각도 계산
         function getTouchAngle(x, y) {
             const dx = x - window.innerWidth / 2;
             const dy = y - window.innerHeight / 2;
             return Math.atan2(dy, dx);
         }
 
-        // 급격한 회전 방지 (각도를 -π ~ π 범위로 변환)
+        // 각도를 -π ~ π 범위로 변환하여 급격한 값 변동 방지
         function normalizeAngle(angle) {
             while (angle > Math.PI) angle -= 2 * Math.PI;
             while (angle < -Math.PI) angle += 2 * Math.PI;
             return angle;
         }
 
-        // 버튼 위치 업데이트 (무한 회전 가능)
+        // 버튼들의 위치를 원의 지름을 따라 배치
         function updateButtonPositions() {
             buttons.forEach(button => {
                 const initialAngle = parseFloat(button.dataset.initialAngle);
-                const angle = initialAngle + rotationAngle; // 누적 회전값 적용
+                const angle = initialAngle + rotationAngle; // 현재 회전값 적용
                 const x = centerX + Math.cos(angle) * radius;
                 const y = centerY + Math.sin(angle) * radius;
                 button.style.left = `${x}px`;
@@ -173,7 +179,7 @@
             });
         }
 
-        // 이벤트 리스너 추가
+        // 이벤트 리스너 등록
         document.addEventListener('mousedown', startRotate);
         document.addEventListener('mousemove', rotate);
         document.addEventListener('mouseup', stopRotate);
@@ -182,6 +188,7 @@
         document.addEventListener('touchend', stopRotate);
         toggleButton.addEventListener('click', toggleButtons);
 
+        // 버튼 생성 후 초기 위치 설정
         createButtons();
     </script>
 
