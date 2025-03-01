@@ -63,7 +63,7 @@
             position: absolute;
             transform: translate(-50%, -50%) scale(0.5);
             opacity: 0;
-            transition: opacity 0.5s, transform 0.5s;
+            transition: opacity 0.3s, transform 0.3s ease-out;
         }
     </style>
 </head>
@@ -81,13 +81,11 @@
         const radius = 100;  // 원의 반지름
         const centerX = 100; // 원의 중심 X 좌표
         const centerY = 100; // 원의 중심 Y 좌표
-        let rotationAngle = 0; // 현재 회전 각도 (제한 없음)
+        let rotationAngle = 0; // 현재 회전 각도
         let isDragging = false;
         let buttonsVisible = false;
-        let startAngle = 0;
-        let targetRotation = 0; // 목표 회전 각도
-        let animationFrame = null; // 애니메이션 프레임 ID
-
+        let lastAngle = 0;
+        let deltaAngle = 0;
         const buttons = [];
 
         // 버튼 생성 및 원 테두리 배치
@@ -114,60 +112,51 @@
             if (buttonsVisible) {
                 container.style.display = "block"; // 먼저 display를 활성화
                 setTimeout(() => {
-                    buttons.forEach(button => {
+                    buttons.forEach((button, index) => {
                         button.style.opacity = "1";
-                        button.style.transform = "translate(-50%, -50%) scale(1)";
+                        button.style.transform = `translate(-50%, -50%) scale(1)`;
                     });
-                }, 10); // 약간의 지연을 줘서 애니메이션 적용
+                }, 10);
             } else {
                 buttons.forEach(button => {
                     button.style.opacity = "0";
-                    button.style.transform = "translate(-50%, -50%) scale(0.5)";
+                    button.style.transform = `translate(-50%, -50%) scale(0.5)`;
                 });
                 setTimeout(() => {
-                    container.style.display = "none"; // 애니메이션 후 숨김 처리
-                }, 500);
+                    container.style.display = "none";
+                }, 300);
             }
         }
 
-        // 터치 또는 마우스 시작
+        // 드래그 시작
         function startRotate(event) {
-            if (!buttonsVisible) return; // 버튼이 보일 때만 회전 가능
+            if (!buttonsVisible) return;
             isDragging = true;
             const touch = event.touches ? event.touches[0] : event;
-            startAngle = getTouchAngle(touch.clientX, touch.clientY);
-            cancelAnimationFrame(animationFrame);
+            lastAngle = getTouchAngle(touch.clientX, touch.clientY);
         }
 
-        // 회전 계산
+        // 드래그 중 회전 (속도 일정하게 유지)
         function rotate(event) {
             if (!isDragging) return;
             const touch = event.touches ? event.touches[0] : event;
             const currentAngle = getTouchAngle(touch.clientX, touch.clientY);
-            let angleDiff = currentAngle - startAngle;
+            
+            deltaAngle = currentAngle - lastAngle;
+            lastAngle = currentAngle;
 
-            // 목표 회전 각도를 제한하지 않음 (누적 회전 가능)
-            targetRotation += angleDiff * 0.5; // 가중치 조정
-            startAngle = currentAngle;
-
-            // 애니메이션 시작
-            cancelAnimationFrame(animationFrame);
-            animationFrame = requestAnimationFrame(smoothRotate);
+            requestAnimationFrame(() => {
+                rotationAngle += deltaAngle; // 일정한 속도로 회전
+                updateButtonPositions();
+            });
         }
 
+        // 드래그 종료
         function stopRotate() {
             isDragging = false;
         }
 
-        // 부드러운 애니메이션 적용
-        function smoothRotate() {
-            rotationAngle += (targetRotation - rotationAngle) * 0.2; // 점진적 변화
-            updateButtonPositions();
-            if (Math.abs(targetRotation - rotationAngle) > 0.001) {
-                animationFrame = requestAnimationFrame(smoothRotate);
-            }
-        }
-
+        // 터치 좌표에서 각도 계산
         function getTouchAngle(x, y) {
             const dx = x - window.innerWidth / 2;
             const dy = y - window.innerHeight / 2;
