@@ -133,7 +133,11 @@
             if (!isDragging) return;
             const touch = event.touches ? event.touches[0] : event;
             const currentAngle = getTouchAngle(touch.clientX, touch.clientY);
-            rotationAngle += (currentAngle - lastAngle) * 0.5; // 회전 속도를 느리게 조정
+            
+            // 각도 차이를 -π ~ π 범위로 조정하여 급격한 값 변경 방지
+            const deltaAngle = normalizeAngle(currentAngle - lastAngle);
+            
+            rotationAngle += deltaAngle * 0.5; // 회전 속도 조정
             lastAngle = currentAngle;
             updateButtonPositions();
         }
@@ -148,6 +152,13 @@
             const dx = x - window.innerWidth / 2;
             const dy = y - window.innerHeight / 2;
             return Math.atan2(dy, dx);
+        }
+
+        // 급격한 회전 방지 (각도를 -π ~ π 범위로 변환)
+        function normalizeAngle(angle) {
+            while (angle > Math.PI) angle -= 2 * Math.PI;
+            while (angle < -Math.PI) angle += 2 * Math.PI;
+            return angle;
         }
 
         // 버튼 위치 업데이트 (무한 회전 가능)
