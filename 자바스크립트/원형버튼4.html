@@ -132,7 +132,7 @@
             const currentAngle = getTouchAngle(touch.clientX, touch.clientY);
             const deltaAngle = normalizeAngle(currentAngle - lastAngle);
 
-            rotationAngle += deltaAngle * 0.5;
+            rotationAngle += deltaAngle * 0.7; // 회전 속도 증가
             lastAngle = currentAngle;
             updateButtonPositions(rotationAngle);
         }
@@ -172,8 +172,8 @@
         }
 
         function smoothSnap() {
-            const duration = 300; // 애니메이션 지속 시간 (ms)
-            const frameRate = 60; // 초당 프레임
+            const duration = 250; // 애니메이션 지속 시간 (짧게 조정)
+            const frameRate = 60;
             const frames = (duration / 1000) * frameRate;
             let currentFrame = 0;
             const startAngle = rotationAngle;
@@ -189,10 +189,17 @@
                 } else {
                     rotationAngle = targetRotationAngle;
                     updateButtonPositions(rotationAngle);
+                    triggerHapticFeedback(); // 햅틱 피드백 추가
                 }
             }
 
             animate();
+        }
+
+        function triggerHapticFeedback() {
+            if ("vibrate" in navigator) {
+                navigator.vibrate(50); // 50ms 진동
+            }
         }
 
         function easeOutQuad(t) {
