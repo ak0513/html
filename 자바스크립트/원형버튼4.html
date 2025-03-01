@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>원 버튼 애니메이션 (스와이프 이동)</title>
+    <title>원 버튼 애니메이션</title>
     <style>
         body {
             display: flex;
@@ -12,9 +12,10 @@
             height: 100vh;
             margin: 0;
             position: relative;
-            touch-action: none;
+            touch-action: none; /* 터치 이벤트 기본 동작 방지 */
         }
 
+        /* 큰 원 컨테이너 */
         .circle {
             width: 200px;
             height: 200px;
@@ -29,6 +30,7 @@
             align-items: center;
         }
 
+        /* 중앙 버튼 스타일 */
         .center-button {
             width: 60px;
             height: 60px;
@@ -41,6 +43,7 @@
             position: absolute;
         }
 
+        /* 지름 위 버튼들을 감싸는 컨테이너 */
         .button-container {
             position: absolute;
             top: 50%;
@@ -48,9 +51,10 @@
             width: 200px;
             height: 200px;
             transform: translate(-50%, -50%);
-            display: none;
+            display: none; /* 기본적으로 숨김 */
         }
 
+        /* 지름 위의 버튼 스타일 */
         .button-container button {
             width: 60px;
             height: 60px;
@@ -69,30 +73,32 @@
 </head>
 <body>
 
+    <!-- 중앙 버튼을 포함하는 원 -->
     <div class="circle">
         <button class="center-button" id="toggleButton">+</button>
     </div>
+
+    <!-- 지름 위의 버튼들을 포함하는 컨테이너 -->
     <div class="button-container" id="buttonContainer"></div>
 
     <script>
         const container = document.getElementById('buttonContainer');
         const toggleButton = document.getElementById('toggleButton');
-        const buttonCount = 5;
-        const radius = 100;
-        const centerX = 100;
-        const centerY = 100;
-        let currentIndex = 0; // 현재 위치 (버튼 인덱스)
-        let isDragging = false;
-        let startAngle = 0;
-        let lastAngle = 0;
-        const buttons = [];
-        const stepAngle = (2 * Math.PI) / buttonCount; // 버튼 간격
+        const buttonCount = 5;  // 버튼 개수
+        const radius = 100;  // 버튼들이 배치될 원의 반지름
+        const centerX = 100, centerY = 100; // 원의 중심 좌표
+        let rotationAngle = 0; // 회전 각도 누적 값
+        let isDragging = false; // 드래그 상태 여부
+        let lastAngle = 0; // 마지막 터치/마우스 위치 각도
+        const buttons = []; // 버튼 배열
 
-        // 버튼 생성
+        // 버튼 생성 및 초기 배치
         function createButtons() {
             for (let i = 0; i < buttonCount; i++) {
+                const angle = (i / buttonCount) * (2 * Math.PI); // 버튼의 초기 각도 계산
                 const button = document.createElement('button');
-                button.textContent = i + 1;
+                button.textContent = i + 1; // 버튼에 숫자 표시
+                button.dataset.initialAngle = angle; // 초기 각도 저장
                 container.appendChild(button);
                 buttons.push(button);
             }
@@ -102,86 +108,97 @@
         // 버튼 표시/숨김 애니메이션
         function toggleButtons() {
             if (container.style.display === "none" || container.style.display === "") {
-                container.style.display = "block";
+                container.style.display = "block"; // 버튼 컨테이너 표시
                 setTimeout(() => {
                     buttons.forEach(button => {
-                        button.style.opacity = "1";
-                        button.style.transform = `translate(-50%, -50%) scale(1)`;
+                        button.style.opacity = "1"; // 서서히 나타남
+                        button.style.transform = `translate(-50%, -50%) scale(1)`; // 크기 증가
                     });
                 }, 10);
             } else {
                 buttons.forEach(button => {
-                    button.style.opacity = "0";
-                    button.style.transform = `translate(-50%, -50%) scale(0.5)`;
+                    button.style.opacity = "0"; // 서서히 사라짐
+                    button.style.transform = `translate(-50%, -50%) scale(0.5)`; // 크기 축소
                 });
                 setTimeout(() => {
-                    container.style.display = "none";
+                    container.style.display = "none"; // 애니메이션 후 컨테이너 숨김
                 }, 300);
             }
         }
 
-        // 회전 시작
+        // 터치 또는 마우스 드래그 시작 시 호출
         function startRotate(event) {
-            if (container.style.display === "none") return;
+            if (container.style.display === "none") return; // 버튼이 숨겨져 있으면 회전 방지
             isDragging = true;
-            const touch = event.touches ? event.touches[0] : event;
-            startAngle = getTouchAngle(touch.clientX, touch.clientY);
-            lastAngle = startAngle;
+            const touch = event.touches ? event.touches[0] : event; // 터치 또는 마우스 이벤트 처리
+            lastAngle = getTouchAngle(touch.clientX, touch.clientY);
         }
 
-        // 스와이프 감지 후 한 칸씩 이동
-        function stopRotate(event) {
+        // 드래그 중 회전 처리
+        function rotate(event) {
+            if (!isDragging) return;
+            const touch = event.touches ? event.touches[0] : event;
+            const currentAngle = getTouchAngle(touch.clientX, touch.clientY);
+            
+            // 급격한 값 변경 방지를 위한 보정
+            const deltaAngle = normalizeAngle(currentAngle - lastAngle);
+            
+            rotationAngle += deltaAngle * 0.5; // 회전 속도 조정
+            lastAngle = currentAngle;
+            updateButtonPositions(); // 버튼 위치 업데이트
+        }
+
+        // 드래그 종료 시 호출
+        function stopRotate() {
             if (!isDragging) return;
             isDragging = false;
-            const touch = event.changedTouches ? event.changedTouches[0] : event;
-            const endAngle = getTouchAngle(touch.clientX, touch.clientY);
-            const deltaAngle = normalizeAngle(endAngle - startAngle);
-
-            // 스와이프 방향 감지
-            if (deltaAngle > 0.2) {
-                currentIndex = (currentIndex - 1 + buttonCount) % buttonCount; // 왼쪽(시계 반대 방향)
-            } else if (deltaAngle < -0.2) {
-                currentIndex = (currentIndex + 1) % buttonCount; // 오른쪽(시계 방향)
-            }
-
-            updateButtonPositions(true); // 애니메이션 적용
+            snapToNearestPosition(); // 가장 가까운 초기 위치로 이동
         }
 
-        // 터치 좌표에서 각도 계산
-        function getTouchAngle(x, y) {
-            const dx = x - window.innerWidth / 2;
-            const dy = y - window.innerHeight / 2;
-            return Math.atan2(dy, dx);
-        }
+        // 버튼들의 위치를 가장 가까운 초기 위치로 맞춤
+        function snapToNearestPosition() {
+            let minDiff = Infinity;
+            let closestAngle = 0;
 
-        // 급격한 회전 방지 (각도를 -π ~ π 범위로 변환)
-        function normalizeAngle(angle) {
-            while (angle > Math.PI) angle -= 2 * Math.PI;
-            while (angle < -Math.PI) angle += 2 * Math.PI;
-            return angle;
-        }
-
-        // 버튼 위치 업데이트 (한 번에 하나씩 이동)
-        function updateButtonPositions(animated = false) {
-            buttons.forEach((button, i) => {
-                const angle = stepAngle * ((i - currentIndex + buttonCount) % buttonCount);
-                const x = centerX + Math.cos(angle) * radius;
-                const y = centerY + Math.sin(angle) * radius;
-                button.style.left = `${x}px`;
-                button.style.top = `${y}px`;
-
-                if (animated) {
-                    button.style.transition = "left 0.3s ease-out, top 0.3s ease-out";
-                } else {
-                    button.style.transition = "none";
+            buttons.forEach(button => {
+                const initialAngle = parseFloat(button.dataset.initialAngle);
+                const diff = Math.abs(normalizeAngle(rotationAngle + initialAngle));
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closestAngle = initialAngle;
                 }
             });
+
+            rotationAngle = closestAngle;
+            updateButtonPositionsWithAnimation();
         }
 
-        // 이벤트 리스너 추가
+        // 버튼 위치를 애니메이션과 함께 업데이트
+        function updateButtonPositionsWithAnimation() {
+            buttons.forEach(button => {
+                const initialAngle = parseFloat(button.dataset.initialAngle);
+                const angle = initialAngle + rotationAngle;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                
+                button.style.transition = "left 0.3s ease-out, top 0.3s ease-out";
+                button.style.left = `${x}px`;
+                button.style.top = `${y}px`;
+            });
+
+            setTimeout(() => {
+                buttons.forEach(button => {
+                    button.style.transition = "";
+                });
+            }, 300);
+        }
+
+        // 이벤트 리스너 등록
         document.addEventListener('mousedown', startRotate);
+        document.addEventListener('mousemove', rotate);
         document.addEventListener('mouseup', stopRotate);
         document.addEventListener('touchstart', startRotate);
+        document.addEventListener('touchmove', rotate);
         document.addEventListener('touchend', stopRotate);
         toggleButton.addEventListener('click', toggleButtons);
 
