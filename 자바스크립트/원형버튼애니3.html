@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>부드러운 원 버튼 애니메이션</title>
+    <title>원 버튼 애니메이션</title>
     <style>
         body {
             display: flex;
@@ -61,9 +61,9 @@
             font-size: 14px;
             cursor: pointer;
             position: absolute;
-            transition: transform 0.2s ease-out, opacity 0.2s;
             transform: translate(-50%, -50%) scale(0.5);
             opacity: 0;
+            transition: opacity 0.5s, transform 0.5s;
         }
     </style>
 </head>
@@ -78,12 +78,15 @@
         const container = document.getElementById('buttonContainer');
         const toggleButton = document.getElementById('toggleButton');
         const buttonCount = 5;  // 버튼 개수
-        const radius = 80;  // 원의 반지름
+        const radius = 100;  // 원의 반지름
+        const centerX = 100; // 원의 중심 X 좌표
+        const centerY = 100; // 원의 중심 Y 좌표
         let rotationAngle = 0; // 현재 회전 각도
         let isDragging = false;
         let buttonsVisible = false;
         let startAngle = 0;
-        let animationFrame = null;
+        let targetRotation = 0; // 목표 회전 각도
+        let animationFrame = null; // 애니메이션 프레임 ID
 
         const buttons = [];
 
@@ -91,13 +94,17 @@
         function createButtons() {
             for (let i = 0; i < buttonCount; i++) {
                 const angle = (i / buttonCount) * (2 * Math.PI);
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+
                 const button = document.createElement('button');
                 button.textContent = i + 1;
-                button.dataset.baseAngle = angle; // 초기 각도 저장
+                button.dataset.angle = angle; // 초기 각도 저장
+                button.style.left = `${x}px`;
+                button.style.top = `${y}px`;
                 container.appendChild(button);
                 buttons.push(button);
             }
-            updateButtonPositions(); // 초기 버튼 위치 설정
         }
 
         // 버튼 표시/숨김 애니메이션
@@ -123,7 +130,7 @@
             }
         }
 
-        // 터치 시작
+        // 터치 또는 마우스 시작
         function startRotate(event) {
             if (!buttonsVisible) return; // 버튼이 보일 때만 회전 가능
             isDragging = true;
@@ -132,53 +139,51 @@
             cancelAnimationFrame(animationFrame);
         }
 
-        // 터치 중
+        // 회전 계산
         function rotate(event) {
             if (!isDragging) return;
             const touch = event.touches ? event.touches[0] : event;
             const currentAngle = getTouchAngle(touch.clientX, touch.clientY);
             const angleDiff = currentAngle - startAngle;
-            rotationAngle += angleDiff;
+
+            // 목표 회전 각도를 업데이트 (너무 큰 변화 방지)
+            targetRotation += angleDiff * 0.5; // 조절 가능한 가중치 (0.5 → 더 부드러운 회전)
             startAngle = currentAngle;
 
-            // 부드러운 애니메이션 적용
+            // 애니메이션 시작
             cancelAnimationFrame(animationFrame);
-            animationFrame = requestAnimationFrame(updateButtonPositions);
+            animationFrame = requestAnimationFrame(smoothRotate);
         }
 
         function stopRotate() {
             isDragging = false;
         }
 
+        // 부드러운 애니메이션 적용
+        function smoothRotate() {
+            rotationAngle += (targetRotation - rotationAngle) * 0.2; // 점진적으로 변화
+            updateButtonPositions();
+            if (Math.abs(targetRotation - rotationAngle) > 0.001) {
+                animationFrame = requestAnimationFrame(smoothRotate);
+            }
+        }
+
         function getTouchAngle(x, y) {
-            const rect = container.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            const dx = x - centerX;
-            const dy = y - centerY;
+            const dx = x - window.innerWidth / 2;
+            const dy = y - window.innerHeight / 2;
             return Math.atan2(dy, dx);
         }
 
-        // 버튼 위치 업데이트 (초기 및 회전 적용)
+        // 버튼 위치 업데이트 (회전 적용)
         function updateButtonPositions() {
-            const rect = container.getBoundingClientRect();
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-
-            buttons.forEach((button, index) => {
-                let baseAngle = parseFloat(button.dataset.baseAngle); // 초기 각도 유지
-                let newAngle = baseAngle + rotationAngle; // 회전 적용
-
-                const x = Math.cos(newAngle) * radius + centerX;
-                const y = Math.sin(newAngle) * radius + centerY;
-
+            buttons.forEach(button => {
+                let angle = parseFloat(button.dataset.angle) + rotationAngle;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
                 button.style.left = `${x}px`;
                 button.style.top = `${y}px`;
             });
         }
-
-        // 창 크기가 변경될 때 버튼 위치 재조정
-        window.addEventListener("resize", updateButtonPositions);
 
         // 이벤트 리스너 추가
         document.addEventListener('mousedown', startRotate);
