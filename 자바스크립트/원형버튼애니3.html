@@ -12,7 +12,7 @@
             height: 100vh;
             margin: 0;
             position: relative;
-            touch-action: none; /* 터치 스크롤 방지 */
+            touch-action: none;
         }
 
         .circle {
@@ -83,33 +83,25 @@
         const centerY = 100;
         let rotationAngle = 0;
         let isDragging = false;
-        let buttonsVisible = false;
         let lastAngle = 0;
-        let deltaAngle = 0;
         const buttons = [];
 
         // 버튼 생성
         function createButtons() {
             for (let i = 0; i < buttonCount; i++) {
                 const angle = (i / buttonCount) * (2 * Math.PI);
-                const x = centerX + Math.cos(angle) * radius;
-                const y = centerY + Math.sin(angle) * radius;
-
                 const button = document.createElement('button');
                 button.textContent = i + 1;
-                button.dataset.angle = angle;
-                button.style.left = `${x}px`;
-                button.style.top = `${y}px`;
+                button.dataset.initialAngle = angle; // 초기 각도 저장
                 container.appendChild(button);
                 buttons.push(button);
             }
+            updateButtonPositions(); // 초기에 버튼 배치
         }
 
         // 버튼 표시/숨김 애니메이션
         function toggleButtons() {
-            buttonsVisible = !buttonsVisible;
-
-            if (buttonsVisible) {
+            if (container.style.display === "none" || container.style.display === "") {
                 container.style.display = "block";
                 setTimeout(() => {
                     buttons.forEach(button => {
@@ -130,25 +122,20 @@
 
         // 회전 시작
         function startRotate(event) {
-            if (!buttonsVisible) return;
+            if (container.style.display === "none") return;
             isDragging = true;
             const touch = event.touches ? event.touches[0] : event;
             lastAngle = getTouchAngle(touch.clientX, touch.clientY);
         }
 
-        // 회전 (속도 조절)
+        // 회전 (무한 회전 가능)
         function rotate(event) {
             if (!isDragging) return;
             const touch = event.touches ? event.touches[0] : event;
             const currentAngle = getTouchAngle(touch.clientX, touch.clientY);
-
-            deltaAngle = (currentAngle - lastAngle) * 0.5; // 속도를 느리게 조정
+            rotationAngle += (currentAngle - lastAngle) * 0.5; // 회전 속도를 느리게 조정
             lastAngle = currentAngle;
-
-            requestAnimationFrame(() => {
-                rotationAngle += deltaAngle;
-                updateButtonPositions();
-            });
+            updateButtonPositions();
         }
 
         // 회전 종료
@@ -163,10 +150,11 @@
             return Math.atan2(dy, dx);
         }
 
-        // 버튼 위치 업데이트 (회전 적용)
+        // 버튼 위치 업데이트 (무한 회전 가능)
         function updateButtonPositions() {
             buttons.forEach(button => {
-                let angle = parseFloat(button.dataset.angle) + rotationAngle;
+                const initialAngle = parseFloat(button.dataset.initialAngle);
+                const angle = initialAngle + rotationAngle; // 누적 회전값 적용
                 const x = centerX + Math.cos(angle) * radius;
                 const y = centerY + Math.sin(angle) * radius;
                 button.style.left = `${x}px`;
