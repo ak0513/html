@@ -81,7 +81,7 @@
         const radius = 100;  // 원의 반지름
         const centerX = 100; // 원의 중심 X 좌표
         const centerY = 100; // 원의 중심 Y 좌표
-        let rotationAngle = 0; // 현재 회전 각도
+        let rotationAngle = 0; // 현재 회전 각도 (0 ~ 2π)
         let isDragging = false;
         let buttonsVisible = false;
         let startAngle = 0;
@@ -144,11 +144,14 @@
             if (!isDragging) return;
             const touch = event.touches ? event.touches[0] : event;
             const currentAngle = getTouchAngle(touch.clientX, touch.clientY);
-            const angleDiff = currentAngle - startAngle;
+            let angleDiff = currentAngle - startAngle;
 
-            // 목표 회전 각도를 업데이트 (너무 큰 변화 방지)
-            targetRotation += angleDiff * 0.5; // 조절 가능한 가중치 (0.5 → 더 부드러운 회전)
+            // 목표 회전 각도를 제한 (부드럽게 유지)
+            targetRotation += angleDiff * 0.5; // 가중치 조정
             startAngle = currentAngle;
+
+            // 회전 범위를 0 ~ 2π로 유지
+            targetRotation = normalizeAngle(targetRotation);
 
             // 애니메이션 시작
             cancelAnimationFrame(animationFrame);
@@ -161,7 +164,8 @@
 
         // 부드러운 애니메이션 적용
         function smoothRotate() {
-            rotationAngle += (targetRotation - rotationAngle) * 0.2; // 점진적으로 변화
+            rotationAngle += (targetRotation - rotationAngle) * 0.2; // 점진적 변화
+            rotationAngle = normalizeAngle(rotationAngle); // 0 ~ 2π로 유지
             updateButtonPositions();
             if (Math.abs(targetRotation - rotationAngle) > 0.001) {
                 animationFrame = requestAnimationFrame(smoothRotate);
@@ -183,6 +187,11 @@
                 button.style.left = `${x}px`;
                 button.style.top = `${y}px`;
             });
+        }
+
+        // 각도를 0 ~ 2π 범위로 유지
+        function normalizeAngle(angle) {
+            return (angle + 2 * Math.PI) % (2 * Math.PI);
         }
 
         // 이벤트 리스너 추가
