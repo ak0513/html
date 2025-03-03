@@ -62,12 +62,6 @@
         <div class="roulette-container" data-final="5">
             <div class="numbers"></div>
         </div>
-          <div class="roulette-container" data-final="0">
-            <div class="numbers"></div>
-        </div>
-          <div class="roulette-container" data-final="9">
-            <div class="numbers"></div>
-        </div>
     </div>
 
     <script>
@@ -80,7 +74,7 @@
 
             for (let i = 0; i < totalSpins * 10; i++) {
                 let number = (start + i) % 10;
-                numbersHtml += `<div>${number}</div>`; // `aria-hidden` 제거
+                numbersHtml += `<div>${number}</div>`;
             }
 
             container.querySelector('.numbers').innerHTML = numbersHtml;
@@ -91,13 +85,18 @@
             const numbersContainer = container.querySelector('.numbers');
             const finalNumber = parseInt(container.getAttribute('data-final'), 10);
             let totalHeight = numbersContainer.children.length * 80;
-            let stopPosition = totalHeight - ((finalNumber + 1) * 80); // 정확한 위치 보정
+            
+            // 정확한 위치 계산
+            let lastNumberIndex = Array.from(numbersContainer.children)
+                .findIndex(num => parseInt(num.textContent, 10) === finalNumber);
+
+            let stopPosition = lastNumberIndex * 80; // 해당 숫자가 정확히 멈추는 위치
 
             // 먼저 회전 시작
             numbersContainer.style.transition = 'transform 1s linear';
             numbersContainer.style.transform = `translateY(-${totalHeight - 80}px)`;
 
-            // 개별적으로 멈추는 타이밍 조정
+            // 개별적으로 멈추는 타이밍 조정 (태그 순서대로 적용)
             setTimeout(() => {
                 numbersContainer.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
                 numbersContainer.style.transform = `translateY(-${stopPosition}px)`;
