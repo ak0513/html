@@ -65,13 +65,16 @@
     </div>
 
     <script>
-        const totalSpins = 10; // 모든 룰렛이 최소한 회전하는 횟수
+        const totalSpins = 3; // 최소 몇 바퀴 돌릴지
         const delayBetweenStops = 200; // 각 룰렛이 멈추는 간격 (0.2초)
 
         function setupNumbers(container) {
             let numbersHtml = '';
-            for (let i = 0; i < (totalSpins + 1) * 10; i++) { // 최소 한 바퀴 이상 돌도록 보장
-                numbersHtml += `<div>${i % 10}</div>`;
+            let start = Math.floor(Math.random() * 10); // 랜덤 시작 숫자
+
+            for (let i = 0; i < totalSpins * 10; i++) {
+                let number = (start + i) % 10;
+                numbersHtml += `<div aria-hidden="true">${number}</div>`; // 기본적으로 숨김 처리
             }
 
             container.querySelector('.numbers').innerHTML = numbersHtml;
@@ -81,29 +84,34 @@
         function startRoulette(container, index) {
             const numbersContainer = container.querySelector('.numbers');
             const finalNumber = parseInt(container.getAttribute('data-final'), 10);
-            const totalNumbers = numbersContainer.children.length;
+            let totalHeight = numbersContainer.children.length * 80;
+            let stopPosition = totalHeight - ((finalNumber + 1) * 80); // 정확한 위치 보정
 
-            // 최종 멈출 숫자의 위치 찾기
-            let lastNumberIndex = Array.from(numbersContainer.children)
-                .findIndex(num => parseInt(num.textContent, 10) === finalNumber);
-            let stopPosition = lastNumberIndex * 80;
-
-            // 최소 한 바퀴 이상 회전하도록 변경
-            let fullRotation = (totalSpins * 10 * 80) + stopPosition;
-
-            numbersContainer.style.transition = 'transform 1.5s linear';
-            numbersContainer.style.transform = `translateY(-${fullRotation}px)`;
+            // 먼저 회전 시작
+            numbersContainer.style.transition = 'transform 1s linear';
+            numbersContainer.style.transform = `translateY(-${totalHeight - 80}px)`;
 
             // 개별적으로 멈추는 타이밍 조정
             setTimeout(() => {
                 numbersContainer.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
                 numbersContainer.style.transform = `translateY(-${stopPosition}px)`;
+
+                // 애니메이션 종료 후 보이는 숫자만 접근 가능하게 설정
+                setTimeout(() => {
+                    numbersContainer.querySelectorAll('div').forEach((num, i) => {
+                        if (i === numbersContainer.children.length - (finalNumber + 1)) {
+                            num.removeAttribute('aria-hidden'); // 보이는 숫자는 접근 가능
+                        } else {
+                            num.setAttribute('aria-hidden', 'true'); // 나머지는 접근 불가능
+                        }
+                    });
+                }, 800); // 애니메이션 시간 이후 실행
             }, index * delayBetweenStops);
         }
 
         function startAllRoulette() {
             document.querySelectorAll('.roulette-container').forEach((container, index) => {
-                startRoulette(container, index);
+                startRoulette(container, index); // 모든 룰렛이 동시에 시작
             });
         }
 
