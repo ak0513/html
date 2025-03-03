@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>빠른 룰렛 숫자 효과</title>
+    <title>멀티 룰렛 숫자 효과</title>
     <style>
         * {
             box-sizing: border-box;
@@ -20,18 +20,23 @@
             background-color: #f4f4f4;
         }
 
+        .roulette-wrapper {
+            display: flex;
+            gap: 20px;
+        }
+
         .roulette-container {
             position: relative;
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             overflow: hidden;
             border: 2px solid black;
             border-radius: 10px;
             background: white;
             text-align: center;
-            font-size: 48px;
+            font-size: 36px;
             font-weight: bold;
-            line-height: 100px;
+            line-height: 80px;
         }
 
         .numbers {
@@ -41,7 +46,7 @@
         }
 
         .numbers div {
-            height: 100px;
+            height: 80px;
         }
 
         .btn {
@@ -58,37 +63,49 @@
 </head>
 <body>
 
-    <div class="roulette-container">
-        <div class="numbers"></div>
+    <div class="roulette-wrapper">
+        <div class="roulette-container" data-final="3">
+            <div class="numbers"></div>
+        </div>
+        <div class="roulette-container" data-final="7">
+            <div class="numbers"></div>
+        </div>
+        <div class="roulette-container" data-final="5">
+            <div class="numbers"></div>
+        </div>
     </div>
-    <button class="btn" onclick="startRoulette()">룰렛 시작</button>
+    <button class="btn" onclick="startAllRoulette()">모두 시작</button>
 
     <script>
-        const numbersContainer = document.querySelector('.numbers');
-        let finalNumber = 7; // 마지막에 멈출 숫자
         const totalSpins = 3; // 최소 몇 바퀴 돌릴지
 
-        function setupNumbers() {
+        function setupNumbers(container) {
             let numbersHtml = '';
             let start = Math.floor(Math.random() * 10); // 랜덤 시작 숫자
 
-            // 최소 3바퀴 이상 돌게 숫자 개수 늘리기
             for (let i = 0; i < totalSpins * 10; i++) {
                 numbersHtml += `<div>${(start + i) % 10}</div>`;
             }
-            numbersContainer.innerHTML = numbersHtml;
-            numbersContainer.style.transform = `translateY(0px)`;
+
+            container.querySelector('.numbers').innerHTML = numbersHtml;
+            container.querySelector('.numbers').style.transform = `translateY(0px)`;
         }
 
-        function startRoulette() {
-            let totalHeight = numbersContainer.children.length * 100;
-            let stopPosition = (totalHeight - (finalNumber * 100)) - 100; // 감속 효과 반영
+        function startRoulette(container) {
+            const numbersContainer = container.querySelector('.numbers');
+            const finalNumber = parseInt(container.getAttribute('data-final'), 10);
+            let totalHeight = numbersContainer.children.length * 80;
+            let stopPosition = (totalHeight - (finalNumber * 80)) - 100;
 
             numbersContainer.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
             numbersContainer.style.transform = `translateY(-${stopPosition}px)`;
         }
 
-        setupNumbers();
+        function startAllRoulette() {
+            document.querySelectorAll('.roulette-container').forEach(container => startRoulette(container));
+        }
+
+        document.querySelectorAll('.roulette-container').forEach(setupNumbers);
     </script>
 
 </body>
