@@ -65,7 +65,7 @@
     </div>
 
     <script>
-        const totalSpins = 10; // 모든 룰렛이 동일하게 여러 바퀴 회전
+        const totalSpins = 10; // 모든 룰렛이 동일한 회전량
         const delayBetweenStops = 200; // 각 룰렛이 멈추는 간격 (0.2초)
 
         function setupNumbers(container) {
@@ -81,15 +81,16 @@
         function startRoulette(container, index) {
             const numbersContainer = container.querySelector('.numbers');
             const finalNumber = parseInt(container.getAttribute('data-final'), 10);
-            let totalHeight = numbersContainer.children.length * 80;
+            const totalNumbers = numbersContainer.children.length;
 
             // 최종 멈출 숫자의 위치 찾기
             let lastNumberIndex = Array.from(numbersContainer.children)
                 .findIndex(num => parseInt(num.textContent, 10) === finalNumber);
             let stopPosition = lastNumberIndex * 80;
 
-            // 동일한 회전량 적용
-            let fullRotation = totalHeight - 80;
+            // 모든 룰렛이 동일한 거리만큼 회전하도록 수정
+            let fullRotation = (totalSpins * 10 * 80) - 80 + stopPosition;
+
             numbersContainer.style.transition = 'transform 1.5s linear';
             numbersContainer.style.transform = `translateY(-${fullRotation}px)`;
 
