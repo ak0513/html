@@ -65,16 +65,13 @@
     </div>
 
     <script>
-        const totalSpins = 5; // 최소 몇 바퀴 돌릴지 (숫자 개수 증가)
+        const totalSpins = 10; // 모든 룰렛이 동일하게 여러 바퀴 회전
         const delayBetweenStops = 200; // 각 룰렛이 멈추는 간격 (0.2초)
 
         function setupNumbers(container) {
             let numbersHtml = '';
-            let start = Math.floor(Math.random() * 10); // 랜덤 시작 숫자
-
             for (let i = 0; i < totalSpins * 10; i++) {
-                let number = (start + i) % 10;
-                numbersHtml += `<div>${number}</div>`;
+                numbersHtml += `<div>${i % 10}</div>`;
             }
 
             container.querySelector('.numbers').innerHTML = numbersHtml;
@@ -85,18 +82,18 @@
             const numbersContainer = container.querySelector('.numbers');
             const finalNumber = parseInt(container.getAttribute('data-final'), 10);
             let totalHeight = numbersContainer.children.length * 80;
-            
-            // 정확한 위치 계산
+
+            // 최종 멈출 숫자의 위치 찾기
             let lastNumberIndex = Array.from(numbersContainer.children)
                 .findIndex(num => parseInt(num.textContent, 10) === finalNumber);
+            let stopPosition = lastNumberIndex * 80;
 
-            let stopPosition = lastNumberIndex * 80; // 해당 숫자가 정확히 멈추는 위치
+            // 동일한 회전량 적용
+            let fullRotation = totalHeight - 80;
+            numbersContainer.style.transition = 'transform 1.5s linear';
+            numbersContainer.style.transform = `translateY(-${fullRotation}px)`;
 
-            // 먼저 회전 시작
-            numbersContainer.style.transition = 'transform 1s linear';
-            numbersContainer.style.transform = `translateY(-${totalHeight - 80}px)`;
-
-            // 개별적으로 멈추는 타이밍 조정 (태그 순서대로 적용)
+            // 개별적으로 멈추는 타이밍 조정
             setTimeout(() => {
                 numbersContainer.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
                 numbersContainer.style.transform = `translateY(-${stopPosition}px)`;
@@ -105,7 +102,7 @@
 
         function startAllRoulette() {
             document.querySelectorAll('.roulette-container').forEach((container, index) => {
-                startRoulette(container, index); // 모든 룰렛이 동시에 시작
+                startRoulette(container, index);
             });
         }
 
