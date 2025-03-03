@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자동 실행 룰렛</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .roulette-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .roulette-container {
+            position: relative;
+            width: 10px;
+            height: 18px;
+            overflow: hidden;
+            visibility: hidden; /* 초기에는 숨김 */
+        }
+
+        .comma-container {
+            width: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .numbers {
+            position: absolute;
+            width: 100%;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .numbers div {
+            height: 18px;
+            font-size: 18px;
+            line-height: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div style="font-size:18px" id="number-display">375,700,509</div>
+    <div class="roulette-wrapper" id="roulette-wrapper"></div>
+
+    <script>
+        const totalSpins = 5;
+        const delayBetweenStops = 200;
+        const digitHeight = 18;
+
+        function setupNumbers(container) {
+            let numbersHtml = '';
+            let repeatCount = totalSpins + 2;
+            let initialRandom = Math.floor(Math.random() * 10);
+            
+            for (let i = 0; i < repeatCount; i++) {
+                for (let j = 0; j < 10; j++) {
+                    numbersHtml += `<div>${j}</div>`;
+                }
+            }
+            container.querySelector('.numbers').innerHTML = numbersHtml;
+            
+            container.querySelector('.numbers').style.transform = `translateY(-${initialRandom * digitHeight}px)`;
+        }
+
+        function startRoulette(container, index) {
+            const numbersContainer = container.querySelector('.numbers');
+            const finalNumber = parseInt(container.getAttribute('data-final'), 10);
+            const totalNumbers = numbersContainer.children.length;
+            const totalHeight = totalNumbers * digitHeight;
+
+            let lastIndex = Array.from(numbersContainer.children)
+                .map(num => parseInt(num.textContent, 10))
+                .lastIndexOf(finalNumber);
+            let stopPosition = lastIndex * digitHeight;
+
+            container.style.visibility = 'visible'; // 애니메이션 시작 직전에 보이게 설정
+            numbersContainer.style.transition = 'transform 1.5s linear';
+            numbersContainer.style.transform = `translateY(-${totalHeight - digitHeight}px)`;
+
+            setTimeout(() => {
+                numbersContainer.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+                numbersContainer.style.transform = `translateY(-${stopPosition}px)`;
+            }, index * delayBetweenStops);
+        }
+
+        function startAllRoulette() {
+            document.querySelectorAll('.roulette-container').forEach((container, index) => {
+                startRoulette(container, index);
+            });
+        }
+
+        function createRouletteElements() {
+            const numberDisplay = document.getElementById('number-display').textContent;
+            const wrapper = document.getElementById('roulette-wrapper');
+            wrapper.innerHTML = '';
+
+            numberDisplay.split('').forEach(char => {
+                if (char === ',') {
+                    wrapper.innerHTML += '<div class="comma-container">,</div>';
+                } else {
+                    wrapper.innerHTML += `<div class="roulette-container" data-final="${char}"><div class="numbers"></div></div>`;
+                }
+            });
+        }
+
+        window.onload = function () {
+            createRouletteElements();
+            document.querySelectorAll('.roulette-container').forEach(setupNumbers);
+            setTimeout(startAllRoulette, 500);
+        };
+    </script>
+</body>
+</html>
