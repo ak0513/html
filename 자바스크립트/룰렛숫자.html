@@ -71,9 +71,11 @@
         function setupNumbers(container) {
             let numbersHtml = '';
 
-            // 0~9 숫자를 여러 번 반복해서 추가 (최소 totalSpins 바퀴 이상)
-            for (let i = 0; i < totalSpins * 10; i++) {
-                numbersHtml += `<div>${i % 10}</div>`;
+            // 0~9를 여러 번 반복 + 마지막에 0~9를 한 번 더 추가
+            for (let i = 0; i < totalSpins + 1; i++) {
+                for (let j = 0; j < 10; j++) {
+                    numbersHtml += `<div>${j}</div>`;
+                }
             }
 
             container.querySelector('.numbers').innerHTML = numbersHtml;
@@ -85,12 +87,13 @@
             const finalNumber = parseInt(container.getAttribute('data-final'), 10);
             let totalHeight = numbersContainer.children.length * 80;
 
-            // 정확한 위치 계산
+            // 목표 숫자의 마지막 위치 찾기
             let lastIndex = Array.from(numbersContainer.children)
-                .findIndex(num => parseInt(num.textContent, 10) === finalNumber);
+                .map(num => parseInt(num.textContent, 10))
+                .lastIndexOf(finalNumber);
             let stopPosition = lastIndex * 80;
 
-            // 먼저 회전 시작
+            // 회전 시작
             numbersContainer.style.transition = 'transform 1s linear';
             numbersContainer.style.transform = `translateY(-${totalHeight - 80}px)`;
 
