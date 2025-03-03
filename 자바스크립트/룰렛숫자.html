@@ -30,18 +30,17 @@
             width: 0;
             height: 18px;
             overflow: hidden;
-            visibility: hidden;
         }
         .roulette-container.on {
             width:10px;
         }
 
         .comma-container {
+            overflow: hidden;
             width: 0;
             font-size: 18px;
             font-weight: bold;
             text-align: center;
-            visibility: hidden;
         }
         .comma-container.on {
             width:5px;
@@ -94,7 +93,7 @@
             let stopPosition = lastIndex * digitHeight;
 
             setTimeout(() => {
-                container.style.visibility = 'visible';
+                // container.style.visibility = 'visible';
                 numbersContainer.style.transition = 'transform 1s ease-out';
                 numbersContainer.style.transform = `translateY(-${stopPosition}px)`;
             }, index * delayBetweenStops);
