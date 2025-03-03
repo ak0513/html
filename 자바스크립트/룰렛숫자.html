@@ -22,14 +22,21 @@
 
         .roulette-wrapper {
             display: flex;
-            gap: 0px;
+            align-items: center;
         }
 
         .roulette-container {
             position: relative;
-            width: 20px;
+            width: 10px;
             height: 18px;
             overflow: hidden;
+        }
+
+        .comma-container {
+            width: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
         }
 
         .numbers {
@@ -40,13 +47,13 @@
 
         .numbers div {
             height: 18px;
-            font-size: 18px; /* 숫자 크기 설정 */
-            line-height:18px
+            font-size: 18px;
+            line-height: 18px;
         }
     </style>
 </head>
 <body>
-
+    <div style="font-size:18px">375,700,500</div>
     <div class="roulette-wrapper">
         <div class="roulette-container" data-final="3">
             <div class="numbers"></div>
@@ -55,6 +62,26 @@
             <div class="numbers"></div>
         </div>
         <div class="roulette-container" data-final="5">
+            <div class="numbers"></div>
+        </div>
+        <div class="comma-container">,</div>
+        <div class="roulette-container" data-final="7">
+            <div class="numbers"></div>
+        </div>
+        <div class="roulette-container" data-final="0">
+            <div class="numbers"></div>
+        </div>
+        <div class="roulette-container" data-final="0">
+            <div class="numbers"></div>
+        </div>
+        <div class="comma-container">,</div>
+        <div class="roulette-container" data-final="5">
+            <div class="numbers"></div>
+        </div>
+        <div class="roulette-container" data-final="0">
+            <div class="numbers"></div>
+        </div>
+        <div class="roulette-container" data-final="0">
             <div class="numbers"></div>
         </div>
     </div>
@@ -80,17 +107,17 @@
         function startRoulette(container, index) {
             const numbersContainer = container.querySelector('.numbers');
             const finalNumber = parseInt(container.getAttribute('data-final'), 10);
-            let totalHeight = numbersContainer.children.length * 50;
+            let totalHeight = numbersContainer.children.length * 18;
 
             // 목표 숫자의 마지막 위치 찾기
             let lastIndex = Array.from(numbersContainer.children)
                 .map(num => parseInt(num.textContent, 10))
                 .lastIndexOf(finalNumber);
-            let stopPosition = lastIndex * 50;
+            let stopPosition = lastIndex * 18;
 
             // 회전 시작
             numbersContainer.style.transition = 'transform 1s linear';
-            numbersContainer.style.transform = `translateY(-${totalHeight - 50}px)`;
+            numbersContainer.style.transform = `translateY(-${totalHeight - 18}px)`;
 
             // 개별적으로 멈추는 타이밍 조정
             setTimeout(() => {
@@ -110,6 +137,5 @@
             startAllRoulette();
         };
     </script>
-
 </body>
 </html>
