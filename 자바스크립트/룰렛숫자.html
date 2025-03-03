@@ -66,7 +66,7 @@
 
     <script>
         const totalSpins = 3; // 최소 몇 바퀴 돌릴지
-        const delayBetweenStarts = 200; // 각 룰렛이 시작되는 간격 (0.2초)
+        const delayBetweenStops = 200; // 각 룰렛이 멈추는 간격 (0.2초)
 
         function setupNumbers(container) {
             let numbersHtml = '';
@@ -81,13 +81,18 @@
             container.querySelector('.numbers').style.transform = `translateY(0px)`;
         }
 
-        function startRoulette(container, delay) {
-            setTimeout(() => {
-                const numbersContainer = container.querySelector('.numbers');
-                const finalNumber = parseInt(container.getAttribute('data-final'), 10);
-                let totalHeight = numbersContainer.children.length * 80;
-                let stopPosition = totalHeight - ((finalNumber + 1) * 80); // 정확한 위치 보정
+        function startRoulette(container, index) {
+            const numbersContainer = container.querySelector('.numbers');
+            const finalNumber = parseInt(container.getAttribute('data-final'), 10);
+            let totalHeight = numbersContainer.children.length * 80;
+            let stopPosition = totalHeight - ((finalNumber + 1) * 80); // 정확한 위치 보정
 
+            // 먼저 회전 시작
+            numbersContainer.style.transition = 'transform 1s linear';
+            numbersContainer.style.transform = `translateY(-${totalHeight - 80}px)`;
+
+            // 개별적으로 멈추는 타이밍 조정
+            setTimeout(() => {
                 numbersContainer.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
                 numbersContainer.style.transform = `translateY(-${stopPosition}px)`;
 
@@ -101,12 +106,12 @@
                         }
                     });
                 }, 800); // 애니메이션 시간 이후 실행
-            }, delay);
+            }, index * delayBetweenStops);
         }
 
         function startAllRoulette() {
             document.querySelectorAll('.roulette-container').forEach((container, index) => {
-                startRoulette(container, index * delayBetweenStarts); // 각 룰렛이 0.2초 차이로 시작
+                startRoulette(container, index); // 모든 룰렛이 동시에 시작
             });
         }
 
