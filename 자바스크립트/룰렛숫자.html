@@ -65,12 +65,12 @@
     </div>
 
     <script>
-        const totalSpins = 10; // 모든 룰렛이 동일한 회전량
+        const totalSpins = 10; // 모든 룰렛이 최소한 회전하는 횟수
         const delayBetweenStops = 200; // 각 룰렛이 멈추는 간격 (0.2초)
 
         function setupNumbers(container) {
             let numbersHtml = '';
-            for (let i = 0; i < totalSpins * 10; i++) {
+            for (let i = 0; i < (totalSpins + 1) * 10; i++) { // 최소 한 바퀴 이상 돌도록 보장
                 numbersHtml += `<div>${i % 10}</div>`;
             }
 
@@ -88,8 +88,8 @@
                 .findIndex(num => parseInt(num.textContent, 10) === finalNumber);
             let stopPosition = lastNumberIndex * 80;
 
-            // 모든 룰렛이 동일한 거리만큼 회전하도록 수정
-            let fullRotation = (totalSpins * 10 * 80) - 80 + stopPosition;
+            // 최소 한 바퀴 이상 회전하도록 변경
+            let fullRotation = (totalSpins * 10 * 80) + stopPosition;
 
             numbersContainer.style.transition = 'transform 1.5s linear';
             numbersContainer.style.transform = `translateY(-${fullRotation}px)`;
