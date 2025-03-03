@@ -30,6 +30,7 @@
             width: 10px;
             height: 18px;
             overflow: hidden;
+            visibility: hidden;
         }
 
         .comma-container {
@@ -37,6 +38,7 @@
             font-size: 18px;
             font-weight: bold;
             text-align: center;
+            visibility: hidden;
         }
 
         .numbers {
@@ -53,53 +55,23 @@
     </style>
 </head>
 <body>
-    <div style="font-size:18px">375,700,500</div>
-    <div class="roulette-wrapper">
-        <div class="roulette-container" data-final="3">
-            <div class="numbers"></div>
-        </div>
-        <div class="roulette-container" data-final="7">
-            <div class="numbers"></div>
-        </div>
-        <div class="roulette-container" data-final="5">
-            <div class="numbers"></div>
-        </div>
-        <div class="comma-container">,</div>
-        <div class="roulette-container" data-final="7">
-            <div class="numbers"></div>
-        </div>
-        <div class="roulette-container" data-final="0">
-            <div class="numbers"></div>
-        </div>
-        <div class="roulette-container" data-final="0">
-            <div class="numbers"></div>
-        </div>
-        <div class="comma-container">,</div>
-        <div class="roulette-container" data-final="5">
-            <div class="numbers"></div>
-        </div>
-        <div class="roulette-container" data-final="0">
-            <div class="numbers"></div>
-        </div>
-        <div class="roulette-container" data-final="0">
-            <div class="numbers"></div>
-        </div>
-    </div>
+    <div style="font-size:18px" id="number-display">375,700,509</div>
+    <div class="roulette-wrapper" id="roulette-wrapper"></div>
 
     <script>
-        const totalSpins = 3; // 최소 몇 바퀴 돌릴지
-        const delayBetweenStops = 200; // 각 룰렛이 멈추는 간격 (0.2초)
+        const totalSpins = 5;
+        const delayBetweenStops = 200;
+        const digitHeight = 18;
 
         function setupNumbers(container) {
             let numbersHtml = '';
-
-            // 0~9를 여러 번 반복 + 마지막에 0~9를 한 번 더 추가
-            for (let i = 0; i < totalSpins + 1; i++) {
+            let repeatCount = totalSpins + 2;
+            
+            for (let i = 0; i < repeatCount; i++) {
                 for (let j = 0; j < 10; j++) {
                     numbersHtml += `<div>${j}</div>`;
                 }
             }
-
             container.querySelector('.numbers').innerHTML = numbersHtml;
             container.querySelector('.numbers').style.transform = `translateY(0px)`;
         }
@@ -107,34 +79,50 @@
         function startRoulette(container, index) {
             const numbersContainer = container.querySelector('.numbers');
             const finalNumber = parseInt(container.getAttribute('data-final'), 10);
-            let totalHeight = numbersContainer.children.length * 18;
+            const totalNumbers = numbersContainer.children.length;
+            const totalHeight = totalNumbers * digitHeight;
 
-            // 목표 숫자의 마지막 위치 찾기
             let lastIndex = Array.from(numbersContainer.children)
                 .map(num => parseInt(num.textContent, 10))
                 .lastIndexOf(finalNumber);
-            let stopPosition = lastIndex * 18;
+            let stopPosition = lastIndex * digitHeight;
 
-            // 회전 시작
-            numbersContainer.style.transition = 'transform 1s linear';
-            numbersContainer.style.transform = `translateY(-${totalHeight - 18}px)`;
-
-            // 개별적으로 멈추는 타이밍 조정
             setTimeout(() => {
-                numbersContainer.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+                container.style.visibility = 'visible';
+                numbersContainer.style.transition = 'transform 1s ease-out';
                 numbersContainer.style.transform = `translateY(-${stopPosition}px)`;
             }, index * delayBetweenStops);
         }
 
         function startAllRoulette() {
+            document.querySelectorAll('.roulette-container, .comma-container').forEach((container, index) => {
+                setTimeout(() => {
+                    container.style.visibility = 'visible';
+                }, index * delayBetweenStops);
+            });
             document.querySelectorAll('.roulette-container').forEach((container, index) => {
-                startRoulette(container, index); // 모든 룰렛이 동시에 시작
+                startRoulette(container, index);
+            });
+        }
+
+        function createRouletteElements() {
+            const numberDisplay = document.getElementById('number-display').textContent;
+            const wrapper = document.getElementById('roulette-wrapper');
+            wrapper.innerHTML = '';
+
+            numberDisplay.split('').forEach((char, index) => {
+                if (char === ',') {
+                    wrapper.innerHTML += '<div class="comma-container">,</div>';
+                } else {
+                    wrapper.innerHTML += `<div class="roulette-container" data-final="${char}"><div class="numbers"></div></div>`;
+                }
             });
         }
 
         window.onload = function () {
+            createRouletteElements();
             document.querySelectorAll('.roulette-container').forEach(setupNumbers);
-            startAllRoulette();
+            setTimeout(startAllRoulette, 500);
         };
     </script>
 </body>
