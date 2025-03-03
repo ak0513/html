@@ -62,10 +62,16 @@
         <div class="roulette-container" data-final="5">
             <div class="numbers"></div>
         </div>
+          <div class="roulette-container" data-final="0">
+            <div class="numbers"></div>
+        </div>
+          <div class="roulette-container" data-final="9">
+            <div class="numbers"></div>
+        </div>
     </div>
 
     <script>
-        const totalSpins = 3; // 최소 몇 바퀴 돌릴지
+        const totalSpins = 5; // 최소 몇 바퀴 돌릴지 (숫자 개수 증가)
         const delayBetweenStops = 200; // 각 룰렛이 멈추는 간격 (0.2초)
 
         function setupNumbers(container) {
@@ -74,7 +80,7 @@
 
             for (let i = 0; i < totalSpins * 10; i++) {
                 let number = (start + i) % 10;
-                numbersHtml += `<div aria-hidden="true">${number}</div>`; // 기본적으로 숨김 처리
+                numbersHtml += `<div>${number}</div>`; // `aria-hidden` 제거
             }
 
             container.querySelector('.numbers').innerHTML = numbersHtml;
@@ -95,17 +101,6 @@
             setTimeout(() => {
                 numbersContainer.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
                 numbersContainer.style.transform = `translateY(-${stopPosition}px)`;
-
-                // 애니메이션 종료 후 보이는 숫자만 접근 가능하게 설정
-                setTimeout(() => {
-                    numbersContainer.querySelectorAll('div').forEach((num, i) => {
-                        if (i === numbersContainer.children.length - (finalNumber + 1)) {
-                            num.removeAttribute('aria-hidden'); // 보이는 숫자는 접근 가능
-                        } else {
-                            num.setAttribute('aria-hidden', 'true'); // 나머지는 접근 불가능
-                        }
-                    });
-                }, 800); // 애니메이션 시간 이후 실행
             }, index * delayBetweenStops);
         }
 
