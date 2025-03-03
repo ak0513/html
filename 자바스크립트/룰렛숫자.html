@@ -22,21 +22,14 @@
 
         .roulette-wrapper {
             display: flex;
-            gap: 20px;
+            gap: 0px;
         }
 
         .roulette-container {
             position: relative;
-            width: 80px;
-            height: 80px;
+            width: 50px;
+            height: 50px;
             overflow: hidden;
-            border: 2px solid black;
-            border-radius: 10px;
-            background: white;
-            text-align: center;
-            font-size: 36px;
-            font-weight: bold;
-            line-height: 80px;
         }
 
         .numbers {
@@ -46,7 +39,8 @@
         }
 
         .numbers div {
-            height: 80px;
+            height: 50px;
+            font-size: 18px; /* 숫자 크기 설정 */
         }
     </style>
 </head>
@@ -85,17 +79,17 @@
         function startRoulette(container, index) {
             const numbersContainer = container.querySelector('.numbers');
             const finalNumber = parseInt(container.getAttribute('data-final'), 10);
-            let totalHeight = numbersContainer.children.length * 80;
+            let totalHeight = numbersContainer.children.length * 50;
 
             // 목표 숫자의 마지막 위치 찾기
             let lastIndex = Array.from(numbersContainer.children)
                 .map(num => parseInt(num.textContent, 10))
                 .lastIndexOf(finalNumber);
-            let stopPosition = lastIndex * 80;
+            let stopPosition = lastIndex * 50;
 
             // 회전 시작
             numbersContainer.style.transition = 'transform 1s linear';
-            numbersContainer.style.transform = `translateY(-${totalHeight - 80}px)`;
+            numbersContainer.style.transform = `translateY(-${totalHeight - 50}px)`;
 
             // 개별적으로 멈추는 타이밍 조정
             setTimeout(() => {
