@@ -70,11 +70,10 @@
 
         function setupNumbers(container) {
             let numbersHtml = '';
-            let start = Math.floor(Math.random() * 10); // 랜덤 시작 숫자
 
+            // 0~9 숫자를 여러 번 반복해서 추가 (최소 totalSpins 바퀴 이상)
             for (let i = 0; i < totalSpins * 10; i++) {
-                let number = (start + i) % 10;
-                numbersHtml += `<div aria-hidden="true">${number}</div>`; // 기본적으로 숨김 처리
+                numbersHtml += `<div>${i % 10}</div>`;
             }
 
             container.querySelector('.numbers').innerHTML = numbersHtml;
@@ -85,7 +84,11 @@
             const numbersContainer = container.querySelector('.numbers');
             const finalNumber = parseInt(container.getAttribute('data-final'), 10);
             let totalHeight = numbersContainer.children.length * 80;
-            let stopPosition = totalHeight - ((finalNumber + 1) * 80); // 정확한 위치 보정
+
+            // 정확한 위치 계산
+            let lastIndex = Array.from(numbersContainer.children)
+                .findIndex(num => parseInt(num.textContent, 10) === finalNumber);
+            let stopPosition = lastIndex * 80;
 
             // 먼저 회전 시작
             numbersContainer.style.transition = 'transform 1s linear';
@@ -95,17 +98,6 @@
             setTimeout(() => {
                 numbersContainer.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
                 numbersContainer.style.transform = `translateY(-${stopPosition}px)`;
-
-                // 애니메이션 종료 후 보이는 숫자만 접근 가능하게 설정
-                setTimeout(() => {
-                    numbersContainer.querySelectorAll('div').forEach((num, i) => {
-                        if (i === numbersContainer.children.length - (finalNumber + 1)) {
-                            num.removeAttribute('aria-hidden'); // 보이는 숫자는 접근 가능
-                        } else {
-                            num.setAttribute('aria-hidden', 'true'); // 나머지는 접근 불가능
-                        }
-                    });
-                }, 800); // 애니메이션 시간 이후 실행
             }, index * delayBetweenStops);
         }
 
