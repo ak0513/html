@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>멀티 룰렛 숫자 효과</title>
+    <title>순차적 멈춤 룰렛</title>
     <style>
         * {
             box-sizing: border-box;
@@ -78,6 +78,7 @@
 
     <script>
         const totalSpins = 3; // 최소 몇 바퀴 돌릴지
+        const delayBetweenStops = 200; // 각 룰렛이 멈추는 간격 (0.2초)
 
         function setupNumbers(container) {
             let numbersHtml = '';
@@ -91,18 +92,22 @@
             container.querySelector('.numbers').style.transform = `translateY(0px)`;
         }
 
-        function startRoulette(container) {
-            const numbersContainer = container.querySelector('.numbers');
-            const finalNumber = parseInt(container.getAttribute('data-final'), 10);
-            let totalHeight = numbersContainer.children.length * 80;
-            let stopPosition = (totalHeight - (finalNumber * 80)) - 100;
+        function startRoulette(container, delay) {
+            setTimeout(() => {
+                const numbersContainer = container.querySelector('.numbers');
+                const finalNumber = parseInt(container.getAttribute('data-final'), 10);
+                let totalHeight = numbersContainer.children.length * 80;
+                let stopPosition = totalHeight - ((finalNumber + totalSpins * 10) % 10) * 80;
 
-            numbersContainer.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
-            numbersContainer.style.transform = `translateY(-${stopPosition}px)`;
+                numbersContainer.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+                numbersContainer.style.transform = `translateY(-${stopPosition}px)`;
+            }, delay);
         }
 
         function startAllRoulette() {
-            document.querySelectorAll('.roulette-container').forEach(container => startRoulette(container));
+            document.querySelectorAll('.roulette-container').forEach((container, index) => {
+                startRoulette(container, index * delayBetweenStops);
+            });
         }
 
         document.querySelectorAll('.roulette-container').forEach(setupNumbers);
