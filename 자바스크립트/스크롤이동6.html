@@ -123,13 +123,15 @@
             scrollDownBtn: document.getElementById('popupScrollDownBtn'),
             confirmBtn: document.getElementById('popupConfirmBtn'),
             sections: document.querySelectorAll('.modal-content section'),
-            headerHeight: 110, // 헤더 + 탭 높이 (60 + 50)
+            headerHeight: 110, // 헤더(60px) + 탭(50px) 높이
             reachedBottom: false, // ✅ 최하단 도달 여부 저장
 
+            // 현재 스크롤이 최하단인지 체크하는 함수
             isScrollEnd() {
                 return this.scrollContainer.scrollTop + this.scrollContainer.clientHeight >= this.scrollContainer.scrollHeight;
             },
 
+            // 특정 섹션으로 스크롤 이동
             scrollToSection(index) {
                 if (this.sections[index]) {
                     this.scrollContainer.scrollTo({ 
@@ -141,6 +143,7 @@
                 setTimeout(() => this.updateButtonVisibility(), 500);
             },
 
+            // 아래로 스크롤 버튼 클릭 시 실행
             scrollDown() {
                 let currentIndex = this.getVisibleSectionIndex();
                 if (currentIndex < this.sections.length - 1) {
@@ -156,6 +159,7 @@
                 setTimeout(() => this.updateButtonVisibility(), 500);
             },
 
+            // 현재 화면에서 가장 중앙에 가까운 섹션의 인덱스를 반환
             getVisibleSectionIndex() {
                 let index = 0;
                 let minDiff = Infinity;
@@ -177,28 +181,32 @@
                 return index;
             },
 
+            // 버튼 표시 여부 업데이트
             updateButtonVisibility() {
                 if (this.isScrollEnd()) {
-                    // 하단에 도달하면 "확인" 버튼을 표시
+                    // 최하단에 도달하면 "확인" 버튼 표시
                     this.scrollDownBtn.style.display = 'none';
                     this.confirmBtn.style.display = 'inline-block';
-                    this.reachedBottom = true; // ✅ 하단 도달 여부 저장
+                    this.reachedBottom = true; // ✅ 한 번이라도 하단 도달 시 true 설정
                 } else if (!this.reachedBottom) {
-                    // ❗ 한 번이라도 하단에 도달하면 버튼 상태를 유지
+                    // ❗ 한 번이라도 하단에 도달하면 버튼 상태 유지
                     this.scrollDownBtn.style.display = 'inline-block';
                     this.confirmBtn.style.display = 'none';
                 }
             },
 
+            // 팝업이 열릴 때 초기화
             init() {
-                this.reachedBottom = false; // 팝업 열 때 초기화
+                this.reachedBottom = false; // ✅ 하단 도달 여부 초기화
                 this.scrollContainer.addEventListener('scroll', this.updateButtonVisibility.bind(this));
             },
 
+            // 팝업이 닫힐 때 이벤트 해제
             destroy() {
                 this.scrollContainer.removeEventListener('scroll', this.updateButtonVisibility.bind(this));
             },
 
+            // 확인 버튼 클릭 시 실행
             confirmAction() {
                 alert('확인 버튼 클릭');
             }
