@@ -27,7 +27,7 @@
         }
         .modal-content {
             position: relative;
-            height: 100%;
+            height: calc(100% - 60px);
             overflow-y: auto;
             padding-top: 110px;
         }
@@ -72,13 +72,15 @@
         #popup-section3 { background-color: lightcoral; }
         #popup-section4 { background-color: lightyellow; }
 
+        /* 고정된 버튼 */
         .popup-fixed-buttons {
-            position: absolute;
+            position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             gap: 20px;
+            z-index: 2001; /* 팝업보다 위에 배치 */
         }
         .popup-fixed-buttons button {
             padding: 10px 20px;
@@ -102,11 +104,11 @@
             <section id="popup-section2">팝업 섹션 2</section>
             <section id="popup-section3">팝업 섹션 3</section>
             <section id="popup-section4">팝업 섹션 4</section>
+        </div>
 
-            <div class="popup-fixed-buttons">
-                <button id="popupScrollDownBtn" onclick="ScrollManager.scrollDown()">아래로 스크롤</button>
-                <button id="popupConfirmBtn" onclick="ScrollManager.confirmAction()">확인</button>
-            </div>
+        <div class="popup-fixed-buttons">
+            <button id="popupScrollDownBtn" onclick="ScrollManager.scrollDown()">아래로 스크롤</button>
+            <button id="popupConfirmBtn" onclick="ScrollManager.confirmAction()">확인</button>
         </div>
     </div>
 
@@ -172,18 +174,23 @@
                 }
             },
 
-            confirmAction() {
-                alert("확인 버튼이 클릭되었습니다.");
+            init() {
+                this.scrollContainer.addEventListener('scroll', this.updateButtonVisibility.bind(this));
             },
 
-            init() {
-                this.scrollContainer.addEventListener('scroll', () => this.updateButtonVisibility());
+            destroy() {
+                this.scrollContainer.removeEventListener('scroll', this.updateButtonVisibility.bind(this));
             }
         };
 
         function openPopup() {
             document.getElementById('popup').style.display = 'block';
             ScrollManager.init();
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+            ScrollManager.destroy();
         }
     </script>
 
