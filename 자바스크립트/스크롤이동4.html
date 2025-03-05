@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스크롤 섹션 (바닥 & 팝업 개별 동작)</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        /* 상단 고정 헤더 */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: black;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 1000;
+        }
+
+        /* 고정된 탭 */
+        .tabs {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background-color: gray;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            z-index: 999;
+        }
+
+        /* 컨텐츠 영역 */
+        section {
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            text-align: center;
+            border-bottom: 2px solid white;
+            box-shadow: inset 0 -5px 5px -5px rgba(0, 0, 0, 0.2);
+        }
+        #section1 { background-color: lightblue; margin-top: 110px; }
+        #section2 { background-color: lightgreen; }
+        #section3 { background-color: lightcoral; }
+        #section4 { background-color: lightyellow; }
+        #section5 { background-color: lightgray; }
+        #section6 { background-color: lightsalmon; }
+
+        .fixed-buttons {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+        .fixed-buttons button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        #confirmBtnMain, #confirmBtnPopup {
+            display: none;
+        }
+
+        /* 모달 팝업 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 60%;
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 2000;
+        }
+        .modal-content {
+            height: 100%;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .modal .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+        .popup-buttons {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 상단 고정 헤더 -->
+    <div class="header">고정된 헤더</div>
+
+    <!-- 선택적 고정 탭 -->
+    <div class="tabs">고정된 탭</div>
+
+    <section id="section1">
+        섹션 1
+        <button onclick="openPopup()">팝업 열기</button>
+    </section>
+    <section id="section2">섹션 2</section>
+    <section id="section3">섹션 3</section>
+    <section id="section4">섹션 4</section>
+    <section id="section5">섹션 5</section>
+    <section id="section6">
+        섹션 6<br>마지막 섹션입니다.
+        <div style="height: 500px;"></div>
+    </section>
+
+    <!-- 바닥 페이지용 버튼 -->
+    <div class="fixed-buttons">
+        <button id="scrollDownBtnMain" onclick="ScrollManagerMain.scrollDown()">아래로 스크롤</button>
+        <button id="confirmBtnMain" onclick="ScrollManagerMain.confirmAction()">확인</button>
+    </div>
+
+    <!-- 레이어 팝업 -->
+    <div class="modal" id="popup">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closePopup()">×</span>
+            <h2>팝업 내부</h2>
+            <div style="height: 1800px; background: lightgray;">
+                스크롤 가능한 내용 (여러 줄 추가)
+            </div>
+        </div>
+        <!-- 팝업 내부용 버튼 -->
+        <div class="popup-buttons">
+            <button id="scrollDownBtnPopup" onclick="ScrollManagerPopup.scrollDown()">아래로 스크롤</button>
+            <button id="confirmBtnPopup" onclick="ScrollManagerPopup.confirmAction()">확인</button>
+        </div>
+    </div>
+
+    <script>
+        function createScrollManager(scrollContainer, scrollDownBtn, confirmBtn, isPopup = false) {
+            return {
+                scrollContainer,
+                scrollDownBtn,
+                confirmBtn,
+
+                isLastSectionFullyVisible() {
+                    return this.scrollContainer.scrollTop + this.scrollContainer.clientHeight >= this.scrollContainer.scrollHeight - 10;
+                },
+
+                scrollDown() {
+                    const nextScroll = this.scrollContainer.scrollTop + this.scrollContainer.clientHeight;
+                    this.scrollContainer.scrollTo({ top: nextScroll, behavior: 'smooth' });
+
+                    setTimeout(() => this.updateButtonVisibility(), 500);
+                },
+
+                updateButtonVisibility() {
+                    if (this.isLastSectionFullyVisible()) {
+                        this.scrollDownBtn.style.display = 'none';
+                        this.confirmBtn.style.display = 'inline-block';
+                    } else {
+                        this.scrollDownBtn.style.display = 'inline-block';
+                        this.confirmBtn.style.display = 'none';
+                    }
+                },
+
+                confirmAction() {
+                    alert("확인 버튼이 클릭되었습니다.");
+                },
+
+                init() {
+                    this.scrollContainer.addEventListener('scroll', () => this.updateButtonVisibility());
+                }
+            };
+        }
+
+        const ScrollManagerMain = createScrollManager(document.documentElement, document.getElementById('scrollDownBtnMain'), document.getElementById('confirmBtnMain'));
+        const ScrollManagerPopup = createScrollManager(document.querySelector('.modal-content'), document.getElementById('scrollDownBtnPopup'), document.getElementById('confirmBtnPopup'), true);
+
+        function openPopup() {
+            document.getElementById('popup').style.display = 'block';
+            ScrollManagerPopup.init();
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        ScrollManagerMain.init();
+    </script>
+
+</body>
+</html>
