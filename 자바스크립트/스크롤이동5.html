@@ -3,76 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스크롤 섹션 (팝업 대응)</title>
+    <title>팝업 내 스크롤</title>
     <style>
         body, html {
             margin: 0;
             padding: 0;
-            scroll-behavior: smooth;
-        }
-
-        /* 상단 고정 헤더 */
-        .header, .popup-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background-color: black;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            z-index: 1000;
-        }
-
-        /* 고정된 탭 */
-        .tabs, .popup-tabs {
-            position: fixed;
-            top: 60px;
-            left: 0;
-            width: 100%;
-            height: 50px;
-            background-color: gray;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            z-index: 999;
-        }
-
-        /* 컨텐츠 영역 */
-        section {
-            height: 1000px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-size: 2rem;
-            text-align: center;
-        }
-        #section1 { background-color: lightblue; margin-top: 110px; }
-        #section2 { background-color: lightgreen; }
-        #section3 { background-color: lightcoral; }
-        #section4 { background-color: lightyellow; }
-
-        .fixed-buttons {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-        }
-        .fixed-buttons button {
-            padding: 10px 20px;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-        #confirmBtn, #popupConfirmBtn {
-            display: none;
+            overflow: hidden; /* 바깥 페이지 스크롤 방지 */
         }
 
         /* 모달 팝업 스타일 */
@@ -95,14 +31,47 @@
             overflow-y: auto;
             padding-top: 110px;
         }
-        .modal .close-btn {
+        .popup-header {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: black;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 1000;
         }
+        .popup-tabs {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background-color: gray;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            z-index: 999;
+        }
+        section {
+            height: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            text-align: center;
+        }
+        #popup-section1 { background-color: lightblue; }
+        #popup-section2 { background-color: lightgreen; }
+        #popup-section3 { background-color: lightcoral; }
+        #popup-section4 { background-color: lightyellow; }
 
-        /* 팝업 내부 버튼 */
         .popup-fixed-buttons {
             position: absolute;
             bottom: 20px;
@@ -111,36 +80,23 @@
             display: flex;
             gap: 20px;
         }
+        .popup-fixed-buttons button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        #popupConfirmBtn {
+            display: none;
+        }
     </style>
 </head>
 <body>
-
-    <!-- 상단 고정 헤더 -->
-    <div class="header">고정된 헤더</div>
-    <div class="tabs">고정된 탭</div>
-
-    <section id="section1">
-        섹션 1
-        <button onclick="openPopup()">팝업 열기</button>
-    </section>
-    <section id="section2">섹션 2</section>
-    <section id="section3">섹션 3</section>
-    <section id="section4">
-        섹션 4<br>마지막 섹션입니다.
-        <div style="height: 500px;"></div> <!-- 추가 콘텐츠 -->
-    </section>
-
-    <div class="fixed-buttons">
-        <button id="scrollDownBtn" onclick="ScrollManager.scrollDown()">아래로 스크롤</button>
-        <button id="confirmBtn" onclick="ScrollManager.confirmAction()">확인</button>
-    </div>
 
     <!-- 레이어 팝업 -->
     <div class="modal" id="popup">
         <div class="popup-header">팝업 헤더</div>
         <div class="popup-tabs">팝업 탭</div>
-        <div class="modal-content">
-            <span class="close-btn" onclick="closePopup()">×</span>
+        <div class="modal-content" id="popupScrollContainer">
             <h2>팝업 내부</h2>
             <section id="popup-section1">팝업 섹션 1</section>
             <section id="popup-section2">팝업 섹션 2</section>
@@ -148,57 +104,57 @@
             <section id="popup-section4">팝업 섹션 4</section>
 
             <div class="popup-fixed-buttons">
-                <button id="popupScrollDownBtn" onclick="ScrollManager.scrollDown(true)">아래로 스크롤</button>
+                <button id="popupScrollDownBtn" onclick="ScrollManager.scrollDown()">아래로 스크롤</button>
                 <button id="popupConfirmBtn" onclick="ScrollManager.confirmAction()">확인</button>
             </div>
         </div>
     </div>
 
+    <button onclick="openPopup()">팝업 열기</button>
+
     <script>
         const ScrollManager = {
-            getScrollContainer(isPopup = false) {
-                if (isPopup) {
-                    return document.querySelector('.modal-content');
-                }
-                return document.documentElement || document.body;
+            scrollContainer: document.getElementById('popupScrollContainer'),
+            scrollDownBtn: document.getElementById('popupScrollDownBtn'),
+            confirmBtn: document.getElementById('popupConfirmBtn'),
+            sections: document.querySelectorAll('.modal-content section'),
+
+            isLastSectionFullyVisible() {
+                return this.scrollContainer.scrollTop + this.scrollContainer.clientHeight >= this.scrollContainer.scrollHeight;
             },
 
-            isLastSectionFullyVisible(isPopup = false) {
-                const container = this.getScrollContainer(isPopup);
-                return container.scrollTop + container.clientHeight >= container.scrollHeight;
-            },
-
-            scrollToSection(index, isPopup = false) {
-                const sections = isPopup ? document.querySelectorAll('.modal-content section') : document.querySelectorAll('section');
-                const container = this.getScrollContainer(isPopup);
-
-                if (sections[index]) {
-                    container.scrollTo({ top: sections[index].offsetTop, behavior: 'smooth' });
+            scrollToSection(index) {
+                if (this.sections[index]) {
+                    this.scrollContainer.scrollTo({ 
+                        top: this.sections[index].offsetTop, 
+                        behavior: 'smooth' 
+                    });
                 }
 
-                setTimeout(() => this.updateButtonVisibility(isPopup), 500);
+                setTimeout(() => this.updateButtonVisibility(), 500);
             },
 
-            scrollDown(isPopup = false) {
-                let currentIndex = this.getVisibleSectionIndex(isPopup);
-                const sections = isPopup ? document.querySelectorAll('.modal-content section') : document.querySelectorAll('section');
-
-                if (currentIndex < sections.length - 1) {
-                    this.scrollToSection(currentIndex + 1, isPopup);
+            scrollDown() {
+                let currentIndex = this.getVisibleSectionIndex();
+                if (currentIndex < this.sections.length - 1) {
+                    this.scrollToSection(currentIndex + 1);
                 }
             },
 
-            getVisibleSectionIndex(isPopup = false) {
-                const sections = isPopup ? document.querySelectorAll('.modal-content section') : document.querySelectorAll('section');
-                const container = this.getScrollContainer(isPopup);
+            getVisibleSectionIndex() {
                 let index = 0;
                 let minDiff = Infinity;
-                const center = container.scrollTop + container.clientHeight / 2;
+                const container = this.scrollContainer;
+                const windowCenter = container.scrollTop + container.clientHeight / 2;
 
-                sections.forEach((section, i) => {
-                    const centerDiff = Math.abs(center - (section.offsetTop + section.offsetHeight / 2));
-                    if (centerDiff < minDiff) {
-                        minDiff = centerDiff;
+                this.sections.forEach((section, i) => {
+                    const sectionTop = section.offsetTop;
+                    const sectionBottom = sectionTop + section.offsetHeight;
+                    const sectionCenter = (sectionTop + sectionBottom) / 2;
+
+                    const diff = Math.abs(windowCenter - sectionCenter);
+                    if (diff < minDiff) {
+                        minDiff = diff;
                         index = i;
                     }
                 });
@@ -206,22 +162,29 @@
                 return index;
             },
 
-            updateButtonVisibility(isPopup = false) {
-                const scrollBtn = isPopup ? document.getElementById('popupScrollDownBtn') : document.getElementById('scrollDownBtn');
-                const confirmBtn = isPopup ? document.getElementById('popupConfirmBtn') : document.getElementById('confirmBtn');
-
-                if (this.isLastSectionFullyVisible(isPopup)) {
-                    scrollBtn.style.display = 'none';
-                    confirmBtn.style.display = 'inline-block';
+            updateButtonVisibility() {
+                if (this.isLastSectionFullyVisible()) {
+                    this.scrollDownBtn.style.display = 'none';
+                    this.confirmBtn.style.display = 'inline-block';
                 } else {
-                    scrollBtn.style.display = 'inline-block';
-                    confirmBtn.style.display = 'none';
+                    this.scrollDownBtn.style.display = 'inline-block';
+                    this.confirmBtn.style.display = 'none';
                 }
+            },
+
+            confirmAction() {
+                alert("확인 버튼이 클릭되었습니다.");
+            },
+
+            init() {
+                this.scrollContainer.addEventListener('scroll', () => this.updateButtonVisibility());
             }
         };
 
-        function openPopup() { document.getElementById('popup').style.display = 'block'; }
-        function closePopup() { document.getElementById('popup').style.display = 'none'; }
+        function openPopup() {
+            document.getElementById('popup').style.display = 'block';
+            ScrollManager.init();
+        }
     </script>
 
 </body>
