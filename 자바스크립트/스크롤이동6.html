@@ -124,6 +124,7 @@
             confirmBtn: document.getElementById('popupConfirmBtn'),
             sections: document.querySelectorAll('.modal-content section'),
             headerHeight: 110, // 헤더 + 탭 높이 (60 + 50)
+            reachedBottom: false, // ✅ 최하단 도달 여부 저장
 
             isScrollEnd() {
                 return this.scrollContainer.scrollTop + this.scrollContainer.clientHeight >= this.scrollContainer.scrollHeight;
@@ -177,24 +178,29 @@
             },
 
             updateButtonVisibility() {
-    if (this.isScrollEnd()) {
-        // 하단에 도달하면 "확인" 버튼을 표시
-        this.scrollDownBtn.style.display = 'none';
-        this.confirmBtn.style.display = 'inline-block';
-        this.reachedBottom = true; // ✅ 하단 도달 여부 저장
-    } else if (!this.reachedBottom) {
-        // ❗ 한 번이라도 하단에 도달하면 버튼 상태를 유지
-        this.scrollDownBtn.style.display = 'inline-block';
-        this.confirmBtn.style.display = 'none';
-    }
-}
+                if (this.isScrollEnd()) {
+                    // 하단에 도달하면 "확인" 버튼을 표시
+                    this.scrollDownBtn.style.display = 'none';
+                    this.confirmBtn.style.display = 'inline-block';
+                    this.reachedBottom = true; // ✅ 하단 도달 여부 저장
+                } else if (!this.reachedBottom) {
+                    // ❗ 한 번이라도 하단에 도달하면 버튼 상태를 유지
+                    this.scrollDownBtn.style.display = 'inline-block';
+                    this.confirmBtn.style.display = 'none';
+                }
+            },
 
             init() {
+                this.reachedBottom = false; // 팝업 열 때 초기화
                 this.scrollContainer.addEventListener('scroll', this.updateButtonVisibility.bind(this));
             },
 
             destroy() {
                 this.scrollContainer.removeEventListener('scroll', this.updateButtonVisibility.bind(this));
+            },
+
+            confirmAction() {
+                alert('확인 버튼 클릭');
             }
         };
 
