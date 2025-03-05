@@ -92,81 +92,97 @@
     </section>
 
     <div class="fixed-buttons">
-        <button id="scrollDownBtn" onclick="scrollDown()">아래로 스크롤</button>
-        <button id="confirmBtn" onclick="confirmAction()">확인</button>
+        <button id="scrollDownBtn" onclick="ScrollManager.scrollDown()">아래로 스크롤</button>
+        <button id="confirmBtn" onclick="ScrollManager.confirmAction()">확인</button>
     </div>
 
     <script>
-        const sections = document.querySelectorAll('section');
-        const confirmBtn = document.getElementById('confirmBtn');
-        const header = document.querySelector('.header');
-        const tabs = document.querySelector('.tabs');
+        const ScrollManager = {
+            sections: document.querySelectorAll('section'),
+            scrollDownBtn: document.getElementById('scrollDownBtn'),
+            confirmBtn: document.getElementById('confirmBtn'),
+            header: document.querySelector('.header'),
+            tabs: document.querySelector('.tabs'),
 
-        function getFixedHeight() {
-            let headerHeight = header ? header.offsetHeight : 0;
-            let tabsHeight = tabs ? tabs.offsetHeight : 0;
-            return headerHeight + tabsHeight;
-        }
+            /** 고정된 헤더와 탭의 높이를 계산 */
+            getFixedHeight() {
+                let headerHeight = this.header ? this.header.offsetHeight : 0;
+                let tabsHeight = this.tabs ? this.tabs.offsetHeight : 0;
+                return headerHeight + tabsHeight;
+            },
 
-        function scrollToSection(index) {
-            const fixedHeight = getFixedHeight();
-            const targetPosition = sections[index].offsetTop - fixedHeight;
-            window.scrollTo({ top: targetPosition, behavior: 'smooth' });
-        }
+            /** 특정 섹션으로 스크롤 */
+            scrollToSection(index) {
+                const fixedHeight = this.getFixedHeight();
+                const targetPosition = this.sections[index].offsetTop - fixedHeight;
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+            },
 
-        function getVisibleSectionIndex() {
-            let index = 0;
-            let minDiff = Infinity;
-            const windowCenter = window.scrollY + window.innerHeight / 2;
+            /** 현재 화면에서 가장 중앙에 가까운 섹션의 인덱스를 찾음 */
+            getVisibleSectionIndex() {
+                let index = 0;
+                let minDiff = Infinity;
+                const windowCenter = window.scrollY + window.innerHeight / 2;
 
-            sections.forEach((section, i) => {
-                const sectionTop = section.offsetTop - getFixedHeight();
-                const sectionBottom = sectionTop + section.offsetHeight;
-                const sectionCenter = (sectionTop + sectionBottom) / 2;
+                this.sections.forEach((section, i) => {
+                    const sectionTop = section.offsetTop - this.getFixedHeight();
+                    const sectionBottom = sectionTop + section.offsetHeight;
+                    const sectionCenter = (sectionTop + sectionBottom) / 2;
 
-                const diff = Math.abs(windowCenter - sectionCenter);
-                if (diff < minDiff) {
-                    minDiff = diff;
-                    index = i;
+                    const diff = Math.abs(windowCenter - sectionCenter);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        index = i;
+                    }
+                });
+
+                return index;
+            },
+
+            /** 마지막 섹션이 화면에 완전히 보이는지 확인 */
+            isLastSectionFullyVisible() {
+                const lastSection = this.sections[this.sections.length - 1];
+                const lastSectionBottom = lastSection.offsetTop + lastSection.offsetHeight;
+                return window.scrollY + window.innerHeight >= lastSectionBottom;
+            },
+
+            /** 버튼 가시성 업데이트 */
+            updateButtonVisibility() {
+                if (this.isLastSectionFullyVisible()) {
+                    this.scrollDownBtn.style.display = 'none';
+                    this.confirmBtn.style.display = 'inline-block';
+                } else {
+                    this.scrollDownBtn.style.display = 'inline-block';
+                    this.confirmBtn.style.display = 'none';
                 }
-            });
+            },
 
-            return index;
-        }
+            /** 아래로 스크롤 버튼 클릭 시 동작 */
+            scrollDown() {
+                let currentIndex = this.getVisibleSectionIndex();
 
-        function isLastSectionFullyVisible() {
-            const lastSection = sections[sections.length - 1];
-            const lastSectionBottom = lastSection.offsetTop + lastSection.offsetHeight;
-            return window.scrollY + window.innerHeight >= lastSectionBottom;
-        }
+                if (currentIndex < this.sections.length - 1) {
+                    this.scrollToSection(currentIndex + 1);
+                } else {
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                }
 
-        function updateButtonVisibility() {
-            if (isLastSectionFullyVisible()) {
-                document.getElementById('scrollDownBtn').style.display = 'none';
-                confirmBtn.style.display = 'inline-block';
-            } else {
-                document.getElementById('scrollDownBtn').style.display = 'inline-block';
-                confirmBtn.style.display = 'none';
+                setTimeout(() => this.updateButtonVisibility(), 500);
+            },
+
+            /** 확인 버튼 클릭 시 동작 */
+            confirmAction() {
+                alert("확인 버튼이 클릭되었습니다.");
+            },
+
+            /** 초기 설정 */
+            init() {
+                window.addEventListener('scroll', () => this.updateButtonVisibility());
             }
-        }
+        };
 
-        function scrollDown() {
-            let currentIndex = getVisibleSectionIndex();
-
-            if (currentIndex < sections.length - 1) {
-                scrollToSection(currentIndex + 1);
-            } else {
-                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-            }
-
-            setTimeout(updateButtonVisibility, 500);
-        }
-
-        function confirmAction() {
-            alert("확인 버튼이 클릭되었습니다.");
-        }
-
-        window.addEventListener('scroll', updateButtonVisibility);
+        // 초기 실행
+        ScrollManager.init();
     </script>
 
 </body>
