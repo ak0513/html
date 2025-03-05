@@ -174,74 +174,72 @@
     </div>
 
     <script>
-        function createScrollManager(scrollContainer, sections, scrollDownBtn, confirmBtn, headerHeight = 110) {
-            return {
-                scrollContainer,
-                sections,
-                scrollDownBtn,
-                confirmBtn,
+        const ScrollManagerMain = {
+    scrollContainer: document.documentElement,
+    sections: document.querySelectorAll('.container section'),
+    scrollDownBtn: document.getElementById('scrollDownBtnMain'),
+    confirmBtn: document.getElementById('confirmBtnMain'),
+    headerHeight: 110,
 
-                isLastSectionFullyVisible() {
-                    return this.scrollContainer.scrollTop + this.scrollContainer.clientHeight >= this.scrollContainer.scrollHeight;
-                },
+    isLastSectionFullyVisible() {
+        return window.innerHeight + document.documentElement.scrollTop >= document.documentElement.scrollHeight - 1;
+    },
 
-                scrollToSection(index) {
-                    if (this.sections[index]) {
-                        const targetPosition = this.sections[index].offsetTop - headerHeight;
-                        this.scrollContainer.scrollTo({ top: targetPosition, behavior: 'smooth' });
-                    }
-                    setTimeout(() => this.updateButtonVisibility(), 500);
-                },
-
-                scrollDown() {
-                    let currentIndex = this.getVisibleSectionIndex();
-                    if (currentIndex < this.sections.length - 1) {
-                        this.scrollToSection(currentIndex + 1);
-                    } else {
-                        this.scrollContainer.scrollTo({ top: this.scrollContainer.scrollHeight, behavior: 'smooth' });
-                    }
-                },
-
-                getVisibleSectionIndex() {
-                    let index = 0;
-                    let minDiff = Infinity;
-                    const windowCenter = this.scrollContainer.scrollTop + this.scrollContainer.clientHeight / 2;
-
-                    this.sections.forEach((section, i) => {
-                        const sectionTop = section.offsetTop;
-                        const diff = Math.abs(windowCenter - sectionTop);
-                        if (diff < minDiff) {
-                            minDiff = diff;
-                            index = i;
-                        }
-                    });
-
-                    return index;
-                },
-
-                updateButtonVisibility() {
-                    this.confirmBtn.style.display = this.isLastSectionFullyVisible() ? 'inline-block' : 'none';
-                    this.scrollDownBtn.style.display = this.isLastSectionFullyVisible() ? 'none' : 'inline-block';
-                },
-
-                confirmAction() {
-                    alert("확인 버튼 클릭!");
-                },
-
-                init() {
-                    this.scrollContainer.addEventListener('scroll', () => this.updateButtonVisibility());
-                }
-            };
+    scrollToSection(index) {
+        if (this.sections[index]) {
+            const targetPosition = this.sections[index].offsetTop - this.headerHeight;
+            window.scrollTo({ top: targetPosition, behavior: 'smooth' });
         }
+        setTimeout(() => this.updateButtonVisibility(), 500);
+    },
 
-        const ScrollManagerMain = createScrollManager(document.documentElement, document.querySelectorAll('.container section'), document.getElementById('scrollDownBtnMain'), document.getElementById('confirmBtnMain'));
-        const ScrollManagerPopup = createScrollManager(document.querySelector('.modal-content'), document.querySelectorAll('.popup-section'), document.getElementById('scrollDownBtnPopup'), document.getElementById('confirmBtnPopup'), 0);
+    scrollDown() {
+        let currentIndex = this.getVisibleSectionIndex();
+        if (currentIndex < this.sections.length - 1) {
+            this.scrollToSection(currentIndex + 1);
+        } else {
+            window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+        }
+    },
 
-        function openPopup() { document.getElementById('popup').style.display = 'block'; ScrollManagerPopup.init(); }
-        function closePopup() { document.getElementById('popup').style.display = 'none'; }
+    getVisibleSectionIndex() {
+        let index = 0;
+        let minDiff = Infinity;
+        const windowCenter = document.documentElement.scrollTop + window.innerHeight / 2;
 
-        ScrollManagerMain.init();
-    </script>
+        this.sections.forEach((section, i) => {
+            const sectionTop = section.offsetTop;
+            const diff = Math.abs(windowCenter - sectionTop);
+            if (diff < minDiff) {
+                minDiff = diff;
+                index = i;
+            }
+        });
 
+        return index;
+    },
+
+    updateButtonVisibility() {
+        if (this.isLastSectionFullyVisible()) {
+            this.confirmBtn.style.display = 'inline-block';
+            this.scrollDownBtn.style.display = 'none';
+        } else {
+            this.confirmBtn.style.display = 'none';
+            this.scrollDownBtn.style.display = 'inline-block';
+        }
+    },
+
+    confirmAction() {
+        alert("확인 버튼 클릭!");
+    },
+
+    init() {
+        window.addEventListener('scroll', () => this.updateButtonVisibility());
+        this.updateButtonVisibility();
+    }
+};
+
+ScrollManagerMain.init();
+</script>
 </body>
 </html>
