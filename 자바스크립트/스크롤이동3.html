@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스크롤 섹션</title>
+    <title>스크롤 섹션 (바닥 & 팝업 개별 동작)</title>
     <style>
         body, html {
             margin: 0;
@@ -47,6 +47,7 @@
         section {
             height: 1000px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             font-size: 2rem;
@@ -74,34 +75,38 @@
             display: none;
         }
 
-        /* 모달 스타일 */
+        /* 모달 팝업 스타일 */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 60%;
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 2000;
         }
         .modal-content {
-            background: white;
-            width: 80%;
-            max-width: 400px;
-            height: 300px;
-            padding: 20px;
+            height: 100%;
             overflow-y: auto;
-            text-align: center;
+            padding: 20px;
         }
-        .close-btn {
-            margin-top: 10px;
-            padding: 5px 10px;
-            background: red;
-            color: white;
-            border: none;
+        .modal .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
             cursor: pointer;
+        }
+        .popup-buttons {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
         }
     </style>
 </head>
@@ -115,110 +120,120 @@
 
     <section id="section1">
         섹션 1
-        <button id="openPopup">팝업 열기</button>
+        <button onclick="openPopup()">팝업 열기</button>
     </section>
     <section id="section2">섹션 2</section>
     <section id="section3">섹션 3</section>
     <section id="section4">
         섹션 4<br>마지막 섹션입니다.
-        <div style="height: 500px;"></div> <!-- 추가 콘텐츠 시뮬레이션 -->
+        <div style="height: 500px;"></div>
     </section>
 
+    <!-- 바닥 페이지용 버튼 -->
     <div class="fixed-buttons">
-        <button id="scrollDownBtnMain">아래로 스크롤</button>
-        <button id="confirmBtnMain">확인</button>
+        <button id="scrollDownBtnMain" onclick="ScrollManagerMain.scrollDown()">아래로 스크롤</button>
+        <button id="confirmBtnMain" onclick="ScrollManagerMain.confirmAction()">확인</button>
     </div>
 
-    <!-- 모달 팝업 -->
+    <!-- 레이어 팝업 -->
     <div class="modal" id="popup">
         <div class="modal-content">
-            <p>팝업 내용</p>
-            <div class="fixed-buttons">
-                <button id="scrollDownBtnPopup">아래로 스크롤</button>
-                <button id="confirmBtnPopup">확인</button>
+            <span class="close-btn" onclick="closePopup()">×</span>
+            <h2>팝업 내부</h2>
+            <div style="height: 1200px; background: lightgray;">
+                스크롤 가능한 내용 (여러 줄 추가)
             </div>
-            <button class="close-btn">닫기</button>
+        </div>
+        <!-- 팝업 내부용 버튼 -->
+        <div class="popup-buttons">
+            <button id="scrollDownBtnPopup" onclick="ScrollManagerPopup.scrollDown()">아래로 스크롤</button>
+            <button id="confirmBtnPopup" onclick="ScrollManagerPopup.confirmAction()">확인</button>
         </div>
     </div>
 
     <script>
-        function createScrollManager(scrollContainer, scrollDownBtn, confirmBtn) {
-            function getFixedHeight() {
-                const header = document.querySelector('.header');
-                const tabs = document.querySelector('.tabs');
-                return (header ? header.offsetHeight : 0) + (tabs ? tabs.offsetHeight : 0);
-            }
+        function createScrollManager(scrollContainer, scrollDownBtn, confirmBtn, isMainPage) {
+            return {
+                scrollContainer,
+                scrollDownBtn,
+                confirmBtn,
+                sections: isMainPage ? document.querySelectorAll('section') : scrollContainer.querySelectorAll('div'),
 
-            function scrollToSection(index) {
-                const sections = scrollContainer.querySelectorAll('section');
-                if (sections[index]) {
-                    const targetPosition = sections[index].offsetTop - getFixedHeight();
-                    scrollContainer.scrollTo({ top: targetPosition, behavior: 'smooth' });
-                }
-            }
+                isLastSectionFullyVisible() {
+                    const totalHeight = isMainPage ? document.documentElement.scrollHeight : this.scrollContainer.scrollHeight;
+                    return this.scrollContainer.scrollTop + this.scrollContainer.clientHeight >= totalHeight - 1;
+                },
 
-            function getVisibleSectionIndex() {
-                const sections = scrollContainer.querySelectorAll('section');
-                let index = 0;
-                let minDiff = Infinity;
-                const windowCenter = scrollContainer.scrollTop + scrollContainer.clientHeight / 2;
-
-                sections.forEach((section, i) => {
-                    const sectionTop = section.offsetTop - getFixedHeight();
-                    const sectionBottom = sectionTop + section.offsetHeight;
-                    const sectionCenter = (sectionTop + sectionBottom) / 2;
-
-                    const diff = Math.abs(windowCenter - sectionCenter);
-                    if (diff < minDiff) {
-                        minDiff = diff;
-                        index = i;
+                scrollToSection(index) {
+                    if (this.sections[index]) {
+                        const targetPosition = isMainPage ? this.sections[index].offsetTop - 110 : this.sections[index].offsetTop;
+                        this.scrollContainer.scrollTo({ top: targetPosition, behavior: 'smooth' });
                     }
-                });
+                    setTimeout(() => this.updateButtonVisibility(), 500);
+                },
 
-                return index;
-            }
+                scrollDown() {
+                    let currentIndex = this.getVisibleSectionIndex();
+                    if (currentIndex < this.sections.length - 1) {
+                        this.scrollToSection(currentIndex + 1);
+                    } else {
+                        this.scrollContainer.scrollTo({ top: this.scrollContainer.scrollHeight, behavior: 'smooth' });
+                    }
+                },
 
-            function isLastSectionFullyVisible() {
-                const scrollHeight = Math.max(
-                    scrollContainer.scrollHeight,
-                    scrollContainer.clientHeight
-                );
-                return scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollHeight - 1;
-            }
+                getVisibleSectionIndex() {
+                    let index = 0;
+                    let minDiff = Infinity;
+                    const windowCenter = this.scrollContainer.scrollTop + this.scrollContainer.clientHeight / 2;
 
-            function updateButtonVisibility() {
-                if (isLastSectionFullyVisible()) {
-                    scrollDownBtn.style.display = 'none';
-                    confirmBtn.style.display = 'inline-block';
-                } else {
-                    scrollDownBtn.style.display = 'inline-block';
-                    confirmBtn.style.display = 'none';
+                    this.sections.forEach((section, i) => {
+                        const sectionTop = isMainPage ? section.offsetTop - 110 : section.offsetTop;
+                        const sectionBottom = sectionTop + section.offsetHeight;
+                        const sectionCenter = (sectionTop + sectionBottom) / 2;
+
+                        const diff = Math.abs(windowCenter - sectionCenter);
+                        if (diff < minDiff) {
+                            minDiff = diff;
+                            index = i;
+                        }
+                    });
+
+                    return index;
+                },
+
+                updateButtonVisibility() {
+                    if (this.isLastSectionFullyVisible()) {
+                        this.scrollDownBtn.style.display = 'none';
+                        this.confirmBtn.style.display = 'inline-block';
+                    } else {
+                        this.scrollDownBtn.style.display = 'inline-block';
+                        this.confirmBtn.style.display = 'none';
+                    }
+                },
+
+                confirmAction() {
+                    alert("확인 버튼이 클릭되었습니다.");
+                },
+
+                init() {
+                    this.scrollContainer.addEventListener('scroll', () => this.updateButtonVisibility());
                 }
-            }
-
-            scrollDownBtn.addEventListener('click', () => {
-                let currentIndex = getVisibleSectionIndex();
-                scrollToSection(currentIndex + 1);
-                setTimeout(updateButtonVisibility, 500);
-            });
-
-            scrollContainer.addEventListener('scroll', () => {
-                setTimeout(updateButtonVisibility, 50);
-            });
-
-            return { updateButtonVisibility };
+            };
         }
 
-        const ScrollManagerMain = createScrollManager(document.documentElement, document.getElementById('scrollDownBtnMain'), document.getElementById('confirmBtnMain'));
-        const ScrollManagerPopup = createScrollManager(document.querySelector('.modal-content'), document.getElementById('scrollDownBtnPopup'), document.getElementById('confirmBtnPopup'));
+        const ScrollManagerMain = createScrollManager(document.documentElement, document.getElementById('scrollDownBtnMain'), document.getElementById('confirmBtnMain'), true);
+        const ScrollManagerPopup = createScrollManager(document.querySelector('.modal-content'), document.getElementById('scrollDownBtnPopup'), document.getElementById('confirmBtnPopup'), false);
 
-        document.getElementById('openPopup').addEventListener('click', () => {
-            document.getElementById('popup').style.display = 'flex';
-        });
+        function openPopup() {
+            document.getElementById('popup').style.display = 'block';
+            ScrollManagerPopup.init();
+        }
 
-        document.querySelector('.close-btn').addEventListener('click', () => {
+        function closePopup() {
             document.getElementById('popup').style.display = 'none';
-        });
+        }
+
+        ScrollManagerMain.init();
     </script>
 
 </body>
