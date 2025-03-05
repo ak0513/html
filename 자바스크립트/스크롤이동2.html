@@ -157,6 +157,11 @@
                 return document.documentElement || document.body;
             },
 
+            isLastSectionFullyVisible() {
+                const container = this.getScrollContainer();
+                return container.scrollTop + container.clientHeight >= container.scrollHeight;
+            },
+
             scrollToSection(index) {
                 const container = this.getScrollContainer();
                 const sections = container.querySelectorAll('section');
@@ -165,6 +170,20 @@
                 if (sections[index]) {
                     const targetPosition = sections[index].offsetTop - fixedHeight;
                     container.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                }
+
+                setTimeout(() => this.updateButtonVisibility(), 500);
+            },
+
+            scrollDown() {
+                let currentIndex = this.getVisibleSectionIndex();
+                const container = this.getScrollContainer();
+                const sections = container.querySelectorAll('section');
+
+                if (currentIndex < sections.length - 1) {
+                    this.scrollToSection(currentIndex + 1);
+                } else {
+                    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
                 }
             },
 
@@ -191,15 +210,13 @@
                 return index;
             },
 
-            scrollDown() {
-                let currentIndex = this.getVisibleSectionIndex();
-                const container = this.getScrollContainer();
-                const sections = container.querySelectorAll('section');
-
-                if (currentIndex < sections.length - 1) {
-                    this.scrollToSection(currentIndex + 1);
+            updateButtonVisibility() {
+                if (this.isLastSectionFullyVisible()) {
+                    this.scrollDownBtn.style.display = 'none';
+                    this.confirmBtn.style.display = 'inline-block';
                 } else {
-                    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+                    this.scrollDownBtn.style.display = 'inline-block';
+                    this.confirmBtn.style.display = 'none';
                 }
             },
 
@@ -208,16 +225,18 @@
             },
 
             init() {
-                window.addEventListener('scroll', () => this.updateButtonVisibility());
+                this.getScrollContainer().addEventListener('scroll', () => this.updateButtonVisibility());
             }
         };
 
         function openPopup() {
             document.getElementById('popup').style.display = 'block';
+            ScrollManager.init();
         }
 
         function closePopup() {
             document.getElementById('popup').style.display = 'none';
+            ScrollManager.init();
         }
 
         ScrollManager.init();
