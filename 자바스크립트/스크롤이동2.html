@@ -47,6 +47,7 @@
         section {
             height: 1000px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             font-size: 2rem;
@@ -109,10 +110,9 @@
     <!-- 선택적 고정 탭 -->
     <div class="tabs">고정된 탭</div>
 
-    <section id="section1">섹션 1
-        
-            <button onclick="openPopup()">팝업 열기</button>
-        
+    <section id="section1">
+        섹션 1
+        <button onclick="openPopup()">팝업 열기</button>
     </section>
     <section id="section2">섹션 2</section>
     <section id="section3">섹션 3</section>
@@ -137,21 +137,11 @@
         </div>
     </div>
 
-
-
     <script>
         const ScrollManager = {
             sections: document.querySelectorAll('section'),
             scrollDownBtn: document.getElementById('scrollDownBtn'),
             confirmBtn: document.getElementById('confirmBtn'),
-            header: document.querySelector('.header'),
-            tabs: document.querySelector('.tabs'),
-
-            getFixedHeight() {
-                let headerHeight = this.header ? this.header.offsetHeight : 0;
-                let tabsHeight = this.tabs ? this.tabs.offsetHeight : 0;
-                return headerHeight + tabsHeight;
-            },
 
             getScrollContainer() {
                 const modalContent = document.querySelector('.modal-content');
@@ -163,16 +153,20 @@
 
             isLastSectionFullyVisible() {
                 const container = this.getScrollContainer();
-                return container.scrollTop + container.clientHeight >= container.scrollHeight;
+
+                if (container === document.documentElement || container === document.body) {
+                    return window.scrollY + window.innerHeight >= document.documentElement.scrollHeight;
+                } else {
+                    return container.scrollTop + container.clientHeight >= container.scrollHeight;
+                }
             },
 
             scrollToSection(index) {
                 const container = this.getScrollContainer();
-                const sections = container.querySelectorAll('section');
-                const fixedHeight = this.getFixedHeight();
+                const sections = document.querySelectorAll('section');
 
                 if (sections[index]) {
-                    const targetPosition = sections[index].offsetTop - fixedHeight;
+                    const targetPosition = sections[index].offsetTop;
                     container.scrollTo({ top: targetPosition, behavior: 'smooth' });
                 }
 
@@ -181,26 +175,23 @@
 
             scrollDown() {
                 let currentIndex = this.getVisibleSectionIndex();
-                const container = this.getScrollContainer();
-                const sections = container.querySelectorAll('section');
+                const sections = document.querySelectorAll('section');
 
                 if (currentIndex < sections.length - 1) {
                     this.scrollToSection(currentIndex + 1);
                 } else {
-                    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+                    this.getScrollContainer().scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
                 }
             },
 
             getVisibleSectionIndex() {
-                const container = this.getScrollContainer();
-                const sections = container.querySelectorAll('section');
-
+                const sections = document.querySelectorAll('section');
                 let index = 0;
                 let minDiff = Infinity;
-                const windowCenter = container.scrollTop + container.clientHeight / 2;
+                const windowCenter = window.scrollY + window.innerHeight / 2;
 
                 sections.forEach((section, i) => {
-                    const sectionTop = section.offsetTop - this.getFixedHeight();
+                    const sectionTop = section.offsetTop;
                     const sectionBottom = sectionTop + section.offsetHeight;
                     const sectionCenter = (sectionTop + sectionBottom) / 2;
 
@@ -229,6 +220,7 @@
             },
 
             init() {
+                window.addEventListener('scroll', () => this.updateButtonVisibility());
                 this.getScrollContainer().addEventListener('scroll', () => this.updateButtonVisibility());
             }
         };
