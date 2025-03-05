@@ -27,7 +27,7 @@
         }
         .modal-content {
             position: relative;
-            height: calc(100% - 60px);
+            height: calc(100% - 110px);
             overflow-y: auto;
             padding-top: 110px;
         }
@@ -72,7 +72,7 @@
         #popup-section3 { background-color: lightcoral; }
         #popup-section4 { background-color: lightyellow; }
 
-        /* 고정된 버튼 */
+        /* 하단 고정 버튼 */
         .popup-fixed-buttons {
             position: fixed;
             bottom: 20px;
@@ -80,7 +80,7 @@
             transform: translateX(-50%);
             display: flex;
             gap: 20px;
-            z-index: 2001; /* 팝업보다 위에 배치 */
+            z-index: 2001;
         }
         .popup-fixed-buttons button {
             padding: 10px 20px;
@@ -103,7 +103,10 @@
             <section id="popup-section1">팝업 섹션 1</section>
             <section id="popup-section2">팝업 섹션 2</section>
             <section id="popup-section3">팝업 섹션 3</section>
-            <section id="popup-section4">팝업 섹션 4</section>
+            <section id="popup-section4">
+                팝업 섹션 4
+                <div style="height: 500px;">추가 내용 (더 스크롤 가능)</div>
+            </section>
         </div>
 
         <div class="popup-fixed-buttons">
@@ -120,15 +123,16 @@
             scrollDownBtn: document.getElementById('popupScrollDownBtn'),
             confirmBtn: document.getElementById('popupConfirmBtn'),
             sections: document.querySelectorAll('.modal-content section'),
+            headerHeight: 110, // 헤더 + 탭 높이 (60 + 50)
 
-            isLastSectionFullyVisible() {
+            isScrollEnd() {
                 return this.scrollContainer.scrollTop + this.scrollContainer.clientHeight >= this.scrollContainer.scrollHeight;
             },
 
             scrollToSection(index) {
                 if (this.sections[index]) {
                     this.scrollContainer.scrollTo({ 
-                        top: this.sections[index].offsetTop, 
+                        top: this.sections[index].offsetTop - this.headerHeight, 
                         behavior: 'smooth' 
                     });
                 }
@@ -140,7 +144,15 @@
                 let currentIndex = this.getVisibleSectionIndex();
                 if (currentIndex < this.sections.length - 1) {
                     this.scrollToSection(currentIndex + 1);
+                } else {
+                    // 마지막 섹션에서도 하단 추가 콘텐츠까지 스크롤
+                    this.scrollContainer.scrollTo({
+                        top: this.scrollContainer.scrollHeight - this.scrollContainer.clientHeight,
+                        behavior: 'smooth'
+                    });
                 }
+
+                setTimeout(() => this.updateButtonVisibility(), 500);
             },
 
             getVisibleSectionIndex() {
@@ -150,7 +162,7 @@
                 const windowCenter = container.scrollTop + container.clientHeight / 2;
 
                 this.sections.forEach((section, i) => {
-                    const sectionTop = section.offsetTop;
+                    const sectionTop = section.offsetTop - this.headerHeight;
                     const sectionBottom = sectionTop + section.offsetHeight;
                     const sectionCenter = (sectionTop + sectionBottom) / 2;
 
@@ -165,7 +177,7 @@
             },
 
             updateButtonVisibility() {
-                if (this.isLastSectionFullyVisible()) {
+                if (this.isScrollEnd()) {
                     this.scrollDownBtn.style.display = 'none';
                     this.confirmBtn.style.display = 'inline-block';
                 } else {
