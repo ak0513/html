@@ -96,13 +96,14 @@
         .modal-content {
             height: 100%;
             overflow-y: auto;
-            padding: 20px;
+            padding: 0;
         }
         .modal .close-btn {
             position: absolute;
             top: 10px;
             right: 10px;
             cursor: pointer;
+            font-size: 1.5rem;
         }
         .popup-buttons {
             position: absolute;
@@ -112,6 +113,24 @@
             display: flex;
             gap: 20px;
         }
+
+        /* 팝업 내부 섹션 디자인 */
+        .popup-section {
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            text-align: center;
+            border-bottom: 2px solid white;
+            box-shadow: inset 0 -5px 5px -5px rgba(0, 0, 0, 0.2);
+        }
+        #popup-section1 { background-color: lavender; }
+        #popup-section2 { background-color: lightpink; }
+        #popup-section3 { background-color: lightgoldenrodyellow; }
+        #popup-section4 { background-color: lightcyan; }
+        #popup-section5 { background-color: lightgray; }
+
     </style>
 </head>
 <body>
@@ -146,10 +165,17 @@
         <div class="modal-content">
             <span class="close-btn" onclick="closePopup()">×</span>
             <h2>팝업 내부</h2>
-            <div style="height: 1800px; background: lightgray;">
-                스크롤 가능한 내용 (여러 줄 추가)
+
+            <div id="popup-section1" class="popup-section">팝업 섹션 1</div>
+            <div id="popup-section2" class="popup-section">팝업 섹션 2</div>
+            <div id="popup-section3" class="popup-section">팝업 섹션 3</div>
+            <div id="popup-section4" class="popup-section">팝업 섹션 4</div>
+            <div id="popup-section5" class="popup-section">
+                팝업 마지막 섹션
+                <div style="height: 200px;"></div>
             </div>
         </div>
+
         <!-- 팝업 내부용 버튼 -->
         <div class="popup-buttons">
             <button id="scrollDownBtnPopup" onclick="ScrollManagerPopup.scrollDown()">아래로 스크롤</button>
