@@ -160,8 +160,15 @@
                 sections: isMainPage ? document.querySelectorAll('section') : scrollContainer.querySelectorAll('div'),
 
                 isLastSectionFullyVisible() {
-                    const totalHeight = isMainPage ? document.documentElement.scrollHeight : this.scrollContainer.scrollHeight;
-                    return this.scrollContainer.scrollTop + this.scrollContainer.clientHeight >= totalHeight - 1;
+                    if (isMainPage) {
+                        const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+                        const viewportHeight = window.innerHeight;
+                        const documentHeight = document.documentElement.scrollHeight;
+
+                        return scrollPosition + viewportHeight >= documentHeight - 1;
+                    } else {
+                        return this.scrollContainer.scrollTop + this.scrollContainer.clientHeight >= this.scrollContainer.scrollHeight - 1;
+                    }
                 },
 
                 scrollToSection(index) {
@@ -202,6 +209,7 @@
                 },
 
                 updateButtonVisibility() {
+                    console.log("스크롤 체크:", this.isLastSectionFullyVisible());
                     if (this.isLastSectionFullyVisible()) {
                         this.scrollDownBtn.style.display = 'none';
                         this.confirmBtn.style.display = 'inline-block';
