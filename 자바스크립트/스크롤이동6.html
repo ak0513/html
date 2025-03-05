@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>팝업 내 스크롤</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* 바깥 페이지 스크롤 방지 */
+        }
+
+        /* 모달 팝업 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 70%;
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 2000;
+        }
+        .modal-content {
+            position: relative;
+            height: calc(100% - 110px);
+            overflow-y: auto;
+            padding-top: 110px;
+        }
+        .popup-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: black;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 1000;
+        }
+        .popup-tabs {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background-color: gray;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            z-index: 999;
+        }
+        section {
+            height: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            text-align: center;
+        }
+        #popup-section1 { background-color: lightblue; }
+        #popup-section2 { background-color: lightgreen; }
+        #popup-section3 { background-color: lightcoral; }
+        #popup-section4 { background-color: lightyellow; }
+
+        /* 하단 고정 버튼 */
+        .popup-fixed-buttons {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 2001;
+        }
+        .popup-fixed-buttons button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        #popupConfirmBtn {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 레이어 팝업 -->
+    <div class="modal" id="popup">
+        <div class="popup-header">팝업 헤더</div>
+        <div class="popup-tabs">팝업 탭</div>
+        <div class="modal-content" id="popupScrollContainer">
+            <h2>팝업 내부</h2>
+            <section id="popup-section1">팝업 섹션 1</section>
+            <section id="popup-section2">팝업 섹션 2</section>
+            <section id="popup-section3">팝업 섹션 3</section>
+            <section id="popup-section4">
+                팝업 섹션 4
+                <div style="height: 500px;">추가 내용 (더 스크롤 가능)</div>
+            </section>
+        </div>
+
+        <div class="popup-fixed-buttons">
+            <button id="popupScrollDownBtn" onclick="ScrollManager.scrollDown()">아래로 스크롤</button>
+            <button id="popupConfirmBtn" onclick="ScrollManager.confirmAction()">확인</button>
+        </div>
+    </div>
+
+    <button onclick="openPopup()">팝업 열기</button>
+
+    <script>
+        const ScrollManager = {
+            scrollContainer: document.getElementById('popupScrollContainer'),
+            scrollDownBtn: document.getElementById('popupScrollDownBtn'),
+            confirmBtn: document.getElementById('popupConfirmBtn'),
+            sections: document.querySelectorAll('.modal-content section'),
+            headerHeight: 110, // 헤더 + 탭 높이 (60 + 50)
+
+            isScrollEnd() {
+                return this.scrollContainer.scrollTop + this.scrollContainer.clientHeight >= this.scrollContainer.scrollHeight;
+            },
+
+            scrollToSection(index) {
+                if (this.sections[index]) {
+                    this.scrollContainer.scrollTo({ 
+                        top: this.sections[index].offsetTop - this.headerHeight, 
+                        behavior: 'smooth' 
+                    });
+                }
+
+                setTimeout(() => this.updateButtonVisibility(), 500);
+            },
+
+            scrollDown() {
+                let currentIndex = this.getVisibleSectionIndex();
+                if (currentIndex < this.sections.length - 1) {
+                    this.scrollToSection(currentIndex + 1);
+                } else {
+                    // 마지막 섹션에서도 하단 추가 콘텐츠까지 스크롤
+                    this.scrollContainer.scrollTo({
+                        top: this.scrollContainer.scrollHeight - this.scrollContainer.clientHeight,
+                        behavior: 'smooth'
+                    });
+                }
+
+                setTimeout(() => this.updateButtonVisibility(), 500);
+            },
+
+            getVisibleSectionIndex() {
+                let index = 0;
+                let minDiff = Infinity;
+                const container = this.scrollContainer;
+                const windowCenter = container.scrollTop + container.clientHeight / 2;
+
+                this.sections.forEach((section, i) => {
+                    const sectionTop = section.offsetTop - this.headerHeight;
+                    const sectionBottom = sectionTop + section.offsetHeight;
+                    const sectionCenter = (sectionTop + sectionBottom) / 2;
+
+                    const diff = Math.abs(windowCenter - sectionCenter);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        index = i;
+                    }
+                });
+
+                return index;
+            },
+
+            updateButtonVisibility() {
+    if (this.isScrollEnd()) {
+        // 하단에 도달하면 "확인" 버튼을 표시
+        this.scrollDownBtn.style.display = 'none';
+        this.confirmBtn.style.display = 'inline-block';
+        this.reachedBottom = true; // ✅ 하단 도달 여부 저장
+    } else if (!this.reachedBottom) {
+        // ❗ 한 번이라도 하단에 도달하면 버튼 상태를 유지
+        this.scrollDownBtn.style.display = 'inline-block';
+        this.confirmBtn.style.display = 'none';
+    }
+}
+
+            init() {
+                this.scrollContainer.addEventListener('scroll', this.updateButtonVisibility.bind(this));
+            },
+
+            destroy() {
+                this.scrollContainer.removeEventListener('scroll', this.updateButtonVisibility.bind(this));
+            }
+        };
+
+        function openPopup() {
+            document.getElementById('popup').style.display = 'block';
+            ScrollManager.init();
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+            ScrollManager.destroy();
+        }
+    </script>
+
+</body>
+</html>
