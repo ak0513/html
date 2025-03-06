@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>바닥 & 팝업 독립 스크롤</title>
+    <title>스크롤 섹션 (레이어 팝업 대응)</title>
     <style>
         body, html {
             margin: 0;
@@ -11,51 +11,53 @@
             scroll-behavior: smooth;
         }
 
-        /* 고정 헤더 & 탭 */
+        /* 상단 고정 헤더 */
         .header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 60px;
-            background: black;
+            background-color: black;
             color: white;
-            text-align: center;
-            line-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 1.2rem;
             z-index: 1000;
         }
+
+        /* 고정된 탭 */
         .tabs {
             position: fixed;
             top: 60px;
             left: 0;
             width: 100%;
             height: 50px;
-            background: gray;
+            background-color: gray;
             color: white;
-            text-align: center;
-            line-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 1rem;
             z-index: 999;
         }
 
-        /* 본문 영역 */
-        .container {
-            margin-top: 110px;
-        }
+        /* 컨텐츠 영역 */
         section {
-            height: 100vh;
+            height: 1000px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             font-size: 2rem;
+            text-align: center;
         }
-        #section1 { background: lightblue; }
-        #section2 { background: lightgreen; }
-        #section3 { background: lightcoral; }
-        #section4 { background: lightyellow; }
+        #section1 { background-color: lightblue; margin-top: 110px; }
+        #section2 { background-color: lightgreen; }
+        #section3 { background-color: lightcoral; }
+        #section4 { background-color: lightyellow; }
 
-        /* 바닥 페이지 버튼 */
         .fixed-buttons {
             position: fixed;
             bottom: 20px;
@@ -69,11 +71,11 @@
             font-size: 1rem;
             cursor: pointer;
         }
-        #confirmBtnMain, #confirmBtnPopup {
+        .confirmBtn {
             display: none;
         }
 
-        /* 팝업 */
+        /* 모달 팝업 스타일 */
         .modal {
             display: none;
             position: fixed;
@@ -98,129 +100,105 @@
             right: 10px;
             cursor: pointer;
         }
-
-        /* 팝업 내부 섹션 */
-        .popup-sections section {
-            height: 300px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-        }
-        #popupSection1 { background: #ffddc1; }
-        #popupSection2 { background: #ffab91; }
-        #popupSection3 { background: #ff8a65; }
-        #popupSection4 { background: #d84315; color: white; }
-
-        /* 팝업 내부 버튼 */
-        .popup-buttons {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-        }
     </style>
 </head>
 <body>
 
-    <!-- 고정 헤더 & 탭 -->
+    <!-- 상단 고정 헤더 -->
     <div class="header">고정된 헤더</div>
+
+    <!-- 선택적 고정 탭 -->
     <div class="tabs">고정된 탭</div>
 
-    <!-- 바닥 페이지 -->
-    <div class="container">
-        <section id="section1">
-            섹션 1
-            <button onclick="openPopup()">팝업 열기</button>
-        </section>
-        <section id="section2">섹션 2</section>
-        <section id="section3">섹션 3</section>
-        <section id="section4">섹션 4 (마지막)</section>
-    </div>
+    <section id="section1">
+        섹션 1
+        <button onclick="openPopup('popup1')">팝업 1 열기</button>
+        <button onclick="openPopup('popup2')">팝업 2 열기</button>
+    </section>
+    <section id="section2">섹션 2</section>
+    <section id="section3">섹션 3</section>
+    <section id="section4">
+        섹션 4<br>마지막 섹션입니다.
+        <div style="height: 500px;"></div> <!-- 추가 콘텐츠 시뮬레이션 -->
+    </section>
 
-    <!-- 바닥 페이지 버튼 -->
     <div class="fixed-buttons">
-        <button id="scrollDownBtnMain" onclick="ScrollManagerMain.scrollDown()">아래로 스크롤</button>
-        <button id="confirmBtnMain" onclick="ScrollManagerMain.confirmAction()">확인</button>
+        <button class="scrollDownBtn" onclick="ScrollManager.scrollDown()">아래로 스크롤</button>
+        <button class="confirmBtn" onclick="ScrollManager.confirmAction()">확인</button>
     </div>
 
-    <!-- 팝업 -->
-    <div class="modal" id="popup">
+    <!-- 레이어 팝업 1 -->
+    <div class="modal" id="popup1">
         <div class="modal-content">
-            <span class="close-btn" onclick="closePopup()">×</span>
-            <h2>팝업 내부</h2>
-            <div class="popup-sections">
-                <section id="popupSection1">팝업 섹션 1</section>
-                <section id="popupSection2">팝업 섹션 2</section>
-                <section id="popupSection3">팝업 섹션 3</section>
-                <section id="popupSection4">팝업 섹션 4 (마지막)</section>
+            <span class="close-btn" onclick="closePopup('popup1')">×</span>
+            <h2>팝업 1</h2>
+            <div style="height: 1200px; background: lightgray;">
+                스크롤 가능한 내용 (여러 줄 추가)
             </div>
         </div>
-        <div class="popup-buttons">
-            <button id="scrollDownBtnPopup" onclick="ScrollManagerPopup.scrollDown()">아래로 스크롤</button>
-            <button id="confirmBtnPopup" onclick="ScrollManagerPopup.confirmAction()">확인</button>
+        <div class="fixed-buttons">
+            <button class="scrollDownBtn" onclick="ScrollManager.scrollDown('popup1')">아래로 스크롤</button>
+            <button class="confirmBtn" onclick="ScrollManager.confirmAction()">확인</button>
+        </div>
+    </div>
+
+    <!-- 레이어 팝업 2 -->
+    <div class="modal" id="popup2">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closePopup('popup2')">×</span>
+            <h2>팝업 2</h2>
+            <div style="height: 1200px; background: lightgray;">
+                스크롤 가능한 내용 (여러 줄 추가)
+            </div>
+        </div>
+        <div class="fixed-buttons">
+            <button class="scrollDownBtn" onclick="ScrollManager.scrollDown('popup2')">아래로 스크롤</button>
+            <button class="confirmBtn" onclick="ScrollManager.confirmAction()">확인</button>
         </div>
     </div>
 
     <script>
-        function createScrollManager(container, sections, scrollBtn, confirmBtn, offset = 0) {
-            return {
-                container,
-                sections,
-                scrollBtn,
-                confirmBtn,
+        const ScrollManager = {
+            scrollDown(target = null) {
+                const container = target ? document.querySelector(`#${target} .modal-content`) : document.documentElement;
+                container.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+                setTimeout(() => this.updateButtonVisibility(target), 500);
+            },
 
-                updateButtonVisibility() {
-                    const lastSection = this.sections[this.sections.length - 1];
-                    const isAtBottom = this.container.scrollTop + this.container.clientHeight >= lastSection.offsetTop + lastSection.offsetHeight - 1;
-                    
-                    this.confirmBtn.style.display = isAtBottom ? 'inline-block' : 'none';
-                    this.scrollBtn.style.display = isAtBottom ? 'none' : 'inline-block';
-                },
+            isLastSectionFullyVisible(target = null) {
+                const container = target ? document.querySelector(`#${target} .modal-content`) : document.documentElement;
+                return container.scrollTop + container.clientHeight >= container.scrollHeight;
+            },
 
-                scrollDown() {
-                    let currentIndex = this.getVisibleSectionIndex();
-                    if (currentIndex < this.sections.length - 1) {
-                        this.container.scrollTo({ top: this.sections[currentIndex + 1].offsetTop - offset, behavior: 'smooth' });
-                    }
-                },
+            updateButtonVisibility(target = null) {
+                const modal = target ? document.querySelector(`#${target}`) : null;
+                const scrollDownBtn = modal ? modal.querySelector('.scrollDownBtn') : document.querySelector('.scrollDownBtn');
+                const confirmBtn = modal ? modal.querySelector('.confirmBtn') : document.querySelector('.confirmBtn');
 
-                getVisibleSectionIndex() {
-                    let index = 0;
-                    let minDiff = Infinity;
-                    const center = this.container.scrollTop + this.container.clientHeight / 2;
-
-                    this.sections.forEach((section, i) => {
-                        const diff = Math.abs(center - section.offsetTop);
-                        if (diff < minDiff) {
-                            minDiff = diff;
-                            index = i;
-                        }
-                    });
-
-                    return index;
-                },
-
-                confirmAction() {
-                    alert("확인 버튼 클릭!");
-                },
-
-                init() {
-                    this.container.addEventListener('scroll', () => this.updateButtonVisibility());
-                    this.updateButtonVisibility();
+                if (this.isLastSectionFullyVisible(target)) {
+                    scrollDownBtn.style.display = 'none';
+                    confirmBtn.style.display = 'inline-block';
+                } else {
+                    scrollDownBtn.style.display = 'inline-block';
+                    confirmBtn.style.display = 'none';
                 }
-            };
+            },
+
+            confirmAction() {
+                alert("확인 버튼이 클릭되었습니다.");
+            }
+        };
+
+        function openPopup(id) {
+            document.getElementById(id).style.display = 'block';
+            ScrollManager.updateButtonVisibility(id);
         }
 
-        const ScrollManagerMain = createScrollManager(document.documentElement, document.querySelectorAll('.container section'), document.getElementById('scrollDownBtnMain'), document.getElementById('confirmBtnMain'), 110);
-        const ScrollManagerPopup = createScrollManager(document.querySelector('.modal-content'), document.querySelectorAll('.popup-sections section'), document.getElementById('scrollDownBtnPopup'), document.getElementById('confirmBtnPopup'));
+        function closePopup(id) {
+            document.getElementById(id).style.display = 'none';
+        }
 
-        function openPopup() { document.getElementById('popup').style.display = 'block'; ScrollManagerPopup.init(); }
-        function closePopup() { document.getElementById('popup').style.display = 'none'; }
-
-        ScrollManagerMain.init();
+        window.addEventListener('scroll', () => ScrollManager.updateButtonVisibility());
     </script>
 
 </body>
