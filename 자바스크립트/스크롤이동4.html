@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>정확한 섹션 스크롤 & 팝업 대응</title>
+    <title>스크롤 섹션 (레이어 팝업 대응)</title>
     <style>
         body, html {
             margin: 0;
@@ -42,7 +42,7 @@
         }
 
         section {
-            height: 100vh;
+            height: 1000px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -50,7 +50,6 @@
             font-size: 2rem;
             text-align: center;
         }
-
         #section1 { background-color: lightblue; margin-top: 110px; }
         #section2 { background-color: lightgreen; }
         #section3 { background-color: lightcoral; }
@@ -63,20 +62,16 @@
             transform: translateX(-50%);
             display: flex;
             gap: 20px;
-            z-index: 10000;
         }
-
         .fixed-buttons button {
             padding: 10px 20px;
             font-size: 1rem;
             cursor: pointer;
         }
-
         #confirmBtn {
             display: none;
         }
 
-        /* 팝업 관련 스타일 */
         .modal {
             display: none;
             position: fixed;
@@ -91,20 +86,18 @@
             z-index: 2000;
             overflow: hidden;
         }
-
         .modal-content {
             height: 100%;
             overflow-y: auto;
             padding: 20px;
         }
-
         .modal .close-btn {
             position: absolute;
             top: 10px;
             right: 10px;
             cursor: pointer;
         }
-
+        
         .modal button {
             position: fixed;
             bottom: 30px;
@@ -136,11 +129,14 @@
     </section>
     <section id="section2">섹션 2</section>
     <section id="section3">섹션 3</section>
-    <section id="section4">섹션 4<br>마지막 섹션</section>
+    <section id="section4">
+        섹션 4<br>마지막 섹션입니다.
+        <div style="height: 500px;"></div>
+    </section>
 
     <div class="fixed-buttons">
-        <button id="scrollDownBtn" onclick="scrollManager.scrollToNext()">아래로 스크롤</button>
-        <button id="confirmBtn" onclick="alert('확인 버튼 클릭')">확인</button>
+        <button id="scrollDownBtn" onclick="ScrollManager.scrollDown()">아래로 스크롤</button>
+        <button id="confirmBtn" onclick="ScrollManager.confirmAction()">확인</button>
     </div>
 
     <div class="modal" id="popup">
@@ -151,81 +147,77 @@
             <div class="section">팝업 섹션 2</div>
             <div class="section">팝업 섹션 3</div>
             <div class="section">팝업 섹션 4 (마지막)</div>
-            <button onclick="scrollManager.scrollToNext('popup')">아래로 스크롤</button>
+            <button onclick="ScrollManager.scrollDown('popup')">아래로 스크롤</button>
         </div>
     </div>
 
     <script>
-        const scrollManager = {
-            sections: [],
-            currentIndex: 0,
-            modalSections: [],
+        const ScrollManager = {
+            scrollDownBtn: document.getElementById('scrollDownBtn'),
+            confirmBtn: document.getElementById('confirmBtn'),
+
+            getScrollContainer(modalId = null) {
+                if (modalId) {
+                    const modal = document.getElementById(modalId);
+                    if (modal && modal.style.display === 'block') {
+                        return modal.querySelector('.modal-content');
+                    }
+                }
+                return document.documentElement || document.body;
+            },
+
+            isLastSectionFullyVisible(modalId = null) {
+                const container = this.getScrollContainer(modalId);
+                return container.scrollTop + container.clientHeight >= container.scrollHeight;
+            },
+
+            scrollDown(modalId = null) {
+                let container = this.getScrollContainer(modalId);
+                container.scrollBy({ top: container.clientHeight, behavior: 'smooth' });
+
+                setTimeout(() => this.updateButtonVisibility(modalId), 500);
+            },
+
+            updateButtonVisibility(modalId = null) {
+                const isLast = this.isLastSectionFullyVisible(modalId);
+
+                if (modalId) {
+                    const modal = document.getElementById(modalId);
+                    const modalConfirmBtn = modal.querySelector('.confirmBtn');
+                    if (modalConfirmBtn) {
+                        modalConfirmBtn.style.display = isLast ? 'inline-block' : 'none';
+                    }
+                } else {
+                    this.scrollDownBtn.style.display = isLast ? 'none' : 'inline-block';
+                    this.confirmBtn.style.display = isLast ? 'inline-block' : 'none';
+                }
+            },
+
+            confirmAction() {
+                alert("확인 버튼이 클릭되었습니다.");
+            },
 
             init() {
-                this.sections = [...document.querySelectorAll("section")];
-                this.modalSections = [...document.querySelectorAll(".modal-content .section")];
+                window.addEventListener('scroll', () => this.updateButtonVisibility());
 
-                this.updateButtonVisibility();
-                window.addEventListener("scroll", () => this.updateButtonVisibility());
-            },
-
-            scrollToNext(modalId = null) {
-                const isModal = modalId !== null;
-                const container = isModal ? document.querySelector(`#${modalId} .modal-content`) : window;
-                const sections = isModal ? this.modalSections : this.sections;
-
-                let currentIndex = this.getVisibleSectionIndex(sections, container);
-                if (currentIndex < sections.length - 1) {
-                    this.scrollToSection(currentIndex + 1, sections, container);
-                }
-            },
-
-            scrollToSection(index, sections, container) {
-                if (index >= 0 && index < sections.length) {
-                    const targetOffset = sections[index].offsetTop - (container === window ? 110 : 0);
-                    container.scrollTo({ top: targetOffset, behavior: "smooth" });
-
-                    if (container === window) {
-                        this.currentIndex = index;
-                    }
-                }
-            },
-
-            getVisibleSectionIndex(sections, container) {
-                let index = 0;
-                let minDiff = Infinity;
-                const center = container.scrollTop + container.clientHeight / 2;
-
-                sections.forEach((section, i) => {
-                    const sectionCenter = section.offsetTop + section.clientHeight / 2;
-                    const diff = Math.abs(center - sectionCenter);
-                    if (diff < minDiff) {
-                        minDiff = diff;
-                        index = i;
-                    }
+                document.querySelectorAll('.modal-content').forEach(modalContent => {
+                    modalContent.addEventListener('scroll', (event) => {
+                        const modalId = event.target.closest('.modal').id;
+                        this.updateButtonVisibility(modalId);
+                    });
                 });
-
-                return index;
-            },
-
-            updateButtonVisibility() {
-                const lastSection = this.sections[this.sections.length - 1];
-                const bottomReached = window.scrollY + window.innerHeight >= lastSection.offsetTop + lastSection.clientHeight - 10;
-
-                document.getElementById("scrollDownBtn").style.display = bottomReached ? "none" : "inline-block";
-                document.getElementById("confirmBtn").style.display = bottomReached ? "inline-block" : "none";
             }
         };
 
         function openPopup(modalId) {
-            document.getElementById(modalId).style.display = "block";
+            document.getElementById(modalId).style.display = 'block';
         }
 
         function closePopup(modalId) {
-            document.getElementById(modalId).style.display = "none";
+            document.getElementById(modalId).style.display = 'none';
         }
 
-        document.addEventListener("DOMContentLoaded", () => scrollManager.init());
+        ScrollManager.init();
     </script>
 
 </body>
