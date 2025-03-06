@@ -88,6 +88,7 @@
             border: 1px solid #ccc;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             z-index: 2000;
+            overflow: hidden;
         }
         .modal-content {
             height: 100%;
@@ -99,6 +100,19 @@
             top: 10px;
             right: 10px;
             cursor: pointer;
+        }
+
+        /* 팝업 내부 섹션 스타일 */
+        .modal-content .section {
+            height: 800px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            text-align: center;
+            background-color: lightgray;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -131,39 +145,37 @@
         <div class="modal-content">
             <span class="close-btn" onclick="closePopup()">×</span>
             <h2>팝업 내부</h2>
-            <div style="height: 1200px; background: lightgray;">
-                스크롤 가능한 내용 (여러 줄 추가)
-            </div>
+            <div class="section">팝업 섹션 1</div>
+            <div class="section">팝업 섹션 2</div>
+            <div class="section">팝업 섹션 3</div>
+            <div class="section">팝업 섹션 4 (마지막)</div>
         </div>
     </div>
 
     <script>
         const ScrollManager = {
-            sections: document.querySelectorAll('section'),
             scrollDownBtn: document.getElementById('scrollDownBtn'),
             confirmBtn: document.getElementById('confirmBtn'),
 
             getScrollContainer() {
+                const modal = document.getElementById('popup');
                 const modalContent = document.querySelector('.modal-content');
-                if (modalContent && modalContent.offsetParent !== null) {
+
+                if (modal.style.display === 'block' && modalContent) {
                     return modalContent;
                 }
+
                 return document.documentElement || document.body;
             },
 
             isLastSectionFullyVisible() {
                 const container = this.getScrollContainer();
-
-                if (container === document.documentElement || container === document.body) {
-                    return window.scrollY + window.innerHeight >= document.documentElement.scrollHeight;
-                } else {
-                    return container.scrollTop + container.clientHeight >= container.scrollHeight;
-                }
+                return container.scrollTop + container.clientHeight >= container.scrollHeight;
             },
 
             scrollToSection(index) {
                 const container = this.getScrollContainer();
-                const sections = document.querySelectorAll('section');
+                const sections = this.getActiveSections();
 
                 if (sections[index]) {
                     const targetPosition = sections[index].offsetTop;
@@ -175,20 +187,29 @@
 
             scrollDown() {
                 let currentIndex = this.getVisibleSectionIndex();
-                const sections = document.querySelectorAll('section');
+                const sections = this.getActiveSections();
 
                 if (currentIndex < sections.length - 1) {
                     this.scrollToSection(currentIndex + 1);
                 } else {
-                    this.getScrollContainer().scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                    this.getScrollContainer().scrollTo({ top: this.getScrollContainer().scrollHeight, behavior: 'smooth' });
                 }
             },
 
+            getActiveSections() {
+                const modal = document.getElementById('popup');
+                if (modal.style.display === 'block') {
+                    return document.querySelectorAll('.modal-content .section');
+                }
+                return document.querySelectorAll('section');
+            },
+
             getVisibleSectionIndex() {
-                const sections = document.querySelectorAll('section');
+                const sections = this.getActiveSections();
                 let index = 0;
                 let minDiff = Infinity;
-                const windowCenter = window.scrollY + window.innerHeight / 2;
+                const container = this.getScrollContainer();
+                const windowCenter = container.scrollTop + container.clientHeight / 2;
 
                 sections.forEach((section, i) => {
                     const sectionTop = section.offsetTop;
@@ -221,7 +242,7 @@
 
             init() {
                 window.addEventListener('scroll', () => this.updateButtonVisibility());
-                this.getScrollContainer().addEventListener('scroll', () => this.updateButtonVisibility());
+                document.querySelector('.modal-content').addEventListener('scroll', () => this.updateButtonVisibility());
             }
         };
 
