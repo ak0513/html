@@ -42,7 +42,7 @@
         }
 
         section {
-            height: 1000px;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -68,7 +68,7 @@
             font-size: 1rem;
             cursor: pointer;
         }
-        #confirmBtn {
+        #confirmBtn, #modalConfirmBtn {
             display: none;
         }
 
@@ -99,7 +99,7 @@
         }
 
         .modal .modal-buttons {
-            position: fixed;
+            position: absolute;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
@@ -108,7 +108,7 @@
         }
 
         .modal-content .section {
-            height: 800px;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -149,7 +149,7 @@
         </div>
         <div class="modal-buttons">
             <button id="modalScrollDownBtn" onclick="ScrollManager.scrollDown('popup')">아래로 스크롤</button>
-            <button id="modalConfirmBtn" onclick="ScrollManager.confirmAction()" style="display: none;">확인</button>
+            <button id="modalConfirmBtn" onclick="ScrollManager.confirmAction()">확인</button>
         </div>
     </div>
 
@@ -163,67 +163,28 @@
 
             getScrollContainer(modalId = null) {
                 if (modalId) {
-                    const modal = document.getElementById(modalId);
-                    return modal ? modal.querySelector('.modal-content') : null;
+                    return document.querySelector(`#${modalId} .modal-content`);
                 }
                 return document.documentElement || document.body;
             },
 
-            getSections(modalId = null) {
-                if (modalId) {
-                    return document.querySelectorAll(`#${modalId} .section`);
-                }
-                return document.querySelectorAll('section');
-            },
-
-            getCurrentSectionIndex(modalId = null) {
-                const sections = this.getSections(modalId);
-                let index = 0;
-                let minDiff = Infinity;
-                const container = this.getScrollContainer(modalId);
-                const scrollTop = container.scrollTop;
-
-                sections.forEach((section, i) => {
-                    const diff = Math.abs(scrollTop - (section.offsetTop - (modalId ? 0 : this.headerHeight)));
-                    if (diff < minDiff) {
-                        minDiff = diff;
-                        index = i;
-                    }
-                });
-
-                return index;
-            },
-
             scrollDown(modalId = null) {
-                const sections = this.getSections(modalId);
-                let currentIndex = this.getCurrentSectionIndex(modalId);
                 const container = this.getScrollContainer(modalId);
-
-                if (currentIndex < sections.length - 1) {
-                    container.scrollTo({
-                        top: sections[currentIndex + 1].offsetTop - (modalId ? 0 : this.headerHeight),
-                        behavior: 'smooth'
-                    });
-                }
+                container.scrollBy({ top: container.clientHeight, behavior: 'smooth' });
 
                 setTimeout(() => this.updateButtonVisibility(modalId), 500);
             },
 
-            isLastSectionVisible(modalId = null) {
-                const sections = this.getSections(modalId);
-                const container = this.getScrollContainer(modalId);
-                return container.scrollTop + container.clientHeight >= container.scrollHeight;
-            },
-
             updateButtonVisibility(modalId = null) {
-                const isLast = this.isLastSectionVisible(modalId);
+                const container = this.getScrollContainer(modalId);
+                const isBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 10;
 
                 if (modalId) {
-                    this.modalScrollDownBtn.style.display = isLast ? 'none' : 'inline-block';
-                    this.modalConfirmBtn.style.display = isLast ? 'inline-block' : 'none';
+                    this.modalScrollDownBtn.style.display = isBottom ? 'none' : 'inline-block';
+                    this.modalConfirmBtn.style.display = isBottom ? 'inline-block' : 'none';
                 } else {
-                    this.scrollDownBtn.style.display = isLast ? 'none' : 'inline-block';
-                    this.confirmBtn.style.display = isLast ? 'inline-block' : 'none';
+                    this.scrollDownBtn.style.display = isBottom ? 'none' : 'inline-block';
+                    this.confirmBtn.style.display = isBottom ? 'inline-block' : 'none';
                 }
             },
 
@@ -233,12 +194,21 @@
         };
 
         function openPopup(modalId) {
-            document.getElementById(modalId).style.display = 'block';
+            const modal = document.getElementById(modalId);
+            modal.style.display = 'block';
+
+            const modalContent = modal.querySelector('.modal-content');
+            modalContent.scrollTop = 0;
+
+            ScrollManager.updateButtonVisibility(modalId);
         }
 
         function closePopup(modalId) {
             document.getElementById(modalId).style.display = 'none';
         }
+
+        window.addEventListener('scroll', () => ScrollManager.updateButtonVisibility());
+        document.querySelector('.modal-content').addEventListener('scroll', () => ScrollManager.updateButtonVisibility('popup'));
     </script>
 
 </body>
