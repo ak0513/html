@@ -97,7 +97,7 @@
             right: 10px;
             cursor: pointer;
         }
-        
+
         .modal button {
             position: fixed;
             bottom: 30px;
@@ -155,9 +155,6 @@
 
     <script>
         const ScrollManager = {
-            scrollDownBtn: document.getElementById('scrollDownBtn'),
-            confirmBtn: document.getElementById('confirmBtn'),
-
             getScrollContainer(modalId = null) {
                 if (modalId) {
                     const modal = document.getElementById(modalId);
@@ -168,16 +165,52 @@
                 return document.documentElement || document.body;
             },
 
-            isLastSectionFullyVisible(modalId = null) {
+            getVisibleSectionIndex(modalId = null) {
+                const sections = this.getActiveSections(modalId);
                 const container = this.getScrollContainer(modalId);
-                return container.scrollTop + container.clientHeight >= container.scrollHeight;
+                let index = 0;
+                let minDiff = Infinity;
+                let scrollTop = container.scrollTop;
+
+                sections.forEach((section, i) => {
+                    let sectionTop = section.offsetTop;
+                    let diff = Math.abs(scrollTop - sectionTop);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        index = i;
+                    }
+                });
+
+                return index;
+            },
+
+            getActiveSections(modalId = null) {
+                if (modalId) {
+                    return document.getElementById(modalId).querySelectorAll('.modal-content .section');
+                }
+                return document.querySelectorAll('section');
+            },
+
+            scrollToSection(index, modalId = null) {
+                const sections = this.getActiveSections(modalId);
+                const container = this.getScrollContainer(modalId);
+
+                if (sections[index]) {
+                    let targetPosition = sections[index].offsetTop;
+                    container.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                }
+
+                setTimeout(() => this.updateButtonVisibility(modalId), 500);
             },
 
             scrollDown(modalId = null) {
-                let container = this.getScrollContainer(modalId);
-                container.scrollBy({ top: container.clientHeight, behavior: 'smooth' });
+                let currentIndex = this.getVisibleSectionIndex(modalId);
+                this.scrollToSection(currentIndex + 1, modalId);
+            },
 
-                setTimeout(() => this.updateButtonVisibility(modalId), 500);
+            isLastSectionFullyVisible(modalId = null) {
+                const container = this.getScrollContainer(modalId);
+                return container.scrollTop + container.clientHeight >= container.scrollHeight;
             },
 
             updateButtonVisibility(modalId = null) {
@@ -188,43 +221,26 @@
                     let modalConfirmBtn = modal.querySelector('.confirmBtn');
                     let modalScrollBtn = modal.querySelector('.scrollBtn');
 
-                    if (modalConfirmBtn && modalScrollBtn) {
-                        modalScrollBtn.style.display = isLastVisible ? 'none' : 'inline-block';
-                        modalConfirmBtn.style.display = isLastVisible ? 'inline-block' : 'none';
-                    }
+                    modalScrollBtn.style.display = isLastVisible ? 'none' : 'inline-block';
+                    modalConfirmBtn.style.display = isLastVisible ? 'inline-block' : 'none';
                 } else {
-                    this.scrollDownBtn.style.display = isLastVisible ? 'none' : 'inline-block';
-                    this.confirmBtn.style.display = isLastVisible ? 'inline-block' : 'none';
+                    document.getElementById('scrollDownBtn').style.display = isLastVisible ? 'none' : 'inline-block';
+                    document.getElementById('confirmBtn').style.display = isLastVisible ? 'inline-block' : 'none';
                 }
             },
 
             confirmAction() {
                 alert("확인 버튼이 클릭되었습니다.");
-            },
-
-            init() {
-                window.addEventListener('scroll', () => this.updateButtonVisibility());
-
-                document.querySelectorAll('.modal-content').forEach(modal => {
-                    modal.addEventListener('scroll', (event) => {
-                        let modalId = event.target.closest('.modal').id;
-                        this.updateButtonVisibility(modalId);
-                    });
-                });
             }
         };
 
         function openPopup(modalId) {
             document.getElementById(modalId).style.display = 'block';
-            ScrollManager.init();
         }
 
         function closePopup(modalId) {
             document.getElementById(modalId).style.display = 'none';
-            ScrollManager.init();
         }
-
-        ScrollManager.init();
     </script>
 
 </body>
