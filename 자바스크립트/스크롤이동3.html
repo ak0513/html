@@ -8,10 +8,9 @@
         body, html {
             margin: 0;
             padding: 0;
-            scroll-behavior: smooth; /* 스크롤 부드럽게 이동 */
+            scroll-behavior: smooth;
         }
 
-        /* 상단 고정 헤더 */
         .header {
             position: fixed;
             top: 0;
@@ -27,7 +26,6 @@
             z-index: 1000;
         }
 
-        /* 고정된 탭 */
         .tabs {
             position: fixed;
             top: 60px;
@@ -43,7 +41,6 @@
             z-index: 999;
         }
 
-        /* 각 섹션 스타일 */
         section {
             height: 1000px;
             display: flex;
@@ -58,7 +55,6 @@
         #section3 { background-color: lightcoral; }
         #section4 { background-color: lightyellow; }
 
-        /* 하단 고정 버튼 */
         .fixed-buttons {
             position: fixed;
             bottom: 20px;
@@ -73,10 +69,9 @@
             cursor: pointer;
         }
         #confirmBtn {
-            display: none; /* 마지막 섹션에서만 보이도록 설정 */
+            display: none;
         }
 
-        /* 모달 팝업 스타일 */
         .modal {
             display: none;
             position: fixed;
@@ -103,7 +98,6 @@
             cursor: pointer;
         }
 
-        /* 팝업 내부 섹션 스타일 */
         .modal-content .section {
             height: 800px;
             display: flex;
@@ -119,38 +113,34 @@
 </head>
 <body>
 
-    <!-- 상단 고정 헤더 -->
     <div class="header">고정된 헤더</div>
-
-    <!-- 선택적 고정 탭 -->
     <div class="tabs">고정된 탭</div>
 
     <section id="section1">
         섹션 1
-        <button onclick="openPopup()">팝업 열기</button>
+        <button onclick="openPopup('popup')">팝업 열기</button>
     </section>
     <section id="section2">섹션 2</section>
     <section id="section3">섹션 3</section>
     <section id="section4">
         섹션 4<br>마지막 섹션입니다.
-        <div style="height: 500px;"></div> <!-- 추가 콘텐츠 시뮬레이션 -->
+        <div style="height: 500px;"></div>
     </section>
 
-    <!-- 하단 고정 버튼 -->
     <div class="fixed-buttons">
         <button id="scrollDownBtn" onclick="ScrollManager.scrollDown()">아래로 스크롤</button>
         <button id="confirmBtn" onclick="ScrollManager.confirmAction()">확인</button>
     </div>
 
-    <!-- 레이어 팝업 -->
     <div class="modal" id="popup">
         <div class="modal-content">
-            <span class="close-btn" onclick="closePopup()">×</span>
+            <span class="close-btn" onclick="closePopup('popup')">×</span>
             <h2>팝업 내부</h2>
             <div class="section">팝업 섹션 1</div>
             <div class="section">팝업 섹션 2</div>
             <div class="section">팝업 섹션 3</div>
             <div class="section">팝업 섹션 4 (마지막)</div>
+            <button onclick="ScrollManager.scrollDown('popup')">아래로 스크롤</button>
         </div>
     </div>
 
@@ -162,52 +152,11 @@
             getScrollContainer(modalId = null) {
                 if (modalId) {
                     const modal = document.getElementById(modalId);
-                    const modalContent = modal?.querySelector('.modal-content');
-                    if (modal?.style.display === 'block' && modalContent) {
-                        return modalContent;
+                    if (modal && modal.style.display === 'block') {
+                        return modal.querySelector('.modal-content');
                     }
                 }
                 return document.documentElement || document.body;
-            },
-
-            scrollDown(modalId = null) {
-                let currentIndex = this.getVisibleSectionIndex(modalId);
-                const sections = this.getActiveSections(modalId);
-                
-                if (currentIndex < sections.length - 1) {
-                    this.scrollToSection(currentIndex + 1, modalId);
-                }
-            },
-
-            scrollToSection(index, modalId = null) {
-                const container = this.getScrollContainer(modalId);
-                const sections = this.getActiveSections(modalId);
-                
-                if (sections[index]) {
-                    container.scrollTo({ top: sections[index].offsetTop, behavior: 'smooth' });
-                }
-
-                setTimeout(() => this.updateButtonVisibility(modalId), 500);
-            },
-
-            getActiveSections(modalId = null) {
-                if (modalId) {
-                    return document.querySelector(`#${modalId} .modal-content`).querySelectorAll('.section');
-                }
-                return document.querySelectorAll('section');
-            },
-
-            getVisibleSectionIndex(modalId = null) {
-                const sections = this.getActiveSections(modalId);
-                const container = this.getScrollContainer(modalId);
-                const center = container.scrollTop + container.clientHeight / 2;
-                return [...sections].reduce((closest, section, i) =>
-                    Math.abs(section.offsetTop - center) < Math.abs(sections[closest].offsetTop - center) ? i : closest, 0);
-            },
-
-            updateButtonVisibility(modalId = null) {
-                this.scrollDownBtn.style.display = this.isLastSectionFullyVisible(modalId) ? 'none' : 'inline-block';
-                this.confirmBtn.style.display = this.isLastSectionFullyVisible(modalId) ? 'inline-block' : 'none';
             },
 
             isLastSectionFullyVisible(modalId = null) {
@@ -215,11 +164,87 @@
                 return container.scrollTop + container.clientHeight >= container.scrollHeight;
             },
 
-            confirmAction() { alert("확인 버튼이 클릭되었습니다."); }
+            scrollToSection(index, modalId = null) {
+                const container = this.getScrollContainer(modalId);
+                const sections = this.getActiveSections(modalId);
+
+                if (sections[index]) {
+                    const targetPosition = sections[index].offsetTop;
+                    container.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                }
+
+                setTimeout(() => this.updateButtonVisibility(modalId), 500);
+            },
+
+            scrollDown(modalId = null) {
+                let currentIndex = this.getVisibleSectionIndex(modalId);
+                const sections = this.getActiveSections(modalId);
+
+                if (currentIndex < sections.length - 1) {
+                    this.scrollToSection(currentIndex + 1, modalId);
+                } else {
+                    this.getScrollContainer(modalId).scrollTo({
+                        top: this.getScrollContainer(modalId).scrollHeight,
+                        behavior: 'smooth'
+                    });
+                }
+            },
+
+            getActiveSections(modalId = null) {
+                if (modalId) {
+                    const modal = document.getElementById(modalId);
+                    if (modal && modal.style.display === 'block') {
+                        return modal.querySelectorAll('.modal-content .section');
+                    }
+                }
+                return document.querySelectorAll('section');
+            },
+
+            getVisibleSectionIndex(modalId = null) {
+                const sections = this.getActiveSections(modalId);
+                let index = 0;
+                let minDiff = Infinity;
+                const container = this.getScrollContainer(modalId);
+                const windowCenter = container.scrollTop + container.clientHeight / 2;
+
+                sections.forEach((section, i) => {
+                    const sectionCenter = section.offsetTop + section.offsetHeight / 2;
+                    const diff = Math.abs(windowCenter - sectionCenter);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        index = i;
+                    }
+                });
+
+                return index;
+            },
+
+            updateButtonVisibility(modalId = null) {
+                this.scrollDownBtn.style.display = this.isLastSectionFullyVisible() ? 'none' : 'inline-block';
+                this.confirmBtn.style.display = this.isLastSectionFullyVisible() ? 'inline-block' : 'none';
+            },
+
+            confirmAction() {
+                alert("확인 버튼이 클릭되었습니다.");
+            },
+
+            init() {
+                window.addEventListener('scroll', () => this.updateButtonVisibility());
+                document.querySelector('.modal-content').addEventListener('scroll', () => this.updateButtonVisibility());
+            }
         };
 
-        function openPopup() { document.getElementById('popup').style.display = 'block'; }
-        function closePopup() { document.getElementById('popup').style.display = 'none'; }
+        function openPopup(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            ScrollManager.init();
+        }
+
+        function closePopup(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            ScrollManager.init();
+        }
+
+        ScrollManager.init();
     </script>
 
 </body>
