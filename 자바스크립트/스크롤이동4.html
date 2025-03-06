@@ -42,7 +42,7 @@
         }
 
         section {
-            height: 100vh;
+            height: 1000px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -68,7 +68,7 @@
             font-size: 1rem;
             cursor: pointer;
         }
-        #confirmBtn, #modalConfirmBtn {
+        #confirmBtn {
             display: none;
         }
 
@@ -98,17 +98,8 @@
             cursor: pointer;
         }
 
-        .modal .modal-buttons {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-        }
-
         .modal-content .section {
-            height: 100vh;
+            height: 800px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -131,7 +122,10 @@
     </section>
     <section id="section2">섹션 2</section>
     <section id="section3">섹션 3</section>
-    <section id="section4">섹션 4 (마지막)</section>
+    <section id="section4">
+        섹션 4<br>마지막 섹션입니다.
+        <div style="height: 500px;"></div>
+    </section>
 
     <div class="fixed-buttons">
         <button id="scrollDownBtn" onclick="ScrollManager.scrollDown()">아래로 스크롤</button>
@@ -147,47 +141,84 @@
             <div class="section">팝업 섹션 3</div>
             <div class="section">팝업 섹션 4 (마지막)</div>
         </div>
-        <div class="modal-buttons">
-            <button id="modalScrollDownBtn" onclick="ScrollManager.scrollDown('popup')">아래로 스크롤</button>
-            <button id="modalConfirmBtn" onclick="ScrollManager.confirmAction()">확인</button>
-        </div>
     </div>
 
     <script>
         const ScrollManager = {
-            sections: [...document.querySelectorAll("section")],
-            modalSections: [...document.querySelectorAll(".modal-content .section")],
-            currentIndex: 0,
-            modalIndex: 0,
-            headerHeight: 110,
+            scrollDownBtn: document.getElementById('scrollDownBtn'),
+            confirmBtn: document.getElementById('confirmBtn'),
 
-            scrollDown(modalId = null) {
+            getScrollContainer(modalId = null) {
                 if (modalId) {
-                    // 팝업 내부 스크롤
-                    if (this.modalIndex < this.modalSections.length - 1) {
-                        this.modalIndex++;
-                        this.modalSections[this.modalIndex].scrollIntoView({ behavior: 'smooth' });
-                    }
-                } else {
-                    // 메인 페이지 스크롤
-                    if (this.currentIndex < this.sections.length - 1) {
-                        this.currentIndex++;
-                        this.sections[this.currentIndex].scrollIntoView({ behavior: 'smooth' });
+                    const modal = document.getElementById(modalId);
+                    if (modal && modal.style.display === 'block') {
+                        return modal.querySelector('.modal-content');
                     }
                 }
+                return document.documentElement || document.body;
+            },
+
+            isScrolledToBottom(modalId = null) {
+                const container = this.getScrollContainer(modalId);
+                return container.scrollTop + container.clientHeight >= container.scrollHeight;
+            },
+
+            scrollToSection(index, modalId = null) {
+                const container = this.getScrollContainer(modalId);
+                const sections = this.getActiveSections(modalId);
+                const headerOffset = 110;
+
+                if (sections[index]) {
+                    const targetPosition = sections[index].offsetTop - headerOffset;
+                    container.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                }
+
                 setTimeout(() => this.updateButtonVisibility(modalId), 500);
             },
 
-            updateButtonVisibility(modalId = null) {
-                if (modalId) {
-                    const isBottom = this.modalIndex === this.modalSections.length - 1;
-                    document.getElementById("modalScrollDownBtn").style.display = isBottom ? 'none' : 'inline-block';
-                    document.getElementById("modalConfirmBtn").style.display = isBottom ? 'inline-block' : 'none';
+            scrollDown(modalId = null) {
+                let currentIndex = this.getVisibleSectionIndex(modalId);
+                const sections = this.getActiveSections(modalId);
+
+                if (currentIndex < sections.length - 1) {
+                    this.scrollToSection(currentIndex + 1, modalId);
                 } else {
-                    const isBottom = this.currentIndex === this.sections.length - 1;
-                    document.getElementById("scrollDownBtn").style.display = isBottom ? 'none' : 'inline-block';
-                    document.getElementById("confirmBtn").style.display = isBottom ? 'inline-block' : 'none';
+                    this.getScrollContainer(modalId).scrollTo({
+                        top: this.getScrollContainer(modalId).scrollHeight,
+                        behavior: 'smooth'
+                    });
                 }
+            },
+
+            getActiveSections(modalId = null) {
+                if (modalId) {
+                    return document.querySelector(`#${modalId} .modal-content`).querySelectorAll('.section');
+                }
+                return document.querySelectorAll('section');
+            },
+
+            getVisibleSectionIndex(modalId = null) {
+                const sections = this.getActiveSections(modalId);
+                const container = this.getScrollContainer(modalId);
+                const windowCenter = container.scrollTop + container.clientHeight / 2;
+
+                let index = 0, minDiff = Infinity;
+                sections.forEach((section, i) => {
+                    const sectionCenter = section.offsetTop + section.offsetHeight / 2;
+                    const diff = Math.abs(windowCenter - sectionCenter);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        index = i;
+                    }
+                });
+
+                return index;
+            },
+
+            updateButtonVisibility(modalId = null) {
+                const isBottom = this.isScrolledToBottom(modalId);
+                this.scrollDownBtn.style.display = isBottom ? 'none' : 'inline-block';
+                this.confirmBtn.style.display = isBottom ? 'inline-block' : 'none';
             },
 
             confirmAction() {
@@ -197,15 +228,12 @@
 
         function openPopup(modalId) {
             document.getElementById(modalId).style.display = 'block';
-            ScrollManager.modalIndex = 0;
-            ScrollManager.updateButtonVisibility(modalId);
         }
 
         function closePopup(modalId) {
             document.getElementById(modalId).style.display = 'none';
         }
 
-        window.addEventListener("scroll", () => ScrollManager.updateButtonVisibility());
     </script>
 
 </body>
