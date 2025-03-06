@@ -159,23 +159,51 @@
             getScrollContainer(modalId = null) {
                 if (modalId) {
                     const modal = document.getElementById(modalId);
-                    if (modal && modal.style.display === 'block') {
-                        return modal.querySelector('.modal-content');
-                    }
+                    return modal ? modal.querySelector('.modal-content') : null;
                 }
                 return document.documentElement || document.body;
+            },
+
+            getActiveSections(modalId = null) {
+                if (modalId) {
+                    const modal = document.getElementById(modalId);
+                    return modal ? modal.querySelectorAll('.modal-content .section') : [];
+                }
+                return document.querySelectorAll('section');
+            },
+
+            getCurrentSectionIndex(modalId = null) {
+                const container = this.getScrollContainer(modalId);
+                const sections = this.getActiveSections(modalId);
+                let index = 0;
+                let minDiff = Infinity;
+
+                sections.forEach((section, i) => {
+                    const diff = Math.abs(container.scrollTop - section.offsetTop);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        index = i;
+                    }
+                });
+
+                return index;
+            },
+
+            scrollDown(modalId = null) {
+                const container = this.getScrollContainer(modalId);
+                const sections = this.getActiveSections(modalId);
+                let currentIndex = this.getCurrentSectionIndex(modalId);
+
+                if (currentIndex < sections.length - 1) {
+                    container.scrollTo({ top: sections[currentIndex + 1].offsetTop, behavior: 'smooth' });
+                }
+
+                setTimeout(() => this.updateButtonVisibility(modalId), 500);
             },
 
             isLastSectionFullyVisible(modalId = null) {
                 const container = this.getScrollContainer(modalId);
                 return container.scrollTop + container.clientHeight >= container.scrollHeight;
-            },
-
-            scrollDown(modalId = null) {
-                let container = this.getScrollContainer(modalId);
-                container.scrollBy({ top: container.clientHeight, behavior: 'smooth' });
-
-                setTimeout(() => this.updateButtonVisibility(modalId), 500);
             },
 
             updateButtonVisibility(modalId = null) {
@@ -199,10 +227,9 @@
 
             init() {
                 window.addEventListener('scroll', () => this.updateButtonVisibility());
-
                 document.querySelectorAll('.modal-content').forEach(modalContent => {
-                    modalContent.addEventListener('scroll', (event) => {
-                        const modalId = event.target.closest('.modal').id;
+                    modalContent.addEventListener('scroll', () => {
+                        const modalId = modalContent.closest('.modal').id;
                         this.updateButtonVisibility(modalId);
                     });
                 });
