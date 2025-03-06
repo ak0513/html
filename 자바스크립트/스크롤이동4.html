@@ -155,36 +155,38 @@
 
     <script>
         const ScrollManager = {
-            scrollDownBtn: document.getElementById('scrollDownBtn'),
-            confirmBtn: document.getElementById('confirmBtn'),
-            modalScrollDownBtn: document.getElementById('modalScrollDownBtn'),
-            modalConfirmBtn: document.getElementById('modalConfirmBtn'),
+            sections: [...document.querySelectorAll("section")],
+            modalSections: [...document.querySelectorAll(".modal-content .section")],
+            currentIndex: 0,
+            modalIndex: 0,
             headerHeight: 110,
 
-            getScrollContainer(modalId = null) {
-                if (modalId) {
-                    return document.querySelector(`#${modalId} .modal-content`);
-                }
-                return document.documentElement || document.body;
-            },
-
             scrollDown(modalId = null) {
-                const container = this.getScrollContainer(modalId);
-                container.scrollBy({ top: container.clientHeight, behavior: 'smooth' });
-
+                if (modalId) {
+                    // 팝업 내부 스크롤
+                    if (this.modalIndex < this.modalSections.length - 1) {
+                        this.modalIndex++;
+                        this.modalSections[this.modalIndex].scrollIntoView({ behavior: 'smooth' });
+                    }
+                } else {
+                    // 메인 페이지 스크롤
+                    if (this.currentIndex < this.sections.length - 1) {
+                        this.currentIndex++;
+                        this.sections[this.currentIndex].scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
                 setTimeout(() => this.updateButtonVisibility(modalId), 500);
             },
 
             updateButtonVisibility(modalId = null) {
-                const container = this.getScrollContainer(modalId);
-                const isBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 10;
-
                 if (modalId) {
-                    this.modalScrollDownBtn.style.display = isBottom ? 'none' : 'inline-block';
-                    this.modalConfirmBtn.style.display = isBottom ? 'inline-block' : 'none';
+                    const isBottom = this.modalIndex === this.modalSections.length - 1;
+                    document.getElementById("modalScrollDownBtn").style.display = isBottom ? 'none' : 'inline-block';
+                    document.getElementById("modalConfirmBtn").style.display = isBottom ? 'inline-block' : 'none';
                 } else {
-                    this.scrollDownBtn.style.display = isBottom ? 'none' : 'inline-block';
-                    this.confirmBtn.style.display = isBottom ? 'inline-block' : 'none';
+                    const isBottom = this.currentIndex === this.sections.length - 1;
+                    document.getElementById("scrollDownBtn").style.display = isBottom ? 'none' : 'inline-block';
+                    document.getElementById("confirmBtn").style.display = isBottom ? 'inline-block' : 'none';
                 }
             },
 
@@ -194,12 +196,8 @@
         };
 
         function openPopup(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.style.display = 'block';
-
-            const modalContent = modal.querySelector('.modal-content');
-            modalContent.scrollTop = 0;
-
+            document.getElementById(modalId).style.display = 'block';
+            ScrollManager.modalIndex = 0;
             ScrollManager.updateButtonVisibility(modalId);
         }
 
@@ -207,8 +205,7 @@
             document.getElementById(modalId).style.display = 'none';
         }
 
-        window.addEventListener('scroll', () => ScrollManager.updateButtonVisibility());
-        document.querySelector('.modal-content').addEventListener('scroll', () => ScrollManager.updateButtonVisibility('popup'));
+        window.addEventListener("scroll", () => ScrollManager.updateButtonVisibility());
     </script>
 
 </body>
