@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>체크박스 제어</title>
+</head>
+<body>
+
+    <!-- 상위 체크박스 -->
+    <label>
+        <input type="checkbox" id="parentCheckbox"> 상위 체크박스
+    </label>
+
+    <br>
+
+    <!-- 하위 체크박스 그룹 -->
+    <label>
+        <input type="checkbox" class="childCheckbox"> 하위 체크박스 1
+    </label>
+    <label>
+        <input type="checkbox" class="childCheckbox"> 하위 체크박스 2
+    </label>
+    <label>
+        <input type="checkbox" class="childCheckbox"> 하위 체크박스 3
+    </label>
+    <label>
+        <input type="checkbox" class="childCheckbox"> 하위 체크박스 4
+    </label>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const parentCheckbox = document.getElementById("parentCheckbox");
+            const childCheckboxes = document.querySelectorAll(".childCheckbox");
+
+            // 부모 체크박스 클릭 시 하위 체크박스들 상태 변경
+            parentCheckbox.addEventListener("change", function () {
+                childCheckboxes.forEach(child => {
+                    child.checked = parentCheckbox.checked;
+                });
+            });
+
+            // 하위 체크박스 변경 시 부모 체크박스 상태 업데이트
+            childCheckboxes.forEach(child => {
+                child.addEventListener("change", function () {
+                    const allChecked = [...childCheckboxes].every(cb => cb.checked);
+                    const anyChecked = [...childCheckboxes].some(cb => cb.checked);
+                    
+                    parentCheckbox.checked = allChecked || anyChecked;
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
