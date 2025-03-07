@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smooth Scroll with Fixed Header</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #555;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 1.5rem;
+            z-index: 1000;
+        }
+
+        .navbar {
+            position: sticky;
+            top: 60px; /* 헤더 높이 */
+            display: flex;
+            justify-content: center;
+            background-color: #333;
+            padding: 10px 0;
+            z-index: 999;
+        }
+
+        .navbar button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            color: white;
+            background-color: transparent;
+            border: 1px solid white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .navbar button.active {
+            background-color: white;
+            color: black;
+        }
+
+        .section {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            background-color: #f4f4f4;
+        }
+
+        #section1 { background-color: #ffdddd; }
+        #section2 { background-color: #ddffdd; }
+        #section3 { background-color: #ddddff; }
+    </style>
+</head>
+
+<body>
+    <div class="header">Header Content</div>
+    <div class="navbar">
+        <button onclick="scrollToSection('#section1')">Section 1</button>
+        <button onclick="scrollToSection('#section2')">Section 2</button>
+        <button onclick="scrollToSection('#section3')">Section 3</button>
+    </div>
+
+    <div id="section1" class="section">Section 1 Content</div>
+    <div id="section2" class="section">Section 2 Content</div>
+    <div id="section3" class="section">Section 3 Content</div>
+
+    <script>
+        function updateActiveButton() {
+            const sections = document.querySelectorAll(".section");
+            const buttons = document.querySelectorAll(".navbar button");
+            const headerHeight = document.querySelector(".header").offsetHeight;
+            const navbarHeight = document.querySelector(".navbar").offsetHeight;
+            let currentSectionId = "";
+
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= headerHeight + navbarHeight && rect.bottom > headerHeight + navbarHeight) {
+                    currentSectionId = `#${section.id}`;
+                }
+            });
+
+            buttons.forEach(button => {
+                button.classList.toggle("active", button.getAttribute("onclick").includes(currentSectionId));
+            });
+        }
+
+        window.addEventListener("scroll", updateActiveButton);
+
+        function scrollToSection(targetId) {
+            const headerHeight = document.querySelector(".header").offsetHeight;
+            const navbarHeight = document.querySelector(".navbar").offsetHeight;
+            const targetSection = document.querySelector(targetId);
+
+            if (targetSection) {
+                const targetPosition = targetSection.getBoundingClientRect().top + window.scrollY;
+                const offsetPosition = targetPosition - (headerHeight + navbarHeight);
+
+                window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+            }
+        }
+    </script>
+</body>
+
+</html>
