@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Nested Tab Bar</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body {padding-top:100px}
+        .tab_sticky {
+            position: relative;
+            z-index:10;
+            width: 100%;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+        }
+
+        .tab_group {
+            position: sticky;
+            top:100px;
+        }
+        .tab_list {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            background-color: violet;
+        }
+
+        .tab_list_li {
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .tab_list_li a {
+            display: block;
+            height: 50px;
+        }
+
+        .tab_list_li.active {
+            font-weight: bold;
+        }
+
+        .tab_cont {
+            display: block;
+            height: 5000px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+
+        #header {
+            position: fixed;
+            top:0;
+            left:0;
+            right:0;
+            height:100px;
+            background-color: #007bff;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div id="header"></div>
+    <div class="tab_wrap tab_sticky">
+        <div class="tab_group">
+            <ul class="tab_list">
+                <li class="tab_list_li active"><a href="#" onclick="scrollToSection('#section1')" title="xxx 영역으로 스크롤 이동됩니다.">버튼 A</a></li>
+                <li class="tab_list_li"><a href="#" onclick="scrollToSection('#section2')" title="xxx 영역으로 스크롤 이동됩니다.">버튼 B</a></li>
+            </ul>
+        </div>
+        <div class="tab_cont" id="section1"><div>첫번째 요소</div>11111</div>
+        <div class="tab_cont" id="section2"><div>첫번째 요소</div>222</div>
+    </div>
+
+    <div style="height:300px"></div>
+
+    <div class="tab_wrap tab_sticky">
+        <div class="tab_group">
+            <ul class="tab_list">
+                <li class="tab_list_li"><a href="#" onclick="scrollToSection('#section3')" title="xxx 영역으로 스크롤 이동됩니다.">버튼 C</a></li>
+                <li class="tab_list_li active"><a href="#" onclick="scrollToSection('#section4')" title="xxx 영역으로 스크롤 이동됩니다.">버튼 D</a></li>
+            </ul>
+        </div>
+        <div class="tab_cont" id="section3"><div>첫번째 요소</div>333</div>
+        <div class="tab_cont" id="section4"><div>첫번째 요소</div>444</div>
+    </div>
+
+    <div style="height:2000px"></div>
+
+    <script>
+var scrollToSectionEventEnabled = true; // scroll 이벤트가 활성화된 상태를 추적
+
+// 버튼 클릭 시 스크롤 이동 함수
+function scrollToSection(targetId) {
+    event.preventDefault();
+    var headerHeight = document.querySelector("#header").offsetHeight;
+    var button = event.target;
+    var tabListLi = button.closest('.tab_list_li'); // 클릭한 버튼의 부모 li 요소
+    var tabSticky = tabListLi.closest('.tab_sticky'); // 현재 tab_sticky
+    var tabList = tabSticky.querySelector('.tab_list'); // ul 요소
+    var tabListLies = tabList.querySelectorAll('.tab_list_li'); // 모든 li 요소
+    var tabListHeight = tabList.offsetHeight;
+    var targetSection = document.querySelector(targetId);
+    var timer = 300;
+    
+    // 모든 li에서 active 제거 후 클릭한 li에 active 추가
+    tabListLies.forEach(function (item) {
+        item.classList.remove('active');
+    });
+    tabListLi.classList.add('active');
+    
+    if (targetSection) {
+        var targetPosition = targetSection.getBoundingClientRect().top + window.scrollY;
+        var offsetPosition = targetPosition - headerHeight - tabListHeight;
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+        });
+    }
+    if(targetSection.offsetHeight > 1500) {
+        timer = 600;
+    }
+    console.log(timer)
+
+    // targetSection의 첫 번째 요소에 tabindex 0을 추가하고 포커스를 이동
+    setTimeout(() => {
+        if (targetSection) {
+            // 기존 tabindex 제거 - 첫 번째 자식 요소에서만 제거
+            document.querySelectorAll('.tab_cont').forEach(function (section) {
+                var firstElement = section.querySelector('*');
+                if (firstElement) {
+                    firstElement.removeAttribute('tabindex');
+                }
+            });
+            
+            // targetSection의 첫 번째 자식 요소에 tabindex 0을 추가하고 포커스를 이동
+            var firstElement = targetSection.querySelector('*');
+            if (firstElement) {
+                firstElement.setAttribute('tabindex', '0');
+                firstElement.focus();
+            }
+        }
+    }, timer);
+
+    // 스크롤 이벤트 비활성화
+    scrollToSectionEventEnabled = false;
+    
+    // 일정 시간 후 스크롤 이벤트를 다시 활성화
+    setTimeout(function() {
+        scrollToSectionEventEnabled = true;
+    }, timer + 200);
+}
+
+// 특정 tab_sticky의 active 클래스를 업데이트하는 함수
+function updateActiveTab(tabSticky) {
+    if (!scrollToSectionEventEnabled) return;
+
+    var headerHeight = document.querySelector("#header").offsetHeight;
+    var tabList = tabSticky.querySelector('.tab_list'); // ul 요소
+    var tabListLies = tabList.querySelectorAll('.tab_list_li'); // 모든 li 요소
+    var sections = tabSticky.querySelectorAll('.tab_cont'); // tab_sticky 내부의 섹션들
+    var tabListHeight = tabList.offsetHeight;
+
+    sections.forEach(function (section, index) {
+        var sectionTop = section.getBoundingClientRect().top + window.scrollY - headerHeight - tabListHeight;
+        var sectionBottom = sectionTop + section.offsetHeight;
+
+        if (window.scrollY >= sectionTop && window.scrollY < sectionBottom) {
+            tabListLies.forEach(function (item) {
+                item.classList.remove('active');
+            });
+            tabListLies[index].classList.add('active');
+        }
+    });
+}
+
+// 윈도우 스크롤 이벤트
+window.addEventListener('scroll', function () {
+    if (!scrollToSectionEventEnabled) return;
+
+    document.querySelectorAll('.tab_sticky').forEach(function (tabSticky) {
+        updateActiveTab(tabSticky);
+    });
+});
+    </script>
+</body>
+</html>
