@@ -9,7 +9,7 @@
 
     <!-- 상위 체크박스 -->
     <label>
-        <input type="checkbox" id="parentCheckbox" aria-label="이름"> 상위 체크박스
+        <input type="checkbox" id="parentCheckbox"> 상위 체크박스
     </label>
 
     <br>
@@ -30,22 +30,29 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // 부모 체크박스 요소 가져오기
             const parentCheckbox = document.getElementById("parentCheckbox");
+            // 모든 하위 체크박스 요소 가져오기 (NodeList 형태)
             const childCheckboxes = document.querySelectorAll(".childCheckbox");
 
-            // 부모 체크박스 클릭 시 하위 체크박스들 상태 변경
+            // 부모 체크박스 클릭 시, 하위 체크박스들의 상태를 변경
             parentCheckbox.addEventListener("change", function () {
                 childCheckboxes.forEach(child => {
-                    child.checked = parentCheckbox.checked;
+                    child.checked = parentCheckbox.checked; // 부모의 상태를 자식에게 반영
                 });
             });
 
-            // 하위 체크박스 변경 시 부모 체크박스 상태 업데이트
+            // 각 하위 체크박스 클릭 시 부모 체크박스의 상태를 업데이트
             childCheckboxes.forEach(child => {
                 child.addEventListener("change", function () {
+                    // 모든 하위 체크박스가 체크되었는지 확인
                     const allChecked = [...childCheckboxes].every(cb => cb.checked);
+                    // 하나라도 체크된 항목이 있는지 확인
                     const anyChecked = [...childCheckboxes].some(cb => cb.checked);
                     
+                    // 모든 하위 체크박스가 선택되면 부모 체크박스도 선택
+                    // 하나라도 선택된 상태이면 부모 체크박스를 유지
+                    // 모두 해제되었을 경우 부모 체크박스도 해제
                     parentCheckbox.checked = allChecked || anyChecked;
                 });
             });
