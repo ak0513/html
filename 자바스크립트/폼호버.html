@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Hover 효과</title>
+    <style>
+        /* 공통 스타일 */
+        label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        /* 체크박스 & 라디오 버튼 hover 효과 */
+        input[type="checkbox"]:hover,
+        input[type="radio"]:hover {
+            transform: scale(1.2);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        /* 인풋 박스 hover 효과 */
+        input[type="text"]:hover,
+        input[type="password"]:hover,
+        input[type="email"]:hover {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            transition: all 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <h3>체크박스</h3>
+    <label>
+        <input type="checkbox"> 선택 1
+    </label>
+    <label>
+        <input type="checkbox"> 선택 2
+    </label>
+
+    <h3>라디오 버튼</h3>
+    <label>
+        <input type="radio" name="group1"> 옵션 A
+    </label>
+    <label>
+        <input type="radio" name="group1"> 옵션 B
+    </label>
+
+    <h3>인풋 박스</h3>
+    <input type="text" placeholder="텍스트 입력">
+    <input type="password" placeholder="비밀번호 입력">
+    <input type="email" placeholder="이메일 입력">
+
+</body>
+</html>
