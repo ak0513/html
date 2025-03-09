@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모바일 가로 스크롤</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        .scroll-container {
+            width: 100px; /* 가로 길이 100px */
+            height: 4px;  /* 높이 4px */
+            position: relative;
+            background: #ddd;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .scroll-bar {
+            width: 30px; /* 스크롤 핸들 크기 */
+            height: 4px;
+            background: #3498db;
+            border-radius: 2px;
+            position: absolute;
+            left: 0;
+            transition: 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scroll-container">
+        <div class="scroll-bar"></div>
+    </div>
+
+    <script>
+        const scrollContainer = document.querySelector('.scroll-container');
+        const scrollBar = document.querySelector('.scroll-bar');
+        
+        let isDragging = false;
+        let startX;
+        let startLeft;
+
+        scrollContainer.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startX = e.touches[0].pageX;
+            startLeft = scrollBar.offsetLeft;
+        });
+
+        scrollContainer.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+
+            const moveX = e.touches[0].pageX - startX;
+            let newLeft = startLeft + moveX;
+            
+            // 스크롤 바 범위 제한
+            const maxLeft = scrollContainer.clientWidth - scrollBar.clientWidth;
+            newLeft = Math.max(0, Math.min(maxLeft, newLeft));
+
+            scrollBar.style.left = newLeft + "px";
+        });
+
+        scrollContainer.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+
+        scrollContainer.addEventListener('touchcancel', () => {
+            isDragging = false;
+        });
+    </script>
+
+</body>
+</html>
