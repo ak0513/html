@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>터치 전용 호버 효과</title>
+    <style>
+        /* 기본 스타일 */
+        .custom-checkbox,
+        .custom-radio {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* 기본 hover 효과 */
+        .custom-checkbox:hover,
+        .custom-radio:hover,
+        .custom-checkbox.hover,
+        .custom-radio.hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* 체크박스 및 라디오 버튼 숨기기 */
+        .custom-checkbox input,
+        .custom-radio input {
+            display: none;
+        }
+
+        /* 체크박스 스타일 */
+        .checkmark {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+
+        /* 라디오 버튼 스타일 */
+        .radiomark {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #333;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <label class="custom-checkbox">
+        <input type="checkbox">
+        <span class="checkmark"></span>
+        체크박스
+    </label>
+
+    <label class="custom-radio">
+        <input type="radio" name="radio">
+        <span class="radiomark"></span>
+        라디오 버튼
+    </label>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const labels = document.querySelectorAll(".custom-checkbox, .custom-radio");
+
+            labels.forEach(label => {
+                label.addEventListener("touchstart", () => {
+                    label.classList.add("hover");
+                });
+
+                label.addEventListener("touchend", () => {
+                    setTimeout(() => label.classList.remove("hover"), 300);
+                });
+
+                label.addEventListener("touchcancel", () => {
+                    label.classList.remove("hover");
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
