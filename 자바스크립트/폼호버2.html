@@ -3,34 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>터치 전용 호버 효과</title>
+    <title>모바일 전용 터치 효과 (애니메이션 없음)</title>
     <style>
-        /* 기본 스타일 */
+        /* ✅ 기본 스타일 */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
         .custom-checkbox,
         .custom-radio,
-        .custom-button {
+        .hover-button,
+        .hover-link {
             display: inline-flex;
             align-items: center;
             cursor: pointer;
-            padding: 8px;
+            padding: 10px;
             border-radius: 4px;
-            transition: background-color 0.2s ease;
+            text-decoration: none;
+            font-size: 16px;
+            touch-action: manipulation; /* 터치 후 상태 유지 방지 */
             user-select: none; /* 텍스트 선택 방지 */
+            margin: 10px 0;
         }
 
-        /* 터치 시에만 효과 적용 */
-        .custom-checkbox.hover,
-        .custom-radio.hover,
-        .custom-button.hover,
-         .custom-button2:active
-        
-        
-        {
-            background-color: rgba(0, 0, 0, 0.5);
-            transform:scale(1.5)
-        }
-
-        /* 체크박스 및 라디오 버튼 숨기기 */
+        /* ✅ 체크박스 & 라디오 버튼 숨기기 */
         .custom-checkbox input,
         .custom-radio input {
             position: absolute;
@@ -39,10 +36,10 @@
             height: 0;
         }
 
-        /* 체크박스 스타일 */
+        /* ✅ 체크박스 스타일 */
         .checkmark {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             border: 2px solid #333;
             border-radius: 4px;
             margin-right: 8px;
@@ -50,23 +47,23 @@
             position: relative;
         }
 
-        /* 체크박스 체크 상태 */
+        /* ✅ 체크박스 체크 상태 */
         .custom-checkbox input:checked + .checkmark::after {
             content: "";
             position: absolute;
             left: 4px;
-            top: 1px;
-            width: 5px;
-            height: 10px;
+            top: 2px;
+            width: 6px;
+            height: 12px;
             border: solid #333;
             border-width: 0 2px 2px 0;
             transform: rotate(45deg);
         }
 
-        /* 라디오 버튼 스타일 */
+        /* ✅ 라디오 버튼 스타일 */
         .radiomark {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             border: 2px solid #333;
             border-radius: 50%;
             margin-right: 8px;
@@ -74,70 +71,95 @@
             position: relative;
         }
 
-        /* 라디오 버튼 체크 상태 */
+        /* ✅ 라디오 버튼 체크 상태 */
         .custom-radio input:checked + .radiomark::after {
             content: "";
             position: absolute;
             left: 50%;
             top: 50%;
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             background-color: #333;
             border-radius: 50%;
             transform: translate(-50%, -50%);
         }
 
-        /* 추가된 버튼 스타일 */
-        .custom-button {
+        /* ✅ 버튼 스타일 */
+        .hover-button {
             background-color: #f0f0f0;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: 1px solid #ccc;
             border-radius: 6px;
-            font-size: 16px;
-            margin-top: 10px;
+        }
+
+        /* ✅ a 태그 스타일 */
+        .hover-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* ✅ PC에서는 :hover 효과 적용 */
+        @media (pointer: fine) {
+            .hover-button:hover {
+                background-color: rgba(0, 255, 0, 0.3);
+                color: green;
+                border: 1px solid green;
+            }
+
+            .hover-link:hover {
+                background-color: rgba(0, 0, 255, 0.3);
+                color: white;
+            }
+        }
+
+        /* ✅ 모바일에서는 :hover 효과 제거 & :active만 적용 */
+        @media (pointer: coarse) {
+            .custom-checkbox:hover,
+            .custom-radio:hover,
+            .hover-button:hover,
+            .hover-link:hover {
+                background-color: transparent !important; /* :hover 효과 강제 제거 */
+            }
+
+            .custom-checkbox:active,
+            .custom-radio:active,
+            .hover-button:active,
+            .hover-link:active {
+                background-color: rgba(0, 0, 0, 0.2);
+            }
         }
     </style>
 </head>
 <body>
 
+    <h2>체크박스</h2>
     <label class="custom-checkbox">
         <input type="checkbox">
         <span class="checkmark"></span>
-        체크박스
+        체크박스 선택
     </label>
 
+    <h2>라디오 버튼</h2>
     <label class="custom-radio">
         <input type="radio" name="radio">
         <span class="radiomark"></span>
-        라디오 버튼
+        라디오 버튼 1
+    </label>
+    <label class="custom-radio">
+        <input type="radio" name="radio">
+        <span class="radiomark"></span>
+        라디오 버튼 2
     </label>
 
-    <!-- 새로운 버튼 추가 -->
-    <button class="custom-button">커스텀 버튼</button>
+    <h2>버튼</h2>
+    <button class="hover-button">커스텀 버튼</button>
 
-    <button class="custom-button2">커스텀 버튼3</button>
-
-
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const labels = document.querySelectorAll(".custom-checkbox, .custom-radio, .custom-button");
-
-            labels.forEach(label => {
-                label.addEventListener("touchstart", () => {
-                    label.classList.add("hover");
-                });
-
-                label.addEventListener("touchend", () => {
-                    label.classList.remove("hover");
-                });
-
-                label.addEventListener("touchcancel", () => {
-                    label.classList.remove("hover");
-                });
-            });
-        });
-    </script>
+    <h2>링크</h2>
+    <a href="#" class="hover-link">커스텀 링크</a>
 
 </body>
 </html>
