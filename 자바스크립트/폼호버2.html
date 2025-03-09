@@ -3,28 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>모바일 전용 터치 효과</title>
+    <title>터치 전용 호버 효과</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-
+        /* 기본 스타일 */
         .custom-checkbox,
         .custom-radio,
+        .custom-button,
+        .hover-link,
         .hover-button,
-        .hover-link {
+        .active-button {
             display: inline-flex;
             align-items: center;
             cursor: pointer;
-            padding: 10px;
+            padding: 8px;
             border-radius: 4px;
-            text-decoration: none;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            user-select: none; /* 텍스트 선택 방지 */
+            text-decoration: none; /* 링크 기본 밑줄 제거 */
             font-size: 16px;
-            user-select: none;
-            margin: 10px 0;
         }
 
+        /* 터치 시에만 효과 적용 */
+        .custom-checkbox.hover,
+        .custom-radio.hover,
+        .custom-button.hover {
+            background-color: rgba(0, 0, 0, 0.5);
+            transform: scale(1.5);
+        }
+
+        /* 체크박스 및 라디오 버튼 숨기기 */
         .custom-checkbox input,
         .custom-radio input {
             position: absolute;
@@ -33,9 +40,10 @@
             height: 0;
         }
 
+        /* 체크박스 스타일 */
         .checkmark {
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             border: 2px solid #333;
             border-radius: 4px;
             margin-right: 8px;
@@ -43,21 +51,23 @@
             position: relative;
         }
 
+        /* 체크박스 체크 상태 */
         .custom-checkbox input:checked + .checkmark::after {
             content: "";
             position: absolute;
             left: 4px;
-            top: 2px;
-            width: 6px;
-            height: 12px;
+            top: 1px;
+            width: 5px;
+            height: 10px;
             border: solid #333;
             border-width: 0 2px 2px 0;
             transform: rotate(45deg);
         }
 
+        /* 라디오 버튼 스타일 */
         .radiomark {
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             border: 2px solid #333;
             border-radius: 50%;
             margin-right: 8px;
@@ -65,134 +75,118 @@
             position: relative;
         }
 
+        /* 라디오 버튼 체크 상태 */
         .custom-radio input:checked + .radiomark::after {
             content: "";
             position: absolute;
             left: 50%;
             top: 50%;
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             background-color: #333;
             border-radius: 50%;
             transform: translate(-50%, -50%);
         }
 
-        .hover-button {
+        /* 버튼 스타일 */
+        .custom-button {
             background-color: #f0f0f0;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border: 1px solid #ccc;
             border-radius: 6px;
+            font-size: 16px;
+            margin-top: 10px;
         }
 
-        .hover-link {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
+        /* ✅ a 태그 :hover 효과 */
+        .hover-link:hover {
+            background-color: red;
+            color: blue;
+            padding: 10px;
             border-radius: 4px;
-            text-align: center;
         }
 
-        @media (hover: hover) {
-            .hover-button:hover {
-                background-color: rgba(0, 255, 0, 0.3);
-                color: green;
-                border: 1px solid green;
-            }
-
-            .hover-link:hover {
-                background-color: rgba(0, 0, 255, 0.3);
-                color: white;
-            }
+        /* ✅ 버튼 :hover 효과 */
+        .hover-button:hover {
+            background-color: red;
+            color: green;
+            padding: 10px;
+            border: 1px solid green;
+            border-radius: 4px;
         }
 
-        @media (hover: none) {
-            .hover-button:hover,
-            .hover-link:hover,
-            .custom-checkbox:hover,
-            .custom-radio:hover {
-                background-color: transparent !important;
-            }
-
-            .hover-button:active,
-            .hover-link:active,
-            .custom-checkbox:active,
-            .custom-radio:active {
-                background-color: rgba(0, 0, 0, 0.2);
-            }
-        }
-
-        /* ✅ JavaScript에서 추가될 터치 효과 */
-        .touch-active {
-            background-color: rgba(0, 0, 0, 0.2) !important;
-            transition: background-color 0.2s ease;
+        /* ✅ 버튼 :active 효과 */
+        .active-button:active,
+        .active-link:active {
+            background-color: red;
+            transform: scale(0.9);
+            padding: 10px;
+            border: 1px solid red;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
 
-    <h2>체크박스</h2>
     <label class="custom-checkbox">
         <input type="checkbox">
         <span class="checkmark"></span>
-        체크박스 선택
+        체크박스
     </label>
 
-    <h2>라디오 버튼</h2>
     <label class="custom-radio">
         <input type="radio" name="radio">
         <span class="radiomark"></span>
-        라디오 버튼 1
-    </label>
-    <label class="custom-radio">
-        <input type="radio" name="radio">
-        <span class="radiomark"></span>
-        라디오 버튼 2
+        라디오 버튼
     </label>
 
-    <h2>버튼</h2>
-    <button class="hover-button">커스텀 버튼</button>
+    <!-- 기존 버튼 -->
+    <button class="custom-button">커스텀 버튼</button>
 
-    <h2>링크</h2>
-    <a href="#" class="hover-link">커스텀 링크</a>
+    <!-- ✅ :hover 효과만 있는 a 태그 -->
+    <a href="#" class="hover-link">호버 효과 있는 링크</a>
 
-    <h2>동적 추가</h2>
-    <button id="addButton">요소 추가</button>
-    <div id="dynamicContainer"></div>
+    <a href="#" class="active-link">액티브 효과 있는 링크</a>
+
+    <!-- ✅ :hover 효과만 있는 버튼 -->
+    <button class="hover-button">호버 효과 있는 버튼</button>
+
+    <!-- ✅ :active 효과만 있는 버튼 -->
+    <button class="active-button">액티브 효과 있는 버튼</button>
+
+    <!-- 동적으로 버튼을 추가할 공간 -->
+    <div id="button-container"></div>
 
     <script>
-        // ✅ 모바일에서 터치 효과 추가
-        document.addEventListener("touchstart", function(event) {
-            let target = event.target.closest(".hover-button, .hover-link, .custom-checkbox, .custom-radio");
-            if (target) {
-                target.classList.add("touch-active");
-            }
-        });
+        document.addEventListener("DOMContentLoaded", function () {
+            document.body.addEventListener("touchstart", function (event) {
+                const target = event.target.closest(".custom-checkbox, .custom-radio, .custom-button");
+                if (target) {
+                    target.classList.add("hover");
+                }
+            });
 
-        document.addEventListener("touchend", function(event) {
-            let target = event.target.closest(".hover-button, .hover-link, .custom-checkbox, .custom-radio");
-            if (target) {
-                setTimeout(() => target.classList.remove("touch-active"), 200);
-            }
-        });
+            document.body.addEventListener("touchend", function (event) {
+                const target = event.target.closest(".custom-checkbox, .custom-radio, .custom-button");
+                if (target) {
+                    target.classList.remove("hover");
+                }
+            });
 
-        // ✅ 동적으로 요소 추가
-        document.getElementById("addButton").addEventListener("click", function() {
-            let container = document.getElementById("dynamicContainer");
-            let newButton = document.createElement("button");
-            newButton.className = "hover-button";
-            newButton.textContent = "새로운 버튼";
-            container.appendChild(newButton);
+            document.body.addEventListener("touchcancel", function (event) {
+                const target = event.target.closest(".custom-checkbox, .custom-radio, .custom-button");
+                if (target) {
+                    target.classList.remove("hover");
+                }
+            });
 
-            let newCheckbox = document.createElement("label");
-            newCheckbox.className = "custom-checkbox";
-            newCheckbox.innerHTML = `<input type="checkbox"><span class="checkmark"></span> 새 체크박스`;
-            container.appendChild(newCheckbox);
-
-            let newRadio = document.createElement("label");
-            newRadio.className = "custom-radio";
-            newRadio.innerHTML = `<input type="radio" name="radio"><span class="radiomark"></span> 새 라디오`;
-            container.appendChild(newRadio);
+            // 2초 후 새로운 버튼 추가 (예제)
+            setTimeout(() => {
+                const newButton = document.createElement("button");
+                newButton.className = "custom-button";
+                newButton.textContent = "동적으로 추가된 버튼";
+                document.getElementById("button-container").appendChild(newButton);
+            }, 2000);
         });
     </script>
 
