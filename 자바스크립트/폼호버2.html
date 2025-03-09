@@ -13,12 +13,10 @@
             cursor: pointer;
             padding: 8px;
             border-radius: 4px;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.2s ease;
         }
 
-        /* 기본 hover 효과 */
-        .custom-checkbox:hover,
-        .custom-radio:hover,
+        /* 터치 시에만 효과 적용 */
         .custom-checkbox.hover,
         .custom-radio.hover {
             background-color: rgba(0, 0, 0, 0.1);
@@ -73,7 +71,7 @@
                 });
 
                 label.addEventListener("touchend", () => {
-                    setTimeout(() => label.classList.remove("hover"), 300);
+                    label.classList.remove("hover");
                 });
 
                 label.addEventListener("touchcancel", () => {
