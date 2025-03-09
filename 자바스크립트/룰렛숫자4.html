@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>다중 자동 룰렛</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        /* 룰렛 전체 컨테이너 */
+        .roulette-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* 개별 숫자 룰렛 */
+        .roulette-container {
+            position: relative;
+            width: 0;
+            height: 24px;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+        .roulette-container.on {
+            width: 14px;
+            opacity: 1;
+        }
+
+        /* 쉼표(,) 스타일 */
+        .comma-container {
+            overflow: hidden;
+            width: 0;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+        .comma-container.on {
+            width: 8px;
+            opacity: 1;
+        }
+
+        /* 숫자 이동 애니메이션 */
+        .numbers {
+            position: absolute;
+            width: 100%;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); /* 빠른 애니메이션 */
+        }
+
+        .numbers div {
+            height: 24px;
+            font-size: 24px;
+            line-height: 24px;
+        }
+
+        /* 단위 (원) */
+        .unit {
+            font-size: 24px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 여러 개의 숫자 표시 -->
+    <div data-number="375,700,509"></div>
+    <div data-number="42,198,654"></div>
+    <div data-number="8,912,304"></div>
+
+    <script>
+        const totalSpins = 2; // 최소 2바퀴 이상 돌도록 설정
+        const delayBetweenStops = 100; // 숫자가 하나씩 멈추는 간격(ms)
+        const digitHeight = 24; // 숫자 하나의 높이(px)
+
+        /**
+         * 숫자 룰렛 컨테이너를 설정하는 함수
+         * @param {HTMLElement} container - 개별 숫자 컨테이너
+         */
+        function setupNumbers(container) {
+            let numbersHtml = '';
+            let repeatCount = totalSpins + 2; // 최소 한 바퀴 이상 돌도록 추가 숫자 생성
+            
+            // 0~9 숫자를 여러 번 반복하여 생성
+            for (let i = 0; i < repeatCount; i++) {
+                for (let j = 0; j < 10; j++) {
+                    numbersHtml += `<div>${j}</div>`;
+                }
+            }
+            container.querySelector('.numbers').innerHTML = numbersHtml;
+            container.querySelector('.numbers').style.transform = `translateY(0px)`; // 초기 위치 설정
+        }
+
+        /**
+         * 개별 숫자 룰렛을 회전시키는 함수
+         * @param {HTMLElement} container - 숫자 컨테이너
+         * @param {number} index - 숫자의 순서 (0부터 시작)
+         */
+        function startRoulette(container, index) {
+            const numbersContainer = container.querySelector('.numbers');
+            const finalNumber = parseInt(container.getAttribute('data-final'), 10); // 목표 숫자
+            const stopPosition = Array.from(numbersContainer.children)
+                .map(num => parseInt(num.textContent, 10))
+                .lastIndexOf(finalNumber) * digitHeight; // 목표 숫자가 위치할 최종 좌표 계산
+
+            // 지정된 간격 후 애니메이션 시작
+            setTimeout(() => {
+                numbersContainer.style.transition = 'transform 0.5s ease-out'; // 빠른 애니메이션
+                numbersContainer.style.transform = `translateY(-${stopPosition}px)`; // 목표 숫자로 이동
+            }, index * delayBetweenStops);
+        }
+
+        /**
+         * 모든 숫자 룰렛을 실행하는 함수
+         */
+        function startAllRoulette() {
+            document.querySelectorAll('.roulette-wrapper').forEach(wrapper => {
+                // 숫자와 쉼표를 하나씩 표시
+                wrapper.querySelectorAll('.roulette-container, .comma-container').forEach((container, index) => {
+                    setTimeout(() => {
+                        container.classList.add('on');
+                    }, index * delayBetweenStops);
+                });
+
+                // 숫자 회전 시작
+                wrapper.querySelectorAll('.roulette-container').forEach((container, index) => {
+                    startRoulette(container, index);
+                });
+            });
+        }
+
+        /**
+         * 모든 [data-number] 요소를 찾아서 룰렛 애니메이션을 적용하는 함수
+         */
+        function setupRoulette() {
+            document.querySelectorAll('[data-number]').forEach(target => {
+                const numberText = target.getAttribute('data-number'); // 기존 숫자 가져오기
+                const wrapper = document.createElement('div'); // 새로운 숫자 컨테이너 생성
+                wrapper.className = 'roulette-wrapper';
+                target.replaceWith(wrapper); // 기존 요소를 새로운 컨테이너로 교체
+
+                // 숫자와 쉼표를 개별 컨테이너로 분리
+                numberText.split('').forEach(char => {
+                    if (char === ',') {
+                        wrapper.innerHTML += '<div class="comma-container">,</div>'; // 쉼표 컨테이너 추가
+                    } else {
+                        wrapper.innerHTML += `<div class="roulette-container" data-final="${char}"><div class="numbers"></div></div>`; // 숫자 컨테이너 추가
+                    }
+                });
+
+                // 숫자 뒤에 "원" 단위 추가
+                wrapper.innerHTML += '<span class="unit">원</span>';
+            });
+
+            // 숫자 룰렛 설정 및 시작
+            document.querySelectorAll('.roulette-container').forEach(setupNumbers);
+            setTimeout(startAllRoulette, 300);
+        }
+
+        // 페이지 로드 시 룰렛 효과 적용
+        window.onload = setupRoulette;
+    </script>
+</body>
+</html>
