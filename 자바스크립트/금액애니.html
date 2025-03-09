@@ -3,23 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>금액 애니메이션</title>
+    <title>토스뱅크 금액 애니메이션</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 100px;
         }
-        .amount {
+        .amount-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
             font-size: 48px;
             font-weight: bold;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
-    <div class="amount" id="amount">0</div>
-    <button onclick="updateAmount(500000)">500,000원으로 변경</button>
-    <button onclick="updateAmount(1234567)">1,234,567원으로 변경</button>
+
+    <div class="amount-container">
+        <span class="amount" data-amount="0">0</span>
+        <span class="currency">원</span>
+    </div>
+
+    <div class="amount-container">
+        <span class="amount" data-amount="0">0</span>
+        <span class="currency">원</span>
+    </div>
 
     <script>
         function animateValue(element, start, end, duration) {
@@ -40,11 +52,18 @@
             requestAnimationFrame(step);
         }
 
-        function updateAmount(newAmount) {
-            const amountElement = document.getElementById('amount');
-            const currentAmount = parseInt(amountElement.innerText.replace(/,/g, ''), 10) || 0;
-            animateValue(amountElement, currentAmount, newAmount, 1000);
+        function setAmount(selector, newAmount) {
+            document.querySelectorAll(selector).forEach(element => {
+                const currentAmount = parseInt(element.innerText.replace(/,/g, ''), 10) || 0;
+                animateValue(element, currentAmount, newAmount, 1000);
+            });
         }
+
+        // 2초 후 첫 번째 금액 변경
+        setTimeout(() => setAmount('.amount:nth-of-type(1)', 500000), 2000);
+        // 5초 후 두 번째 금액 변경
+        setTimeout(() => setAmount('.amount:nth-of-type(2)', 1234567), 5000);
     </script>
+
 </body>
 </html>
