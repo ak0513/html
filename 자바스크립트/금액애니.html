@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>금액 애니메이션</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+        }
+        .amount {
+            font-size: 48px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="amount" id="amount">0</div>
+    <button onclick="updateAmount(500000)">500,000원으로 변경</button>
+    <button onclick="updateAmount(1234567)">1,234,567원으로 변경</button>
+
+    <script>
+        function animateValue(element, start, end, duration) {
+            let startTime = null;
+
+            function step(currentTime) {
+                if (!startTime) startTime = currentTime;
+                const progress = Math.min((currentTime - startTime) / duration, 1);
+                const currentValue = Math.floor(start + (end - start) * progress);
+                
+                element.innerText = currentValue.toLocaleString();
+
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                }
+            }
+
+            requestAnimationFrame(step);
+        }
+
+        function updateAmount(newAmount) {
+            const amountElement = document.getElementById('amount');
+            const currentAmount = parseInt(amountElement.innerText.replace(/,/g, ''), 10) || 0;
+            animateValue(amountElement, currentAmount, newAmount, 1000);
+        }
+    </script>
+</body>
+</html>
