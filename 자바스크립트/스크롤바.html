@@ -13,15 +13,56 @@
 
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             background-color: #f5f5f5;
         }
 
+        /* 스크롤 가능한 콘텐츠 */
+        .scroll-wrapper {
+            width: 300px; /* 콘텐츠 영역 */
+            overflow: hidden;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        .scroll-content {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none; /* Firefox 스크롤바 숨김 */
+            -ms-overflow-style: none; /* IE 스크롤바 숨김 */
+        }
+
+        .scroll-content::-webkit-scrollbar {
+            display: none; /* Chrome, Safari 스크롤바 숨김 */
+        }
+
+        .item {
+            flex: 0 0 auto;
+            width: 80px;
+            height: 80px;
+            background: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            border-radius: 10px;
+            font-weight: bold;
+            user-select: none;
+        }
+
+        /* 커스텀 스크롤 바 */
         .scroll-container {
-            width: 100px; /* 가로 길이 100px */
-            height: 4px;  /* 높이 4px */
+            width: 100px; /* 스크롤 바 길이 */
+            height: 4px;  /* 스크롤 바 높이 */
+            margin-top: 10px;
             position: relative;
             background: #ddd;
             border-radius: 2px;
@@ -41,18 +82,37 @@
 </head>
 <body>
 
+    <!-- 스크롤 가능한 콘텐츠 -->
+    <div class="scroll-wrapper">
+        <div class="scroll-content">
+            <div class="item">1</div>
+            <div class="item">2</div>
+            <div class="item">3</div>
+            <div class="item">4</div>
+            <div class="item">5</div>
+            <div class="item">6</div>
+            <div class="item">7</div>
+            <div class="item">8</div>
+            <div class="item">9</div>
+            <div class="item">10</div>
+        </div>
+    </div>
+
+    <!-- 커스텀 스크롤 바 -->
     <div class="scroll-container">
         <div class="scroll-bar"></div>
     </div>
 
     <script>
+        const scrollContent = document.querySelector('.scroll-content');
         const scrollContainer = document.querySelector('.scroll-container');
         const scrollBar = document.querySelector('.scroll-bar');
-        
+
         let isDragging = false;
         let startX;
         let startLeft;
 
+        // 터치 드래그로 스크롤 바 이동
         scrollContainer.addEventListener('touchstart', (e) => {
             isDragging = true;
             startX = e.touches[0].pageX;
@@ -65,11 +125,17 @@
             const moveX = e.touches[0].pageX - startX;
             let newLeft = startLeft + moveX;
             
-            // 스크롤 바 범위 제한
+            // 스크롤 바 이동 범위 제한
             const maxLeft = scrollContainer.clientWidth - scrollBar.clientWidth;
             newLeft = Math.max(0, Math.min(maxLeft, newLeft));
 
+            // 스크롤 바 이동 적용
             scrollBar.style.left = newLeft + "px";
+
+            // 스크롤 콘텐츠 동기화
+            const scrollRatio = newLeft / maxLeft;
+            const contentMaxScroll = scrollContent.scrollWidth - scrollContent.clientWidth;
+            scrollContent.scrollLeft = contentMaxScroll * scrollRatio;
         });
 
         scrollContainer.addEventListener('touchend', () => {
@@ -78,6 +144,14 @@
 
         scrollContainer.addEventListener('touchcancel', () => {
             isDragging = false;
+        });
+
+        // 스크롤 콘텐츠 움직일 때 커스텀 바 연동
+        scrollContent.addEventListener('scroll', () => {
+            const contentMaxScroll = scrollContent.scrollWidth - scrollContent.clientWidth;
+            const scrollRatio = scrollContent.scrollLeft / contentMaxScroll;
+            const maxLeft = scrollContainer.clientWidth - scrollBar.clientWidth;
+            scrollBar.style.left = (scrollRatio * maxLeft) + "px";
         });
     </script>
 
