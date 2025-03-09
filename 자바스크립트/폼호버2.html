@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>모바일 전용 터치 효과 (애니메이션 없음)</title>
+    <title>모바일 전용 터치 효과</title>
     <style>
         /* ✅ 기본 스타일 */
         body {
@@ -22,8 +22,7 @@
             border-radius: 4px;
             text-decoration: none;
             font-size: 16px;
-            touch-action: manipulation; /* 터치 후 상태 유지 방지 */
-            user-select: none; /* 텍스트 선택 방지 */
+            user-select: none;
             margin: 10px 0;
         }
 
@@ -103,7 +102,7 @@
         }
 
         /* ✅ PC에서는 :hover 효과 적용 */
-        @media (pointer: fine) {
+        @media (hover: hover) {
             .hover-button:hover {
                 background-color: rgba(0, 255, 0, 0.3);
                 color: green;
@@ -117,18 +116,18 @@
         }
 
         /* ✅ 모바일에서는 :hover 효과 제거 & :active만 적용 */
-        @media (pointer: coarse) {
-            .custom-checkbox:hover,
-            .custom-radio:hover,
+        @media (hover: none) {
             .hover-button:hover,
-            .hover-link:hover {
+            .hover-link:hover,
+            .custom-checkbox:hover,
+            .custom-radio:hover {
                 background-color: transparent !important; /* :hover 효과 강제 제거 */
             }
 
-            .custom-checkbox:active,
-            .custom-radio:active,
             .hover-button:active,
-            .hover-link:active {
+            .hover-link:active,
+            .custom-checkbox:active,
+            .custom-radio:active {
                 background-color: rgba(0, 0, 0, 0.2);
             }
         }
