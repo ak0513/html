@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>다중 자동 룰렛</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .roulette-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px; /* 여러 개의 숫자 구분 */
+        }
+
+        .roulette-container {
+            position: relative;
+            width: 0;
+            height: 24px;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .roulette-container.on {
+            width: 14px;
+            opacity: 1;
+        }
+
+        .comma-container {
+            overflow: hidden;
+            width: 0;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .comma-container.on {
+            width: 8px;
+            opacity: 1;
+        }
+
+        .numbers {
+            position: absolute;
+            width: 100%;
+            transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .numbers div {
+            height: 24px;
+            font-size: 24px;
+            line-height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 여러 개의 숫자 표시 -->
+    <div data-number="375,700,509"></div>
+    <div data-number="42,198,654"></div>
+    <div data-number="8,912,304"></div>
+
+    <script>
+        const totalSpins = 2;
+        const delayBetweenStops = 150;
+        const digitHeight = 24;
+
+        /**
+         * 숫자 컨테이너를 설정하는 함수
+         */
+        function setupNumbers(container) {
+            let numbersHtml = '';
+            let repeatCount = totalSpins + 2;
+            
+            for (let i = 0; i < repeatCount; i++) {
+                for (let j = 0; j < 10; j++) {
+                    numbersHtml += `<div>${j}</div>`;
+                }
+            }
+            container.querySelector('.numbers').innerHTML = numbersHtml;
+            container.querySelector('.numbers').style.transform = `translateY(0px)`;
+        }
+
+        /**
+         * 특정 숫자 룰렛을 회전시키는 함수
+         */
+        function startRoulette(container, index) {
+            const numbersContainer = container.querySelector('.numbers');
+            const finalNumber = parseInt(container.getAttribute('data-final'), 10);
+            const totalNumbers = numbersContainer.children.length;
+            const stopPosition = Array.from(numbersContainer.children)
+                .map(num => parseInt(num.textContent, 10))
+                .lastIndexOf(finalNumber) * digitHeight;
+
+            setTimeout(() => {
+                numbersContainer.style.transition = 'transform 0.7s ease-out';
+                numbersContainer.style.transform = `translateY(-${stopPosition}px)`;
+            }, index * delayBetweenStops);
+        }
+
+        /**
+         * 모든 룰렛을 동시에 실행하는 함수
+         */
+        function startAllRoulette() {
+            document.querySelectorAll('.roulette-wrapper').forEach(wrapper => {
+                wrapper.querySelectorAll('.roulette-container, .comma-container').forEach((container, index) => {
+                    setTimeout(() => {
+                        container.classList.add('on');
+                    }, index * delayBetweenStops);
+                });
+
+                wrapper.querySelectorAll('.roulette-container').forEach((container, index) => {
+                    startRoulette(container, index);
+                });
+            });
+        }
+
+        /**
+         * 페이지 내 모든 숫자를 룰렛으로 변환
+         */
+        function setupRoulette() {
+            document.querySelectorAll('[data-number]').forEach(target => {
+                const numberText = target.getAttribute('data-number');
+                const wrapper = document.createElement('div');
+                wrapper.className = 'roulette-wrapper';
+                target.replaceWith(wrapper);
+
+                numberText.split('').forEach(char => {
+                    if (char === ',') {
+                        wrapper.innerHTML += '<div class="comma-container">,</div>';
+                    } else {
+                        wrapper.innerHTML += `<div class="roulette-container" data-final="${char}"><div class="numbers"></div></div>`;
+                    }
+                });
+            });
+
+            document.querySelectorAll('.roulette-container').forEach(setupNumbers);
+            setTimeout(startAllRoulette, 300);
+        }
+
+        window.onload = setupRoulette;
+    </script>
+</body>
+</html>
