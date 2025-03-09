@@ -38,21 +38,13 @@
             transition: all 0.2s ease-in-out;
         }
 
-        /* PC와 모바일에서 hover & active 효과 */
-        input[type="checkbox"]:hover,
-        input[type="checkbox"]:active,
-        input[type="radio"]:hover,
-        input[type="radio"]:active {
+        /* Hover 효과 (PC에서는 정상 작동, 모바일에서는 JS로 제어) */
+        input.hover-effect {
             transform: scale(1.2);
             transition: transform 0.2s ease-in-out;
         }
 
-        input[type="text"]:hover,
-        input[type="text"]:active,
-        input[type="password"]:hover,
-        input[type="password"]:active,
-        input[type="email"]:hover,
-        input[type="email"]:active {
+        input.text-hover-effect {
             border-color: #007bff;
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
             transition: all 0.2s ease-in-out;
@@ -63,26 +55,49 @@
 
     <h3>체크박스</h3>
     <label>
-        <input type="checkbox"> 선택 1
+        <input type="checkbox" class="hover-target"> 선택 1
     </label>
     <label>
-        <input type="checkbox"> 선택 2
+        <input type="checkbox" class="hover-target"> 선택 2
     </label>
 
     <h3>라디오 버튼</h3>
     <label>
-        <input type="radio" name="group1"> 옵션 A
+        <input type="radio" name="group1" class="hover-target"> 옵션 A
     </label>
     <label>
-        <input type="radio" name="group1"> 옵션 B
+        <input type="radio" name="group1" class="hover-target"> 옵션 B
     </label>
 
     <h3>인풋 박스</h3>
-    <input type="text" placeholder="텍스트 입력">
+    <input type="text" class="text-hover-target" placeholder="텍스트 입력">
     <br><br>
-    <input type="password" placeholder="비밀번호 입력">
+    <input type="password" class="text-hover-target" placeholder="비밀번호 입력">
     <br><br>
-    <input type="email" placeholder="이메일 입력">
+    <input type="email" class="text-hover-target" placeholder="이메일 입력">
+
+    <script>
+        // 터치 이벤트 시 hover 효과 제거
+        document.querySelectorAll(".hover-target").forEach(input => {
+            input.addEventListener("touchstart", () => {
+                input.classList.add("hover-effect");
+            });
+
+            input.addEventListener("touchend", () => {
+                setTimeout(() => input.classList.remove("hover-effect"), 100);
+            });
+        });
+
+        document.querySelectorAll(".text-hover-target").forEach(input => {
+            input.addEventListener("touchstart", () => {
+                input.classList.add("text-hover-effect");
+            });
+
+            input.addEventListener("touchend", () => {
+                setTimeout(() => input.classList.remove("text-hover-effect"), 100);
+            });
+        });
+    </script>
 
 </body>
 </html>
