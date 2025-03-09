@@ -23,7 +23,7 @@
         .roulette-wrapper {
             display: flex;
             align-items: center;
-            margin-bottom: 20px; /* 여러 개의 숫자 구분 */
+            margin-bottom: 20px;
         }
 
         .roulette-container {
@@ -64,6 +64,12 @@
             font-size: 24px;
             line-height: 24px;
         }
+
+        .unit {
+            font-size: 24px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
     </style>
 </head>
 <body>
@@ -77,9 +83,6 @@
         const delayBetweenStops = 150;
         const digitHeight = 24;
 
-        /**
-         * 숫자 컨테이너를 설정하는 함수
-         */
         function setupNumbers(container) {
             let numbersHtml = '';
             let repeatCount = totalSpins + 2;
@@ -93,13 +96,9 @@
             container.querySelector('.numbers').style.transform = `translateY(0px)`;
         }
 
-        /**
-         * 특정 숫자 룰렛을 회전시키는 함수
-         */
         function startRoulette(container, index) {
             const numbersContainer = container.querySelector('.numbers');
             const finalNumber = parseInt(container.getAttribute('data-final'), 10);
-            const totalNumbers = numbersContainer.children.length;
             const stopPosition = Array.from(numbersContainer.children)
                 .map(num => parseInt(num.textContent, 10))
                 .lastIndexOf(finalNumber) * digitHeight;
@@ -110,9 +109,6 @@
             }, index * delayBetweenStops);
         }
 
-        /**
-         * 모든 룰렛을 동시에 실행하는 함수
-         */
         function startAllRoulette() {
             document.querySelectorAll('.roulette-wrapper').forEach(wrapper => {
                 wrapper.querySelectorAll('.roulette-container, .comma-container').forEach((container, index) => {
@@ -127,9 +123,6 @@
             });
         }
 
-        /**
-         * 페이지 내 모든 숫자를 룰렛으로 변환
-         */
         function setupRoulette() {
             document.querySelectorAll('[data-number]').forEach(target => {
                 const numberText = target.getAttribute('data-number');
@@ -144,6 +137,9 @@
                         wrapper.innerHTML += `<div class="roulette-container" data-final="${char}"><div class="numbers"></div></div>`;
                     }
                 });
+
+                // 원 단위 추가
+                wrapper.innerHTML += '<span class="unit">원</span>';
             });
 
             document.querySelectorAll('.roulette-container').forEach(setupNumbers);
