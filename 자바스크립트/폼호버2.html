@@ -7,7 +7,8 @@
     <style>
         /* 기본 스타일 */
         .custom-checkbox,
-        .custom-radio {
+        .custom-radio,
+        .custom-button {
             display: inline-flex;
             align-items: center;
             cursor: pointer;
@@ -19,7 +20,8 @@
 
         /* 터치 시에만 효과 적용 */
         .custom-checkbox.hover,
-        .custom-radio.hover {
+        .custom-radio.hover,
+        .custom-button.hover {
             background-color: rgba(0, 0, 0, 0.1);
         }
 
@@ -79,6 +81,16 @@
             border-radius: 50%;
             transform: translate(-50%, -50%);
         }
+
+        /* 추가된 버튼 스타일 */
+        .custom-button {
+            background-color: #f0f0f0;
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -86,7 +98,7 @@
     <label class="custom-checkbox">
         <input type="checkbox">
         <span class="checkmark"></span>
-        체크박스2
+        체크박스
     </label>
 
     <label class="custom-radio">
@@ -95,9 +107,12 @@
         라디오 버튼
     </label>
 
+    <!-- 새로운 버튼 추가 -->
+    <button class="custom-button">커스텀 버튼</button>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const labels = document.querySelectorAll(".custom-checkbox, .custom-radio");
+            const labels = document.querySelectorAll(".custom-checkbox, .custom-radio, .custom-button");
 
             labels.forEach(label => {
                 label.addEventListener("touchstart", () => {
