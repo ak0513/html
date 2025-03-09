@@ -14,6 +14,7 @@
             padding: 8px;
             border-radius: 4px;
             transition: background-color 0.2s ease;
+            user-select: none; /* 텍스트 선택 방지 */
         }
 
         /* 터치 시에만 효과 적용 */
@@ -25,7 +26,10 @@
         /* 체크박스 및 라디오 버튼 숨기기 */
         .custom-checkbox input,
         .custom-radio input {
-            display: none;
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
         }
 
         /* 체크박스 스타일 */
@@ -35,6 +39,21 @@
             border: 2px solid #333;
             border-radius: 4px;
             margin-right: 8px;
+            display: inline-block;
+            position: relative;
+        }
+
+        /* 체크박스 체크 상태 */
+        .custom-checkbox input:checked + .checkmark::after {
+            content: "";
+            position: absolute;
+            left: 4px;
+            top: 1px;
+            width: 5px;
+            height: 10px;
+            border: solid #333;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
         }
 
         /* 라디오 버튼 스타일 */
@@ -44,6 +63,21 @@
             border: 2px solid #333;
             border-radius: 50%;
             margin-right: 8px;
+            display: inline-block;
+            position: relative;
+        }
+
+        /* 라디오 버튼 체크 상태 */
+        .custom-radio input:checked + .radiomark::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 8px;
+            height: 8px;
+            background-color: #333;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
         }
     </style>
 </head>
@@ -52,7 +86,7 @@
     <label class="custom-checkbox">
         <input type="checkbox">
         <span class="checkmark"></span>
-        체크박스
+        체크박스2
     </label>
 
     <label class="custom-radio">
@@ -66,7 +100,7 @@
             const labels = document.querySelectorAll(".custom-checkbox, .custom-radio");
 
             labels.forEach(label => {
-                label.addEventListener("touchstart", (e) => {
+                label.addEventListener("touchstart", () => {
                     label.classList.add("hover");
                 });
 
