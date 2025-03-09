@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>터치 전용 호버 효과</title>
+    <style>
+        /* 기본 스타일 */
+        .custom-checkbox,
+        .custom-radio,
+        .custom-button,
+        .hover-link,
+        .hover-button,
+        .active-button {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            user-select: none; /* 텍스트 선택 방지 */
+            text-decoration: none; /* 링크 기본 밑줄 제거 */
+            font-size: 16px;
+        }
+
+        /* 터치 시에만 효과 적용 */
+        .custom-checkbox.hover,
+        .custom-radio.hover,
+        .custom-button.hover,
+        .custom-button2:active {
+            background-color: rgba(0, 0, 0, 0.5);
+            transform: scale(1.5);
+        }
+
+        /* 체크박스 및 라디오 버튼 숨기기 */
+        .custom-checkbox input,
+        .custom-radio input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* 체크박스 스타일 */
+        .checkmark {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            margin-right: 8px;
+            display: inline-block;
+            position: relative;
+        }
+
+        /* 체크박스 체크 상태 */
+        .custom-checkbox input:checked + .checkmark::after {
+            content: "";
+            position: absolute;
+            left: 4px;
+            top: 1px;
+            width: 5px;
+            height: 10px;
+            border: solid #333;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        /* 라디오 버튼 스타일 */
+        .radiomark {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #333;
+            border-radius: 50%;
+            margin-right: 8px;
+            display: inline-block;
+            position: relative;
+        }
+
+        /* 라디오 버튼 체크 상태 */
+        .custom-radio input:checked + .radiomark::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 8px;
+            height: 8px;
+            background-color: #333;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* 추가된 버튼 스타일 */
+        .custom-button {
+            background-color: #f0f0f0;
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        /* ✅ a 태그 :hover 효과만 적용 */
+        .hover-link:hover {
+            background-color: rgba(0, 0, 255, 0.1);
+            color: blue;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        /* ✅ 버튼 :hover 효과만 적용 */
+        .hover-button:hover {
+            background-color: rgba(0, 255, 0, 0.1);
+            color: green;
+            padding: 10px;
+            border: 1px solid green;
+            border-radius: 4px;
+        }
+
+        /* ✅ 버튼 :active 효과만 적용 */
+        .active-button:active,
+        .active-link:active {
+            background-color: rgba(255, 0, 0, 0.3);
+            transform: scale(0.9);
+            padding: 10px;
+            border: 1px solid red;
+            border-radius: 4px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <label class="custom-checkbox">
+        <input type="checkbox">
+        <span class="checkmark"></span>
+        체크박스
+    </label>
+
+    <label class="custom-radio">
+        <input type="radio" name="radio">
+        <span class="radiomark"></span>
+        라디오 버튼
+    </label>
+
+    <!-- 기존 버튼 -->
+    <button class="custom-button">커스텀 버튼</button>
+
+    <button class="custom-button2">커스텀 버튼3</button>
+
+    <!-- ✅ :hover 효과만 있는 a 태그 -->
+    <a href="#" class="hover-link">호버 효과 있는 링크</a>
+
+    <a href="#" class="active-link">액티브 효과 있는 링크</a>
+
+
+
+    <!-- ✅ :hover 효과만 있는 버튼 -->
+    <button class="hover-button">호버 효과 있는 버튼</button>
+
+    <!-- ✅ :active 효과만 있는 버튼 -->
+    <button class="active-button">액티브 효과 있는 버튼</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const labels = document.querySelectorAll(".custom-checkbox, .custom-radio, .custom-button");
+
+            labels.forEach(label => {
+                label.addEventListener("touchstart", () => {
+                    label.classList.add("hover");
+                });
+
+                label.addEventListener("touchend", () => {
+                    label.classList.remove("hover");
+                });
+
+                label.addEventListener("touchcancel", () => {
+                    label.classList.remove("hover");
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
