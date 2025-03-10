@@ -64,11 +64,12 @@
         function adjustButtonPosition(button) {
             const buttonWrapper = button.parentElement;
             const threshold = 400;
-            
+
             function scrollToTarget() {
-                const buttonBottom = window.innerHeight - buttonWrapper.getBoundingClientRect().bottom;
+                const buttonRect = buttonWrapper.getBoundingClientRect();
+                const buttonBottom = window.innerHeight - buttonRect.bottom;
                 const scrollNeeded = threshold - buttonBottom;
-                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+                let maxScroll = document.documentElement.scrollHeight - window.innerHeight;
 
                 if (scrollNeeded > 0) {
                     let newScrollPosition = window.scrollY + scrollNeeded;
@@ -77,13 +78,19 @@
                         // 부족한 만큼 추가 여백 계산
                         let extraSpace = newScrollPosition - maxScroll;
                         document.body.style.paddingBottom = `${extraSpace}px`;
+                        maxScroll = document.documentElement.scrollHeight - window.innerHeight; // 업데이트
                         newScrollPosition = maxScroll; // 최대 스크롤로 조정
                     }
 
                     window.scrollTo({ top: newScrollPosition, behavior: "smooth" });
 
-                    // 다음 프레임에서 다시 확인
-                    requestAnimationFrame(scrollToTarget);
+                    // 애니메이션 완료 후 다시 확인
+                    setTimeout(() => {
+                        const updatedBottom = window.innerHeight - buttonWrapper.getBoundingClientRect().bottom;
+                        if (updatedBottom < threshold) {
+                            scrollToTarget();
+                        }
+                    }, 300);
                 }
             }
 
