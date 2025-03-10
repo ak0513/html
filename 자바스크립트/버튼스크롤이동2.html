@@ -10,9 +10,6 @@
             padding: 20px;
             margin: 0;
         }
-        .extra-padding {
-            padding-bottom: var(--extra-space, 0px); /* 동적으로 변경 */
-        }
         .spacer {
             height: 1700px;
             background-color: lightgray;
@@ -76,9 +73,8 @@
                     // 부족한 만큼 추가 여백 계산
                     const extraSpace = newScrollPosition - maxScroll;
 
-                    // `extra-padding` 클래스 추가 및 CSS 변수로 패딩 조절
-                    document.body.classList.add("extra-padding");
-                    document.body.style.setProperty("--extra-space", `${extraSpace}px`);
+                    // 기존 body 스타일에 padding-bottom 적용
+                    document.body.style.paddingBottom = `${extraSpace}px`;
 
                     // 스크롤 이동
                     window.scrollTo({ top: newScrollPosition, behavior: "smooth" });
