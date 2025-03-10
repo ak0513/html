@@ -76,11 +76,12 @@
 
                 if (newScrollPosition > maxScroll) {
                     document.body.style.paddingBottom = `400px`; // 패딩 추가
-                    requestAnimationFrame(() => {
-                        // 다음 프레임에서 스크롤 실행
+
+                    // 패딩 적용 후 100ms 지연 -> 그 후에 스크롤 실행
+                    setTimeout(() => {
                         newScrollPosition = document.documentElement.scrollHeight - window.innerHeight;
                         window.scrollTo({ top: newScrollPosition, behavior: "smooth" });
-                    });
+                    }, 100);
                 } else {
                     window.scrollTo({ top: newScrollPosition, behavior: "smooth" });
                 }
