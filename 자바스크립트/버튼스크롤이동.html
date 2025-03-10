@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>버튼 위치 이동</title>
+    <style>
+        body {
+            height: 2000px; /* 스크롤 테스트를 위해 높이 증가 */
+            padding: 20px;
+        }
+        .spacer {
+            height: 1000px; /* 버튼 위에 위치할 여백 */
+            background-color: lightgray; /* 시각적으로 구분 가능하게 설정 (선택 사항) */
+        }
+        #myButton {
+            display: block;
+            margin: 0 auto;
+            padding: 10px 20px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="spacer"></div> <!-- 버튼 이전 여백 -->
+    <button id="myButton">위치 조정</button>
+
+    <script>
+        document.getElementById("myButton").addEventListener("click", function () {
+            const button = this;
+            const buttonTop = button.getBoundingClientRect().top + window.scrollY; // 버튼의 절대 위치
+            const threshold = 400; // 기준값
+
+            if (buttonTop > threshold) {
+                const newScrollPosition = buttonTop - 200; // 200px까지 이동
+                window.scrollTo({ top: newScrollPosition, behavior: "smooth" });
+            }
+        });
+    </script>
+
+</body>
+</html>
