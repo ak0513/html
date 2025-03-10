@@ -12,7 +12,7 @@
             transition: padding-bottom 0.3s ease; /* 패딩 변경 시 부드럽게 */
         }
         .spacer {
-            height: 1900px;
+            height: 1000px;
             background-color: lightgray;
         }
         .button-wrapper {
@@ -65,30 +65,26 @@
         function adjustButtonPosition(button) {
             const buttonWrapper = button.parentElement;
             const threshold = 400;
+            const buttonRect = buttonWrapper.getBoundingClientRect();
+            const buttonBottom = window.innerHeight - buttonRect.bottom;
+            const scrollNeeded = threshold - buttonBottom;
+            const currentScroll = window.scrollY;
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
 
-            function calculateScroll() {
-                const buttonRect = buttonWrapper.getBoundingClientRect();
-                const buttonBottom = window.innerHeight - buttonRect.bottom;
-                const scrollNeeded = threshold - buttonBottom;
-                const currentScroll = window.scrollY;
-                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            if (scrollNeeded > 0) {
+                let newScrollPosition = currentScroll + scrollNeeded;
 
-                if (scrollNeeded > 0) {
-                    let newScrollPosition = currentScroll + scrollNeeded;
-
-                    if (newScrollPosition > maxScroll) {
-                        // 무조건 `padding-bottom: 400px` 추가
-                        document.body.style.paddingBottom = `400px`;
-
-                        // 최대 스크롤 다시 계산
+                if (newScrollPosition > maxScroll) {
+                    document.body.style.paddingBottom = `400px`; // 패딩 추가
+                    requestAnimationFrame(() => {
+                        // 다음 프레임에서 스크롤 실행
                         newScrollPosition = document.documentElement.scrollHeight - window.innerHeight;
-                    }
-
+                        window.scrollTo({ top: newScrollPosition, behavior: "smooth" });
+                    });
+                } else {
                     window.scrollTo({ top: newScrollPosition, behavior: "smooth" });
                 }
             }
-
-            calculateScroll(); // 실행
         }
 
         document.getElementById("myButton").addEventListener("click", function () {
