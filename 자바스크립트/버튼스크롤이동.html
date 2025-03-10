@@ -17,8 +17,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
-            gap: 5px;
+            gap: 10px; /* 요소 간 간격 */
+        }
+        .number {
+            font-size: 20px;
+            font-weight: bold;
         }
         #myButton {
             padding: 10px 20px;
@@ -26,6 +29,11 @@
             color: white;
             border: none;
             cursor: pointer;
+        }
+        .text-circle {
+            font-size: 18px;
+            font-weight: bold;
+            color: black;
         }
         .cursor {
             width: 8px;
@@ -44,9 +52,12 @@
     <div class="spacer"></div> <!-- 버튼 이전 여백 -->
 
     <div class="button-wrapper">
+        <div class="number">123</div> <!-- 숫자 추가 -->
         <button id="myButton">위치 조정</button>
-        <div class="cursor"></div> <!-- 깜박이는 커서 -->
+        <div class="text-circle">원</div> <!-- 원 글자 추가 -->
     </div>
+    
+    <div class="cursor"></div> <!-- 깜박이는 커서 -->
 
     <script>
         function adjustButtonPosition(button) {
