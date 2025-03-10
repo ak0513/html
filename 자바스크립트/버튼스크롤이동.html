@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>버튼 위치 이동</title>
+    <title>버튼 위치 조정</title>
     <style>
         body {
             height: 2000px; /* 스크롤 테스트를 위해 높이 증가 */
             padding: 20px;
         }
         .spacer {
-            height: 1000px; /* 버튼 위에 위치할 여백 */
-            background-color: lightgray; /* 시각적으로 구분 가능하게 설정 (선택 사항) */
+            height: 1000px; /* 버튼 위 여백 */
+            background-color: lightgray; /* 가시성을 위한 배경색 (선택 사항) */
         }
         #myButton {
             display: block;
@@ -32,11 +32,11 @@
     <script>
         document.getElementById("myButton").addEventListener("click", function () {
             const button = this;
-            const buttonTop = button.getBoundingClientRect().top; // 현재 화면에서 버튼의 위치
-            const threshold = 400; // 화면 상단에서 400px 기준
+            const buttonBottom = window.innerHeight - button.getBoundingClientRect().bottom; // 버튼의 현재 위치 (바닥 기준)
+            const threshold = 400; // 기준값 (바닥에서 400px 이내인지 확인)
 
-            if (buttonTop > threshold) {
-                const newScrollPosition = window.scrollY + (buttonTop - 200); // 200px까지 이동
+            if (buttonBottom < threshold) {
+                const newScrollPosition = window.scrollY + (threshold - buttonBottom); // 버튼이 바닥에서 정확히 400px 위치하도록 조정
                 window.scrollTo({ top: newScrollPosition, behavior: "smooth" });
             }
         });
