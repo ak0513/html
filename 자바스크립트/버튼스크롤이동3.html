@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>버튼 위치 조정</title>
+    <style>
+        body {
+            height: 2000px; /* 스크롤 테스트용 */
+            padding: 20px;
+            margin: 0;
+        }
+        .spacer {
+            height: 1000px;
+            background-color: lightgray;
+        }
+        .button-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .number {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        #myButton {
+            padding: 10px 20px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .text-circle {
+            font-size: 18px;
+            font-weight: bold;
+            color: black;
+        }
+        .cursor {
+            width: 8px;
+            height: 20px;
+            background-color: black;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="spacer"></div> <!-- 버튼 이전 여백 -->
+
+    <div class="button-wrapper">
+        <div class="number">123</div> <!-- 숫자 추가 -->
+        <button id="myButton">위치 조정</button>
+        <div class="text-circle">원</div> <!-- 원 글자 추가 -->
+    </div>
+    
+    <div class="cursor"></div> <!-- 깜박이는 커서 -->
+
+    <script>
+        function adjustButtonPosition(button) {
+            const buttonWrapper = button.parentElement;
+            const threshold = 400;
+            let buttonBottom = window.innerHeight - buttonWrapper.getBoundingClientRect().bottom;
+            let scrollNeeded = threshold - buttonBottom;
+            let maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+
+            if (buttonBottom < threshold) {
+                while (scrollNeeded > 0) {
+                    let newScrollPosition = window.scrollY + scrollNeeded;
+                    
+                    if (newScrollPosition > maxScroll) {
+                        // 부족한 만큼 추가 여백 계산
+                        let extraSpace = newScrollPosition - maxScroll;
+                        document.body.style.paddingBottom = `${extraSpace}px`;
+                        maxScroll = document.documentElement.scrollHeight - window.innerHeight; // 업데이트
+                    }
+
+                    window.scrollTo({ top: Math.min(newScrollPosition, maxScroll), behavior: "smooth" });
+
+                    // 다시 위치 확인 (스크롤 후)
+                    buttonBottom = window.innerHeight - buttonWrapper.getBoundingClientRect().bottom;
+                    scrollNeeded = threshold - buttonBottom;
+                }
+            }
+        }
+
+        document.getElementById("myButton").addEventListener("click", function () {
+            adjustButtonPosition(this);
+        });
+    </script>
+
+</body>
+</html>
