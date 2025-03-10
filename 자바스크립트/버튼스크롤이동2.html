@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>버튼 위치 조정</title>
+    <style>
+        body {
+            height: 2000px; /* 스크롤 테스트용 */
+            padding: 20px;
+            margin: 0;
+        }
+        .extra-padding {
+            padding-bottom: var(--extra-space, 0px); /* 동적으로 변경 */
+        }
+        .spacer {
+            height: 1000px;
+            background-color: lightgray;
+        }
+        .button-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .number {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        #myButton {
+            padding: 10px 20px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .text-circle {
+            font-size: 18px;
+            font-weight: bold;
+            color: black;
+        }
+        .cursor {
+            width: 8px;
+            height: 20px;
+            background-color: black;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="spacer"></div> <!-- 버튼 이전 여백 -->
+
+    <div class="button-wrapper">
+        <div class="number">123</div> <!-- 숫자 추가 -->
+        <button id="myButton">위치 조정</button>
+        <div class="text-circle">원</div> <!-- 원 글자 추가 -->
+    </div>
+    
+    <div class="cursor"></div> <!-- 깜박이는 커서 -->
+
+    <script>
+        function adjustButtonPosition(button) {
+            const buttonWrapper = button.parentElement;
+            const buttonBottom = window.innerHeight - buttonWrapper.getBoundingClientRect().bottom;
+            const threshold = 400;
+            const newScrollPosition = window.scrollY + (threshold - buttonBottom);
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+
+            if (buttonBottom < threshold) {
+                if (newScrollPosition > maxScroll) {
+                    // 부족한 만큼 추가 여백 계산
+                    const extraSpace = newScrollPosition - maxScroll;
+
+                    // `extra-padding` 클래스 추가 및 CSS 변수로 패딩 조절
+                    document.body.classList.add("extra-padding");
+                    document.body.style.setProperty("--extra-space", `${extraSpace}px`);
+
+                    // 스크롤 이동
+                    window.scrollTo({ top: newScrollPosition, behavior: "smooth" });
+                } else {
+                    window.scrollTo({ top: newScrollPosition, behavior: "smooth" });
+                }
+            }
+        }
+
+        document.getElementById("myButton").addEventListener("click", function () {
+            adjustButtonPosition(this);
+        });
+    </script>
+
+</body>
+</html>
