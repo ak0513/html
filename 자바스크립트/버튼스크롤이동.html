@@ -32,11 +32,11 @@
     <script>
         document.getElementById("myButton").addEventListener("click", function () {
             const button = this;
-            const buttonTop = button.getBoundingClientRect().top + window.scrollY; // 버튼의 절대 위치
-            const threshold = 400; // 기준값
+            const buttonTop = button.getBoundingClientRect().top; // 현재 화면에서 버튼의 위치
+            const threshold = 400; // 화면 상단에서 400px 기준
 
             if (buttonTop > threshold) {
-                const newScrollPosition = buttonTop - 200; // 200px까지 이동
+                const newScrollPosition = window.scrollY + (buttonTop - 200); // 200px까지 이동
                 window.scrollTo({ top: newScrollPosition, behavior: "smooth" });
             }
         });
