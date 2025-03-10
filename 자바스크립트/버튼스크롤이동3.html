@@ -12,7 +12,7 @@
             transition: padding-bottom 0.3s ease; /* 패딩 변경 시 부드럽게 */
         }
         .spacer {
-            height: 1800px;
+            height: 1900px;
             background-color: lightgray;
         }
         .button-wrapper {
@@ -71,30 +71,20 @@
                 const buttonBottom = window.innerHeight - buttonRect.bottom;
                 const scrollNeeded = threshold - buttonBottom;
                 const currentScroll = window.scrollY;
-                let maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
 
                 if (scrollNeeded > 0) {
                     let newScrollPosition = currentScroll + scrollNeeded;
 
                     if (newScrollPosition > maxScroll) {
-                        // 현재 패딩 값 확인
-                        let currentPadding = parseInt(getComputedStyle(document.body).paddingBottom) || 0;
-                        let extraSpace = newScrollPosition - maxScroll;
-                        document.body.style.paddingBottom = `${currentPadding + extraSpace}px`;
+                        // 무조건 `padding-bottom: 400px` 추가
+                        document.body.style.paddingBottom = `400px`;
 
-                        maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-                        newScrollPosition = maxScroll; // 최대 스크롤로 조정
+                        // 최대 스크롤 다시 계산
+                        newScrollPosition = document.documentElement.scrollHeight - window.innerHeight;
                     }
 
                     window.scrollTo({ top: newScrollPosition, behavior: "smooth" });
-
-                    // 스크롤 애니메이션이 끝난 후 다시 확인
-                    window.addEventListener("scrollend", function onScrollEnd() {
-                        window.removeEventListener("scrollend", onScrollEnd);
-                        if ((window.innerHeight - buttonWrapper.getBoundingClientRect().bottom) < threshold) {
-                            calculateScroll();
-                        }
-                    });
                 }
             }
 
