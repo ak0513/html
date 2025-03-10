@@ -13,30 +13,49 @@
             height: 1000px; /* 버튼 위 여백 */
             background-color: lightgray; /* 가시성을 위한 배경색 (선택 사항) */
         }
+        .button-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 5px;
+        }
         #myButton {
-            display: block;
-            margin: 0 auto;
             padding: 10px 20px;
             background-color: blue;
             color: white;
             border: none;
             cursor: pointer;
         }
+        .cursor {
+            width: 8px;
+            height: 20px;
+            background-color: black;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
     </style>
 </head>
 <body>
 
     <div class="spacer"></div> <!-- 버튼 이전 여백 -->
-    <button id="myButton">위치 조정</button>
+
+    <div class="button-wrapper">
+        <button id="myButton">위치 조정</button>
+        <div class="cursor"></div> <!-- 깜박이는 커서 -->
+    </div>
 
     <script>
         document.getElementById("myButton").addEventListener("click", function () {
-            const button = this;
-            const buttonBottom = window.innerHeight - button.getBoundingClientRect().bottom; // 버튼의 현재 위치 (바닥 기준)
+            const buttonWrapper = this.parentElement;
+            const buttonBottom = window.innerHeight - buttonWrapper.getBoundingClientRect().bottom; // 버튼 div의 현재 위치 (바닥 기준)
             const threshold = 400; // 기준값 (바닥에서 400px 이내인지 확인)
 
             if (buttonBottom < threshold) {
-                const newScrollPosition = window.scrollY + (threshold - buttonBottom); // 버튼이 바닥에서 정확히 400px 위치하도록 조정
+                const newScrollPosition = window.scrollY + (threshold - buttonBottom); // 버튼 div가 바닥에서 정확히 400px 위치하도록 조정
                 window.scrollTo({ top: newScrollPosition, behavior: "smooth" });
             }
         });
