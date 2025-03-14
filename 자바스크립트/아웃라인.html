@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outline 비교</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        button, a {
+            font-size: 16px;
+            padding: 10px 20px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            background-color: #f8f8f8;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        /* 첫 번째 버튼과 링크: outline 제거 */
+        .no-outline {
+            outline: 0;
+        }
+
+        /* 두 번째 버튼과 링크: 키보드 포커스 시 outline 표시 */
+        .focus-visible {
+            outline: 0;
+        }
+        .focus-visible:focus-visible {
+            outline: 3px solid blue;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Outline 비교 테스트</h2>
+    <p>Tab 키로 버튼과 링크를 이동하며 포커스 상태를 확인하세요.</p>
+
+    <button class="no-outline">outline: 0; 버튼</button>
+    <a href="#" class="no-outline">outline: 0; 링크</a>
+
+    <button class="focus-visible">focus-visible 버튼</button>
+    <a href="#" class="focus-visible">focus-visible 링크</a>
+
+</body>
+</html>
