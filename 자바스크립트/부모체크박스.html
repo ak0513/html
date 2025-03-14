@@ -3,34 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>부모 체크박스와 자식 체크박스</title>
+    <title>다중 체크박스 그룹</title>
 </head>
 <body>
-    <label>
-        <input type="checkbox" id="parentCheckbox"> 전체 선택
-    </label>
+
+    <!-- 첫 번째 그룹 -->
+    <div>
+        <label>
+            <input type="checkbox" data-checkbox="parent" data-group="group1"> 전체 선택 (그룹 1)
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" data-checkbox="child" data-group="group1"> 항목 1-1
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" data-checkbox="child" data-group="group1"> 항목 1-2
+        </label>
+    </div>
+
     <br>
-    <label>
-        <input type="checkbox" class="childCheckbox"> 항목 1
-    </label>
-    <br>
-    <label>
-        <input type="checkbox" class="childCheckbox"> 항목 2
-    </label>
-    <br>
-    <label>
-        <input type="checkbox" class="childCheckbox"> 항목 3
-    </label>
+
+    <!-- 두 번째 그룹 -->
+    <div>
+        <label>
+            <input type="checkbox" data-checkbox="parent" data-group="group2"> 전체 선택 (그룹 2)
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" data-checkbox="child" data-group="group2"> 항목 2-1
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" data-checkbox="child" data-group="group2"> 항목 2-2
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" data-checkbox="child" data-group="group2"> 항목 2-3
+        </label>
+    </div>
 
     <script>
-        const parentCheckbox = document.getElementById("parentCheckbox");
-        const childCheckboxes = document.querySelectorAll(".childCheckbox");
+        document.addEventListener("DOMContentLoaded", function () {
+            // 모든 부모 체크박스 찾기
+            const parentCheckboxes = document.querySelectorAll("[data-checkbox='parent']");
 
-        parentCheckbox.addEventListener("change", function () {
-            childCheckboxes.forEach(child => {
-                child.checked = parentCheckbox.checked;
+            parentCheckboxes.forEach(parent => {
+                const group = parent.dataset.group; // 해당 그룹 가져오기
+                const childCheckboxes = document.querySelectorAll(`[data-checkbox='child'][data-group='${group}']`);
+
+                // 부모 체크박스를 클릭하면 해당 그룹의 자식 체크박스 전체 선택/해제
+                parent.addEventListener("change", function () {
+                    childCheckboxes.forEach(child => {
+                        child.checked = parent.checked;
+                    });
+                });
+
+                // 자식 체크박스 상태 변경 시 부모 체크박스 상태 업데이트
+                childCheckboxes.forEach(child => {
+                    child.addEventListener("change", function () {
+                        const allChecked = Array.from(childCheckboxes).every(child => child.checked);
+                        parent.checked = allChecked;
+                    });
+                });
             });
         });
     </script>
+
 </body>
 </html>
