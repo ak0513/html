@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>다중 체크박스 그룹 (동적 추가 지원)</title>
+</head>
+<body>
+
+    <!-- 첫 번째 그룹 -->
+    <div data-group-container="group1">
+        <label>
+            <input type="checkbox" data-checkbox="parent" data-group="group1"> 전체 선택 (그룹 1)
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" data-checkbox="child" data-group="group1"> 항목 1-1
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" data-checkbox="child" data-group="group1"> 항목 1-2
+        </label>
+    </div>
+
+    <button onclick="addCheckbox('group1')">그룹 1 항목 추가</button>
+
+    <br><br>
+
+    <!-- 두 번째 그룹 -->
+    <div data-group-container="group2">
+        <label>
+            <input type="checkbox" data-checkbox="parent" data-group="group2"> 전체 선택 (그룹 2)
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" data-checkbox="child" data-group="group2"> 항목 2-1
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" data-checkbox="child" data-group="group2"> 항목 2-2
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" data-checkbox="child" data-group="group2"> 항목 2-3
+        </label>
+    </div>
+
+    <button onclick="addCheckbox('group2')">그룹 2 항목 추가</button>
+
+    <script>
+        document.addEventListener("change", function (event) {
+            const target = event.target;
+
+            // 부모 체크박스가 변경된 경우 → 해당 그룹의 자식 체크박스 전체 선택/해제
+            if (target.matches("[data-checkbox='parent']")) {
+                const group = target.dataset.group;
+                const childCheckboxes = document.querySelectorAll(`[data-checkbox='child'][data-group='${group}']`);
+
+                childCheckboxes.forEach(child => {
+                    child.checked = target.checked;
+                });
+            }
+
+            // 자식 체크박스가 변경된 경우 → 해당 그룹의 부모 체크박스 상태 업데이트
+            if (target.matches("[data-checkbox='child']")) {
+                const group = target.dataset.group;
+                const parentCheckbox = document.querySelector(`[data-checkbox='parent'][data-group='${group}']`);
+                const childCheckboxes = document.querySelectorAll(`[data-checkbox='child'][data-group='${group}']`);
+
+                const allChecked = Array.from(childCheckboxes).every(child => child.checked);
+                parentCheckbox.checked = allChecked;
+            }
+        });
+
+        // 체크박스 동적 추가 함수
+        function addCheckbox(group) {
+            const container = document.querySelector(`[data-group-container='${group}']`);
+            const newCheckbox = document.createElement("label");
+            newCheckbox.innerHTML = `<input type="checkbox" data-checkbox="child" data-group="${group}"> 새 항목`;
+            container.appendChild(newCheckbox);
+        }
+    </script>
+
+</body>
+</html>
