@@ -3,49 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>다중 체크박스 그룹 (동적 추가 지원)</title>
+    <title>부모-자식 세트 동적 추가</title>
 </head>
 <body>
 
-    <!-- 첫 번째 그룹 -->
-    <div data-group-container="group1">
-        <label>
-            <input type="checkbox" data-checkbox="parent" data-group="group1"> 전체 선택 (그룹 1)
-        </label>
-        <br>
-        <label>
-            <input type="checkbox" data-checkbox="child" data-group="group1"> 항목 1-1
-        </label>
-        <br>
-        <label>
-            <input type="checkbox" data-checkbox="child" data-group="group1"> 항목 1-2
-        </label>
+    <!-- 기존 체크박스 그룹 -->
+    <div id="checkbox-container">
+        <div data-group-container="group1">
+            <label>
+                <input type="checkbox" data-checkbox="parent" data-group="group1"> 전체 선택 (그룹 1)
+            </label>
+            <br>
+            <label>
+                <input type="checkbox" data-checkbox="child" data-group="group1"> 항목 1-1
+            </label>
+            <br>
+            <label>
+                <input type="checkbox" data-checkbox="child" data-group="group1"> 항목 1-2
+            </label>
+        </div>
     </div>
 
-    <button onclick="addCheckbox('group1')">그룹 1 항목 추가</button>
-
-    <br><br>
-
-    <!-- 두 번째 그룹 -->
-    <div data-group-container="group2">
-        <label>
-            <input type="checkbox" data-checkbox="parent" data-group="group2"> 전체 선택 (그룹 2)
-        </label>
-        <br>
-        <label>
-            <input type="checkbox" data-checkbox="child" data-group="group2"> 항목 2-1
-        </label>
-        <br>
-        <label>
-            <input type="checkbox" data-checkbox="child" data-group="group2"> 항목 2-2
-        </label>
-        <br>
-        <label>
-            <input type="checkbox" data-checkbox="child" data-group="group2"> 항목 2-3
-        </label>
-    </div>
-
-    <button onclick="addCheckbox('group2')">그룹 2 항목 추가</button>
+    <button onclick="addCheckboxSet()">부모-자식 세트 추가</button>
 
     <script>
         document.addEventListener("change", function (event) {
@@ -72,12 +51,27 @@
             }
         });
 
-        // 체크박스 동적 추가 함수
-        function addCheckbox(group) {
-            const container = document.querySelector(`[data-group-container='${group}']`);
-            const newCheckbox = document.createElement("label");
-            newCheckbox.innerHTML = `<input type="checkbox" data-checkbox="child" data-group="${group}"> 새 항목`;
-            container.appendChild(newCheckbox);
+        // 부모-자식 세트를 동적으로 추가하는 함수
+        function addCheckboxSet() {
+            const container = document.getElementById("checkbox-container");
+            const groupId = `group${document.querySelectorAll("[data-group-container]").length + 1}`;
+
+            const newGroup = document.createElement("div");
+            newGroup.setAttribute("data-group-container", groupId);
+            newGroup.innerHTML = `
+                <label>
+                    <input type="checkbox" data-checkbox="parent" data-group="${groupId}"> 전체 선택 (${groupId})
+                </label>
+                <br>
+                <label>
+                    <input type="checkbox" data-checkbox="child" data-group="${groupId}"> 항목 1
+                </label>
+                <br>
+                <label>
+                    <input type="checkbox" data-checkbox="child" data-group="${groupId}"> 항목 2
+                </label>
+            `;
+            container.appendChild(newGroup);
         }
     </script>
 
