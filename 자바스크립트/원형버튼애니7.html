@@ -114,14 +114,10 @@
 
                 setTimeout(() => {
                     buttons.forEach((button, i) => {
-                        const angle = (i / buttonCount) * (2 * Math.PI) + Math.PI;
+                        const angle = (i / buttonCount) * (2 * Math.PI) - Math.PI / 2;
                         button.dataset.initialAngle = angle;
 
-                        const x = Math.cos(angle) * radius + 100;
-                        const y = Math.sin(angle) * radius + 100;
-
-                        button.style.left = `${x}px`;
-                        button.style.top = `${y}px`;
+                        updateButtonPosition(button, angle);
                         button.style.opacity = "1";
                         button.style.transform = "translate(-50%, -50%) scale(1)";
                     });
@@ -235,7 +231,6 @@
         circle.addEventListener('touchend', stopRotate);
         toggleButton.addEventListener('click', toggleButtons);
 
-        // 초기 버튼 위치 설정 실행
         setInitialPositions();
     </script>
 </body>
