@@ -3,72 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>부모-자식 체크박스 (시멘틱 개선)</title>
+    <title>부모-자식 체크박스 (네이밍 개선)</title>
 </head>
 <body>
 
-    <!-- 기존 체크박스 그룹 -->
+    <!-- ✅ 체크박스 그룹 컨테이너 -->
     <div id="checkbox-container">
-        <div data-group-wrapper="group1">
+        <div data-chkall-wrap="group1">
+            <!-- ✅ 부모 체크박스 (전체 선택) -->
             <label>
-                <input type="checkbox" data-role="group-selector" data-group-id="group1"> 전체 선택 (그룹 1)
+                <input type="checkbox" data-role="chkall-selector" data-chkall-id="group1"> 전체 선택 (그룹 1)
+            </label>
+            <br>
+            <!-- ✅ 자식 체크박스 (개별 항목) -->
+            <label>
+                <input type="checkbox" data-role="chkall-item" data-chkall-id="group1"> 항목 1-1
             </label>
             <br>
             <label>
-                <input type="checkbox" data-role="group-item" data-group-id="group1"> 항목 1-1
-            </label>
-            <br>
-            <label>
-                <input type="checkbox" data-role="group-item" data-group-id="group1"> 항목 1-2
+                <input type="checkbox" data-role="chkall-item" data-chkall-id="group1"> 항목 1-2
             </label>
         </div>
     </div>
 
+    <!-- ✅ 동적으로 부모-자식 체크박스 세트 추가 버튼 -->
     <button onclick="addCheckboxSet()">부모-자식 세트 추가</button>
 
     <script>
         document.addEventListener("change", function (event) {
             const target = event.target;
 
-            // 부모 체크박스 동작 (그룹 전체 선택/해제)
-            if (target.matches("[data-role='group-selector']")) {
-                const groupId = target.dataset.groupId;
-                const childCheckboxes = document.querySelectorAll(`[data-role='group-item'][data-group-id='${groupId}']`);
+            // ✅ 부모 체크박스 동작 (그룹 전체 선택/해제)
+            if (target.matches("[data-role='chkall-selector']")) {
+                const groupId = target.dataset.chkallId; // 그룹 ID 가져오기
+                const childCheckboxes = document.querySelectorAll(`[data-role='chkall-item'][data-chkall-id='${groupId}']`);
 
+                // 부모 체크박스 상태에 따라 자식 체크박스 전체 선택/해제
                 childCheckboxes.forEach(child => {
                     child.checked = target.checked;
                 });
             }
 
-            // 자식 체크박스 동작 (전체 체크 시 부모 체크박스 업데이트)
-            if (target.matches("[data-role='group-item']")) {
-                const groupId = target.dataset.groupId;
-                const parentCheckbox = document.querySelector(`[data-role='group-selector'][data-group-id='${groupId}']`);
-                const childCheckboxes = document.querySelectorAll(`[data-role='group-item'][data-group-id='${groupId}']`);
+            // ✅ 자식 체크박스 동작 (모두 체크 시 부모 체크 활성화, 일부 해제 시 비활성화)
+            if (target.matches("[data-role='chkall-item']")) {
+                const groupId = target.dataset.chkallId;
+                const parentCheckbox = document.querySelector(`[data-role='chkall-selector'][data-chkall-id='${groupId}']`);
+                const childCheckboxes = document.querySelectorAll(`[data-role='chkall-item'][data-chkall-id='${groupId}']`);
 
+                // 모든 자식 체크박스가 선택되었는지 확인
                 const allChecked = Array.from(childCheckboxes).every(child => child.checked);
-                parentCheckbox.checked = allChecked;
+                parentCheckbox.checked = allChecked; // 모든 자식이 선택되면 부모 체크 활성화
             }
         });
 
-        // 부모-자식 세트를 동적으로 추가하는 함수
+        // ✅ 동적으로 부모-자식 체크박스 세트를 추가하는 함수
         function addCheckboxSet() {
             const container = document.getElementById("checkbox-container");
-            const groupId = `group${document.querySelectorAll("[data-group-wrapper]").length + 1}`;
+            const groupId = `group${document.querySelectorAll("[data-chkall-wrap]").length + 1}`; // 새로운 그룹 ID 생성
 
             const newGroup = document.createElement("div");
-            newGroup.setAttribute("data-group-wrapper", groupId);
+            newGroup.setAttribute("data-chkall-wrap", groupId); // 그룹 컨테이너 지정
             newGroup.innerHTML = `
                 <label>
-                    <input type="checkbox" data-role="group-selector" data-group-id="${groupId}"> 전체 선택 (${groupId})
+                    <input type="checkbox" data-role="chkall-selector" data-chkall-id="${groupId}"> 전체 선택 (${groupId})
                 </label>
                 <br>
                 <label>
-                    <input type="checkbox" data-role="group-item" data-group-id="${groupId}"> 항목 1
+                    <input type="checkbox" data-role="chkall-item" data-chkall-id="${groupId}"> 항목 1
                 </label>
                 <br>
                 <label>
-                    <input type="checkbox" data-role="group-item" data-group-id="${groupId}"> 항목 2
+                    <input type="checkbox" data-role="chkall-item" data-chkall-id="${groupId}"> 항목 2
                 </label>
             `;
             container.appendChild(newGroup);
