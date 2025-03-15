@@ -11,8 +11,8 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            position: relative;
             touch-action: none;
+            position: relative;
         }
 
         .circle {
@@ -20,7 +20,9 @@
             height: 200px;
             border-radius: 50%;
             background-color: lightgray;
-            position: relative;
+            position: absolute;  /* 원하는 위치로 옮길 수 있도록 변경 */
+            top: 100px;   /* 원하는 위치 */
+            left: 300px;  /* 원하는 위치 */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -66,7 +68,7 @@
 </head>
 <body>
 
-    <div class="circle">
+    <div class="circle" id="circle">
         <button class="center-button" id="toggleButton">+</button>
         <div class="button-container" id="buttonContainer">
             <button class="circle-button">1</button>
@@ -80,6 +82,7 @@
     </div>
 
     <script>
+        const circle = document.getElementById('circle');
         const container = document.getElementById('buttonContainer');
         const toggleButton = document.getElementById('toggleButton');
         const buttons = document.querySelectorAll('.circle-button');
@@ -114,7 +117,7 @@
                         button.style.transform = `translate(-50%, -50%) scale(1)`;
                     });
                     isButtonsVisible = true; 
-                    addRotationEvents();  // 회전 이벤트 활성화
+                    addRotationEvents();
                 }, 10);
             } else {
                 buttons.forEach(button => {
@@ -124,7 +127,7 @@
                 setTimeout(() => {
                     container.style.display = "none";
                     isButtonsVisible = false;  
-                    removeRotationEvents(); // 회전 이벤트 비활성화
+                    removeRotationEvents();
                 }, 300);
             }
         }
@@ -154,8 +157,9 @@
 
         function getTouchAngle(x, y) {
             const rect = container.getBoundingClientRect();
-            const dx = x - (rect.left + rect.width / 2);
-            const dy = y - (rect.top + rect.height / 2);
+            const circleRect = circle.getBoundingClientRect();
+            const dx = x - (circleRect.left + circleRect.width / 2);
+            const dy = y - (circleRect.top + circleRect.height / 2);
             return Math.atan2(dy, dx);
         }
 
@@ -177,23 +181,23 @@
         }
 
         function addRotationEvents() {
-            container.addEventListener('mousedown', startRotate);
-            container.addEventListener('mousemove', rotate);
-            container.addEventListener('mouseup', stopRotate);
-            container.addEventListener('mouseleave', stopRotate);
-            container.addEventListener('touchstart', startRotate);
-            container.addEventListener('touchmove', rotate);
-            container.addEventListener('touchend', stopRotate);
+            circle.addEventListener('mousedown', startRotate);
+            circle.addEventListener('mousemove', rotate);
+            circle.addEventListener('mouseup', stopRotate);
+            circle.addEventListener('mouseleave', stopRotate);
+            circle.addEventListener('touchstart', startRotate);
+            circle.addEventListener('touchmove', rotate);
+            circle.addEventListener('touchend', stopRotate);
         }
 
         function removeRotationEvents() {
-            container.removeEventListener('mousedown', startRotate);
-            container.removeEventListener('mousemove', rotate);
-            container.removeEventListener('mouseup', stopRotate);
-            container.removeEventListener('mouseleave', stopRotate);
-            container.removeEventListener('touchstart', startRotate);
-            container.removeEventListener('touchmove', rotate);
-            container.removeEventListener('touchend', stopRotate);
+            circle.removeEventListener('mousedown', startRotate);
+            circle.removeEventListener('mousemove', rotate);
+            circle.removeEventListener('mouseup', stopRotate);
+            circle.removeEventListener('mouseleave', stopRotate);
+            circle.removeEventListener('touchstart', startRotate);
+            circle.removeEventListener('touchmove', rotate);
+            circle.removeEventListener('touchend', stopRotate);
         }
 
         toggleButton.addEventListener('click', toggleButtons);
