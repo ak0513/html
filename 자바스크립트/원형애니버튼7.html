@@ -19,15 +19,21 @@
             width: 300px;
             height: 300px;
             position: relative;
+            border-radius: 50%;
+            background-color: lightgray;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* 원 위의 버튼 */
+        /* 버튼 컨테이너 */
         .button-container {
             position: absolute;
             width: 100%;
             height: 100%;
         }
 
+        /* 원 위의 버튼 스타일 */
         .button-container button {
             position: absolute;
             width: 50px;
@@ -43,19 +49,20 @@
 </head>
 <body>
 
+    <!-- 초기부터 원과 버튼이 세팅됨 -->
     <div class="circle">
         <div class="button-container" id="buttonContainer"></div>
     </div>
 
     <script>
         const container = document.getElementById('buttonContainer');
-        const radius = 120;  // 버튼이 배치될 원 반지름
+        const radius = 120;  // 버튼들이 배치될 원의 반지름
         let rotationAngle = 0;
         let isDragging = false;
         let lastAngle = 0;
         const buttons = [];
-        
-        // 버튼 데이터 (동작 설정 가능)
+
+        // 버튼 데이터 (초기부터 세팅됨)
         const buttonsData = [
             { text: "1", action: () => alert("버튼 1 클릭") },
             { text: "2", action: () => alert("버튼 2 클릭") },
@@ -75,7 +82,7 @@
                 container.appendChild(button);
                 buttons.push(button);
             });
-            updateButtonPositions();
+            updateButtonPositions();  // 초기 위치 설정
         }
 
         function startRotate(event) {
@@ -116,7 +123,7 @@
 
         function updateButtonPositions() {
             const centerX = 150; // 원 중심 (300px 컨테이너 기준)
-            const centerY = 150; 
+            const centerY = 150;
 
             buttons.forEach(button => {
                 const initialAngle = parseFloat(button.dataset.initialAngle);
@@ -151,7 +158,7 @@
         document.addEventListener('touchmove', rotate);
         document.addEventListener('touchend', stopRotate);
 
-        createButtons();
+        createButtons();  // 초기부터 버튼을 생성하여 세팅
     </script>
 
 </body>
