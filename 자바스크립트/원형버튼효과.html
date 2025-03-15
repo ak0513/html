@@ -18,6 +18,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            z-index: 1;
         }
 
         #subButtons {
@@ -115,7 +116,7 @@
                 if (draggedElement) {
                     const x = event.clientX - startX;
                     const y = event.clientY - startY;
-                    draggedElement.style.transform = `translate(${x}px, ${y}px)`;
+                    draggedElement.style.transform = `translate(${x}px, ${y}px) rotate(${Math.atan2(y, x) * (180 / Math.PI)}deg)`;
                 }
             }
 
