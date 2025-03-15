@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>원 버튼 애니메이션</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      touch-action: none;
+      position: relative;
+    }
+    .circle {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background-color: lightgray;
+      position: absolute;
+      top: 100px;
+      left: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .center-button {
+      width: 60px;
+      height: 60px;
+      border: none;
+      border-radius: 50%;
+      background-color: crimson;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      position: absolute;
+      z-index: 20;
+    }
+    .button-container {
+      position: absolute;
+      z-index: 10;
+      top: 50%;
+      left: 50%;
+      width: 200px;
+      height: 200px;
+      transform: translate(-50%, -50%);
+      display: none;
+    }
+    .button-container button {
+      width: 60px;
+      height: 60px;
+      border: none;
+      border-radius: 50%;
+      background-color: steelblue;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      position: absolute;
+      /* 초기 상태는 투명하고 축소되어 있음 */
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+      /* left, top, transform, opacity 모두 애니메이션 적용 */
+      transition: opacity 0.3s, transform 0.3s ease-out, left 0.3s ease-out, top 0.3s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <div class="circle" id="circle">
+    <button class="center-button" id="toggleButton" aria-expanded="false">+</button>
+    <div class="button-container" id="buttonContainer">
+      <button class="circle-button">홈</button>
+      <button class="circle-button">이체</button>
+      <button class="circle-button">펀드</button>
+      <button class="circle-button">알람</button>
+      <button class="circle-button">5</button>
+      <button class="circle-button">6</button>
+      <button class="circle-button">7</button>
+    </div>
+  </div>
+  <button type="button">다음 포커스</button>
+
+  <script>
+    const circle = document.getElementById('circle'); // 원 전체 요소
+    const container = document.getElementById('buttonContainer'); // 버튼들이 담긴 컨테이너
+    const toggleButton = document.getElementById('toggleButton'); // 중앙 토글 버튼
+    const buttons = document.querySelectorAll('.circle-button'); // 원 위의 버튼들
+    const buttonCount = buttons.length; // 버튼 개수
+    const radius = 100; // 버튼이 배치될 원의 반지름 (원 중심이 (100,100)로 가정)
+    let rotationAngle = 0; // 현재 회전 각도
+    let isDragging = false; // 드래그 여부
+    let lastAngle = 0; // 마지막 터치(드래그) 각도
+    let isButtonsVisible = false; // 버튼 표시 여부
+    let firstFocus = true; // 첫 포커스 여부 (불필요한 회전 방지)
+
+    // 초기 버튼들의 최종 위치(좌표)와 각도를 데이터에 저장
+    function setInitialPositions() {
+      buttons.forEach((button, i) => {
+        const angle = (i / buttonCount) * (2 * Math.PI) + Math.PI; // 초기 각도
+        button.dataset.initialAngle = angle;
+        // 바로 최종 위치 적용 (나중에 토글 시 애니메이션 효과를 위해 오버라이드함)
+        updateButtonPosition(button, angle);
+      });
+    }
+
+    // 특정 각도에 따른 최종 위치 계산 후 버튼에 적용
+    function updateButtonPosition(button, angle) {
+      const x = Math.cos(angle) * radius + 100; // 원 중심 (100,100)을 기준으로 계산
+      const y = Math.sin(angle) * radius + 100;
+      button.style.left = `${x}px`;
+      button.style.top = `${y}px`;
+    }
+
+    // 중앙 버튼 클릭 시 토글 동작 (버튼들 등장/숨김)
+    function toggleButtons() {
+      if (!isButtonsVisible) {
+        container.style.display = "block"; // 컨테이너 표시
+        toggleButton.setAttribute('aria-expanded', 'true');
+        const centerX = 100; // 원 중심 좌표 (상대적)
+        const centerY = 100;
+        // 먼저 모든 버튼을 중앙에 배치 (중앙 버튼의 위치에서 시작)
+        buttons.forEach(button => {
+          button.style.left = centerX + "px";
+          button.style.top = centerY + "px";
+          // 초기 상태: 투명, scale 0.5 (작게)
+          button.style.opacity = "0";
+          button.style.transform = "translate(-50%, -50%) scale(0.5)";
+        });
+        // 순차적으로 최종 위치로 애니메이션
+        setTimeout(() => {
+          buttons.forEach((button, index) => {
+            const angle = parseFloat(button.dataset.initialAngle);
+            // updateButtonPosition()로 최종 좌표 설정
+            updateButtonPosition(button, angle);
+            setTimeout(() => {
+              button.style.opacity = "1";
+              button.style.transform = "translate(-50%, -50%) scale(1)";
+            }, index * 100); // 버튼마다 0.1초 간격
+          });
+          isButtonsVisible = true;
+        }, 10);
+      } else {
+        hideButtons();
+      }
+    }
+
+    // 버튼들을 숨기는 함수 (순차적으로 중앙으로 복귀)
+    function hideButtons() {
+      const centerX = 100, centerY = 100;
+      buttons.forEach((button, index) => {
+        setTimeout(() => {
+          button.style.opacity = "0";
+          button.style.transform = "translate(-50%, -50%) scale(0.5)";
+          // 중앙으로 이동 (left, top 애니메이션 효과 적용)
+          button.style.left = centerX + "px";
+          button.style.top = centerY + "px";
+        }, (buttonCount - index - 1) * 100);
+      });
+      setTimeout(() => {
+        container.style.display = "none";
+        isButtonsVisible = false;
+        firstFocus = true;
+        toggleButton.setAttribute('aria-expanded', 'false');
+        rotationAngle = 0;
+        setInitialPositions(); // 회전 관련 초기화
+      }, buttonCount * 100 + 50);
+    }
+
+    // 포커스 이동 시 왼쪽으로 회전 (기존 기능)
+    buttons.forEach(button => {
+      button.addEventListener('focus', () => {
+        if (firstFocus) {
+          firstFocus = false;
+          return;
+        }
+        rotateLeft();
+      });
+      button.addEventListener('blur', () => {
+        setTimeout(() => {
+          if (!document.activeElement.classList.contains('circle-button')) {
+            hideButtons();
+          }
+        }, 100);
+      });
+    });
+
+    // 왼쪽 회전 함수 (드래그 시 사용)
+    function rotateLeft() {
+      rotationAngle -= (2 * Math.PI) / buttonCount;
+      updateButtonPositions();
+    }
+
+    // 모든 버튼의 위치를 회전 각도에 맞게 업데이트
+    function updateButtonPositions() {
+      buttons.forEach(button => {
+        const initialAngle = parseFloat(button.dataset.initialAngle);
+        const angle = initialAngle + rotationAngle;
+        updateButtonPosition(button, angle);
+      });
+    }
+
+    // 터치/마우스 드래그 시작
+    function startRotate(event) {
+      if (!isButtonsVisible) return;
+      isDragging = true;
+      const touch = event.touches ? event.touches[0] : event;
+      lastAngle = getTouchAngle(touch.clientX, touch.clientY);
+    }
+
+    // 드래그 중 회전
+    function rotate(event) {
+      if (!isDragging || !isButtonsVisible) return;
+      const touch = event.touches ? event.touches[0] : event;
+      const currentAngle = getTouchAngle(touch.clientX, touch.clientY);
+      const deltaAngle = currentAngle - lastAngle;
+      rotationAngle += deltaAngle * 1.2;
+      lastAngle = currentAngle;
+      updateButtonPositions();
+    }
+
+    // 드래그 종료
+    function stopRotate() {
+      isDragging = false;
+    }
+
+    // 터치/마우스 현재 위치에서 각도 계산
+    function getTouchAngle(x, y) {
+      const rect = circle.getBoundingClientRect();
+      const dx = x - (rect.left + rect.width / 2);
+      const dy = y - (rect.top + rect.height / 2);
+      return Math.atan2(dy, dx);
+    }
+
+    // 원 위 드래그/터치 이벤트
+    circle.addEventListener('mousedown', startRotate);
+    circle.addEventListener('mousemove', rotate);
+    circle.addEventListener('mouseup', stopRotate);
+    circle.addEventListener('mouseleave', stopRotate);
+    circle.addEventListener('touchstart', startRotate);
+    circle.addEventListener('touchmove', rotate);
+    circle.addEventListener('touchend', stopRotate);
+
+    // 중앙 토글 버튼 클릭 이벤트
+    toggleButton.addEventListener('click', toggleButtons);
+
+    // 초기 버튼 위치 설정
+    setInitialPositions();
+  </script>
+</body>
+</html>
