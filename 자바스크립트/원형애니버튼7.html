@@ -46,11 +46,6 @@
         /* 지름 위의 버튼 컨테이너 */
         .button-container {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 200px;
-            height: 200px;
-            transform: translate(-50%, -50%);
             display: none;
         }
 
@@ -155,8 +150,11 @@
         }
 
         function getTouchAngle(x, y) {
-            const dx = x - window.innerWidth / 2;
-            const dy = y - window.innerHeight / 2;
+            const rect = container.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const dx = x - centerX;
+            const dy = y - centerY;
             return Math.atan2(dy, dx);
         }
 
@@ -167,14 +165,15 @@
         }
 
         function updateButtonPositions() {
-            const centerX = 100;
-            const centerY = 100;
+            const rect = toggleButton.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
 
             buttons.forEach(button => {
                 const initialAngle = parseFloat(button.dataset.initialAngle);
                 const angle = initialAngle + rotationAngle;
-                const x = centerX + Math.cos(angle) * radius;
-                const y = centerY + Math.sin(angle) * radius;
+                const x = centerX + Math.cos(angle) * radius - 25;
+                const y = centerY + Math.sin(angle) * radius - 25;
                 button.style.left = `${x}px`;
                 button.style.top = `${y}px`;
             });
