@@ -88,7 +88,7 @@
         let rotationAngle = 0;
         let isDragging = false;
         let lastAngle = 0;
-        let isButtonsVisible = false;  // 버튼이 보일 때만 회전 가능
+        let isButtonsVisible = false;
 
         function setInitialPositions() {
             buttons.forEach((button, i) => {
@@ -113,7 +113,8 @@
                         button.style.opacity = "1";
                         button.style.transform = `translate(-50%, -50%) scale(1)`;
                     });
-                    isButtonsVisible = true;  // 버튼이 나타난 후 회전 활성화
+                    isButtonsVisible = true; 
+                    addRotationEvents();  // 회전 이벤트 활성화
                 }, 10);
             } else {
                 buttons.forEach(button => {
@@ -122,13 +123,14 @@
                 });
                 setTimeout(() => {
                     container.style.display = "none";
-                    isButtonsVisible = false;  // 버튼이 사라지면 회전 비활성화
+                    isButtonsVisible = false;  
+                    removeRotationEvents(); // 회전 이벤트 비활성화
                 }, 300);
             }
         }
 
         function startRotate(event) {
-            if (!isButtonsVisible) return; // 버튼이 보이지 않으면 회전 방지
+            if (!isButtonsVisible) return;
             isDragging = true;
             const touch = event.touches ? event.touches[0] : event;
             lastAngle = getTouchAngle(touch.clientX, touch.clientY);
@@ -174,12 +176,27 @@
             updateButtonPositions();
         }
 
-        document.addEventListener('mousedown', startRotate);
-        document.addEventListener('mousemove', rotate);
-        document.addEventListener('mouseup', stopRotate);
+        function addRotationEvents() {
+            container.addEventListener('mousedown', startRotate);
+            container.addEventListener('mousemove', rotate);
+            container.addEventListener('mouseup', stopRotate);
+            container.addEventListener('mouseleave', stopRotate);
+            container.addEventListener('touchstart', startRotate);
+            container.addEventListener('touchmove', rotate);
+            container.addEventListener('touchend', stopRotate);
+        }
+
+        function removeRotationEvents() {
+            container.removeEventListener('mousedown', startRotate);
+            container.removeEventListener('mousemove', rotate);
+            container.removeEventListener('mouseup', stopRotate);
+            container.removeEventListener('mouseleave', stopRotate);
+            container.removeEventListener('touchstart', startRotate);
+            container.removeEventListener('touchmove', rotate);
+            container.removeEventListener('touchend', stopRotate);
+        }
 
         toggleButton.addEventListener('click', toggleButtons);
-
         setInitialPositions();
     </script>
 
