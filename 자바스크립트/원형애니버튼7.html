@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>원 버튼 애니메이션</title>
+    <title>원 버튼 회전</title>
     <style>
         body {
             display: flex;
@@ -11,46 +11,25 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            position: relative;
-            touch-action: none; /* 터치 이벤트 기본 동작 방지 */
+            touch-action: none;
         }
 
-        /* 큰 원 컨테이너 */
+        /* 원 컨테이너 */
         .circle {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background-color: lightgray;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 300px;
+            height: 300px;
+            position: relative;
         }
 
-        /* 중앙 버튼 */
-        .center-button {
-            width: 60px;
-            height: 60px;
-            border: none;
-            border-radius: 50%;
-            background-color: crimson;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            position: absolute;
-        }
-
-        /* 지름 위의 버튼 컨테이너 */
+        /* 원 위의 버튼 */
         .button-container {
             position: absolute;
-            display: none;
+            width: 100%;
+            height: 100%;
         }
 
-        /* 원 주변 버튼 */
         .button-container button {
+            position: absolute;
             width: 50px;
             height: 50px;
             border: none;
@@ -59,32 +38,24 @@
             color: white;
             font-size: 16px;
             cursor: pointer;
-            position: absolute;
-            opacity: 0;
-            transition: opacity 0.3s ease-out;
         }
     </style>
 </head>
 <body>
 
-    <!-- 중앙 버튼을 포함하는 원 -->
     <div class="circle">
-        <button class="center-button" id="toggleButton">+</button>
+        <div class="button-container" id="buttonContainer"></div>
     </div>
-
-    <!-- 지름 위의 버튼들을 포함하는 컨테이너 -->
-    <div class="button-container" id="buttonContainer"></div>
 
     <script>
         const container = document.getElementById('buttonContainer');
-        const toggleButton = document.getElementById('toggleButton');
-        const radius = 100;  // 버튼들이 배치될 원의 반지름
+        const radius = 120;  // 버튼이 배치될 원 반지름
         let rotationAngle = 0;
         let isDragging = false;
         let lastAngle = 0;
         const buttons = [];
-
-        // 버튼 데이터 (각 버튼에 다른 동작 설정 가능)
+        
+        // 버튼 데이터 (동작 설정 가능)
         const buttonsData = [
             { text: "1", action: () => alert("버튼 1 클릭") },
             { text: "2", action: () => alert("버튼 2 클릭") },
@@ -92,7 +63,6 @@
             { text: "4", action: () => alert("버튼 4 클릭") },
             { text: "5", action: () => alert("버튼 5 클릭") },
             { text: "6", action: () => alert("버튼 6 클릭") },
-            { text: "7", action: () => alert("버튼 7 클릭") },
         ];
 
         function createButtons() {
@@ -108,26 +78,7 @@
             updateButtonPositions();
         }
 
-        function toggleButtons() {
-            if (container.style.display === "none" || container.style.display === "") {
-                container.style.display = "block";
-                setTimeout(() => {
-                    buttons.forEach(button => {
-                        button.style.opacity = "1";
-                    });
-                }, 10);
-            } else {
-                buttons.forEach(button => {
-                    button.style.opacity = "0";
-                });
-                setTimeout(() => {
-                    container.style.display = "none";
-                }, 300);
-            }
-        }
-
         function startRotate(event) {
-            if (container.style.display === "none") return;
             isDragging = true;
             const touch = event.touches ? event.touches[0] : event;
             lastAngle = getTouchAngle(touch.clientX, touch.clientY);
@@ -144,7 +95,6 @@
         }
 
         function stopRotate() {
-            if (!isDragging) return;
             isDragging = false;
             snapToNearestPosition();
         }
@@ -165,9 +115,8 @@
         }
 
         function updateButtonPositions() {
-            const rect = toggleButton.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
+            const centerX = 150; // 원 중심 (300px 컨테이너 기준)
+            const centerY = 150; 
 
             buttons.forEach(button => {
                 const initialAngle = parseFloat(button.dataset.initialAngle);
@@ -201,7 +150,6 @@
         document.addEventListener('touchstart', startRotate);
         document.addEventListener('touchmove', rotate);
         document.addEventListener('touchend', stopRotate);
-        toggleButton.addEventListener('click', toggleButtons);
 
         createButtons();
     </script>
