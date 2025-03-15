@@ -51,7 +51,7 @@
             align-items: center;
             opacity: 0;
             transform: translate(-50%, -50%) scale(0);
-            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
         }
     </style>
 </head>
@@ -74,6 +74,8 @@
     let isDragging = false;
     let startX, startY;
 
+    const radius = 100; // 서브 버튼들이 유지할 반지름
+
     // 메인 버튼 클릭 이벤트
     mainButton.addEventListener("click", () => {
         isExpanded = !isExpanded;
@@ -81,8 +83,8 @@
             subButtons.forEach((btn, index) => {
                 setTimeout(() => {
                     const angle = (index / subButtons.length) * Math.PI * 2;
-                    const x = Math.cos(angle) * 100 + 130;
-                    const y = Math.sin(angle) * 100 + 130;
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
                     btn.style.transform = `translate(${x}px, ${y}px) scale(1)`;
                     btn.style.opacity = "1";
                 }, index * 150);
@@ -118,7 +120,7 @@
         const dx = event.clientX - startX;
         const dy = event.clientY - startY;
         const angleChange = Math.atan2(dy, dx) * (180 / Math.PI);
-        angleOffset += angleChange * 0.2;
+        angleOffset += angleChange * 0.3;
         rotateButtons(angleOffset);
         startX = event.clientX;
         startY = event.clientY;
@@ -132,8 +134,8 @@
         subButtons.forEach((btn, index) => {
             const angleStep = (index / subButtons.length) * Math.PI * 2;
             const finalAngle = angleStep + (angle * Math.PI / 180);
-            const x = Math.cos(finalAngle) * 100 + 130;
-            const y = Math.sin(finalAngle) * 100 + 130;
+            const x = Math.cos(finalAngle) * radius;
+            const y = Math.sin(finalAngle) * radius;
             btn.style.transform = `translate(${x}px, ${y}px) scale(1)`;
         });
     }
