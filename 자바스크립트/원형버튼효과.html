@@ -1,145 +1,130 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>메인 버튼과 서브 버튼 회전</title>
+    <title>Button Animation</title>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            overflow: hidden;
-        }
-
         .container {
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 200px;
+            height: 200px;
+            margin: 100px auto;
+            text-align: center;
         }
 
-        .main-button {
+        #mainButton {
             position: absolute;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: red;
-            color: white;
-            font-size: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            left: 50%;
             top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 10;
         }
 
-        .sub-button {
+        #subButtons {
             position: absolute;
-            width: 40px;
-            height: 40px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .subButton {
+            position: absolute;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background-color: blue;
-            color: white;
-            font-size: 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             opacity: 0;
-            transform: translate(-50%, -50%) scale(0);
-            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+            transition: opacity 0.5s, transform 0.5s;
+        }
+
+        .subButton.visible {
+            opacity: 1;
+        }
+
+        .draggable {
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <button id="mainButton">메인 버튼</button>
+        <div id="subButtons" class="hidden">
+            <button class="subButton">서브 버튼 1</button>
+            <button class="subButton">서브 버튼 2</button>
+            <button class="subButton">서브 버튼 3</button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const mainButton = document.getElementById('mainButton');
+            const subButtons = document.getElementById('subButtons');
+            const subButtonElements = document.querySelectorAll('.subButton');
 
-<div class="container">
-    <div class="main-button" id="mainButton">메인</div>
-    <div class="sub-button">1</div>
-    <div class="sub-button">2</div>
-    <div class="sub-button">3</div>
-    <div class="sub-button">4</div>
-    <div class="sub-button">5</div>
-</div>
-
-<script>
-    const mainButton = document.getElementById("mainButton");
-    const subButtons = document.querySelectorAll(".sub-button");
-    let isExpanded = false;
-    let angleOffset = 0;
-    let isDragging = false;
-    let startX, startY;
-
-    const radius = 100; // 서브 버튼들이 유지할 반지름
-
-    // 메인 버튼 클릭 이벤트
-    mainButton.addEventListener("click", () => {
-        isExpanded = !isExpanded;
-        if (isExpanded) {
-            subButtons.forEach((btn, index) => {
-                setTimeout(() => {
-                    const angle = (index / subButtons.length) * Math.PI * 2;
-                    const x = Math.cos(angle) * radius;
-                    const y = Math.sin(angle) * radius;
-                    btn.style.transform = `translate(${x}px, ${y}px) scale(1)`;
-                    btn.style.opacity = "1";
-                }, index * 150);
+            mainButton.addEventListener('click', () => {
+                if (subButtons.classList.contains('hidden')) {
+                    subButtons.classList.remove('hidden');
+                    animateSubButtons();
+                } else {
+                    subButtons.classList.add('hidden');
+                    resetSubButtons();
+                }
             });
-        } else {
-            subButtons.forEach((btn, index) => {
-                setTimeout(() => {
-                    btn.style.transform = "translate(-50%, -50%) scale(0)";
-                    btn.style.opacity = "0";
-                }, index * 100);
-            });
-        }
-    });
 
-    // 드래그 이벤트 (메인 버튼 기준 회전)
-    document.addEventListener("mousedown", (e) => startDrag(e));
-    document.addEventListener("touchstart", (e) => startDrag(e.touches[0]));
+            function animateSubButtons() {
+                const radius = 100; // 원형으로 배치될 반지름
+                const angleStep = (2 * Math.PI) / subButtonElements.length;
 
-    document.addEventListener("mousemove", (e) => dragMove(e));
-    document.addEventListener("touchmove", (e) => dragMove(e.touches[0]));
+                subButtonElements.forEach((button, index) => {
+                    const angle = index * angleStep;
+                    const x = radius * Math.cos(angle);
+                    const y = radius * Math.sin(angle);
 
-    document.addEventListener("mouseup", () => stopDrag());
-    document.addEventListener("touchend", () => stopDrag());
+                    button.style.transform = `translate(${x}px, ${y}px)`;
+                    button.classList.add('visible');
+                    button.classList.add('draggable');
+                    button.addEventListener('mousedown', onDragStart);
+                });
+            }
 
-    function startDrag(event) {
-        isDragging = true;
-        startX = event.clientX;
-        startY = event.clientY;
-    }
+            function resetSubButtons() {
+                subButtonElements.forEach((button) => {
+                    button.style.transform = `translate(0, 0)`;
+                    button.classList.remove('visible');
+                    button.classList.remove('draggable');
+                    button.removeEventListener('mousedown', onDragStart);
+                });
+            }
 
-    function dragMove(event) {
-        if (!isDragging) return;
-        const dx = event.clientX - startX;
-        const dy = event.clientY - startY;
-        const angleChange = Math.atan2(dy, dx) * (180 / Math.PI);
-        angleOffset += angleChange * 0.3;
-        rotateButtons(angleOffset);
-        startX = event.clientX;
-        startY = event.clientY;
-    }
+            let draggedElement = null;
+            let startX = 0;
+            let startY = 0;
 
-    function stopDrag() {
-        isDragging = false;
-    }
+            function onDragStart(event) {
+                draggedElement = event.target;
+                startX = event.clientX - draggedElement.offsetLeft;
+                startY = event.clientY - draggedElement.offsetTop;
+                document.addEventListener('mousemove', onDrag);
+                document.addEventListener('mouseup', onDragEnd);
+            }
 
-    function rotateButtons(angle) {
-        subButtons.forEach((btn, index) => {
-            const angleStep = (index / subButtons.length) * Math.PI * 2;
-            const finalAngle = angleStep + (angle * Math.PI / 180);
-            const x = Math.cos(finalAngle) * radius;
-            const y = Math.sin(finalAngle) * radius;
-            btn.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+            function onDrag(event) {
+                if (draggedElement) {
+                    const x = event.clientX - startX;
+                    const y = event.clientY - startY;
+                    draggedElement.style.transform = `translate(${x}px, ${y}px)`;
+                }
+            }
+
+            function onDragEnd() {
+                document.removeEventListener('mousemove', onDrag);
+                document.removeEventListener('mouseup', onDragEnd);
+                draggedElement = null;
+            }
         });
-    }
-</script>
-
+    </script>
 </body>
 </html>
