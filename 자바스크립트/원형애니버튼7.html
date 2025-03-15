@@ -185,7 +185,7 @@
             const touch = event.touches ? event.touches[0] : event;
             const currentAngle = getTouchAngle(touch.clientX, touch.clientY);
             const deltaAngle = currentAngle - lastAngle;
-            rotationAngle += deltaAngle * 0.7;
+            rotationAngle += deltaAngle * 1.2; // 속도를 조절하는 부분 (1.2 값 변경 가능)
             lastAngle = currentAngle;
             updateButtonPositions();
         }
