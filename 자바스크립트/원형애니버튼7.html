@@ -121,7 +121,12 @@
                 setTimeout(() => {
                     buttons.forEach(button => {
                         button.style.opacity = "1"; // 버튼 투명도 변경 (보이도록)
-                        button.style.transform = `translate(-50%, -50%) scale(1)`; // 크기 원래대로
+                        //button.style.transform = `translate(-50%, -50%) scale(1)`; // 크기 원래대로
+ button.style.transform = `translate(-50%, -50%) scale(1.1)`;
+                        setTimeout(() => {
+                            button.style.transform = `translate(-50%, -50%) scale(1)`;
+                        }, 200);
+                    }, index * 80);
                     });
                     isButtonsVisible = true; // 버튼이 보이는 상태로 설정
                 }, 10);
