@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>원 버튼 애니메이션</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            position: relative;
+            touch-action: none;
+        }
+
+        .circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background-color: lightgray;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .center-button {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 50%;
+            background-color: crimson;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            position: absolute;
+        }
+
+        .button-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        .button-container button {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 50%;
+            background-color: steelblue;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            position: absolute;
+            transform: translate(-50%, -50%) scale(0.5);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="circle">
+        <button class="center-button" id="toggleButton">+</button>
+        <div class="button-container" id="buttonContainer">
+            <button class="circle-button">1</button>
+            <button class="circle-button">2</button>
+            <button class="circle-button">3</button>
+            <button class="circle-button">4</button>
+            <button class="circle-button">5</button>
+            <button class="circle-button">6</button>
+            <button class="circle-button">7</button>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('buttonContainer');
+        const toggleButton = document.getElementById('toggleButton');
+        const buttons = document.querySelectorAll('.circle-button');
+        const buttonCount = buttons.length;
+        const radius = 100;
+        let rotationAngle = 0;
+        let isDragging = false;
+        let lastAngle = 0;
+        let isButtonsVisible = false;
+
+        function setInitialPositions() {
+            buttons.forEach((button, i) => {
+                const angle = (i / buttonCount) * (2 * Math.PI);
+                button.dataset.initialAngle = angle;
+                updateButtonPosition(button, angle);
+            });
+        }
+
+        function updateButtonPosition(button, angle) {
+            const x = Math.cos(angle) * radius + 100;
+            const y = Math.sin(angle) * radius + 100;
+            button.style.left = `${x}px`;
+            button.style.top = `${y}px`;
+        }
+
+        function toggleButtons() {
+            if (!isButtonsVisible) {
+                container.style.display = "block";
+                setTimeout(() => {
+                    buttons.forEach(button => {
+                        button.style.opacity = "1";
+                        button.style.transform = `translate(-50%, -50%) scale(1)`;
+                    });
+                    isButtonsVisible = true; 
+                    addRotationEvents();  // 회전 이벤트 활성화
+                }, 10);
+            } else {
+                buttons.forEach(button => {
+                    button.style.opacity = "0";
+                    button.style.transform = `translate(-50%, -50%) scale(0.5)`;
+                });
+                setTimeout(() => {
+                    container.style.display = "none";
+                    isButtonsVisible = false;  
+                    removeRotationEvents(); // 회전 이벤트 비활성화
+                }, 300);
+            }
+        }
+
+        function startRotate(event) {
+            if (!isButtonsVisible) return;
+            isDragging = true;
+            const touch = event.touches ? event.touches[0] : event;
+            lastAngle = getTouchAngle(touch.clientX, touch.clientY);
+        }
+
+        function rotate(event) {
+            if (!isDragging || !isButtonsVisible) return;
+            const touch = event.touches ? event.touches[0] : event;
+            const currentAngle = getTouchAngle(touch.clientX, touch.clientY);
+            const deltaAngle = normalizeAngle(currentAngle - lastAngle);
+            rotationAngle += deltaAngle * 0.7;
+            lastAngle = currentAngle;
+            updateButtonPositions();
+        }
+
+        function stopRotate() {
+            if (!isDragging) return;
+            isDragging = false;
+            snapToNearestPosition();
+        }
+
+        function getTouchAngle(x, y) {
+            const rect = container.getBoundingClientRect();
+            const dx = x - (rect.left + rect.width / 2);
+            const dy = y - (rect.top + rect.height / 2);
+            return Math.atan2(dy, dx);
+        }
+
+        function normalizeAngle(angle) {
+            return ((angle + Math.PI) % (2 * Math.PI)) - Math.PI;
+        }
+
+        function updateButtonPositions() {
+            buttons.forEach(button => {
+                const initialAngle = parseFloat(button.dataset.initialAngle);
+                const angle = initialAngle + rotationAngle;
+                updateButtonPosition(button, angle);
+            });
+        }
+
+        function snapToNearestPosition() {
+            rotationAngle = Math.round(rotationAngle / (2 * Math.PI / buttonCount)) * (2 * Math.PI / buttonCount);
+            updateButtonPositions();
+        }
+
+        function addRotationEvents() {
+            container.addEventListener('mousedown', startRotate);
+            container.addEventListener('mousemove', rotate);
+            container.addEventListener('mouseup', stopRotate);
+            container.addEventListener('mouseleave', stopRotate);
+            container.addEventListener('touchstart', startRotate);
+            container.addEventListener('touchmove', rotate);
+            container.addEventListener('touchend', stopRotate);
+        }
+
+        function removeRotationEvents() {
+            container.removeEventListener('mousedown', startRotate);
+            container.removeEventListener('mousemove', rotate);
+            container.removeEventListener('mouseup', stopRotate);
+            container.removeEventListener('mouseleave', stopRotate);
+            container.removeEventListener('touchstart', startRotate);
+            container.removeEventListener('touchmove', rotate);
+            container.removeEventListener('touchend', stopRotate);
+        }
+
+        toggleButton.addEventListener('click', toggleButtons);
+        setInitialPositions();
+    </script>
+
+</body>
+</html>
