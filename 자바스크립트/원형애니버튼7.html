@@ -20,9 +20,9 @@
             height: 200px;
             border-radius: 50%;
             background-color: lightgray;
-            position: absolute;  /* 원하는 위치로 옮길 수 있도록 변경 */
-            top: 100px;   /* 원하는 위치 */
-            left: 300px;  /* 원하는 위치 */
+            position: absolute;
+            top: 100px;
+            left: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -38,10 +38,12 @@
             font-size: 18px;
             cursor: pointer;
             position: absolute;
+            z-index: 20;
         }
 
         .button-container {
             position: absolute;
+            z-index: 10;
             top: 50%;
             left: 50%;
             width: 200px;
@@ -67,19 +69,19 @@
     </style>
 </head>
 <body>
-
     <div class="circle" id="circle">
-        <button class="center-button" id="toggleButton">+</button>
+        <button class="center-button" id="toggleButton" aria-expanded="false">+</button>
         <div class="button-container" id="buttonContainer">
-            <button class="circle-button">1</button>
-            <button class="circle-button">2</button>
-            <button class="circle-button">3</button>
-            <button class="circle-button">4</button>
+            <button class="circle-button">홈</button>
+            <button class="circle-button">이체</button>
+            <button class="circle-button">펀드</button>
+            <button class="circle-button">알람</button>
             <button class="circle-button">5</button>
             <button class="circle-button">6</button>
             <button class="circle-button">7</button>
         </div>
     </div>
+    <button type="button">다음 포커스</button>
 
     <script>
         const circle = document.getElementById('circle');
@@ -92,10 +94,11 @@
         let isDragging = false;
         let lastAngle = 0;
         let isButtonsVisible = false;
+        let firstFocus = true;
 
         function setInitialPositions() {
             buttons.forEach((button, i) => {
-                const angle = (i / buttonCount) * (2 * Math.PI);
+                const angle = (i / buttonCount) * (2 * Math.PI) + Math.PI;
                 button.dataset.initialAngle = angle;
                 updateButtonPosition(button, angle);
             });
@@ -111,25 +114,63 @@
         function toggleButtons() {
             if (!isButtonsVisible) {
                 container.style.display = "block";
+                toggleButton.setAttribute('aria-expanded', 'true');
                 setTimeout(() => {
                     buttons.forEach(button => {
                         button.style.opacity = "1";
                         button.style.transform = `translate(-50%, -50%) scale(1)`;
                     });
-                    isButtonsVisible = true; 
-                    addRotationEvents();
+                    isButtonsVisible = true;
                 }, 10);
             } else {
-                buttons.forEach(button => {
-                    button.style.opacity = "0";
-                    button.style.transform = `translate(-50%, -50%) scale(0.5)`;
-                });
-                setTimeout(() => {
-                    container.style.display = "none";
-                    isButtonsVisible = false;  
-                    removeRotationEvents();
-                }, 300);
+                hideButtons();
             }
+        }
+
+        function hideButtons() {
+            buttons.forEach(button => {
+                button.style.opacity = "0";
+                button.style.transform = `translate(-50%, -50%) scale(0.5)`;
+            });
+            setTimeout(() => {
+                container.style.display = "none";
+                isButtonsVisible = false;
+                firstFocus = true;
+                toggleButton.setAttribute('aria-expanded', 'false');
+                rotationAngle = 0;
+                setInitialPositions();
+            }, 300);
+        }
+
+        buttons.forEach(button => {
+            button.addEventListener('focus', () => {
+                if (firstFocus) {
+                    firstFocus = false;
+                    return;
+                }
+                rotateLeft();
+            });
+
+            button.addEventListener('blur', () => {
+                setTimeout(() => {
+                    if (!document.activeElement.classList.contains('circle-button')) {
+                        hideButtons();
+                    }
+                }, 100);
+            });
+        });
+
+        function rotateLeft() {
+            rotationAngle -= (2 * Math.PI) / buttonCount;
+            updateButtonPositions();
+        }
+
+        function updateButtonPositions() {
+            buttons.forEach(button => {
+                const initialAngle = parseFloat(button.dataset.initialAngle);
+                const angle = initialAngle + rotationAngle;
+                updateButtonPosition(button, angle);
+            });
         }
 
         function startRotate(event) {
@@ -143,66 +184,33 @@
             if (!isDragging || !isButtonsVisible) return;
             const touch = event.touches ? event.touches[0] : event;
             const currentAngle = getTouchAngle(touch.clientX, touch.clientY);
-            const deltaAngle = normalizeAngle(currentAngle - lastAngle);
+            const deltaAngle = currentAngle - lastAngle;
             rotationAngle += deltaAngle * 0.7;
             lastAngle = currentAngle;
             updateButtonPositions();
         }
 
         function stopRotate() {
-            if (!isDragging) return;
             isDragging = false;
-            snapToNearestPosition();
         }
 
         function getTouchAngle(x, y) {
-            const rect = container.getBoundingClientRect();
-            const circleRect = circle.getBoundingClientRect();
-            const dx = x - (circleRect.left + circleRect.width / 2);
-            const dy = y - (circleRect.top + circleRect.height / 2);
+            const rect = circle.getBoundingClientRect();
+            const dx = x - (rect.left + rect.width / 2);
+            const dy = y - (rect.top + rect.height / 2);
             return Math.atan2(dy, dx);
         }
 
-        function normalizeAngle(angle) {
-            return ((angle + Math.PI) % (2 * Math.PI)) - Math.PI;
-        }
-
-        function updateButtonPositions() {
-            buttons.forEach(button => {
-                const initialAngle = parseFloat(button.dataset.initialAngle);
-                const angle = initialAngle + rotationAngle;
-                updateButtonPosition(button, angle);
-            });
-        }
-
-        function snapToNearestPosition() {
-            rotationAngle = Math.round(rotationAngle / (2 * Math.PI / buttonCount)) * (2 * Math.PI / buttonCount);
-            updateButtonPositions();
-        }
-
-        function addRotationEvents() {
-            circle.addEventListener('mousedown', startRotate);
-            circle.addEventListener('mousemove', rotate);
-            circle.addEventListener('mouseup', stopRotate);
-            circle.addEventListener('mouseleave', stopRotate);
-            circle.addEventListener('touchstart', startRotate);
-            circle.addEventListener('touchmove', rotate);
-            circle.addEventListener('touchend', stopRotate);
-        }
-
-        function removeRotationEvents() {
-            circle.removeEventListener('mousedown', startRotate);
-            circle.removeEventListener('mousemove', rotate);
-            circle.removeEventListener('mouseup', stopRotate);
-            circle.removeEventListener('mouseleave', stopRotate);
-            circle.removeEventListener('touchstart', startRotate);
-            circle.removeEventListener('touchmove', rotate);
-            circle.removeEventListener('touchend', stopRotate);
-        }
+        circle.addEventListener('mousedown', startRotate);
+        circle.addEventListener('mousemove', rotate);
+        circle.addEventListener('mouseup', stopRotate);
+        circle.addEventListener('mouseleave', stopRotate);
+        circle.addEventListener('touchstart', startRotate);
+        circle.addEventListener('touchmove', rotate);
+        circle.addEventListener('touchend', stopRotate);
 
         toggleButton.addEventListener('click', toggleButtons);
         setInitialPositions();
     </script>
-
 </body>
 </html>
