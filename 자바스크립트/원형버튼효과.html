@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 버튼과 서브 버튼 회전</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        .main-button {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: red;
+            color: white;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .sub-button {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: blue;
+            color: white;
+            font-size: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="main-button" id="mainButton">메인</div>
+    <div class="sub-button">1</div>
+    <div class="sub-button">2</div>
+    <div class="sub-button">3</div>
+    <div class="sub-button">4</div>
+    <div class="sub-button">5</div>
+</div>
+
+<script>
+    const mainButton = document.getElementById("mainButton");
+    const subButtons = document.querySelectorAll(".sub-button");
+    let isExpanded = false;
+    let angleOffset = 0;
+    let isDragging = false;
+    let startX, startY;
+
+    // 메인 버튼 클릭 이벤트
+    mainButton.addEventListener("click", () => {
+        isExpanded = !isExpanded;
+        if (isExpanded) {
+            subButtons.forEach((btn, index) => {
+                setTimeout(() => {
+                    const angle = (index / subButtons.length) * Math.PI * 2;
+                    const x = Math.cos(angle) * 100 + 130;
+                    const y = Math.sin(angle) * 100 + 130;
+                    btn.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+                    btn.style.opacity = "1";
+                }, index * 150);
+            });
+        } else {
+            subButtons.forEach((btn, index) => {
+                setTimeout(() => {
+                    btn.style.transform = "translate(-50%, -50%) scale(0)";
+                    btn.style.opacity = "0";
+                }, index * 100);
+            });
+        }
+    });
+
+    // 드래그 이벤트 (메인 버튼 기준 회전)
+    document.addEventListener("mousedown", (e) => startDrag(e));
+    document.addEventListener("touchstart", (e) => startDrag(e.touches[0]));
+
+    document.addEventListener("mousemove", (e) => dragMove(e));
+    document.addEventListener("touchmove", (e) => dragMove(e.touches[0]));
+
+    document.addEventListener("mouseup", () => stopDrag());
+    document.addEventListener("touchend", () => stopDrag());
+
+    function startDrag(event) {
+        isDragging = true;
+        startX = event.clientX;
+        startY = event.clientY;
+    }
+
+    function dragMove(event) {
+        if (!isDragging) return;
+        const dx = event.clientX - startX;
+        const dy = event.clientY - startY;
+        const angleChange = Math.atan2(dy, dx) * (180 / Math.PI);
+        angleOffset += angleChange * 0.2;
+        rotateButtons(angleOffset);
+        startX = event.clientX;
+        startY = event.clientY;
+    }
+
+    function stopDrag() {
+        isDragging = false;
+    }
+
+    function rotateButtons(angle) {
+        subButtons.forEach((btn, index) => {
+            const angleStep = (index / subButtons.length) * Math.PI * 2;
+            const finalAngle = angleStep + (angle * Math.PI / 180);
+            const x = Math.cos(finalAngle) * 100 + 130;
+            const y = Math.sin(finalAngle) * 100 + 130;
+            btn.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+        });
+    }
+</script>
+
+</body>
+</html>
