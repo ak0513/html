@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>원형 버튼 애니메이션</title>
+    <title>원형 버튼 회전</title>
     <style>
         * {
             margin: 0;
@@ -59,7 +59,7 @@
 <body>
 
 <div class="circle-container">
-    <button class="main-button">+</button>
+    <button class="main-button">+ㅂ</button>
     <button class="sub-button">1</button>
     <button class="sub-button">2</button>
     <button class="sub-button">3</button>
@@ -104,26 +104,18 @@
         });
     });
 
-    function getAngle(x) {
-        const rect = circleContainer.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        return Math.atan2(0, x - centerX) * (180 / Math.PI);
-    }
-
     function startDrag(x) {
         if (!isOpen) return;
         isDragging = true;
         startX = x;
-        startAngle = getAngle(x);
     }
 
     function moveDrag(x) {
         if (!isDragging) return;
-        const currentAngle = getAngle(x);
-        const deltaAngle = currentAngle - startAngle;
-        rotationAngle += deltaAngle;
+        const deltaX = x - startX;
+        rotationAngle += deltaX * 0.2; // 회전 속도 조정
         updateButtonPositions();
-        startAngle = currentAngle;
+        startX = x;
     }
 
     function stopDrag() {
