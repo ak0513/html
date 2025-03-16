@@ -51,14 +51,15 @@
             text-align: center;
             line-height: 40px;
             opacity: 0;
-            transition: opacity 0.3s ease-out;
+            transform: scale(0);
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
         }
     </style>
 </head>
 <body>
 
 <div class="circle-container">
-    <button class="main-button">+ㅂ</button>
+    <button class="main-button">+</button>
     <button class="sub-button">1</button>
     <button class="sub-button">2</button>
     <button class="sub-button">3</button>
@@ -79,7 +80,7 @@
     const radius = 120; // 원의 반지름
     const buttonCount = subButtons.length;
 
-    function updateButtonPositions() {
+    function updateButtonPositions(animate = false) {
         const containerRect = circleContainer.getBoundingClientRect();
         const centerX = containerRect.width / 2;
         const centerY = containerRect.height / 2;
@@ -88,6 +89,13 @@
             const angle = ((index / buttonCount) * 360 + rotationAngle) * (Math.PI / 180);
             const x = centerX + radius * Math.cos(angle) - button.offsetWidth / 2;
             const y = centerY + radius * Math.sin(angle) - button.offsetHeight / 2;
+
+            if (animate) {
+                button.style.transition = `left 0.5s ease-out, top 0.5s ease-out`;
+            } else {
+                button.style.transition = ``;
+            }
+
             button.style.left = `${x}px`;
             button.style.top = `${y}px`;
         });
@@ -95,10 +103,21 @@
 
     mainButton.addEventListener('click', () => {
         isOpen = !isOpen;
-        subButtons.forEach((button) => {
-            button.style.opacity = isOpen ? '1' : '0';
-        });
-        updateButtonPositions();
+        if (isOpen) {
+            subButtons.forEach((button, index) => {
+                button.style.opacity = '1';
+                button.style.transform = 'scale(1)';
+                button.style.left = `50%`;
+                button.style.top = `50%`;
+            });
+
+            setTimeout(() => updateButtonPositions(true), 50);
+        } else {
+            subButtons.forEach((button) => {
+                button.style.opacity = '0';
+                button.style.transform = 'scale(0)';
+            });
+        }
     });
 
     function getTouchAngle(x, y) {
