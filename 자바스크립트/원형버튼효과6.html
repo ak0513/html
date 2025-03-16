@@ -54,6 +54,7 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
         }
     </style>
 </head>
@@ -84,7 +85,7 @@
     const radius = 120;
     const buttonCount = subButtons.length;
 
-    function updateButtonPositions() {
+    function updateButtonPositions(animate = false) {
         const containerRect = circleContainer.getBoundingClientRect();
         const centerX = containerRect.width / 2;
         const centerY = containerRect.height / 2;
@@ -93,6 +94,12 @@
             const angle = ((index / buttonCount) * 360 + rotationAngle) * (Math.PI / 180);
             const x = centerX + radius * Math.cos(angle);
             const y = centerY + radius * Math.sin(angle);
+
+            if (animate) {
+                button.style.transition = `left 0.5s ease-out, top 0.5s ease-out, transform 0.5s ease-out`;
+            } else {
+                button.style.transition = ``;
+            }
 
             button.style.left = `${x}px`;
             button.style.top = `${y}px`;
@@ -111,8 +118,7 @@
 
                 setTimeout(() => {
                     button.style.opacity = '1';
-                    button.style.transform = 'translate(-50%, -50%) scale(1)';
-                    updateButtonPositions();
+                    updateButtonPositions(true);
                 }, index * 100);
             });
         } else {
