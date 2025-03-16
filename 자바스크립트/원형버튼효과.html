@@ -1,67 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Circle Menu</title>
+    <title>원형 버튼 애니메이션</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
+            background-color: #f0f0f0;
         }
-
-        .circle {
+        .circle-container {
             position: relative;
-            width: 200px;
-            height: 200px;
+            width: 300px;
+            height: 150px; /* 지름 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .main-button {
+            position: absolute;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            border: 2px solid #000;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 10;
         }
-
-        #mainButton {
+        .sub-button {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .subButton {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ff5733;
+            border: none;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            line-height: 40px;
             opacity: 0;
-            transition: opacity 0.3s, transform 0.3s;
+            transform: scale(0);
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
         }
     </style>
 </head>
 <body>
-    <div class="circle">
-        <button id="mainButton">Main</button>
-        <button class="subButton">1</button>
-        <button class="subButton">2</button>
-        <button class="subButton">3</button>
-        <button class="subButton">4</button>
-        <button class="subButton">5</button>
-    </div>
-    <script>
-        document.getElementById('mainButton').addEventListener('click', function() {
-            const subButtons = document.querySelectorAll('.subButton');
-            const radius = 80; // 반지름
-            const angleStep = (2 * Math.PI) / subButtons.length;
 
-            subButtons.forEach((button, index) => {
-                const angle = index * angleStep;
+<div class="circle-container">
+    <button class="main-button">+</button>
+    <button class="sub-button">1</button>
+    <button class="sub-button">2</button>
+    <button class="sub-button">3</button>
+    <button class="sub-button">4</button>
+</div>
+
+<script>
+    const mainButton = document.querySelector('.main-button');
+    const subButtons = document.querySelectorAll('.sub-button');
+    let isOpen = false;
+
+    const radius = 150 / 2; // 원 반지름
+    const buttonCount = subButtons.length;
+
+    mainButton.addEventListener('click', () => {
+        isOpen = !isOpen;
+        subButtons.forEach((button, index) => {
+            if (isOpen) {
+                const angle = (index / (buttonCount - 1)) * Math.PI; // 0 ~ 180도 사이 분배
                 const x = radius * Math.cos(angle);
                 const y = radius * Math.sin(angle);
 
-                button.style.transform = `translate(${x}px, ${y}px)`;
-                button.style.opacity = 1;
-            });
+                button.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+                button.style.opacity = '1';
+            } else {
+                button.style.transform = 'scale(0)';
+                button.style.opacity = '0';
+            }
         });
-    </script>
+    });
+</script>
+
 </body>
 </html>
