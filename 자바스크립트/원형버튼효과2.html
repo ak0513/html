@@ -25,6 +25,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            touch-action: none; /* 터치 스크롤 방지 */
         }
         .main-button {
             position: absolute;
@@ -96,24 +97,23 @@
         });
     });
 
-    // 드래그 이벤트 추가
-    circleContainer.addEventListener('mousedown', (e) => {
+    function startDrag(x) {
         if (!isOpen) return;
         isDragging = true;
-        startX = e.clientX;
-    });
+        startX = x;
+    }
 
-    document.addEventListener('mousemove', (e) => {
+    function moveDrag(x) {
         if (!isDragging) return;
-        const deltaX = e.clientX - startX;
+        const deltaX = x - startX;
         rotationAngle += deltaX * 0.01; // 회전 속도 조정
         updateButtonPositions();
-        startX = e.clientX;
-    });
+        startX = x;
+    }
 
-    document.addEventListener('mouseup', () => {
+    function stopDrag() {
         isDragging = false;
-    });
+    }
 
     function updateButtonPositions() {
         subButtons.forEach((button, index) => {
@@ -123,6 +123,16 @@
             button.style.transform = `translate(${x}px, ${y}px) scale(1)`;
         });
     }
+
+    // PC용 마우스 이벤트
+    circleContainer.addEventListener('mousedown', (e) => startDrag(e.clientX));
+    document.addEventListener('mousemove', (e) => moveDrag(e.clientX));
+    document.addEventListener('mouseup', stopDrag);
+
+    // 모바일용 터치 이벤트
+    circleContainer.addEventListener('touchstart', (e) => startDrag(e.touches[0].clientX));
+    document.addEventListener('touchmove', (e) => moveDrag(e.touches[0].clientX));
+    document.addEventListener('touchend', stopDrag);
 </script>
 
 </body>
