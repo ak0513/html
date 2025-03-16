@@ -97,10 +97,28 @@
         const toggleButton = document.getElementById('toggleButton'); // 중앙 버튼 (토글 버튼)
         const buttons = document.querySelectorAll('.circle-button'); // 원 위의 버튼들
         const buttonCount = buttons.length; // 버튼 개수
+        const radius = 100; // 버튼이 배치될 원의 반지름
+        let rotationAngle = 0; // 현재 회전 각도
         let isDragging = false; // 사용자가 드래그 중인지 여부
         let lastAngle = 0; // 마지막 터치(드래그) 각도
         let isButtonsVisible = false; // 버튼들이 현재 표시되고 있는지 여부
         let firstFocus = true; // 첫 포커스인지 여부 (포커스 이동 시 불필요한 회전 방지)
+
+        // 초기 버튼들의 위치를 설정하는 함수
+        function setInitialPositions() {
+            buttons.forEach((button, i) => {
+                const angle = (i / buttonCount) * (2 * Math.PI); // 버튼들의 초기 각도를 설정
+                button.dataset.initialAngle = angle; // 초기 각도를 데이터 속성에 저장
+            });
+        }
+
+        // 특정 각도에 따른 버튼의 위치를 업데이트하는 함수
+        function updateButtonPosition(button, angle) {
+            const x = Math.cos(angle) * radius; // x 좌표 계산
+            const y = Math.sin(angle) * radius; // y 좌표 계산
+            button.style.left = `${x + 100}px`; // 계산된 x 좌표 적용
+            button.style.top = `${y + 100}px`; // 계산된 y 좌표 적용
+        }
 
         // 중앙 버튼 클릭 시 버튼들을 토글하는 함수
         function toggleButtons() {
@@ -108,9 +126,11 @@
                 container.style.display = "block"; // 버튼 컨테이너 표시
                 toggleButton.setAttribute('aria-expanded', 'true'); // 접근성을 위한 속성 업데이트
                 setTimeout(() => {
-                    buttons.forEach(button => {
+                    buttons.forEach((button, i) => {
+                        const angle = parseFloat(button.dataset.initialAngle);
                         button.style.opacity = "1"; // 버튼 투명도 변경 (보이도록)
                         button.style.transform = `translate(-50%, -50%) scale(1)`; // 크기 원래대로
+                        updateButtonPosition(button, angle); // 버튼 위치 업데이트
                     });
                     isButtonsVisible = true; // 버튼이 보이는 상태로 설정
                 }, 10);
@@ -130,6 +150,8 @@
                 isButtonsVisible = false; // 버튼이 숨겨진 상태로 설정
                 firstFocus = true; // 포커스 리셋
                 toggleButton.setAttribute('aria-expanded', 'false'); // 접근성을 위한 속성 업데이트
+                rotationAngle = 0; // 회전 각도 초기화
+                setInitialPositions(); // 버튼 위치 초기화
             }, 300);
         }
 
@@ -163,8 +185,8 @@
             buttons.forEach(button => {
                 const initialAngle = parseFloat(button.dataset.initialAngle); // 초기 각도 불러오기
                 const angle = initialAngle + deltaAngle; // 현재 회전 각도 적용
-                const x = Math.cos(angle) * 100; // x 좌표 계산
-                const y = Math.sin(angle) * 100; // y 좌표 계산
+                const x = Math.cos(angle) * radius; // x 좌표 계산
+                const y = Math.sin(angle) * radius; // y 좌표 계산
                 button.style.left = `${x + 100}px`; // 계산된 x 좌표 적용
                 button.style.top = `${y + 100}px`; // 계산된 y 좌표 적용
             });
@@ -212,6 +234,9 @@
 
         // 중앙 버튼 클릭 시 버튼 표시/숨김 토글
         toggleButton.addEventListener('click', toggleButtons);
+
+        // 초기 버튼 위치 설정 실행
+        setInitialPositions();
     </script>
 </body>
 </html>
