@@ -100,7 +100,7 @@
                 button.style.top = `${y}px`;
                 button.style.opacity = '1';
                 button.style.transform = 'translate(-50%, -50%) scale(1)';
-            }, index * 100); // 하나씩 순차적으로 등장
+            }, index * 100);
         });
     }
 
@@ -109,24 +109,24 @@
         if (isOpen) {
             subButtons.forEach((button, index) => {
                 setTimeout(() => {
+                    button.style.left = '50%';
+                    button.style.top = '50%';
                     button.style.opacity = '1';
-                    button.style.transform = 'translate(-50%, -50%) scale(1)';
+                    button.style.transform = 'translate(-50%, -50%) scale(0)';
                 }, index * 100);
-            });
 
-            setTimeout(() => updateButtonPositions(), buttonCount * 100);
+                setTimeout(() => {
+                    updateButtonPositions();
+                }, buttonCount * 100);
+            });
         } else {
             subButtons.forEach((button, index) => {
                 setTimeout(() => {
-                    button.style.opacity = '0';
-                    button.style.transform = 'translate(-50%, -50%) scale(0)';
-                }, (buttonCount - index - 1) * 100);
-
-                setTimeout(() => {
                     button.style.left = '50%';
                     button.style.top = '50%';
+                    button.style.opacity = '0';
                     button.style.transform = 'translate(-50%, -50%) scale(0)';
-                }, 500 + (buttonCount - index - 1) * 100);
+                }, index * 100);
             });
         }
     });
