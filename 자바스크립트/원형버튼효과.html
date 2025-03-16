@@ -66,19 +66,28 @@
             opacity: 0;
             transition: opacity 0.3s, transform 0.3s ease-out;
         }
+
+        /* 초기 위치 설정 */
+        .circle-button:nth-child(1) { top: 20px; left: 20px; }
+        .circle-button:nth-child(2) { top: 40px; left: 40px; }
+        .circle-button:nth-child(3) { top: 60px; left: 60px; }
+        .circle-button:nth-child(4) { top: 80px; left: 80px; }
+        .circle-button:nth-child(5) { top: 100px; left: 100px; }
+        .circle-button:nth-child(6) { top: 120px; left: 120px; }
+        .circle-button:nth-child(7) { top: 140px; left: 140px; }
     </style>
 </head>
 <body>
     <div class="circle" id="circle">
         <button class="center-button" id="toggleButton" aria-expanded="false">+</button>
         <div class="button-container" id="buttonContainer">
-            <button class="circle-button" style="top: 0px; left: 20px;">홈</button>
-            <button class="circle-button" style="top: 40px; left: 40px;">이체</button>
-            <button class="circle-button" style="top: 60px; left: 60px;">펀드</button>
-            <button class="circle-button" style="top: 80px; left: 80px;">알람</button>
-            <button class="circle-button" style="top: 100px; left: 100px;">51</button>
-            <button class="circle-button" style="top: 120px; left: 120px;">6</button>
-            <button class="circle-button" style="top: 140px; left: 140px;">7</button>
+            <button class="circle-button">홈</button>
+            <button class="circle-button">이체</button>
+            <button class="circle-button">펀드</button>
+            <button class="circle-button">알람</button>
+            <button class="circle-button">5</button>
+            <button class="circle-button">6</button>
+            <button class="circle-button">7</button>
         </div>
     </div>
 
@@ -100,7 +109,6 @@
             buttons.forEach((button, i) => {
                 const angle = (i / buttonCount) * (2 * Math.PI); // 버튼들의 초기 각도를 설정
                 button.dataset.initialAngle = angle; // 초기 각도를 데이터 속성에 저장
-                updateButtonPosition(button, angle); // 버튼 위치 업데이트
             });
         }
 
@@ -118,10 +126,11 @@
                 container.style.display = "block"; // 버튼 컨테이너 표시
                 toggleButton.setAttribute('aria-expanded', 'true'); // 접근성을 위한 속성 업데이트
                 setTimeout(() => {
-                    buttons.forEach(button => {
+                    buttons.forEach((button, i) => {
                         const angle = parseFloat(button.dataset.initialAngle);
                         button.style.opacity = "1"; // 버튼 투명도 변경 (보이도록)
                         button.style.transform = `translate(-50%, -50%) scale(1)`; // 크기 원래대로
+                        updateButtonPosition(button, angle); // 버튼 위치 업데이트
                     });
                     isButtonsVisible = true; // 버튼이 보이는 상태로 설정
                 }, 10);
