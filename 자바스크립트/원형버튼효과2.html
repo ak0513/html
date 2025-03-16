@@ -52,7 +52,7 @@
             line-height: 40px;
             opacity: 0;
             transform: scale(0);
-            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
         }
     </style>
 </head>
@@ -60,7 +60,7 @@
 
 <div class="circle-container">
     <button class="main-button">+</button>
-    <button class="sub-button">11</button>
+    <button class="sub-button">1</button>
     <button class="sub-button">2</button>
     <button class="sub-button">3</button>
     <button class="sub-button">4</button>
@@ -95,7 +95,8 @@
         subButtons.forEach((button) => {
             if (isOpen) {
                 button.style.opacity = '1';
-                updateButtonPositions();
+                button.style.transform = 'scale(1)';
+                updateButtonPositions(); // 위치 즉시 반영
             } else {
                 button.style.opacity = '0';
                 button.style.transform = 'scale(0)';
@@ -104,7 +105,8 @@
     });
 
     function getAngle(x) {
-        const centerX = circleContainer.getBoundingClientRect().left + circleContainer.offsetWidth / 2;
+        const rect = circleContainer.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
         return Math.atan2(0, x - centerX) * (180 / Math.PI);
     }
 
