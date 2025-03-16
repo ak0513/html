@@ -21,9 +21,8 @@
             border-radius: 50%;
             background-color: lightgray;
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 100px;
+            left: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -82,6 +81,7 @@
             <button class="circle-button">7</button>
         </div>
     </div>
+    <button type="button">다음 포커스</button>
 
     <script>
         const circle = document.getElementById('circle'); // 원 전체 요소
@@ -90,18 +90,19 @@
         const buttons = document.querySelectorAll('.circle-button'); // 원 위의 버튼들
         const buttonCount = buttons.length; // 버튼 개수
         const radius = 100; // 버튼이 배치될 원의 반지름
+        let rotationAngle = 0; // 현재 회전 각도
         let isDragging = false; // 사용자가 드래그 중인지 여부
         let lastAngle = 0; // 마지막 터치(드래그) 각도
         let isButtonsVisible = false; // 버튼들이 현재 표시되고 있는지 여부
-        let rotationAngle = 0; // 현재 회전 각도
         let firstFocus = true; // 첫 포커스인지 여부 (포커스 이동 시 불필요한 회전 방지)
 
         // 초기 버튼들의 위치를 설정하는 함수
         function setInitialPositions() {
             buttons.forEach((button, i) => {
-                const angle = (i / buttonCount) * (2 * Math.PI); // 버튼들의 초기 각도를 설정
+                const angle = (i / buttonCount) * (2 * Math.PI) + Math.PI; // 버튼들의 초기 각도를 설정
                 button.dataset.initialAngle = angle; // 초기 각도를 데이터 속성에 저장
-                updateButtonPosition(button, angle); // 버튼 위치 업데이트
+                button.style.transform = `translate(-50%, -50%) scale(0.5)`; // 초기 위치는 중앙
+                button.style.opacity = "0"; // 초기 투명도 설정
             });
         }
 
@@ -109,7 +110,8 @@
         function updateButtonPosition(button, angle) {
             const x = Math.cos(angle) * radius; // x 좌표 계산
             const y = Math.sin(angle) * radius; // y 좌표 계산
-            button.style.transform = `translate(${x}px, ${y}px) scale(1)`; // 계산된 좌표 적용
+            button.style.left = `${x + 100}px`; // 계산된 x 좌표 적용
+            button.style.top = `${y + 100}px`; // 계산된 y 좌표 적용
         }
 
         // 중앙 버튼 클릭 시 버튼들을 토글하는 함수
@@ -118,10 +120,12 @@
                 container.style.display = "block"; // 버튼 컨테이너 표시
                 toggleButton.setAttribute('aria-expanded', 'true'); // 접근성을 위한 속성 업데이트
                 setTimeout(() => {
-                    buttons.forEach(button => {
-                        const angle = parseFloat(button.dataset.initialAngle);
-                        button.style.opacity = "1"; // 버튼 투명도 변경 (보이도록)
-                        button.style.transform = `translate(${Math.cos(angle) * radius}px, ${Math.sin(angle) * radius}px) scale(1)`; // 크기 원래대로
+                    buttons.forEach((button, i) => {
+                        setTimeout(() => {
+                            const angle = parseFloat(button.dataset.initialAngle);
+                            button.style.opacity = "1"; // 버튼 투명도 변경 (보이도록)
+                            button.style.transform = `translate(${Math.cos(angle) * radius}px, ${Math.sin(angle) * radius}px) scale(1)`; // 크기 원래대로
+                        }, i * 100); // 단계적으로 나오는 효과
                     });
                     isButtonsVisible = true; // 버튼이 보이는 상태로 설정
                 }, 10);
@@ -167,16 +171,15 @@
 
         // 버튼들을 왼쪽으로 회전시키는 함수
         function rotateLeft() {
-            const angleStep = (2 * Math.PI) / buttonCount; // 각도 조절
-            rotationAngle -= angleStep; // 회전 각도 업데이트
+            rotationAngle -= (2 * Math.PI) / buttonCount; // 일정 각도만큼 왼쪽으로 회전
             updateButtonPositions(); // 버튼 위치 업데이트
         }
 
         // 버튼들의 위치를 업데이트하는 함수
-        function updateButtonPositions(deltaAngle = 0) {
+        function updateButtonPositions() {
             buttons.forEach(button => {
                 const initialAngle = parseFloat(button.dataset.initialAngle); // 초기 각도 불러오기
-                const angle = initialAngle + rotationAngle + deltaAngle; // 현재 회전 각도 적용
+                const angle = initialAngle + rotationAngle; // 현재 회전 각도 적용
                 updateButtonPosition(button, angle); // 버튼 위치 업데이트
             });
         }
@@ -195,9 +198,9 @@
             const touch = event.touches ? event.touches[0] : event; // 터치 이벤트 처리
             const currentAngle = getTouchAngle(touch.clientX, touch.clientY); // 현재 터치 각도 계산
             const deltaAngle = currentAngle - lastAngle; // 각도 차이 계산
-            rotationAngle += deltaAngle; // 회전 각도 업데이트
-            updateButtonPositions(); // 버튼 위치 업데이트
+            rotationAngle += deltaAngle * 1.2; // 속도 조절 (1.2 배율 적용 가능)
             lastAngle = currentAngle; // 마지막 터치 각도 업데이트
+            updateButtonPositions(); // 버튼 위치 업데이트
         }
 
         // 드래그 종료 시 호출되는 함수
@@ -227,6 +230,7 @@
 
         // 초기 버튼 위치 설정 실행
         setInitialPositions();
+
     </script>
 </body>
 </html>
