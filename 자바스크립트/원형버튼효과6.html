@@ -54,7 +54,6 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
         }
     </style>
 </head>
@@ -85,7 +84,7 @@
     const radius = 120;
     const buttonCount = subButtons.length;
 
-    function updateButtonPositions() {
+    function updateButtonPositions(animate = false) {
         const containerRect = circleContainer.getBoundingClientRect();
         const centerX = containerRect.width / 2;
         const centerY = containerRect.height / 2;
@@ -95,12 +94,15 @@
             const x = centerX + radius * Math.cos(angle);
             const y = centerY + radius * Math.sin(angle);
 
-            setTimeout(() => {
-                button.style.left = `${x}px`;
-                button.style.top = `${y}px`;
-                button.style.opacity = '1';
-                button.style.transform = 'translate(-50%, -50%) scale(1)';
-            }, index * 100);
+            if (animate) {
+                button.style.transition = `left 0.5s ease-out, top 0.5s ease-out, transform 0.5s ease-out, opacity 0.5s ease-out`;
+            } else {
+                button.style.transition = ``;
+            }
+
+            button.style.left = `${x}px`;
+            button.style.top = `${y}px`;
+            button.style.transform = `translate(-50%, -50%) scale(1)`;
         });
     }
 
@@ -109,24 +111,24 @@
         if (isOpen) {
             subButtons.forEach((button, index) => {
                 setTimeout(() => {
-                    button.style.left = '50%';
-                    button.style.top = '50%';
                     button.style.opacity = '1';
-                    button.style.transform = 'translate(-50%, -50%) scale(0)';
-                }, index * 100);
+                    button.style.transform = 'translate(-50%, -50%) scale(1)';
+                }, index * 100); // 순차적 등장
 
-                setTimeout(() => {
-                    updateButtonPositions();
-                }, buttonCount * 100);
+                setTimeout(() => updateButtonPositions(true), 50);
             });
         } else {
             subButtons.forEach((button, index) => {
                 setTimeout(() => {
-                    button.style.left = '50%';
-                    button.style.top = '50%';
                     button.style.opacity = '0';
                     button.style.transform = 'translate(-50%, -50%) scale(0)';
                 }, index * 100);
+
+                setTimeout(() => {
+                    button.style.left = '50%';
+                    button.style.top = '50%';
+                    button.style.transition = '';
+                }, 500);
             });
         }
     });
@@ -157,10 +159,12 @@
         isDragging = false;
     }
 
+    // PC용 마우스 이벤트
     circleContainer.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
     document.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
     document.addEventListener('mouseup', stopDrag);
 
+    // 모바일용 터치 이벤트
     circleContainer.addEventListener('touchstart', (e) => startDrag(e.touches[0].clientX, e.touches[0].clientY));
     document.addEventListener('touchmove', (e) => moveDrag(e.touches[0].clientX, e.touches[0].clientY));
     document.addEventListener('touchend', stopDrag);
