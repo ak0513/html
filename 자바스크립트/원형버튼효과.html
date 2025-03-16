@@ -21,8 +21,9 @@
             border-radius: 50%;
             background-color: lightgray;
             position: absolute;
-            top: 100px;
-            left: 100px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -81,7 +82,6 @@
             <button class="circle-button">7</button>
         </div>
     </div>
-    <button type="button">다음 포커스</button>
 
     <script>
         const circle = document.getElementById('circle'); // 원 전체 요소
@@ -226,7 +226,6 @@
 
         // 초기 버튼 위치 설정 실행
         setInitialPositions();
-
     </script>
 </body>
 </html>
