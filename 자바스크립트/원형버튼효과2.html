@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>원형 버튼 애니메이션</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .circle-container {
+            position: relative;
+            width: 300px;
+            height: 300px; /* 원 크기 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .main-button {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .sub-button {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ff5733;
+            border: none;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            line-height: 40px;
+            opacity: 0;
+            transform: scale(0);
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+<div class="circle-container">
+    <button class="main-button">+</button>
+    <button class="sub-button">1</button>
+    <button class="sub-button">2</button>
+    <button class="sub-button">3</button>
+    <button class="sub-button">4</button>
+    <button class="sub-button">5</button>
+    <button class="sub-button">6</button>
+</div>
+
+<script>
+    const mainButton = document.querySelector('.main-button');
+    const subButtons = document.querySelectorAll('.sub-button');
+    const circleContainer = document.querySelector('.circle-container');
+    
+    let isOpen = false;
+    let rotationAngle = 0;
+    let startX = 0;
+    let isDragging = false;
+
+    const radius = 120; // 버튼이 배치될 원의 반지름
+    const buttonCount = subButtons.length;
+
+    mainButton.addEventListener('click', () => {
+        isOpen = !isOpen;
+        subButtons.forEach((button, index) => {
+            if (isOpen) {
+                const angle = (index / buttonCount) * 2 * Math.PI + rotationAngle;
+                const x = radius * Math.cos(angle);
+                const y = radius * Math.sin(angle);
+                button.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+                button.style.opacity = '1';
+            } else {
+                button.style.transform = 'scale(0)';
+                button.style.opacity = '0';
+            }
+        });
+    });
+
+    // 드래그 이벤트 추가
+    circleContainer.addEventListener('mousedown', (e) => {
+        if (!isOpen) return;
+        isDragging = true;
+        startX = e.clientX;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - startX;
+        rotationAngle += deltaX * 0.01; // 회전 속도 조정
+        updateButtonPositions();
+        startX = e.clientX;
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+
+    function updateButtonPositions() {
+        subButtons.forEach((button, index) => {
+            const angle = (index / buttonCount) * 2 * Math.PI + rotationAngle;
+            const x = radius * Math.cos(angle);
+            const y = radius * Math.sin(angle);
+            button.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+        });
+    }
+</script>
+
+</body>
+</html>
