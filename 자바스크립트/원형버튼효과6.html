@@ -121,8 +121,10 @@
                     const x = centerX + radius * Math.cos(angle);
                     const y = centerY + radius * Math.sin(angle);
 
-                    button.style.left = `${x}px`;
-                    button.style.top = `${y}px`;
+                    setTimeout(() => {
+                        button.style.left = `${x}px`;
+                        button.style.top = `${y}px`;
+                    }, 200);
                 }, index * 100);
             });
         } else {
