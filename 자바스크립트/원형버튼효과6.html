@@ -54,7 +54,7 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
         }
     </style>
 </head>
@@ -85,7 +85,7 @@
     const radius = 120;
     const buttonCount = subButtons.length;
 
-    function updateButtonPositions(animate = false) {
+    function updateButtonPositions() {
         const containerRect = circleContainer.getBoundingClientRect();
         const centerX = containerRect.width / 2;
         const centerY = containerRect.height / 2;
@@ -95,15 +95,12 @@
             const x = centerX + radius * Math.cos(angle);
             const y = centerY + radius * Math.sin(angle);
 
-            if (animate) {
-                button.style.transition = `left 0.5s ease-out, top 0.5s ease-out, transform 0.5s ease-out`;
-            } else {
-                button.style.transition = ``;
-            }
-
-            button.style.left = `${x}px`;
-            button.style.top = `${y}px`;
-            button.style.transform = `translate(-50%, -50%) scale(1)`;
+            setTimeout(() => {
+                button.style.left = `${x}px`;
+                button.style.top = `${y}px`;
+                button.style.opacity = '1';
+                button.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, index * 100); // 하나씩 순차적으로 등장
         });
     }
 
@@ -117,7 +114,7 @@
                 }, index * 100);
             });
 
-            setTimeout(() => updateButtonPositions(true), buttonCount * 100);
+            setTimeout(() => updateButtonPositions(), buttonCount * 100);
         } else {
             subButtons.forEach((button, index) => {
                 setTimeout(() => {
@@ -129,7 +126,6 @@
                     button.style.left = '50%';
                     button.style.top = '50%';
                     button.style.transform = 'translate(-50%, -50%) scale(0)';
-                    button.style.transition = '';
                 }, 500 + (buttonCount - index - 1) * 100);
             });
         }
