@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>원형 버튼 회전</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .circle-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none;
+        }
+        .main-button {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .sub-button {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ff5733;
+            border: none;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            line-height: 40px;
+            opacity: 0;
+            transform: scale(0) translate(-50%, -50%);
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+<div class="circle-container">
+    <button class="main-button">+</button>
+    <button class="sub-button">1</button>
+    <button class="sub-button">2</button>
+    <button class="sub-button">3</button>
+    <button class="sub-button">4</button>
+    <button class="sub-button">5</button>
+    <button class="sub-button">6</button>
+</div>
+
+<script>
+    const mainButton = document.querySelector('.main-button');
+    const subButtons = document.querySelectorAll('.sub-button');
+    const circleContainer = document.querySelector('.circle-container');
+
+    let isOpen = false;
+    let rotationAngle = 0;
+    let isDragging = false;
+    let startAngle = 0;
+    const radius = 120; // 원의 반지름
+    const buttonCount = subButtons.length;
+
+    function updateButtonPositions() {
+        const containerRect = circleContainer.getBoundingClientRect();
+        const centerX = containerRect.width / 2;
+        const centerY = containerRect.height / 2;
+
+        subButtons.forEach((button, index) => {
+            const angle = ((index / buttonCount) * 360 + rotationAngle) * (Math.PI / 180);
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+
+            button.style.left = `${x}px`;
+            button.style.top = `${y}px`;
+        });
+    }
+
+    function showButtonsSequentially() {
+        subButtons.forEach((button, index) => {
+            button.style.opacity = '0';
+            button.style.transform = 'scale(0) translate(-50%, -50%)';
+            setTimeout(() => {
+                button.style.opacity = '1';
+                button.style.transform = 'scale(1.2) translate(-50%, -50%)';
+                setTimeout(() => {
+                    button.style.transform = 'scale(1) translate(-50%, -50%)';
+                }, 150);
+            }, index * 100); // 0.1초씩 순차적으로 등장
+        });
+
+        setTimeout(updateButtonPositions, subButtons.length * 100);
+    }
+
+    function hideButtonsSequentially() {
+        subButtons.forEach((button, index) => {
+            setTimeout(() => {
+                button.style.opacity = '0';
+                button.style.transform = 'scale(0) translate(-50%, -50%)';
+            }, (buttonCount - index - 1) * 50); // 반대 순서로 사라짐
+        });
+    }
+
+    mainButton.addEventListener('click', () => {
+        isOpen = !isOpen;
+        if (isOpen) {
+            showButtonsSequentially();
+        } else {
+            hideButtonsSequentially();
+        }
+    });
+
+    function getTouchAngle(x, y) {
+        const rect = circleContainer.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        return Math.atan2(y - centerY, x - centerX) * (180 / Math.PI);
+    }
+
+    function startDrag(x, y) {
+        if (!isOpen) return;
+        isDragging = true;
+        startAngle = getTouchAngle(x, y);
+    }
+
+    function moveDrag(x, y) {
+        if (!isDragging) return;
+        const currentAngle = getTouchAngle(x, y);
+        const deltaAngle = currentAngle - startAngle;
+        rotationAngle += deltaAngle;
+        updateButtonPositions();
+        startAngle = currentAngle;
+    }
+
+    function stopDrag() {
+        isDragging = false;
+    }
+
+    // PC용 마우스 이벤트
+    circleContainer.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
+    document.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
+    document.addEventListener('mouseup', stopDrag);
+
+    // 모바일용 터치 이벤트
+    circleContainer.addEventListener('touchstart', (e) => startDrag(e.touches[0].clientX, e.touches[0].clientY));
+    document.addEventListener('touchmove', (e) => moveDrag(e.touches[0].clientX, e.touches[0].clientY));
+    document.addEventListener('touchend', stopDrag);
+</script>
+
+</body>
+</html>
