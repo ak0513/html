@@ -62,7 +62,7 @@
             font-size: 16px;
             cursor: pointer;
             position: absolute;
-            transform: translate(-50%, -50%) scale(1);
+            transform: translate(-50%, -50%) scale(0.5);
             opacity: 0;
             transition: opacity 0.3s, transform 0.3s ease-out;
         }
@@ -81,7 +81,6 @@
             <button class="circle-button">7</button>
         </div>
     </div>
-    <button type="button">다음 포커스</button>
 
     <script>
         const circle = document.getElementById('circle'); // 원 전체 요소
@@ -101,7 +100,7 @@
             buttons.forEach((button, i) => {
                 const angle = (i / buttonCount) * (2 * Math.PI); // 버튼들의 초기 각도를 설정
                 button.dataset.initialAngle = angle; // 초기 각도를 데이터 속성에 저장
-                button.style.transform = `translate(-50%, -50%)`; // 초기 위치는 중앙
+                button.style.transform = `translate(-50%, -50%) scale(0.5)`; // 초기 위치는 중앙
                 button.style.opacity = "0"; // 초기 투명도 설정
             });
         }
@@ -110,8 +109,8 @@
         function updateButtonPosition(button, angle) {
             const x = Math.cos(angle) * radius; // x 좌표 계산
             const y = Math.sin(angle) * radius; // y 좌표 계산
-            button.style.left = `${x + 100}px`; // 계산된 x 좌표 적용
-            button.style.top = `${y + 100}px`; // 계산된 y 좌표 적용
+            button.style.left = `${x + 50}%`; // 계산된 x 좌표 적용
+            button.style.top = `${y + 50}%`; // 계산된 y 좌표 적용
         }
 
         // 중앙 버튼 클릭 시 버튼들을 토글하는 함수
@@ -124,7 +123,7 @@
                         setTimeout(() => {
                             const angle = parseFloat(button.dataset.initialAngle);
                             button.style.opacity = "1"; // 버튼 투명도 변경 (보이도록)
-                            button.style.transform = `translate(${Math.cos(angle) * radius}px, ${Math.sin(angle) * radius}px)`; // 위치 설정
+                            button.style.transform = `translate(${Math.cos(angle) * radius}px, ${Math.sin(angle) * radius}px) scale(1)`; // 위치 설정
                         }, i * 100); // 단계적으로 나오는 효과
                     });
                     isButtonsVisible = true; // 버튼이 보이는 상태로 설정
@@ -138,7 +137,7 @@
         function hideButtons() {
             buttons.forEach(button => {
                 button.style.opacity = "0"; // 버튼을 투명하게 만듦
-                button.style.transform = `translate(-50%, -50%)`; // 초기 위치로 복귀
+                button.style.transform = `translate(-50%, -50%) scale(0.5)`; // 초기 위치로 복귀
             });
             setTimeout(() => {
                 container.style.display = "none"; // 버튼 컨테이너 숨김
