@@ -81,18 +81,24 @@
     const radius = 120; // 버튼이 배치될 원의 반지름
     const buttonCount = subButtons.length;
 
+    function updateButtonPositions() {
+        subButtons.forEach((button, index) => {
+            const angle = (index / buttonCount) * 2 * Math.PI + rotationAngle;
+            const x = radius * Math.cos(angle);
+            const y = radius * Math.sin(angle);
+            button.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+        });
+    }
+
     mainButton.addEventListener('click', () => {
         isOpen = !isOpen;
-        subButtons.forEach((button, index) => {
+        subButtons.forEach((button) => {
             if (isOpen) {
-                const angle = (index / buttonCount) * 2 * Math.PI + rotationAngle;
-                const x = radius * Math.cos(angle);
-                const y = radius * Math.sin(angle);
-                button.style.transform = `translate(${x}px, ${y}px) scale(1)`;
                 button.style.opacity = '1';
+                updateButtonPositions(); // 열릴 때 즉시 위치 업데이트
             } else {
-                button.style.transform = 'scale(0)';
                 button.style.opacity = '0';
+                button.style.transform = 'scale(0)';
             }
         });
     });
@@ -113,15 +119,6 @@
 
     function stopDrag() {
         isDragging = false;
-    }
-
-    function updateButtonPositions() {
-        subButtons.forEach((button, index) => {
-            const angle = (index / buttonCount) * 2 * Math.PI + rotationAngle;
-            const x = radius * Math.cos(angle);
-            const y = radius * Math.sin(angle);
-            button.style.transform = `translate(${x}px, ${y}px) scale(1)`;
-        });
     }
 
     // PC용 마우스 이벤트
