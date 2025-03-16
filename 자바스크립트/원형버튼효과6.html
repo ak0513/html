@@ -85,7 +85,7 @@
     const radius = 120; // 원의 반지름
     const buttonCount = subButtons.length;
 
-    function updateButtonPositions(animate = false) {
+    function updateButtonPositions() {
         const containerRect = circleContainer.getBoundingClientRect();
         const centerX = containerRect.width / 2;
         const centerY = containerRect.height / 2;
@@ -94,16 +94,8 @@
             const angle = ((index / buttonCount) * 360 + rotationAngle) * (Math.PI / 180);
             const x = centerX + radius * Math.cos(angle);
             const y = centerY + radius * Math.sin(angle);
-
-            if (animate) {
-                button.style.transition = `left 0.5s ease-out, top 0.5s ease-out, transform 0.5s ease-out`;
-            } else {
-                button.style.transition = ``;
-            }
-
             button.style.left = `${x}px`;
             button.style.top = `${y}px`;
-            button.style.transform = `translate(-50%, -50%) scale(1)`;
         });
     }
 
@@ -111,38 +103,39 @@
         isOpen = !isOpen;
 
         if (isOpen) {
-            // 모든 버튼을 중앙에서 시작
-            subButtons.forEach((button) => {
+            subButtons.forEach((button, index) => {
                 button.style.left = '50%';
                 button.style.top = '50%';
                 button.style.transform = 'translate(-50%, -50%) scale(0)';
-            });
+                button.style.opacity = '0';
 
-            // 버튼을 순차적으로 표시
-            subButtons.forEach((button, index) => {
                 setTimeout(() => {
                     button.style.opacity = '1';
                     button.style.transform = 'translate(-50%, -50%) scale(1)';
+
+                    // 개별적으로 원래 위치로 이동
+                    const containerRect = circleContainer.getBoundingClientRect();
+                    const centerX = containerRect.width / 2;
+                    const centerY = containerRect.height / 2;
+                    const angle = ((index / buttonCount) * 360 + rotationAngle) * (Math.PI / 180);
+                    const x = centerX + radius * Math.cos(angle);
+                    const y = centerY + radius * Math.sin(angle);
+
+                    button.style.left = `${x}px`;
+                    button.style.top = `${y}px`;
                 }, index * 100);
             });
-
-            // 모든 버튼이 나타난 후 정렬 실행
-            setTimeout(() => updateButtonPositions(true), buttonCount * 100);
         } else {
-            // 버튼이 순차적으로 사라지도록 설정
             subButtons.forEach((button, index) => {
                 setTimeout(() => {
                     button.style.opacity = '0';
                     button.style.transform = 'translate(-50%, -50%) scale(0)';
-                }, index * 100);
 
-                // 💡 사라진 후 중앙으로 초기화
-                setTimeout(() => {
-                    button.style.left = '50%';
-                    button.style.top = '50%';
-                    button.style.transform = 'translate(-50%, -50%) scale(0)';
-                    button.style.transition = '';
-                }, 500);
+                    setTimeout(() => {
+                        button.style.left = '50%';
+                        button.style.top = '50%';
+                    }, 500);
+                }, index * 100);
             });
         }
     });
