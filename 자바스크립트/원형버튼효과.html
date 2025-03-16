@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>원 버튼 애니메이션</title>
+    <title>Circle Menu</title>
     <style>
         body {
             display: flex;
@@ -11,229 +11,57 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            touch-action: none;
-            position: relative;
         }
 
         .circle {
+            position: relative;
             width: 200px;
             height: 200px;
             border-radius: 50%;
-            background-color: lightgray;
-            position: absolute;
-            top: 100px;
-            left: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            border: 2px solid #000;
         }
 
-        .center-button {
-            width: 60px;
-            height: 60px;
-            border: none;
-            border-radius: 50%;
-            background-color: crimson;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
+        #mainButton {
             position: absolute;
-            z-index: 20;
-        }
-
-        .button-container {
-            position: absolute;
-            z-index: 10;
             top: 50%;
             left: 50%;
-            width: 200px;
-            height: 200px;
             transform: translate(-50%, -50%);
-            display: none;
         }
 
-        .button-container button {
-            width: 60px;
-            height: 60px;
-            border: none;
-            border-radius: 50%;
-            background-color: steelblue;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
+        .subButton {
             position: absolute;
-            transform: translate(-50%, -50%) scale(0.5);
-            opacity: 0;
-            transition: opacity 0.3s, transform 0.3s ease-out;
-        }
-
-        /* 초기 위치 설정 */
-        .circle-button {
             top: 50%;
             left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
         }
     </style>
 </head>
 <body>
-    <div class="circle" id="circle">
-        <button class="center-button" id="toggleButton" aria-expanded="false">+</button>
-        <div class="button-container" id="buttonContainer">
-            <button class="circle-button">홈</button>
-            <button class="circle-button">이체</button>
-            <button class="circle-button">펀드</button>
-            <button class="circle-button">알람</button>
-            <button class="circle-button">5</button>
-            <button class="circle-button">6</button>
-            <button class="circle-button">7</button>
-        </div>
+    <div class="circle">
+        <button id="mainButton">Main</button>
+        <button class="subButton">1</button>
+        <button class="subButton">2</button>
+        <button class="subButton">3</button>
+        <button class="subButton">4</button>
+        <button class="subButton">5</button>
     </div>
-
     <script>
-        const circle = document.getElementById('circle'); // 원 전체 요소
-        const container = document.getElementById('buttonContainer'); // 버튼들이 담긴 컨테이너
-        const toggleButton = document.getElementById('toggleButton'); // 중앙 버튼 (토글 버튼)
-        const buttons = document.querySelectorAll('.circle-button'); // 원 위의 버튼들
-        const buttonCount = buttons.length; // 버튼 개수
-        const radius = 100; // 버튼이 배치될 원의 반지름
-        let rotationAngle = 0; // 현재 회전 각도
-        let isDragging = false; // 사용자가 드래그 중인지 여부
-        let lastAngle = 0; // 마지막 터치(드래그) 각도
-        let isButtonsVisible = false; // 버튼들이 현재 표시되고 있는지 여부
-        let firstFocus = true; // 첫 포커스인지 여부 (포커스 이동 시 불필요한 회전 방지)
+        document.getElementById('mainButton').addEventListener('click', function() {
+            const subButtons = document.querySelectorAll('.subButton');
+            const radius = 80; // 반지름
+            const angleStep = (2 * Math.PI) / subButtons.length;
 
-        // 초기 버튼들의 위치를 설정하는 함수
-        function setInitialPositions() {
-            buttons.forEach((button, i) => {
-                const angle = (i / buttonCount) * (2 * Math.PI); // 버튼들의 초기 각도를 설정
-                button.dataset.initialAngle = angle; // 초기 각도를 데이터 속성에 저장
-            });
-        }
+            subButtons.forEach((button, index) => {
+                const angle = index * angleStep;
+                const x = radius * Math.cos(angle);
+                const y = radius * Math.sin(angle);
 
-        // 특정 각도에 따른 버튼의 위치를 업데이트하는 함수
-        function updateButtonPosition(button, angle) {
-            const x = Math.cos(angle) * radius; // x 좌표 계산
-            const y = Math.sin(angle) * radius; // y 좌표 계산
-            button.style.left = `${x + 100}px`; // 계산된 x 좌표 적용
-            button.style.top = `${y + 100}px`; // 계산된 y 좌표 적용
-        }
-
-        // 중앙 버튼 클릭 시 버튼들을 토글하는 함수
-        function toggleButtons() {
-            if (!isButtonsVisible) { // 버튼이 숨겨져 있을 때
-                container.style.display = "block"; // 버튼 컨테이너 표시
-                toggleButton.setAttribute('aria-expanded', 'true'); // 접근성을 위한 속성 업데이트
-                setTimeout(() => {
-                    buttons.forEach((button, i) => {
-                        const angle = parseFloat(button.dataset.initialAngle);
-                        button.style.opacity = "1"; // 버튼 투명도 변경 (보이도록)
-                        button.style.transform = `translate(-50%, -50%) scale(1)`; // 크기 원래대로
-                        updateButtonPosition(button, angle); // 버튼 위치 업데이트
-                    });
-                    isButtonsVisible = true; // 버튼이 보이는 상태로 설정
-                }, 10);
-            } else { // 버튼이 보이는 상태라면 숨김 처리
-                hideButtons();
-            }
-        }
-
-        // 버튼들을 숨기는 함수
-        function hideButtons() {
-            buttons.forEach(button => {
-                button.style.opacity = "0"; // 버튼을 투명하게 만듦
-                button.style.transform = `translate(-50%, -50%) scale(0.5)`; // 크기 축소
-            });
-            setTimeout(() => {
-                container.style.display = "none"; // 버튼 컨테이너 숨김
-                isButtonsVisible = false; // 버튼이 숨겨진 상태로 설정
-                firstFocus = true; // 포커스 리셋
-                toggleButton.setAttribute('aria-expanded', 'false'); // 접근성을 위한 속성 업데이트
-                rotationAngle = 0; // 회전 각도 초기화
-                setInitialPositions(); // 버튼 위치 초기화
-            }, 300);
-        }
-
-        // 포커스 이동 시 왼쪽으로 회전하는 기능 추가
-        buttons.forEach(button => {
-            button.addEventListener('focus', () => {
-                if (firstFocus) { // 첫 포커스 이동 시에는 회전 방지
-                    firstFocus = false;
-                    return;
-                }
-                rotateLeft(); // 왼쪽으로 회전
-            });
-
-            button.addEventListener('blur', () => {
-                setTimeout(() => {
-                    if (!document.activeElement.classList.contains('circle-button')) { 
-                        hideButtons(); // 버튼이 포커스를 잃으면 자동으로 숨김
-                    }
-                }, 100);
+                button.style.transform = `translate(${x}px, ${y}px)`;
+                button.style.opacity = 1;
             });
         });
-
-        // 버튼들을 왼쪽으로 회전시키는 함수
-        function rotateLeft() {
-            const rotationAngle = -(2 * Math.PI) / buttonCount; // 일정 각도만큼 왼쪽으로 회전
-            updateButtonPositions(rotationAngle); // 버튼 위치 업데이트
-        }
-
-        // 버튼들의 위치를 업데이트하는 함수
-        function updateButtonPositions(deltaAngle = 0) {
-            buttons.forEach(button => {
-                const initialAngle = parseFloat(button.dataset.initialAngle); // 초기 각도 불러오기
-                const angle = initialAngle + deltaAngle; // 현재 회전 각도 적용
-                const x = Math.cos(angle) * radius; // x 좌표 계산
-                const y = Math.sin(angle) * radius; // y 좌표 계산
-                button.style.left = `${x + 100}px`; // 계산된 x 좌표 적용
-                button.style.top = `${y + 100}px`; // 계산된 y 좌표 적용
-            });
-        }
-
-        // 터치 혹은 마우스 드래그 시작 시 호출되는 함수
-        function startRotate(event) {
-            if (!isButtonsVisible) return; // 버튼이 보이지 않으면 회전 방지
-            isDragging = true; // 드래그 상태 활성화
-            const touch = event.touches ? event.touches[0] : event; // 터치 이벤트 처리
-            lastAngle = getTouchAngle(touch.clientX, touch.clientY); // 마지막 터치 각도 저장
-        }
-
-        // 드래그 중 회전하는 함수
-        function rotate(event) {
-            if (!isDragging || !isButtonsVisible) return; // 드래그 중이 아니거나 버튼이 숨겨져 있으면 실행 안 함
-            const touch = event.touches ? event.touches[0] : event; // 터치 이벤트 처리
-            const currentAngle = getTouchAngle(touch.clientX, touch.clientY); // 현재 터치 각도 계산
-            const deltaAngle = currentAngle - lastAngle; // 각도 차이 계산
-            updateButtonPositions(deltaAngle); // 버튼 위치 업데이트
-            lastAngle = currentAngle; // 마지막 터치 각도 업데이트
-        }
-
-        // 드래그 종료 시 호출되는 함수
-        function stopRotate() {
-            isDragging = false; // 드래그 상태 해제
-        }
-
-        // 터치 또는 마우스의 현재 위치에서 각도를 계산하는 함수
-        function getTouchAngle(x, y) {
-            const rect = circle.getBoundingClientRect(); // 원의 위치 정보 가져오기
-            const dx = x - (rect.left + rect.width / 2); // x 좌표 차이 계산
-            const dy = y - (rect.top + rect.height / 2); // y 좌표 차이 계산
-            return Math.atan2(dy, dx); // 아크탄젠트로 각도 계산
-        }
-
-        // 원 위에서 마우스 또는 터치 입력을 감지하여 회전 제어
-        circle.addEventListener('mousedown', startRotate);
-        circle.addEventListener('mousemove', rotate);
-        circle.addEventListener('mouseup', stopRotate);
-        circle.addEventListener('mouseleave', stopRotate);
-        circle.addEventListener('touchstart', startRotate);
-        circle.addEventListener('touchmove', rotate);
-        circle.addEventListener('touchend', stopRotate);
-
-        // 중앙 버튼 클릭 시 버튼 표시/숨김 토글
-        toggleButton.addEventListener('click', toggleButtons);
-
-        // 초기 버튼 위치 설정 실행
-        setInitialPositions();
     </script>
 </body>
 </html>
