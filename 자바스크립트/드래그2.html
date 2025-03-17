@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>웹 접근성 지원 - SortableJS + 화살표 이동</title>
+    <title>다중 리스트 - 기본 드래그 & 드롭</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .sortable-container {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            width: 250px;
+            background: #f8f8f8;
         }
         ul {
             list-style: none;
             padding: 0;
-            width: 250px;
-            margin: 50px auto;
-            border: 1px solid #ddd;
-            border-radius: 5px;
         }
         li {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 5px;
+            justify-content: center;
+            padding: 10px;
             border-bottom: 1px solid #ddd;
             transition: transform 0.2s ease-in-out;
         }
@@ -42,93 +49,52 @@
         }
         .sortable-ghost {
             opacity: 0.5;
-            transform: scale(1.05);
+            transform: scale(1.3);
         }
         .sortable-chosen {
-            background: #ffeb3b;
-        }
-        .move-buttons {
-            display: flex;
-            flex-direction: column;
-        }
-        .move-buttons button {
-            cursor: pointer;
-            width: 30px;
-            height: 25px;
-            font-size: 14px;
-            padding: 5px;
-            margin: 2px 0;
+            /*background: #ffeb3b;*/
         }
     </style>
 </head>
 <body>
 
-    <ul id="sortable-list">
-        <li>
-            <button>항목 1</button>
-            <div class="move-buttons">
-                <button onclick="moveUp(this)">▲</button>
-                <button onclick="moveDown(this)">▼</button>
-            </div>
-        </li>
-        <li>
-            <button>항목 2</button>
-            <div class="move-buttons">
-                <button onclick="moveUp(this)">▲</button>
-                <button onclick="moveDown(this)">▼</button>
-            </div>
-        </li>
-        <li>
-            <button>항목 3</button>
-            <div class="move-buttons">
-                <button onclick="moveUp(this)">▲</button>
-                <button onclick="moveDown(this)">▼</button>
-            </div>
-        </li>
-        <li>
-            <button>항목 4</button>
-            <div class="move-buttons">
-                <button onclick="moveUp(this)">▲</button>
-                <button onclick="moveDown(this)">▼</button>
-            </div>
-        </li>
-        <li>
-            <button>항목 5</button>
-            <div class="move-buttons">
-                <button onclick="moveUp(this)">▲</button>
-                <button onclick="moveDown(this)">▼</button>
-            </div>
-        </li>
-    </ul>
+    <!-- 첫 번째 리스트 -->
+    <div class="sortable-container">
+        <h3>리스트 1</h3>
+        <ul class="sortable-list">
+            <li><button>항목 A</button></li>
+            <li><button>항목 B</button></li>
+            <li><button>항목 C</button></li>
+        </ul>
+    </div>
+
+    <!-- 두 번째 리스트 -->
+    <div class="sortable-container">
+        <h3>리스트 2</h3>
+        <ul class="sortable-list">
+            <li><button>항목 1</button></li>
+            <li><button>항목 2</button></li>
+            <li><button>항목 3</button></li>
+        </ul>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            new Sortable(document.getElementById("sortable-list"), {
-                animation: 300,
-                ghostClass: "sortable-ghost",
-                chosenClass: "sortable-chosen",
-                handle: "button",
-                swapThreshold: 0.5,
-                fallbackOnBody: true,
-                forceFallback: true,
-                onEnd: function (evt) {
-                    console.log(`Moved item ${evt.oldIndex + 1} to ${evt.newIndex + 1}`);
-                }
+            document.querySelectorAll(".sortable-list").forEach(list => {
+                new Sortable(list, {
+                    animation: 300,
+                    ghostClass: "sortable-ghost",
+                    chosenClass: "sortable-chosen",
+                    handle: "button",
+                    fallbackOnBody: true,
+                    forceFallback: true,
+                    onEnd: function (evt) {
+                        console.log(`Moved item ${evt.oldIndex + 1} to ${evt.newIndex + 1}`);
+                    }
+                });
             });
         });
-
-        function moveUp(btn) {
-            let li = btn.closest("li");
-            let prev = li.previousElementSibling;
-            if (prev) li.parentNode.insertBefore(li, prev);
-        }
-
-        function moveDown(btn) {
-            let li = btn.closest("li");
-            let next = li.nextElementSibling;
-            if (next) li.parentNode.insertBefore(next, li);
-        }
     </script>
 
 </body>
