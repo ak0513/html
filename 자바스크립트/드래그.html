@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SortableJS 버튼 드래그</title>
+    <title>SortableJS 버튼 드래그 (다이나믹 효과)</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,6 +21,7 @@
             justify-content: center;
             padding: 5px;
             border-bottom: 1px solid #ddd;
+            transition: transform 0.2s ease-in-out; /* 부드러운 이동 */
         }
         li:last-child {
             border-bottom: none;
@@ -33,9 +34,18 @@
             cursor: grab;
             text-align: center;
             font-size: 16px;
+            transition: background 0.2s;
         }
         button:active {
             cursor: grabbing;
+            background: #e0e0e0;
+        }
+        .sortable-ghost {
+            opacity: 0.5;
+            transform: scale(1.05); /* 드래그 중 약간 확대 */
+        }
+        .sortable-chosen {
+            background: #ffeb3b; /* 드래그 중 강조 */
         }
     </style>
 </head>
@@ -53,9 +63,13 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             new Sortable(document.getElementById("sortable-list"), {
-                animation: 150,  
-                ghostClass: "sortable-ghost",
+                animation: 300,  // 애니메이션 지속 시간 (기본값: 150ms → 300ms)
+                ghostClass: "sortable-ghost",  // 드래그 중인 요소 스타일
+                chosenClass: "sortable-chosen", // 선택한 요소 스타일
                 handle: "button",  // 버튼을 드래그 핸들로 설정
+                swapThreshold: 0.5,  // 항목이 더 쉽게 교체되도록 설정
+                fallbackOnBody: true,  // 드래그 중 원래 위치 유지
+                forceFallback: true,  // 기본 HTML5 드래그 대신 SortableJS의 드래그 사용
                 onEnd: function (evt) {
                     console.log(`Moved item ${evt.oldIndex + 1} to ${evt.newIndex + 1}`);
                 }
