@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>다중 리스트 - SortableJS + 화살표 이동</title>
+    <title>다중 리스트 - 기본 드래그 & 드롭</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -26,8 +26,8 @@
         li {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 5px;
+            justify-content: center;
+            padding: 10px;
             border-bottom: 1px solid #ddd;
             transition: transform 0.2s ease-in-out;
         }
@@ -54,18 +54,6 @@
         .sortable-chosen {
             background: #ffeb3b;
         }
-        .move-buttons {
-            display: flex;
-            flex-direction: column;
-        }
-        .move-buttons button {
-            cursor: pointer;
-            width: 30px;
-            height: 25px;
-            font-size: 14px;
-            padding: 5px;
-            margin: 2px 0;
-        }
     </style>
 </head>
 <body>
@@ -74,27 +62,9 @@
     <div class="sortable-container">
         <h3>리스트 1</h3>
         <ul class="sortable-list">
-            <li>
-                <button>항목 A</button>
-                <div class="move-buttons">
-                    <button onclick="moveUp(this)">▲</button>
-                    <button onclick="moveDown(this)">▼</button>
-                </div>
-            </li>
-            <li>
-                <button>항목 B</button>
-                <div class="move-buttons">
-                    <button onclick="moveUp(this)">▲</button>
-                    <button onclick="moveDown(this)">▼</button>
-                </div>
-            </li>
-            <li>
-                <button>항목 C</button>
-                <div class="move-buttons">
-                    <button onclick="moveUp(this)">▲</button>
-                    <button onclick="moveDown(this)">▼</button>
-                </div>
-            </li>
+            <li><button>항목 A</button></li>
+            <li><button>항목 B</button></li>
+            <li><button>항목 C</button></li>
         </ul>
     </div>
 
@@ -102,27 +72,9 @@
     <div class="sortable-container">
         <h3>리스트 2</h3>
         <ul class="sortable-list">
-            <li>
-                <button>항목 1</button>
-                <div class="move-buttons">
-                    <button onclick="moveUp(this)">▲</button>
-                    <button onclick="moveDown(this)">▼</button>
-                </div>
-            </li>
-            <li>
-                <button>항목 2</button>
-                <div class="move-buttons">
-                    <button onclick="moveUp(this)">▲</button>
-                    <button onclick="moveDown(this)">▼</button>
-                </div>
-            </li>
-            <li>
-                <button>항목 3</button>
-                <div class="move-buttons">
-                    <button onclick="moveUp(this)">▲</button>
-                    <button onclick="moveDown(this)">▼</button>
-                </div>
-            </li>
+            <li><button>항목 1</button></li>
+            <li><button>항목 2</button></li>
+            <li><button>항목 3</button></li>
         </ul>
     </div>
 
@@ -135,7 +87,6 @@
                     ghostClass: "sortable-ghost",
                     chosenClass: "sortable-chosen",
                     handle: "button",
-                    swapThreshold: 0.5,
                     fallbackOnBody: true,
                     forceFallback: true,
                     onEnd: function (evt) {
@@ -144,18 +95,6 @@
                 });
             });
         });
-
-        function moveUp(btn) {
-            let li = btn.closest("li");
-            let prev = li.previousElementSibling;
-            if (prev) li.parentNode.insertBefore(li, prev);
-        }
-
-        function moveDown(btn) {
-            let li = btn.closest("li");
-            let next = li.nextElementSibling;
-            if (next) li.parentNode.insertBefore(next, li);
-        }
     </script>
 
 </body>
