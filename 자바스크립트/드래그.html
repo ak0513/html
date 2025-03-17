@@ -3,38 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SortableJS 버튼 드래그 (다이나믹 효과)</title>
+    <title>다중 리스트 - SortableJS + 화살표 이동</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .sortable-container {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            width: 250px;
+            background: #f8f8f8;
         }
         ul {
             list-style: none;
             padding: 0;
-            width: 220px;
-            margin: 50px auto;
-            border: 1px solid #ddd;
-            border-radius: 5px;
         }
         li {
             display: flex;
-            justify-content: center;
+            align-items: center;
+            justify-content: space-between;
             padding: 5px;
             border-bottom: 1px solid #ddd;
-            transition: transform 0.2s ease-in-out; /* 부드러운 이동 */
+            transition: transform 0.2s ease-in-out;
         }
         li:last-child {
             border-bottom: none;
         }
         button {
-            width: 100%;
             padding: 10px;
             background: #f9f9f9;
             border: none;
             cursor: grab;
-            text-align: center;
             font-size: 16px;
-            transition: background 0.2s;
+            flex-grow: 1;
+            text-align: center;
         }
         button:active {
             cursor: grabbing;
@@ -42,39 +49,113 @@
         }
         .sortable-ghost {
             opacity: 0.5;
-            transform: scale(1.05); /* 드래그 중 약간 확대 */
+            transform: scale(1.05);
         }
         .sortable-chosen {
-            background: #ffeb3b; /* 드래그 중 강조 */
+            background: #ffeb3b;
+        }
+        .move-buttons {
+            display: flex;
+            flex-direction: column;
+        }
+        .move-buttons button {
+            cursor: pointer;
+            width: 30px;
+            height: 25px;
+            font-size: 14px;
+            padding: 5px;
+            margin: 2px 0;
         }
     </style>
 </head>
 <body>
 
-    <ul id="sortable-list">
-        <li><button>항목 1</button></li>
-        <li><button>항목 2</button></li>
-        <li><button>항목 3</button></li>
-        <li><button>항목 4</button></li>
-        <li><button>항목 5</button></li>
-    </ul>
+    <!-- 첫 번째 리스트 -->
+    <div class="sortable-container">
+        <h3>리스트 1</h3>
+        <ul class="sortable-list">
+            <li>
+                <button>항목 A</button>
+                <div class="move-buttons">
+                    <button onclick="moveUp(this)">▲</button>
+                    <button onclick="moveDown(this)">▼</button>
+                </div>
+            </li>
+            <li>
+                <button>항목 B</button>
+                <div class="move-buttons">
+                    <button onclick="moveUp(this)">▲</button>
+                    <button onclick="moveDown(this)">▼</button>
+                </div>
+            </li>
+            <li>
+                <button>항목 C</button>
+                <div class="move-buttons">
+                    <button onclick="moveUp(this)">▲</button>
+                    <button onclick="moveDown(this)">▼</button>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 두 번째 리스트 -->
+    <div class="sortable-container">
+        <h3>리스트 2</h3>
+        <ul class="sortable-list">
+            <li>
+                <button>항목 1</button>
+                <div class="move-buttons">
+                    <button onclick="moveUp(this)">▲</button>
+                    <button onclick="moveDown(this)">▼</button>
+                </div>
+            </li>
+            <li>
+                <button>항목 2</button>
+                <div class="move-buttons">
+                    <button onclick="moveUp(this)">▲</button>
+                    <button onclick="moveDown(this)">▼</button>
+                </div>
+            </li>
+            <li>
+                <button>항목 3</button>
+                <div class="move-buttons">
+                    <button onclick="moveUp(this)">▲</button>
+                    <button onclick="moveDown(this)">▼</button>
+                </div>
+            </li>
+        </ul>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            new Sortable(document.getElementById("sortable-list"), {
-                animation: 300,  // 애니메이션 지속 시간 (기본값: 150ms → 300ms)
-                ghostClass: "sortable-ghost",  // 드래그 중인 요소 스타일
-                chosenClass: "sortable-chosen", // 선택한 요소 스타일
-                handle: "button",  // 버튼을 드래그 핸들로 설정
-                swapThreshold: 0.5,  // 항목이 더 쉽게 교체되도록 설정
-                fallbackOnBody: true,  // 드래그 중 원래 위치 유지
-                forceFallback: true,  // 기본 HTML5 드래그 대신 SortableJS의 드래그 사용
-                onEnd: function (evt) {
-                    console.log(`Moved item ${evt.oldIndex + 1} to ${evt.newIndex + 1}`);
-                }
+            document.querySelectorAll(".sortable-list").forEach(list => {
+                new Sortable(list, {
+                    animation: 300,
+                    ghostClass: "sortable-ghost",
+                    chosenClass: "sortable-chosen",
+                    handle: "button",
+                    swapThreshold: 0.5,
+                    fallbackOnBody: true,
+                    forceFallback: true,
+                    onEnd: function (evt) {
+                        console.log(`Moved item ${evt.oldIndex + 1} to ${evt.newIndex + 1}`);
+                    }
+                });
             });
         });
+
+        function moveUp(btn) {
+            let li = btn.closest("li");
+            let prev = li.previousElementSibling;
+            if (prev) li.parentNode.insertBefore(li, prev);
+        }
+
+        function moveDown(btn) {
+            let li = btn.closest("li");
+            let next = li.nextElementSibling;
+            if (next) li.parentNode.insertBefore(next, li);
+        }
     </script>
 
 </body>
