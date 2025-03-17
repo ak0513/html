@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SortableJS 기본 예제</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            width: 200px;
+            margin: 50px auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        li {
+            padding: 10px;
+            background: #f9f9f9;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+            cursor: grab;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        li:active {
+            cursor: grabbing;
+        }
+    </style>
+</head>
+<body>
+
+    <ul id="sortable-list">
+        <li>항목 1</li>
+        <li>항목 2</li>
+        <li>항목 3</li>
+        <li>항목 4</li>
+        <li>항목 5</li>
+    </ul>
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            new Sortable(document.getElementById("sortable-list"), {
+                animation: 150,  // 드래그 애니메이션 속도
+                ghostClass: "sortable-ghost",  // 드래그 중인 항목에 적용할 클래스
+                onEnd: function (evt) {
+                    console.log(`Moved item ${evt.oldIndex + 1} to ${evt.newIndex + 1}`);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
