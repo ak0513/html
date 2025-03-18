@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi Range Sliders</title>
+    <title>Accessible Range Sliders</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,86 +31,93 @@
             padding: 5px;
         }
 
-        /* 슬라이더 기본 스타일 */
+        /* 기본 range 숨기기 */
         input[type="range"] {
-            -webkit-appearance: none;
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* 커스텀 슬라이더 스타일 */
+        .custom-slider {
             width: 200px;
             height: 8px;
             background: linear-gradient(to right, #ff8c00, #ff4500);
             border-radius: 5px;
-            outline: none;
-            transition: 0.3s;
+            position: relative;
         }
 
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
+        .custom-thumb {
             width: 18px;
             height: 18px;
             background: white;
             border: 2px solid #ff4500;
             border-radius: 50%;
-            cursor: pointer;
+            position: absolute;
+            top: -5px;
+            transform: translateX(-50%);
         }
     </style>
 </head>
 <body>
 
     <div class="slider-container">
-        <label for="slider1" id="label1">슬라이더 1</label>
-        <input type="range" id="slider1" class="rangeInput" min="0" max="100" value="50" step="1" 
-               data-index="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" 
-               aria-valuetext="50" aria-labelledby="label1">
-        <input type="text" id="text1" class="textInput" value="50" data-index="0" aria-labelledby="label1">
-    </div>
-
-    <div class="slider-container">
-        <label for="slider2" id="label2">슬라이더 2</label>
-        <input type="range" id="slider2" class="rangeInput" min="0" max="200" value="100" step="1" 
-               data-index="1" role="slider" aria-valuemin="0" aria-valuemax="200" aria-valuenow="100" 
-               aria-valuetext="100" aria-labelledby="label2">
-        <input type="text" id="text2" class="textInput" value="100" data-index="1" aria-labelledby="label2">
-    </div>
-
-    <div class="slider-container">
-        <label for="slider3" id="label3">슬라이더 3</label>
-        <input type="range" id="slider3" class="rangeInput" min="0" max="50" value="25" step="1" 
-               data-index="2" role="slider" aria-valuemin="0" aria-valuemax="50" aria-valuenow="25" 
-               aria-valuetext="25" aria-labelledby="label3">
-        <input type="text" id="text3" class="textInput" value="25" data-index="2" aria-labelledby="label3">
+        <label id="label1">슬라이더 1</label>
+        <input type="range" class="rangeInput" min="0" max="100" value="50" step="1" aria-hidden="true">
+        <div class="custom-slider" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" 
+             aria-valuenow="50" aria-valuetext="50" aria-labelledby="label1">
+            <div class="custom-thumb"></div>
+        </div>
+        <input type="text" class="textInput" value="50" aria-labelledby="label1">
     </div>
 
     <script>
-        function updateValue(source, index) {
-            const rangeInputs = document.querySelectorAll(".rangeInput");
-            const textInputs = document.querySelectorAll(".textInput");
+        function updateValue(source, container) {
+            const rangeInput = container.querySelector(".rangeInput");
+            const textInput = container.querySelector(".textInput");
+            const slider = container.querySelector(".custom-slider");
+            const thumb = container.querySelector(".custom-thumb");
 
             if (source === "range") {
-                const value = rangeInputs[index].value;
-                textInputs[index].value = value;
-                rangeInputs[index].setAttribute("aria-valuenow", value);
-                rangeInputs[index].setAttribute("aria-valuetext", value); // 스크린 리더에 정확한 숫자 전달
+                let value = rangeInput.value;
+                textInput.value = value;
+                slider.setAttribute("aria-valuenow", value);
+                slider.setAttribute("aria-valuetext", value);
+                thumb.style.left = `${(value - rangeInput.min) / (rangeInput.max - rangeInput.min) * 100}%`;
             } else if (source === "text") {
-                let value = Number(textInputs[index].value);
-                const min = Number(rangeInputs[index].min);
-                const max = Number(rangeInputs[index].max);
+                let value = Number(textInput.value);
+                const min = Number(rangeInput.min);
+                const max = Number(rangeInput.max);
 
-                // 최소/최대 범위 체크
                 if (value < min) value = min;
                 if (value > max) value = max;
 
-                rangeInputs[index].value = value;
-                textInputs[index].value = value;
-                rangeInputs[index].setAttribute("aria-valuenow", value);
-                rangeInputs[index].setAttribute("aria-valuetext", value); // 스크린 리더에 정확한 숫자 전달
+                rangeInput.value = value;
+                textInput.value = value;
+                slider.setAttribute("aria-valuenow", value);
+                slider.setAttribute("aria-valuetext", value);
+                thumb.style.left = `${(value - min) / (max - min) * 100}%`;
             }
         }
 
-        document.querySelectorAll(".rangeInput").forEach((range, index) => {
-            range.addEventListener("input", () => updateValue("range", index));
-        });
+        document.querySelectorAll(".slider-container").forEach(container => {
+            const rangeInput = container.querySelector(".rangeInput");
+            const textInput = container.querySelector(".textInput");
+            const slider = container.querySelector(".custom-slider");
 
-        document.querySelectorAll(".textInput").forEach((text, index) => {
-            text.addEventListener("input", () => updateValue("text", index));
+            rangeInput.addEventListener("input", () => updateValue("range", container));
+            textInput.addEventListener("input", () => updateValue("text", container));
+
+            // 키보드 접근성 추가
+            slider.addEventListener("keydown", (event) => {
+                let value = Number(rangeInput.value);
+                if (event.key === "ArrowRight" || event.key === "ArrowUp") value++;
+                if (event.key === "ArrowLeft" || event.key === "ArrowDown") value--;
+                updateValue("text", container);
+            });
         });
     </script>
 
