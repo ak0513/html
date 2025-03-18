@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Range & Text Sync</title>
+    <title>Custom Range Slider</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,9 +12,67 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            background-color: #f4f4f4;
         }
+
         input {
             margin: 10px;
+            font-size: 16px;
+            text-align: center;
+            width: 60px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        /* 슬라이더 기본 스타일 */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 300px;
+            height: 8px;
+            background: linear-gradient(to right, #ff8c00, #ff4500);
+            border-radius: 5px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        /* 슬라이더 바 스타일 (크롬, 사파리) */
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #ff8c00, #ff4500);
+        }
+
+        /* 슬라이더 핸들 스타일 (크롬, 사파리) */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 2px solid #ff4500;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #ff4500;
+        }
+
+        /* 슬라이더 바 & 핸들 (파이어폭스) */
+        input[type="range"]::-moz-range-track {
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #ff8c00, #ff4500);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 2px solid #ff4500;
+            border-radius: 50%;
+            cursor: pointer;
         }
     </style>
 </head>
