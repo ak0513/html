@@ -59,7 +59,7 @@
         <label for="slider1" id="label1">슬라이더 1</label>
         <input type="range" id="slider1" class="rangeInput" min="0" max="100" value="50" step="1" 
                data-index="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" 
-               aria-labelledby="label1">
+               aria-valuetext="50" aria-labelledby="label1">
         <input type="text" id="text1" class="textInput" value="50" data-index="0" aria-labelledby="label1">
     </div>
 
@@ -67,7 +67,7 @@
         <label for="slider2" id="label2">슬라이더 2</label>
         <input type="range" id="slider2" class="rangeInput" min="0" max="200" value="100" step="1" 
                data-index="1" role="slider" aria-valuemin="0" aria-valuemax="200" aria-valuenow="100" 
-               aria-labelledby="label2">
+               aria-valuetext="100" aria-labelledby="label2">
         <input type="text" id="text2" class="textInput" value="100" data-index="1" aria-labelledby="label2">
     </div>
 
@@ -75,7 +75,7 @@
         <label for="slider3" id="label3">슬라이더 3</label>
         <input type="range" id="slider3" class="rangeInput" min="0" max="50" value="25" step="1" 
                data-index="2" role="slider" aria-valuemin="0" aria-valuemax="50" aria-valuenow="25" 
-               aria-labelledby="label3">
+               aria-valuetext="25" aria-labelledby="label3">
         <input type="text" id="text3" class="textInput" value="25" data-index="2" aria-labelledby="label3">
     </div>
 
@@ -85,8 +85,10 @@
             const textInputs = document.querySelectorAll(".textInput");
 
             if (source === "range") {
-                textInputs[index].value = rangeInputs[index].value;
-                rangeInputs[index].setAttribute("aria-valuenow", rangeInputs[index].value);
+                const value = rangeInputs[index].value;
+                textInputs[index].value = value;
+                rangeInputs[index].setAttribute("aria-valuenow", value);
+                rangeInputs[index].setAttribute("aria-valuetext", value); // 스크린 리더에 정확한 숫자 전달
             } else if (source === "text") {
                 let value = Number(textInputs[index].value);
                 const min = Number(rangeInputs[index].min);
@@ -99,6 +101,7 @@
                 rangeInputs[index].value = value;
                 textInputs[index].value = value;
                 rangeInputs[index].setAttribute("aria-valuenow", value);
+                rangeInputs[index].setAttribute("aria-valuetext", value); // 스크린 리더에 정확한 숫자 전달
             }
         }
 
