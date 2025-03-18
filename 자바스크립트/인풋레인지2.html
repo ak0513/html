@@ -56,13 +56,15 @@
 <body>
 
     <div class="slider-container">
-        <input type="range" class="rangeInput" min="0" max="100" value="50" step="1" data-index="0">
-        <input type="text" class="textInput" value="100" data-index="0">
+        <input type="range" class="rangeInput" min="0" max="100" value="50" step="1" 
+               role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <input type="text" class="textInput" value="100">
     </div>
 
     <div class="slider-container">
-        <input type="range" class="rangeInput" min="0" max="200" value="100" step="1" data-index="1">
-        <input type="text" class="textInput" value="200" data-index="1">
+        <input type="range" class="rangeInput" min="0" max="200" value="100" step="1" 
+               role="slider" aria-valuemin="0" aria-valuemax="200" aria-valuenow="100">
+        <input type="text" class="textInput" value="200">
     </div>
 
     <script>
@@ -72,17 +74,21 @@
 
             if (source === "range") {
                 textInputs[index].value = rangeInputs[index].value;
+                rangeInputs[index].setAttribute("aria-valuenow", rangeInputs[index].value);
             } else if (source === "text") {
                 let maxValue = Number(textInputs[index].value);
 
                 if (maxValue < 1) maxValue = 1; // 최소값 제한
 
                 rangeInputs[index].max = maxValue; // range max 업데이트
+                rangeInputs[index].setAttribute("aria-valuemax", maxValue);
 
                 // 현재 range 값이 max보다 크면 max 값으로 조정
                 if (Number(rangeInputs[index].value) > maxValue) {
                     rangeInputs[index].value = maxValue;
                 }
+
+                rangeInputs[index].setAttribute("aria-valuenow", rangeInputs[index].value);
             }
         }
 
