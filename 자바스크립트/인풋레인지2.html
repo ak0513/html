@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Range Max</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px;
+        }
+
+        input[type="text"] {
+            width: 60px;
+            text-align: center;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        /* 슬라이더 기본 스타일 */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 200px;
+            height: 8px;
+            background: linear-gradient(to right, #4caf50, #2196f3);
+            border-radius: 5px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border: 2px solid #2196f3;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slider-container">
+        <input type="range" class="rangeInput" min="0" max="100" value="50" step="1" data-index="0">
+        <input type="text" class="textInput" value="100" data-index="0">
+    </div>
+
+    <div class="slider-container">
+        <input type="range" class="rangeInput" min="0" max="200" value="100" step="1" data-index="1">
+        <input type="text" class="textInput" value="200" data-index="1">
+    </div>
+
+    <script>
+        function updateValue(source, index) {
+            const rangeInputs = document.querySelectorAll(".rangeInput");
+            const textInputs = document.querySelectorAll(".textInput");
+
+            if (source === "range") {
+                textInputs[index].value = rangeInputs[index].value;
+            } else if (source === "text") {
+                let maxValue = Number(textInputs[index].value);
+
+                if (maxValue < 1) maxValue = 1; // 최소값 제한
+
+                rangeInputs[index].max = maxValue; // range max 업데이트
+
+                // 현재 range 값이 max보다 크면 max 값으로 조정
+                if (Number(rangeInputs[index].value) > maxValue) {
+                    rangeInputs[index].value = maxValue;
+                }
+            }
+        }
+
+        document.querySelectorAll(".rangeInput").forEach((range, index) => {
+            range.addEventListener("input", () => updateValue("range", index));
+        });
+
+        document.querySelectorAll(".textInput").forEach((text, index) => {
+            text.addEventListener("input", () => updateValue("text", index));
+        });
+    </script>
+
+</body>
+</html>
