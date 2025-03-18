@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Range Slider</title>
+    <title>Multi Range Sliders</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,11 +15,17 @@
             background-color: #f4f4f4;
         }
 
-        input {
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             margin: 10px;
-            font-size: 16px;
+        }
+
+        input[type="text"] {
+            width: 50px;
             text-align: center;
-            width: 60px;
+            font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 5px;
             padding: 5px;
@@ -28,7 +34,7 @@
         /* 슬라이더 기본 스타일 */
         input[type="range"] {
             -webkit-appearance: none;
-            width: 300px;
+            width: 200px;
             height: 8px;
             background: linear-gradient(to right, #ff8c00, #ff4500);
             border-radius: 5px;
@@ -36,39 +42,10 @@
             transition: 0.3s;
         }
 
-        /* 슬라이더 바 스타일 (크롬, 사파리) */
-        input[type="range"]::-webkit-slider-runnable-track {
-            height: 8px;
-            border-radius: 5px;
-            background: linear-gradient(to right, #ff8c00, #ff4500);
-        }
-
-        /* 슬라이더 핸들 스타일 (크롬, 사파리) */
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border: 2px solid #ff4500;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        input[type="range"]::-webkit-slider-thumb:hover {
-            background: #ff4500;
-        }
-
-        /* 슬라이더 바 & 핸들 (파이어폭스) */
-        input[type="range"]::-moz-range-track {
-            height: 8px;
-            border-radius: 5px;
-            background: linear-gradient(to right, #ff8c00, #ff4500);
-        }
-
-        input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             background: white;
             border: 2px solid #ff4500;
             border-radius: 50%;
@@ -78,28 +55,48 @@
 </head>
 <body>
 
-    <input type="range" id="rangeInput" min="0" max="100" value="50" step="1">
-    <input type="text" id="textInput" value="50">
+    <div class="slider-container">
+        <input type="range" class="rangeInput" min="0" max="100" value="50" step="1" data-index="0">
+        <input type="text" class="textInput" value="50" data-index="0">
+    </div>
+
+    <div class="slider-container">
+        <input type="range" class="rangeInput" min="0" max="200" value="100" step="1" data-index="1">
+        <input type="text" class="textInput" value="100" data-index="1">
+    </div>
+
+    <div class="slider-container">
+        <input type="range" class="rangeInput" min="0" max="50" value="25" step="1" data-index="2">
+        <input type="text" class="textInput" value="25" data-index="2">
+    </div>
 
     <script>
-        const rangeInput = document.getElementById("rangeInput");
-        const textInput = document.getElementById("textInput");
+        function updateValue(source, index) {
+            const rangeInputs = document.querySelectorAll(".rangeInput");
+            const textInputs = document.querySelectorAll(".textInput");
 
-        // range 값이 변경될 때 text input도 업데이트
-        rangeInput.addEventListener("input", () => {
-            textInput.value = rangeInput.value;
+            if (source === "range") {
+                textInputs[index].value = rangeInputs[index].value;
+            } else if (source === "text") {
+                let value = Number(textInputs[index].value);
+                const min = Number(rangeInputs[index].min);
+                const max = Number(rangeInputs[index].max);
+
+                // 최소/최대 범위 체크
+                if (value < min) value = min;
+                if (value > max) value = max;
+
+                rangeInputs[index].value = value;
+                textInputs[index].value = value;
+            }
+        }
+
+        document.querySelectorAll(".rangeInput").forEach((range, index) => {
+            range.addEventListener("input", () => updateValue("range", index));
         });
 
-        // text 값이 변경될 때 range input도 업데이트
-        textInput.addEventListener("input", () => {
-            let value = Number(textInput.value);
-
-            // 최소/최대 범위 체크
-            if (value < rangeInput.min) value = rangeInput.min;
-            if (value > rangeInput.max) value = rangeInput.max;
-
-            rangeInput.value = value;
-            textInput.value = value; // 입력값도 수정된 값으로 업데이트
+        document.querySelectorAll(".textInput").forEach((text, index) => {
+            text.addEventListener("input", () => updateValue("text", index));
         });
     </script>
 
