@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Range Max</title>
+    <title>Range with Dynamic Max</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,12 +31,11 @@
             padding: 5px;
         }
 
-        /* 슬라이더 기본 스타일 */
         input[type="range"] {
             -webkit-appearance: none;
             width: 200px;
             height: 8px;
-            background: linear-gradient(to right, #4caf50, #2196f3);
+            background: linear-gradient(to right, #ff8c00, #ff4500);
             border-radius: 5px;
             outline: none;
             transition: 0.3s;
@@ -47,7 +46,7 @@
             width: 18px;
             height: 18px;
             background: white;
-            border: 2px solid #2196f3;
+            border: 2px solid #ff4500;
             border-radius: 50%;
             cursor: pointer;
         }
@@ -56,48 +55,54 @@
 <body>
 
     <div class="slider-container">
+        <label id="label1">슬라이더 1</label>
         <input type="range" class="rangeInput" min="0" max="100" value="50" step="1" 
-               role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
-        <input type="text" class="textInput" value="100">
+               aria-labelledby="label1" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50 값">
+        <input type="text" class="textMaxInput" value="100" aria-labelledby="label1">
     </div>
 
     <div class="slider-container">
-        <input type="range" class="rangeInput" min="0" max="200" value="100" step="1" 
-               role="slider" aria-valuemin="0" aria-valuemax="200" aria-valuenow="100">
-        <input type="text" class="textInput" value="200">
+        <label id="label2">슬라이더 2</label>
+        <input type="range" class="rangeInput" min="0" max="200" value="100" step="1"
+               aria-labelledby="label2" aria-valuemin="0" aria-valuemax="200" aria-valuenow="100" aria-valuetext="100 값">
+        <input type="text" class="textMaxInput" value="200" aria-labelledby="label2">
     </div>
 
     <script>
-        function updateValue(source, index) {
-            const rangeInputs = document.querySelectorAll(".rangeInput");
-            const textInputs = document.querySelectorAll(".textInput");
+        function updateRangeMax(container) {
+            const rangeInput = container.querySelector(".rangeInput");
+            const textMaxInput = container.querySelector(".textMaxInput");
 
-            if (source === "range") {
-                textInputs[index].value = rangeInputs[index].value;
-                rangeInputs[index].setAttribute("aria-valuenow", rangeInputs[index].value);
-            } else if (source === "text") {
-                let maxValue = Number(textInputs[index].value);
+            let maxValue = Number(textMaxInput.value);
+            if (isNaN(maxValue) || maxValue <= 0) return;
 
-                if (maxValue < 1) maxValue = 1; // 최소값 제한
+            rangeInput.max = maxValue;
+            rangeInput.setAttribute("aria-valuemax", maxValue);
 
-                rangeInputs[index].max = maxValue; // range max 업데이트
-                rangeInputs[index].setAttribute("aria-valuemax", maxValue);
-
-                // 현재 range 값이 max보다 크면 max 값으로 조정
-                if (Number(rangeInputs[index].value) > maxValue) {
-                    rangeInputs[index].value = maxValue;
-                }
-
-                rangeInputs[index].setAttribute("aria-valuenow", rangeInputs[index].value);
+            // 현재 값이 최대값을 초과하면 조정
+            if (Number(rangeInput.value) > maxValue) {
+                rangeInput.value = maxValue;
+                rangeInput.setAttribute("aria-valuenow", maxValue);
+                rangeInput.setAttribute("aria-valuetext", `${maxValue} 값`);
             }
         }
 
-        document.querySelectorAll(".rangeInput").forEach((range, index) => {
-            range.addEventListener("input", () => updateValue("range", index));
-        });
+        function updateRangeValue(container) {
+            const rangeInput = container.querySelector(".rangeInput");
 
-        document.querySelectorAll(".textInput").forEach((text, index) => {
-            text.addEventListener("input", () => updateValue("text", index));
+            rangeInput.setAttribute("aria-valuenow", rangeInput.value);
+            rangeInput.setAttribute("aria-valuetext", `${rangeInput.value} 값`);
+        }
+
+        document.querySelectorAll(".slider-container").forEach(container => {
+            const rangeInput = container.querySelector(".rangeInput");
+            const textMaxInput = container.querySelector(".textMaxInput");
+
+            // 최대값 변경 시 range에 반영
+            textMaxInput.addEventListener("input", () => updateRangeMax(container));
+
+            // range 값 변경 시 접근성 업데이트
+            rangeInput.addEventListener("input", () => updateRangeValue(container));
         });
     </script>
 
