@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Range Max</title>
+    <title>Multi Range Sliders</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,7 +23,7 @@
         }
 
         input[type="text"] {
-            width: 60px;
+            width: 50px;
             text-align: center;
             font-size: 16px;
             border: 1px solid #ccc;
@@ -36,7 +36,7 @@
             -webkit-appearance: none;
             width: 200px;
             height: 8px;
-            background: linear-gradient(to right, #4caf50, #2196f3);
+            background: linear-gradient(to right, #ff8c00, #ff4500);
             border-radius: 5px;
             outline: none;
             transition: 0.3s;
@@ -47,7 +47,7 @@
             width: 18px;
             height: 18px;
             background: white;
-            border: 2px solid #2196f3;
+            border: 2px solid #ff4500;
             border-radius: 50%;
             cursor: pointer;
         }
@@ -56,13 +56,18 @@
 <body>
 
     <div class="slider-container">
-        <input type="range" class="rangeInput" min="0" max="100" value="50" step="1" data-index="0" aria-valuetext="50">
-        <input type="text" class="textInput" value="100" data-index="0">
+        <input type="range" class="rangeInput" min="0" max="100" value="50" step="1" data-index="0">
+        <input type="text" class="textInput" value="50" data-index="0">
     </div>
 
     <div class="slider-container">
-        <input type="range" class="rangeInput" min="0" max="200" value="100" step="1" data-index="1" aria-valuetext="100">
-        <input type="text" class="textInput" value="200" data-index="1">
+        <input type="range" class="rangeInput" min="0" max="200" value="100" step="1" data-index="1">
+        <input type="text" class="textInput" value="100" data-index="1">
+    </div>
+
+    <div class="slider-container">
+        <input type="range" class="rangeInput" min="0" max="50" value="25" step="1" data-index="2">
+        <input type="text" class="textInput" value="25" data-index="2">
     </div>
 
     <script>
@@ -72,20 +77,17 @@
 
             if (source === "range") {
                 textInputs[index].value = rangeInputs[index].value;
-                rangeInputs[index].setAttribute("aria-valuetext", rangeInputs[index].value);
             } else if (source === "text") {
-                let maxValue = Number(textInputs[index].value);
+                let value = Number(textInputs[index].value);
+                const min = Number(rangeInputs[index].min);
+                const max = Number(rangeInputs[index].max);
 
-                if (maxValue < 1) maxValue = 1; // 최소값 제한
+                // 최소/최대 범위 체크
+                if (value < min) value = min;
+                if (value > max) value = max;
 
-                rangeInputs[index].max = maxValue; // range max 업데이트
-
-                // 현재 range 값이 max보다 크면 max 값으로 조정
-                if (Number(rangeInputs[index].value) > maxValue) {
-                    rangeInputs[index].value = maxValue;
-                }
-
-                rangeInputs[index].setAttribute("aria-valuetext", rangeInputs[index].value);
+                rangeInputs[index].value = value;
+                textInputs[index].value = value;
             }
         }
 
