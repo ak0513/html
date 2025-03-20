@@ -12,6 +12,8 @@
             gap: 10px;
             font-size: 16px;
             cursor: pointer;
+            color: #333; /* 기본 텍스트 색상 */
+            transition: color 0.3s;
         }
 
         /* 숨겨진 체크박스 */
@@ -50,14 +52,19 @@
         .toggle-container input:checked + .toggle-switch::before {
             transform: translateX(20px);
         }
+
+        /* 체크되었을 때 레이블 색상 변경 */
+        .toggle-container input:checked ~ span {
+            color: #4CAF50;
+        }
     </style>
 </head>
 <body>
 
     <label class="toggle-container">
-        체크박스 레이블
         <input type="checkbox">
         <span class="toggle-switch"></span>
+        <span>체크박스 레이블</span>
     </label>
 
 </body>
