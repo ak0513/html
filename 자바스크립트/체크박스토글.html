@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>토글 체크박스</title>
+    <title>접근성 강화된 토글 스위치</title>
     <style>
         /* 체크박스 컨테이너 */
         .toggle-container {
             display: flex;
-            justify-content: space-between; /* 좌우 정렬 */
+            justify-content: space-between;
             align-items: center;
             width: 100%;
             max-width: 300px;
@@ -23,7 +23,11 @@
 
         /* 숨겨진 체크박스 */
         .toggle-container input {
-            display: none;
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
         }
 
         /* 토글 스위치 스타일 */
@@ -34,14 +38,15 @@
             background: #ccc;
             border-radius: 10px;
             transition: background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 2px;
         }
 
         /* 토글 버튼 */
         .toggle-switch::before {
             content: "";
-            position: absolute;
-            top: 2px;
-            left: 2px;
             width: 16px;
             height: 16px;
             background: white;
@@ -52,8 +57,10 @@
         /* 체크되었을 때 토글 색상 변경 */
         .toggle-container input:checked + .toggle-switch {
             background: #4CAF50;
+            justify-content: flex-end;
         }
 
+        /* 체크되었을 때 버튼 이동 */
         .toggle-container input:checked + .toggle-switch::before {
             transform: translateX(20px);
         }
@@ -62,12 +69,18 @@
         .toggle-container input:checked + .toggle-switch + .label-text {
             color: #4CAF50;
         }
+
+        /* 포커스 시 시각적 강조 */
+        .toggle-container input:focus + .toggle-switch {
+            outline: 2px solid #4CAF50;
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body>
 
     <label class="toggle-container">
-        <input type="checkbox">
+        <input type="checkbox" role="switch" aria-checked="false">
         <span class="toggle-switch"></span>
         <span class="label-text">체크박스 레이블</span>
     </label>
