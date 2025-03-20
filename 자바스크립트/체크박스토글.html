@@ -8,8 +8,9 @@
         /* 체크박스 컨테이너 */
         .toggle-container {
             display: flex;
-            justify-content: space-between; /* 레이블 왼쪽, 토글 오른쪽 */
+            justify-content: space-between;
             align-items: center;
+            
             width: 100%;
             max-width: 300px;
             padding: 10px;
@@ -28,11 +29,6 @@
             height: 1px;
             overflow: hidden;
             clip: rect(0, 0, 0, 0);
-        }
-
-        /* 레이블 스타일 */
-        .label-text {
-            flex-grow: 1; /* 왼쪽 정렬 유지 */
         }
 
         /* 토글 스위치 스타일 */
@@ -71,7 +67,7 @@
         }
 
         /* 체크되었을 때 레이블 색상 변경 */
-        .toggle-container input:checked ~ .label-text {
+        .toggle-container input:checked + .toggle-switch + .label-text {
             color: #4CAF50;
         }
 
@@ -85,9 +81,9 @@
 <body>
 
     <label class="toggle-container">
-        <span class="label-text">체크박스 레이블</span>
-        <input type="checkbox" role="switch">
+        <input type="checkbox" role="switch" aria-checked="false">
         <span class="toggle-switch"></span>
+        <span class="label-text">체크박스 레이블</span>
     </label>
 
 </body>
