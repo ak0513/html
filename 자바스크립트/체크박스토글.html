@@ -8,12 +8,17 @@
         /* 체크박스 컨테이너 */
         .toggle-container {
             display: flex;
+            justify-content: space-between; /* 좌우 정렬 */
             align-items: center;
-            gap: 10px;
+            width: 100%; /* 부모 요소 너비 100% */
+            max-width: 300px; /* 최대 너비 설정 (원하는 크기로 조정 가능) */
+            padding: 10px;
             font-size: 16px;
             cursor: pointer;
             color: #333; /* 기본 텍스트 색상 */
             transition: color 0.3s;
+            border: 1px solid #ddd; /* 경계선 추가 (선택 사항) */
+            border-radius: 8px; /* 둥근 모서리 (선택 사항) */
         }
 
         /* 숨겨진 체크박스 */
@@ -54,7 +59,7 @@
         }
 
         /* 체크되었을 때 레이블 색상 변경 */
-        .toggle-container input:checked ~ span {
+        .toggle-container input:checked ~ .label-text {
             color: #4CAF50;
         }
     </style>
@@ -62,9 +67,9 @@
 <body>
 
     <label class="toggle-container">
+        <span class="label-text">체크박스 레이블</span>
         <input type="checkbox">
         <span class="toggle-switch"></span>
-        <span>체크박스 레이블</span>
     </label>
 
 </body>
