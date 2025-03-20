@@ -10,7 +10,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-direction: row-reverse;
+
             width: 100%;
             max-width: 300px;
             padding: 10px;
@@ -56,23 +56,23 @@
         }
 
         /* 체크되었을 때 토글 색상 변경 */
-        .toggle-container input:checked + .toggle-switch {
+        .toggle-container input:checked ~ .toggle-switch {
             background: #4CAF50;
             justify-content: flex-end;
         }
 
         /* 체크되었을 때 버튼 이동 */
-        .toggle-container input:checked + .toggle-switch::before {
+        .toggle-container input:checked ~ .toggle-switch::before {
             transform: translateX(20px);
         }
 
         /* 체크되었을 때 레이블 색상 변경 */
-        .toggle-container input:checked + .toggle-switch + .label-text {
+        .toggle-container input:checked ~ .label-text {
             color: #4CAF50;
         }
 
         /* 포커스 시 시각적 강조 */
-        .toggle-container input:focus + .toggle-switch {
+        .toggle-container input:focus ~ .toggle-switch {
             outline: 2px solid #4CAF50;
             outline-offset: 2px;
         }
@@ -88,8 +88,9 @@
     
        <label class="toggle-container">
         <input type="checkbox">
+                    <span class="label-text">체크박스 레이블2</span>
         <span class="toggle-switch"></span>
-        <span class="label-text">체크박스 레이블2</span>
+
     </label>
 
 </body>
