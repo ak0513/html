@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>토글 체크박스</title>
+    <style>
+        /* 체크박스 컨테이너 */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* 숨겨진 체크박스 */
+        .toggle-container input {
+            display: none;
+        }
+
+        /* 토글 스위치 스타일 */
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background: #ccc;
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+
+        /* 토글 버튼 */
+        .toggle-switch::before {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        /* 체크되었을 때 스타일 */
+        .toggle-container input:checked + .toggle-switch {
+            background: #4CAF50;
+        }
+
+        .toggle-container input:checked + .toggle-switch::before {
+            transform: translateX(20px);
+        }
+    </style>
+</head>
+<body>
+
+    <label class="toggle-container">
+        체크박스 레이블
+        <input type="checkbox">
+        <span class="toggle-switch"></span>
+    </label>
+
+</body>
+</html>
