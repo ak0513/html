@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>여러 개의 input + 초기화 버튼</title>
+    <title>초기화 후 포커스 이동</title>
     <style>
         .input-group {
             margin-bottom: 10px;
@@ -24,21 +24,17 @@
         <input type="text" class="input-field">
         <button class="reset-button">초기화</button>
     </div>
-    <div class="input-group">
-        <input type="text" class="input-field">
-        <button class="reset-button">초기화</button>
-    </div>
-    <div class="input-group">
-        <input type="text" class="input-field">
-        <button class="reset-button">초기화</button>
-    </div>
 
     <script>
         document.querySelectorAll('.reset-button').forEach(button => {
             button.addEventListener('click', function () {
-                let inputField = this.parentElement.querySelector('.input-field'); // 해당 버튼과 같은 부모의 input 찾기
+                let inputField = this.parentElement.querySelector('.input-field'); // 해당 버튼의 input 찾기
                 inputField.value = ''; // 입력값 초기화
-                inputField.focus(); // 다시 포커스 이동
+
+                // ✅ 비동기 처리하여 포커스 정상 동작
+                setTimeout(() => {
+                    inputField.focus();
+                }, 10);
             });
         });
     </script>
