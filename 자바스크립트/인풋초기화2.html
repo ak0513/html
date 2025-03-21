@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동적 요소 이벤트 관리</title>
+    <style>
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .input-field {
+            flex: 1;
+            padding: 5px;
+            font-size: 16px;
+        }
+        .reset-button {
+            margin-left: 5px;
+            padding: 5px 10px;
+            font-size: 14px;
+            display: none; /* 기본적으로 숨김 */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="input-container">
+        <div class="input-group">
+            <input type="text" class="input-field">
+            <button class="reset-button">초기화</button>
+        </div>
+    </div>
+
+    <button id="add-input">추가하기</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputContainer = document.getElementById('input-container');
+            const addButton = document.getElementById('add-input');
+
+            // ✅ 이벤트 위임 방식으로 모든 input-field의 input 이벤트 관리
+            document.addEventListener('input', (event) => {
+                if (event.target.classList.contains('input-field')) {
+                    const resetButton = event.target.nextElementSibling;
+                    resetButton.style.display = event.target.value ? 'inline-block' : 'none';
+                }
+            });
+
+            // ✅ 초기화 버튼 클릭 이벤트 (이벤트 위임)
+            document.addEventListener('click', (event) => {
+                if (event.target.classList.contains('reset-button')) {
+                    const inputField = event.target.previousElementSibling;
+                    inputField.value = '';
+                    event.target.style.display = 'none';
+
+                    // ✅ 포커스를 인풋 필드로 이동
+                    setTimeout(() => {
+                        inputField.focus();
+                    }, 10);
+                }
+            });
+
+            // ✅ "추가하기" 버튼 클릭 시 새로운 input-group 추가
+            addButton.addEventListener('click', () => {
+                const newInputGroup = document.createElement('div');
+                newInputGroup.classList.add('input-group');
+                newInputGroup.innerHTML = `
+                    <input type="text" class="input-field">
+                    <button class="reset-button">초기화</button>
+                `;
+                inputContainer.appendChild(newInputGroup);
+            });
+        });
+    </script>
+
+</body>
+</html>
