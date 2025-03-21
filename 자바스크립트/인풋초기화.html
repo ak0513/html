@@ -3,10 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>초기화 후 포커스 이동</title>
+    <title>입력값 있을 때만 초기화 버튼 보이기</title>
     <style>
         .input-group {
+            display: flex;
+            align-items: center;
             margin-bottom: 10px;
+        }
+        .input-field {
+            flex: 1;
+            padding: 5px;
+            font-size: 16px;
+        }
+        .reset-button {
+            margin-left: 5px;
+            padding: 5px 10px;
+            font-size: 14px;
+            display: none; /* 처음에는 숨김 */
         }
     </style>
 </head>
@@ -14,7 +27,7 @@
 
     <div class="input-group">
         <input type="text" class="input-field">
-        <button class="reset-button">초기화</button>
+        <button class="reset-button">ㅂ초기화</button>
     </div>
     <div class="input-group">
         <input type="text" class="input-field">
@@ -26,12 +39,21 @@
     </div>
 
     <script>
-        document.querySelectorAll('.reset-button').forEach(button => {
-            button.addEventListener('click', function () {
-                let inputField = this.parentElement.querySelector('.input-field'); // 해당 버튼의 input 찾기
-                inputField.value = ''; // 입력값 초기화
+        document.querySelectorAll('.input-group').forEach(group => {
+            const inputField = group.querySelector('.input-field');
+            const resetButton = group.querySelector('.reset-button');
 
-                // ✅ 비동기 처리하여 포커스 정상 동작
+            // ✅ 입력값이 있을 때만 초기화 버튼 보이기
+            inputField.addEventListener('input', () => {
+                resetButton.style.display = inputField.value ? 'inline-block' : 'none';
+            });
+
+            // ✅ 초기화 버튼 클릭 시 값 지우고 버튼 숨김 + 포커스 이동
+            resetButton.addEventListener('click', () => {
+                inputField.value = '';
+                resetButton.style.display = 'none';
+                
+                // ✅ 포커스 이동 (setTimeout 사용)
                 setTimeout(() => {
                     inputField.focus();
                 }, 10);
