@@ -3,41 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>초기화 후 포커스 이동</title>
-    <style>
-        .input-group {
-            margin-bottom: 10px;
-        }
-    </style>
+    <title>인풋 초기화</title>
 </head>
 <body>
-
-    <div class="input-group">
-        <input type="text" class="input-field">
-        <button class="reset-button">ㅇ초기화</button>
+    <style>
+        .clearButton.hide {display: none;}
+    </style>
+    <div>
+        <input type="text" class="inputField">
+        <button type="button" class="clearButton hide">삭제</button>
     </div>
-    <div class="input-group">
-        <input type="text" class="input-field">
-        <button class="reset-button">초기화</button>
+    <div>
+        <input type="text" class="inputField">
+        <button type="button" class="clearButton hide">삭제</button>
     </div>
-    <div class="input-group">
-        <input type="text" class="input-field">
-        <button class="reset-button">초기화</button>
-    </div>
-
+    
     <script>
-        document.querySelectorAll('.reset-button').forEach(button => {
-            button.addEventListener('click', function () {
-                let inputField = this.parentElement.querySelector('.input-field'); // 해당 버튼의 input 찾기
-                inputField.value = ''; // 입력값 초기화
-
-                // ✅ 비동기 처리하여 포커스 정상 동작
-                setTimeout(() => {
-                    inputField.focus();
-                }, 10);
+        // 함수 정의: 인풋과 삭제 버튼을 관리하는 함수
+        function setupClearButton(input, button) {
+            // 인풋에 값이 있을 때 삭제 버튼을 표시
+            input.addEventListener('input', function() {
+                if (input.value.trim() !== '') {
+                    button.classList.remove('hide');  // 삭제 버튼 표시
+                } else {
+                    button.classList.add('hide')  // 삭제 버튼 숨기기
+                }
             });
+    
+            // 삭제 버튼 클릭 시 입력값 초기화하고 포커스를 인풋에 이동
+            button.addEventListener('click', function() {
+                input.value = '';  // 입력값 초기화
+                input.focus();  // 포커스 이동
+                button.classList.add('hide')  // 삭제 버튼 숨기기
+            });
+        }
+    
+        // 모든 인풋과 삭제 버튼에 대해 초기화 함수 호출
+        var inputFields = document.querySelectorAll('.inputField');
+        var clearButtons = document.querySelectorAll('.clearButton');
+    
+        inputFields.forEach((input, index) => {
+            setupClearButton(input, clearButtons[index]);
         });
     </script>
-
+    
 </body>
 </html>
