@@ -62,10 +62,10 @@
             height: 50px;
             background-color: red;
             border-radius: 50%;
-            top: -25px; /* 버튼 위에 위치 */
+            top: -30px; /* 버튼 위에 위치 */
             left: 0;
-            transform: translateX(0);
-            transition: transform 0.5s ease;
+            transform: translateX(-50%);
+            transition: left 0.5s ease;
         }
     </style>
 </head>
@@ -82,28 +82,32 @@
     </div>
 
     <script>
-        document.querySelectorAll(".menu button").forEach((button) => {
-            button.addEventListener("click", (event) => {
-                event.stopPropagation(); // 클릭 이벤트가 li로 전파되지 않도록 방지
-                const li = button.parentElement;
-                const menu = document.querySelector(".menu");
-                const circle = document.querySelector(".circle");
+        const menu = document.querySelector(".menu");
+        const circle = document.querySelector(".circle");
+        const buttons = document.querySelectorAll(".menu button");
 
-                // 기존 활성화된 li의 active 클래스 제거
-                document.querySelectorAll(".menu li").forEach(item => item.classList.remove("active"));
-                
-                // 현재 클릭된 li에 active 클래스 추가
-                li.classList.add("active");
+        function moveCircle(button) {
+            const li = button.parentElement;
+            const liRect = li.getBoundingClientRect();
+            const menuRect = menu.getBoundingClientRect();
 
-                // 비율 기반 위치 계산
-                const liRect = li.getBoundingClientRect();
-                const menuRect = menu.getBoundingClientRect();
-                const percentX = ((liRect.left - menuRect.left) + (liRect.width / 2)) / menuRect.width * 100;
+            // 기존 활성화된 li의 active 클래스 제거
+            document.querySelectorAll(".menu li").forEach(item => item.classList.remove("active"));
+            
+            // 현재 클릭된 li에 active 클래스 추가
+            li.classList.add("active");
 
-                // 원 이동 (비율 사용)
-                circle.style.transform = `translateX(${percentX}%)`;
-            });
+            // `left`를 이용하여 정확한 중앙 위치 설정
+            const centerX = liRect.left + liRect.width / 2 - menuRect.left;
+            circle.style.left = `${centerX}px`;
+        }
+
+        buttons.forEach(button => {
+            button.addEventListener("click", () => moveCircle(button));
         });
+
+        // 페이지 로드 후 첫 번째 메뉴 버튼 기준으로 원 위치 초기화
+        window.addEventListener("load", () => moveCircle(buttons[0]));
     </script>
 
 </body>
