@@ -26,13 +26,9 @@
             margin: 10px auto;
             overflow: hidden;
             max-height: 0;
-            transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out;
             opacity: 0;
-        }
-
-        .box.show {
-            max-height: 500px; /* 충분히 큰 값으로 설정 */
-            opacity: 1;
+            transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out;
+            display: none;
         }
     </style>
 </head>
@@ -43,22 +39,50 @@
 
     <div id="box" class="box">
         이 박스는 부드럽게 slideUp/slideDown 됩니다.
+                이 박스는 부드럽게 slideUp/slideDown         이 박스는 부드럽게 slideUp/slideDown 됩니다.
+        
+                이 박스는 부드럽게 slideUp/slideDown 됩니다.
+        
     </div>
 
     <script>
+        function slideDown(element) {
+            element.style.display = "block"; // 먼저 표시
+            element.style.opacity = "0"; // 처음에는 투명하게 설정
+
+            requestAnimationFrame(() => {
+                element.style.transition = "max-height 0.4s ease-in-out, opacity 0.3s ease-in-out";
+                element.style.maxHeight = element.scrollHeight + "px";
+                element.style.opacity = "1";
+            });
+
+            setTimeout(() => {
+                element.style.maxHeight = "";
+            }, 400); // max-height 애니메이션이 끝나면 높이 자동 조정
+        }
+
+        function slideUp(element) {
+            element.style.maxHeight = element.scrollHeight + "px"; // 현재 높이를 설정
+            element.style.opacity = "1";
+
+            requestAnimationFrame(() => {
+                element.style.transition = "max-height 0.4s ease-in-out, opacity 0.3s ease-in-out";
+                element.style.maxHeight = "0px";
+                element.style.opacity = "0";
+            });
+
+            setTimeout(() => {
+                element.style.display = "none";
+            }, 400); // 애니메이션이 끝난 후 숨김 처리
+        }
+
         function toggleSlide() {
             let box = document.getElementById("box");
 
-            if (box.classList.contains("show")) {
-                box.classList.remove("show");
-                setTimeout(() => {
-                    box.style.display = "none";
-                }, 400); // transition 시간과 맞춤
+            if (box.style.display === "none" || box.style.maxHeight === "0px") {
+                slideDown(box);
             } else {
-                box.style.display = "block";
-                requestAnimationFrame(() => {
-                    box.classList.add("show");
-                });
+                slideUp(box);
             }
         }
     </script>
