@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanilla JS Slide Effect</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .box {
+            display: none;
+            background: lightblue;
+            padding: 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+            width: 300px;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>SlideDown & SlideUp (Pure JS)</h1>
+    <button onclick="toggleSlide()">Toggle</button>
+
+    <div id="box" class="box">
+        이 박스는 slideUp/slideDown 됩니다.
+    </div>
+
+    <script>
+        function slideDown(element, duration = 300) {
+            element.style.display = "block";
+            element.style.overflow = "hidden";
+            element.style.maxHeight = "0px";
+
+            let startHeight = element.scrollHeight;
+            element.style.transition = `max-height ${duration}ms ease-in-out`;
+            requestAnimationFrame(() => {
+                element.style.maxHeight = startHeight + "px";
+            });
+
+            setTimeout(() => {
+                element.style.maxHeight = "";
+            }, duration);
+        }
+
+        function slideUp(element, duration = 300) {
+            element.style.overflow = "hidden";
+            element.style.maxHeight = element.scrollHeight + "px";
+
+            requestAnimationFrame(() => {
+                element.style.transition = `max-height ${duration}ms ease-in-out`;
+                element.style.maxHeight = "0px";
+            });
+
+            setTimeout(() => {
+                element.style.display = "none";
+            }, duration);
+        }
+
+        function toggleSlide() {
+            let box = document.getElementById("box");
+            if (box.style.display === "none" || box.style.maxHeight === "0px") {
+                slideDown(box);
+            } else {
+                slideUp(box);
+            }
+        }
+    </script>
+
+</body>
+</html>
