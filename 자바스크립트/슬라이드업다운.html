@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vanilla JS Slide Effect</title>
+    <title>부드러운 SlideDown & SlideUp</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,62 +18,47 @@
         }
 
         .box {
-            display: none;
             background: lightblue;
             padding: 20px;
             margin-top: 10px;
             border-radius: 5px;
             width: 300px;
             margin: 10px auto;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out;
+            opacity: 0;
+        }
+
+        .box.show {
+            max-height: 500px; /* 충분히 큰 값으로 설정 */
+            opacity: 1;
         }
     </style>
 </head>
 <body>
 
-    <h1>SlideDown & SlideUp (Pure JS)</h1>
+    <h1>부드러운 SlideDown & SlideUp</h1>
     <button onclick="toggleSlide()">Toggle</button>
 
     <div id="box" class="box">
-        이 박스는 slideUp/slideDown 됩니다.
+        이 박스는 부드럽게 slideUp/slideDown 됩니다.
     </div>
 
     <script>
-        function slideDown(element, duration = 300) {
-            element.style.display = "block";
-            element.style.overflow = "hidden";
-            element.style.maxHeight = "0px";
-
-            let startHeight = element.scrollHeight;
-            element.style.transition = `max-height ${duration}ms ease-in-out`;
-            requestAnimationFrame(() => {
-                element.style.maxHeight = startHeight + "px";
-            });
-
-            setTimeout(() => {
-                element.style.maxHeight = "";
-            }, duration);
-        }
-
-        function slideUp(element, duration = 300) {
-            element.style.overflow = "hidden";
-            element.style.maxHeight = element.scrollHeight + "px";
-
-            requestAnimationFrame(() => {
-                element.style.transition = `max-height ${duration}ms ease-in-out`;
-                element.style.maxHeight = "0px";
-            });
-
-            setTimeout(() => {
-                element.style.display = "none";
-            }, duration);
-        }
-
         function toggleSlide() {
             let box = document.getElementById("box");
-            if (box.style.display === "none" || box.style.maxHeight === "0px") {
-                slideDown(box);
+
+            if (box.classList.contains("show")) {
+                box.classList.remove("show");
+                setTimeout(() => {
+                    box.style.display = "none";
+                }, 400); // transition 시간과 맞춤
             } else {
-                slideUp(box);
+                box.style.display = "block";
+                requestAnimationFrame(() => {
+                    box.classList.add("show");
+                });
             }
         }
     </script>
