@@ -2,31 +2,67 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>그라데이션 배경 애니메이션</title>
+  <title>외곽 그라데이션 애니메이션</title>
   <style>
     body {
       margin: 0;
       height: 100vh;
-      background: radial-gradient(circle, #2196f3, #000000);
-      animation: gradientFlow 5s infinite alternate;
-      background-repeat: no-repeat;
-      background-size: 200% 200%;
+      background: #000; /* 배경 검정색 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    @keyframes gradientFlow {
+    .glow-box {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      background: #000; /* 내부는 검정 */
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .glow-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(
+        from 0deg,
+        #2196f3,
+        #00f,
+        #000,
+        #00f,
+        #2196f3
+      );
+      animation: rotate 4s linear infinite;
+    }
+
+    .glow-box::after {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      right: 6px;
+      bottom: 6px;
+      background: #000; /* 내부 배경 */
+      border-radius: 10px;
+      z-index: 1;
+    }
+
+    @keyframes rotate {
       0% {
-        background: radial-gradient(circle at center, #2196f3 0%, #000000 100%);
-      }
-      50% {
-        background: radial-gradient(circle at center, #1e88e5 0%, #111111 100%);
+        transform: rotate(0deg);
       }
       100% {
-        background: radial-gradient(circle at center, #1976d2 0%, #000000 100%);
+        transform: rotate(360deg);
       }
     }
   </style>
 </head>
 <body>
+  <div class="glow-box"></div>
 </body>
 </html>
