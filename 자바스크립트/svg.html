@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>우측 하단 굴곡 카드</title>
+  <style>
+    body {
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <svg width="300" height="180" viewBox="0 0 300 180">
+    <path id="card" fill="#0A2A59">
+      <animate 
+        attributeName="d" 
+        dur="1s" 
+        fill="freeze" 
+        repeatCount="1"
+        from="M0,0 h300 v180 h-300 z"
+        to="M0,0 h300 v160 q-40,40 -80,0 h-220 z" />
+    </path>
+  </svg>
+</body>
+</html>
