@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>우측 하단 굴곡 카드</title>
+  <title>우측 하단 곡선 카드</title>
   <style>
     body {
       background: #f0f2f5;
@@ -16,15 +16,52 @@
   </style>
 </head>
 <body>
-  <svg width="300" height="180" viewBox="0 0 300 180">
-    <path id="card" fill="#0A2A59">
+  <svg width="340" height="220" viewBox="0 0 340 220">
+    <path id="card" fill="#0A2A59" d="
+      M20,0 
+      h300 
+      a20,20 0 0 1 20,20 
+      v140 
+      a40,40 0 0 1 -40,40 
+      q-20,20 -40,0 
+      h-220 
+      a20,20 0 0 1 -20,-20 
+      v20 
+      a20,20 0 0 1 -20,-20 
+      v-160 
+      a20,20 0 0 1 20,-20 
+      z">
       <animate 
         attributeName="d" 
         dur="1s" 
         fill="freeze" 
         repeatCount="1"
-        from="M0,0 h300 v180 h-300 z"
-        to="M0,0 h300 v160 q-40,40 -80,0 h-220 z" />
+        from="
+          M20,0 
+          h300 
+          a20,20 0 0 1 20,20 
+          v180 
+          a20,20 0 0 1 -20,20 
+          h-300 
+          a20,20 0 0 1 -20,-20 
+          v-180 
+          a20,20 0 0 1 20,-20 
+          z"
+        to="
+          M20,0 
+          h300 
+          a20,20 0 0 1 20,20 
+          v140 
+          a40,40 0 0 1 -40,40 
+          q-20,20 -40,0 
+          h-220 
+          a20,20 0 0 1 -20,-20 
+          v20 
+          a20,20 0 0 1 -20,-20 
+          v-160 
+          a20,20 0 0 1 20,-20 
+          z"
+      />
     </path>
   </svg>
 </body>
