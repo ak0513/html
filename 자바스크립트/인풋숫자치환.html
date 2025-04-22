@@ -17,7 +17,7 @@
 </head>
 <body>
 
-<h2>14자리 숫자 1입력</h2>
+<h2>14자리 숫자 입력</h2>
 <input type="text" id="secureInput" placeholder="숫자 14자리 입력" />
 
 <script>
@@ -25,41 +25,49 @@
     let rawValue = '';
 
     inputEl.addEventListener('beforeinput', (e) => {
-        // 모바일에서 입력 전 이벤트로 처리해야 커서 깨짐 방지 가능
-        const selectionStart = inputEl.selectionStart;
-        const selectionEnd = inputEl.selectionEnd;
-
         const isDelete = e.inputType === 'deleteContentBackward';
-        let inputChar = e.data || '';
+        const inputChar = e.data || '';
+        const cursorPos = inputEl.selectionStart;
 
-        // 기존 숫자만 남긴 원본
+        // 숫자만 남긴 원본
         rawValue = rawValue.replace(/\D/g, '');
 
         if (isDelete) {
-            // 삭제 처리
-            let rawIndex = getRawIndexFromMasked(selectionStart - 1);
-            if (rawIndex >= 0) {
-                rawValue = rawValue.slice(0, rawIndex) + rawValue.slice(rawIndex + 1);
+            let deleteIndex = getRawIndexFromMasked(cursorPos - 1);
+
+            // 하이픈 위치에서 백스페이스 누른 경우 → 앞 숫자를 지움
+            if (isDashPosition(cursorPos - 1)) {
+                deleteIndex = getRawIndexFromMasked(cursorPos - 2);
+            }
+
+            if (deleteIndex >= 0) {
+                rawValue = rawValue.slice(0, deleteIndex) + rawValue.slice(deleteIndex + 1);
             }
         } else if (/\d/.test(inputChar) && rawValue.length < 14) {
-            // 숫자 입력 처리
-            let rawIndex = getRawIndexFromMasked(selectionStart);
-            rawValue = rawValue.slice(0, rawIndex) + inputChar + rawValue.slice(rawIndex);
+            let insertIndex = getRawIndexFromMasked(cursorPos);
+            rawValue = rawValue.slice(0, insertIndex) + inputChar + rawValue.slice(insertIndex);
         }
 
-        e.preventDefault(); // 기본 동작 방지
+        e.preventDefault(); // 기본 입력 방지
         renderMaskedValue();
     });
 
+    function isDashPosition(index) {
+        // 마스킹 포맷 상 하이픈이 들어가는 실제 위치
+        return [3, 7, 9, 12].includes(index);
+    }
+
     function getRawIndexFromMasked(maskedIndex) {
-        // maskedIndex 기준으로 raw index 계산
         let rawIndex = 0;
-        for (let i = 0; i < maskedIndex; i++) {
-            if (rawIndex >= rawValue.length) break;
-            const masked = getMaskedCharAt(rawIndex);
-            if (masked.length === 2) i++; // 하이픈 포함 길이
+        let visibleIndex = 0;
+
+        for (let i = 0; i < rawValue.length; i++) {
+            visibleIndex++; // 한 글자 추가
+            if ([2, 6, 7, 9].includes(i)) visibleIndex++; // 하이픈 추가 위치
+            if (visibleIndex > maskedIndex) break;
             rawIndex++;
         }
+
         return rawIndex;
     }
 
@@ -67,7 +75,7 @@
         let ch = rawValue[i] || '';
         if (i >= 6 && i <= 10) ch = '*';
         let result = ch;
-        if (i === 2 || i === 6 || i === 7 || i === 9) result += '-';
+        if ([2, 6, 7, 9].includes(i)) result += '-';
         return result;
     }
 
@@ -86,7 +94,7 @@
         let pos = 0;
         for (let i = 0; i < rawLen; i++) {
             pos++;
-            if (i === 2 || i === 6 || i === 7 || i === 9) pos++;
+            if ([2, 6, 7, 9].includes(i)) pos++;
         }
         return pos;
     }
