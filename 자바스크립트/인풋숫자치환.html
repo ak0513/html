@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>숫자 입력 마스킹</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 50px;
+        }
+        input {
+            font-size: 18px;
+            padding: 10px;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>14자리 숫자 입력</h2>
+<input type="text" id="secureInput" maxlength="20" oninput="formatInput(this)" placeholder="숫자 14자리 입력" />
+
+<script>
+function formatInput(el) {
+    let raw = el.value.replace(/\D/g, ''); // 숫자만 추출
+    if (raw.length > 14) raw = raw.slice(0, 14); // 최대 14자리
+
+    let result = '';
+    for (let i = 0; i < raw.length; i++) {
+        let ch = raw[i];
+
+        // 7~11번째 숫자는 마스킹 처리 (인덱스 기준 6~10)
+        if (i >= 6 && i <= 10) {
+            ch = '*';
+        }
+
+        result += ch;
+
+        // 하이픈 추가 위치: 입력 후 인덱스가 2, 6, 7, 9일 때 (0부터 시작)
+        if (i === 2 || i === 6 || i === 7 || i === 9) {
+            result += '-';
+        }
+    }
+
+    el.value = result;
+}
+</script>
+
+</body>
+</html>
