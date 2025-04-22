@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>숫자 입력 마스킹</title>
+    <title>14자리 숫자 입력 마스킹</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,32 +18,42 @@
 <body>
 
 <h2>14자리 숫자 입력</h2>
-<input type="text" id="secureInput" maxlength="20" oninput="formatInput(this)" placeholder="숫자 14자리 입력" />
+<input type="text" id="secureInput" maxlength="30" placeholder="숫자 14자리 입력" />
 
 <script>
-function formatInput(el) {
-    let raw = el.value.replace(/\D/g, ''); // 숫자만 추출
-    if (raw.length > 14) raw = raw.slice(0, 14); // 최대 14자리
+    let originalValue = ''; // 숫자만 저장
 
-    let result = '';
-    for (let i = 0; i < raw.length; i++) {
-        let ch = raw[i];
+    document.getElementById('secureInput').addEventListener('input', function(e) {
+        const input = e.target;
+        const numbers = input.value.replace(/\D/g, ''); // 숫자만 추출
 
-        // 7~11번째 숫자는 마스킹 처리 (인덱스 기준 6~10)
-        if (i >= 6 && i <= 10) {
-            ch = '*';
+        // 최대 14자리로 제한
+        if (numbers.length <= 14) {
+            originalValue = numbers;
         }
 
-        result += ch;
+        input.value = formatWithMask(originalValue);
+    });
 
-        // 하이픈 추가 위치: 입력 후 인덱스가 2, 6, 7, 9일 때 (0부터 시작)
-        if (i === 2 || i === 6 || i === 7 || i === 9) {
-            result += '-';
+    function formatWithMask(value) {
+        let result = '';
+        for (let i = 0; i < value.length; i++) {
+            let ch = value[i];
+
+            // 마스킹 처리: 7~11번째 자리 (index 6~10)
+            if (i >= 6 && i <= 10) {
+                ch = '*';
+            }
+
+            result += ch;
+
+            // 하이픈 삽입 위치
+            if (i === 2 || i === 6 || i === 7 || i === 9) {
+                result += '-';
+            }
         }
+        return result;
     }
-
-    el.value = result;
-}
 </script>
 
 </body>
