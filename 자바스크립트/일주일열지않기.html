@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>일주일간 열지 않기</title>
+    <style>
+        #popup {
+            position: fixed;
+            width: 300px;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #ccc;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        #popup input[type="checkbox"] {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="popup" style="display: none;">
+    <p>이 팝업은 중요한 공지사항입니다.</p>
+    <label>
+        <input type="checkbox" id="no-show-week"> 일주일간 열지 않기
+    </label>
+    <button onclick="closePopup()">닫기</button>
+</div>
+
+<script>
+    const popup = document.getElementById('popup');
+    const noShowCheckbox = document.getElementById('no-show-week');
+    const cookieName = 'hidePopup';
+
+    // 쿠키 설정 함수
+    function setCookie(name, value, days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        document.cookie = name + '=' + value + '; expires=' + date.toUTCString() + '; path=/';
+    }
+
+    // 쿠키 읽기 함수
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    // 팝업 닫기
+    function closePopup() {
+        if (noShowCheckbox.checked) {
+            setCookie(cookieName, 'true', 7);  // 7일 동안 유지
+        }
+        popup.style.display = 'none';
+    }
+
+    // 페이지 로드 시 팝업 표시 여부 판단
+    window.onload = function () {
+        const shouldHide = getCookie(cookieName);
+        if (!shouldHide) {
+            popup.style.display = 'block';
+        }
+    };
+</script>
+
+</body>
+</html>
