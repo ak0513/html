@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>14자리 숫자 입력 변환</title>
+</head>
+<body>
+  <div id="container">
+    <div style="height:2000px">
+      <input type="text">
+    </div>
+    <div class="button_sum fixed" id="test">
+      sdfsdf
+    </div>
+    <div class="btn_wrap fixed">
+      <button type="button" class="btn_fix">다음</button>
+    </div>
+  </div>
+
+  <style>
+    .fixed{position:fixed;}
+    .button_sum{z-index:1000;left:0;right:0;bottom:85px;padding:20px;background-color: antiquewhite;}
+    .btn_wrap{position: fixed;left:0;right:0;bottom:0;background-color: antiquewhite;height:86px;}
+  </style>
+
+  <script>
+    var initializeBNottomSumManager;
+    function initializeBNottomSum(target) {
+      var fixedBottom = document.querySelector(target);
+      var content = document.querySelector('#container');
+      function setPadding() {
+        var rect = fixedBottom.getBoundingClientRect();
+        content.style.paddingBottom = rect.height + 86 + 'px';
+      }
+      setTimeout(function() {
+        setPadding()
+      })
+
+      var observer = new MutationObserver(setPadding)
+      observer.observe(fixedBottom, {
+          childList: true,
+          subtree: true
+      })
+      return {
+        disconnectObserver: () => observer.disconnect()
+      }
+    }
+
+
+
+    var initializeBNottomSumManager = initializeBNottomSum('#test')
+
+  </script>
+</body>
+</html>
