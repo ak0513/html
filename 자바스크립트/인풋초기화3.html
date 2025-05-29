@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>동적 인풋 삭제버튼 예제</title>
+  <style>
+    .clear-btn {
+      display: none;
+      margin-left: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h2>동적으로 생성되는 인풋과 삭제 버튼</h2>
+  
+  <div id="input-container">
+    <!-- 동적으로 인풋/버튼 추가됨 -->
+  </div>
+  <button id="add-input">인풋 추가</button>
+
+  <script>
+    // 동적 인풋+버튼 추가
+    document.getElementById('add-input').addEventListener('click', function() {
+      const container = document.getElementById('input-container');
+      const wrapper = document.createElement('div');
+      wrapper.style.marginBottom = '8px';
+      wrapper.innerHTML = `
+        <input type="text" class="clearable-input" placeholder="값을 입력하세요" />
+        <button type="button" class="clear-btn">삭제</button>
+      `;
+      container.appendChild(wrapper);
+    });
+
+    // 인풋에 값이 있으면 삭제 버튼 노출 / 없으면 숨김
+    document.addEventListener('input', function (e) {
+      if (e.target.matches('.clearable-input')) {
+        const btn = e.target.nextElementSibling;
+        if (btn && btn.classList.contains('clear-btn')) {
+          btn.style.display = e.target.value ? 'inline' : 'none';
+        }
+      }
+    });
+
+    // 삭제 버튼 클릭 시 인풋 값 비우고 포커스
+    document.addEventListener('click', function (e) {
+      if (e.target.matches('.clear-btn')) {
+        const input = e.target.previousElementSibling;
+        if (input && input.classList.contains('clearable-input')) {
+          input.value = '';
+          e.target.style.display = 'none';
+          input.focus();
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      }
+    });
+
+    // 초기 인풋 1개 자동 추가
+    document.getElementById('add-input').click();
+  </script>
+</body>
+</html>
