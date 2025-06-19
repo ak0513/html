@@ -1,125 +1,148 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>스와이프 토글 체크박스</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: #f4f4f4;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>스와이프 토글 체크박스</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: #f4f4f4;
+      font-family: sans-serif;
+    }
 
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-family: sans-serif;
-            user-select: none;
-        }
+    .toggle-container {
+      position: relative;
+      width: 100px;
+      height: 44px;
+    }
 
-        .toggle-label {
-            font-size: 16px;
-            transition: color 0.3s ease;
-        }
+    /* 시각적으로 숨긴 체크박스 */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      border: 0;
+    }
 
-        .toggle-wrapper {
-            width: 80px;
-            height: 40px;
-            background: #ccc;
-            border-radius: 20px;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            touch-action: pan-x;
-        }
+    .toggle-wrapper {
+      width: 100%;
+      height: 100%;
+      background: #ccc;
+      border-radius: 22px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      touch-action: pan-x;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      box-sizing: border-box;
+    }
 
-        .toggle-knob {
-            width: 36px;
-            height: 36px;
-            background: white;
-            border-radius: 50%;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            transition: left 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
+    .toggle-wrapper.on {
+      background: #4caf50;
+    }
 
-        .toggle-wrapper.on {
-            background: #4caf50;
-        }
+    .toggle-text {
+      font-size: 14px;
+      color: #aaa;
+      pointer-events: none;
+      transition: color 0.3s ease;
+      user-select: none;
+    }
 
-        .toggle-wrapper.on .toggle-knob {
-            left: 42px;
-        }
+    .toggle-wrapper.on .text-out {
+      color: #fff;
+    }
 
-        .label-home {
-            color: #4caf50;
-        }
+    .toggle-wrapper:not(.on) .text-home {
+      color: #4caf50;
+    }
 
-        .label-out {
-            color: #aaa;
-        }
+    .toggle-knob {
+      width: 36px;
+      height: 36px;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      transition: left 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
 
-        .toggle-wrapper.on ~ .label-home {
-            color: #aaa;
-        }
-
-        .toggle-wrapper.on ~ .label-out {
-            color: #fff;
-        }
-    </style>
+    .toggle-wrapper.on .toggle-knob {
+      left: 60px;
+    }
+  </style>
 </head>
 <body>
 
 <div class="toggle-container">
-    <span class="toggle-label label-home">홈</span>
-    <div class="toggle-wrapper" id="toggle">
-        <div class="toggle-knob"></div>
-    </div>
-    <span class="toggle-label label-out">아웃</span>
+  <!-- 접근성: label과 연결된 숨겨진 checkbox -->
+  <input type="checkbox" id="access-toggle" class="visually-hidden"
+         role="switch" aria-checked="false" aria-label="홈 또는 아웃 선택" />
+  
+  <label for="access-toggle" class="toggle-wrapper" id="toggle">
+    <span class="toggle-text text-home">홈</span>
+    <span class="toggle-text text-out">아웃</span>
+    <div class="toggle-knob"></div>
+  </label>
 </div>
 
 <script>
-    const toggle = document.getElementById('toggle');
-    let isOn = false;
-    let startX = 0;
-    let dragging = false;
+  const checkbox = document.getElementById('access-toggle');
+  const toggleWrapper = document.getElementById('toggle');
 
-    toggle.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        dragging = true;
-    });
+  let startX = 0;
+  let dragging = false;
 
-    toggle.addEventListener('touchend', (e) => {
-        if (!dragging) return;
+  // 초기 렌더링
+  updateVisualState(checkbox.checked);
 
-        const endX = e.changedTouches[0].clientX;
-        const diff = endX - startX;
+  // 터치 시작
+  toggleWrapper.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    dragging = true;
+  });
 
-        if (diff > 20) {
-            isOn = true;
-        } else if (diff < -20) {
-            isOn = false;
-        }
-        updateToggle();
-        dragging = false;
-    });
+  // 터치 종료
+  toggleWrapper.addEventListener('touchend', (e) => {
+    if (!dragging) return;
+    const endX = e.changedTouches[0].clientX;
+    const diff = endX - startX;
 
-    toggle.addEventListener('click', () => {
-        if (dragging) return;
-        isOn = !isOn;
-        updateToggle();
-    });
-
-    function updateToggle() {
-        toggle.classList.toggle('on', isOn);
+    if (diff > 20) {
+      checkbox.checked = true;
+    } else if (diff < -20) {
+      checkbox.checked = false;
     }
+    updateVisualState(checkbox.checked);
+    dragging = false;
+  });
+
+  // 클릭 시 토글
+  toggleWrapper.addEventListener('click', (e) => {
+    if (dragging) return;
+    checkbox.checked = !checkbox.checked;
+    updateVisualState(checkbox.checked);
+  });
+
+  function updateVisualState(isChecked) {
+    toggleWrapper.classList.toggle('on', isChecked);
+    checkbox.setAttribute('aria-checked', isChecked.toString());
+  }
 </script>
 
 </body>
