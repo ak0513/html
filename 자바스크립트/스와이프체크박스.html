@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>토글 스와이프 체크</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f4f4f4;
+        }
+
+        .toggle-wrapper {
+            width: 80px;
+            height: 40px;
+            background: #ccc;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            touch-action: pan-x;
+        }
+
+        .toggle-knob {
+            width: 36px;
+            height: 36px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: left 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .toggle-wrapper.on {
+            background: #4caf50;
+        }
+
+        .toggle-wrapper.on .toggle-knob {
+            left: 42px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="toggle-wrapper" id="toggle">
+    <div class="toggle-knob"></div>
+</div>
+
+<script>
+    const toggle = document.getElementById('toggle');
+    let isOn = false;
+    let startX = 0;
+    let currentX = 0;
+    let dragging = false;
+
+    // 터치 시작
+    toggle.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        dragging = true;
+    });
+
+    // 터치 이동
+    toggle.addEventListener('touchmove', (e) => {
+        if (!dragging) return;
+        currentX = e.touches[0].clientX;
+    });
+
+    // 터치 끝
+    toggle.addEventListener('touchend', () => {
+        if (!dragging) return;
+        const diff = currentX - startX;
+
+        // 일정 거리 이상 스와이프하면 토글 상태 변경
+        if (diff > 20) {
+            isOn = true;
+        } else if (diff < -20) {
+            isOn = false;
+        }
+        updateToggle();
+        dragging = false;
+    });
+
+    // 클릭으로도 작동
+    toggle.addEventListener('click', () => {
+        if (dragging) return; // 드래그 중이면 무시
+        isOn = !isOn;
+        updateToggle();
+    });
+
+    function updateToggle() {
+        toggle.classList.toggle('on', isOn);
+    }
+</script>
+
+</body>
+</html>
