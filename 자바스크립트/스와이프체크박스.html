@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>스와이프 토글 체크박스</title>
+  <title>접근성 지원 스와이프 토글</title>
   <style>
     body {
       display: flex;
@@ -21,18 +21,6 @@
       height: 44px;
     }
 
-    /* 시각적으로 숨긴 체크박스 */
-    .visually-hidden {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      margin: -1px;
-      padding: 0;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-      border: 0;
-    }
-
     .toggle-wrapper {
       width: 100%;
       height: 100%;
@@ -47,6 +35,9 @@
       justify-content: space-between;
       padding: 0 12px;
       box-sizing: border-box;
+
+      /* 웹 접근성 */
+      outline: none;
     }
 
     .toggle-wrapper.on {
@@ -90,59 +81,88 @@
 <body>
 
 <div class="toggle-container">
-  <!-- 접근성: label과 연결된 숨겨진 checkbox -->
-  <input type="checkbox" id="access-toggle" class="visually-hidden"
-         role="switch" aria-checked="false" aria-label="홈 또는 아웃 선택" />
-  
-  <label for="access-toggle" class="toggle-wrapper" id="toggle">
+  <!-- 접근성 토글 스위치 -->
+  <div
+    id="toggle"
+    class="toggle-wrapper"
+    role="switch"
+    aria-checked="false"
+    aria-label="홈 또는 아웃 선택"
+    tabindex="0"
+  >
     <span class="toggle-text text-home">홈</span>
     <span class="toggle-text text-out">아웃</span>
     <div class="toggle-knob"></div>
-  </label>
+  </div>
 </div>
 
 <script>
-  const checkbox = document.getElementById('access-toggle');
-  const toggleWrapper = document.getElementById('toggle');
-
+  const toggle = document.getElementById('toggle');
+  let isOn = false;
   let startX = 0;
   let dragging = false;
+  let moved = false;
 
-  // 초기 렌더링
-  updateVisualState(checkbox.checked);
+  // 시각 상태 반영
+  function updateState() {
+    toggle.classList.toggle('on', isOn);
+    toggle.setAttribute('aria-checked', isOn.toString());
+  }
 
   // 터치 시작
-  toggleWrapper.addEventListener('touchstart', (e) => {
+  toggle.addEventListener('touchstart', (e) => {
     startX = e.touches[0].clientX;
     dragging = true;
+    moved = false;
+  });
+
+  // 터치 이동 감지
+  toggle.addEventListener('touchmove', (e) => {
+    moved = true;
   });
 
   // 터치 종료
-  toggleWrapper.addEventListener('touchend', (e) => {
+  toggle.addEventListener('touchend', (e) => {
     if (!dragging) return;
+
     const endX = e.changedTouches[0].clientX;
     const diff = endX - startX;
 
     if (diff > 20) {
-      checkbox.checked = true;
+      isOn = true;
+      updateState();
     } else if (diff < -20) {
-      checkbox.checked = false;
+      isOn = false;
+      updateState();
+    } else if (!moved) {
+      // 터치 클릭처럼 눌렀을 때
+      isOn = !isOn;
+      updateState();
     }
-    updateVisualState(checkbox.checked);
+
     dragging = false;
+    e.preventDefault(); // click과 중복 방지
+  }, { passive: false });
+
+  // 키보드 접근성 (Space, Enter)
+  toggle.addEventListener('keydown', (e) => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      isOn = !isOn;
+      updateState();
+    }
   });
 
-  // 클릭 시 토글
-  toggleWrapper.addEventListener('click', (e) => {
-    if (dragging) return;
-    checkbox.checked = !checkbox.checked;
-    updateVisualState(checkbox.checked);
+  // 마우스 클릭
+  toggle.addEventListener('click', (e) => {
+    if (!moved) {
+      isOn = !isOn;
+      updateState();
+    }
   });
 
-  function updateVisualState(isChecked) {
-    toggleWrapper.classList.toggle('on', isChecked);
-    checkbox.setAttribute('aria-checked', isChecked.toString());
-  }
+  // 초기화
+  updateState();
 </script>
 
 </body>
