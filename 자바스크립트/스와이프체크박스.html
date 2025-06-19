@@ -14,6 +14,19 @@
             background: #f4f4f4;
         }
 
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: sans-serif;
+            user-select: none;
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
         .toggle-wrapper {
             width: 80px;
             height: 40px;
@@ -44,12 +57,32 @@
         .toggle-wrapper.on .toggle-knob {
             left: 42px;
         }
+
+        .label-home {
+            color: #4caf50;
+        }
+
+        .label-out {
+            color: #aaa;
+        }
+
+        .toggle-wrapper.on ~ .label-home {
+            color: #aaa;
+        }
+
+        .toggle-wrapper.on ~ .label-out {
+            color: #fff;
+        }
     </style>
 </head>
 <body>
 
-<div class="toggle-wrapper" id="toggle">
-    <div class="toggle-knob"></div>
+<div class="toggle-container">
+    <span class="toggle-label label-home">홈</span>
+    <div class="toggle-wrapper" id="toggle">
+        <div class="toggle-knob"></div>
+    </div>
+    <span class="toggle-label label-out">아웃</span>
 </div>
 
 <script>
@@ -58,13 +91,11 @@
     let startX = 0;
     let dragging = false;
 
-    // 터치 시작
     toggle.addEventListener('touchstart', (e) => {
         startX = e.touches[0].clientX;
         dragging = true;
     });
 
-    // 터치 끝
     toggle.addEventListener('touchend', (e) => {
         if (!dragging) return;
 
@@ -80,9 +111,8 @@
         dragging = false;
     });
 
-    // 클릭 (드래그가 없을 때만 허용)
     toggle.addEventListener('click', () => {
-        if (dragging) return; // 스와이프 중이면 클릭 무시
+        if (dragging) return;
         isOn = !isOn;
         updateToggle();
     });
