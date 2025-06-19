@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>토글 스와이프 체크</title>
+    <title>스와이프 토글 체크박스</title>
     <style>
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            margin: 0;
             background: #f4f4f4;
         }
 
@@ -55,7 +56,6 @@
     const toggle = document.getElementById('toggle');
     let isOn = false;
     let startX = 0;
-    let currentX = 0;
     let dragging = false;
 
     // 터치 시작
@@ -64,18 +64,13 @@
         dragging = true;
     });
 
-    // 터치 이동
-    toggle.addEventListener('touchmove', (e) => {
-        if (!dragging) return;
-        currentX = e.touches[0].clientX;
-    });
-
     // 터치 끝
-    toggle.addEventListener('touchend', () => {
+    toggle.addEventListener('touchend', (e) => {
         if (!dragging) return;
-        const diff = currentX - startX;
 
-        // 일정 거리 이상 스와이프하면 토글 상태 변경
+        const endX = e.changedTouches[0].clientX;
+        const diff = endX - startX;
+
         if (diff > 20) {
             isOn = true;
         } else if (diff < -20) {
@@ -85,9 +80,9 @@
         dragging = false;
     });
 
-    // 클릭으로도 작동
+    // 클릭 (드래그가 없을 때만 허용)
     toggle.addEventListener('click', () => {
-        if (dragging) return; // 드래그 중이면 무시
+        if (dragging) return; // 스와이프 중이면 클릭 무시
         isOn = !isOn;
         updateToggle();
     });
