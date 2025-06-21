@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>숫자 애니메이션</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        #counter {
+            font-size: 3em;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div id="counter">150</div>
+
+<script>
+    function animateCount(start, end, duration) {
+        const element = document.getElementById("counter");
+        const range = start - end;
+        const startTime = performance.now();
+
+        function step(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1); // 0~1 사이 값
+            const easeOut = 1 - Math.pow(1 - progress, 3); // 감속(ease-out) 효과
+
+            const currentValue = Math.round(start - easeOut * range);
+            element.textContent = currentValue;
+
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            }
+        }
+
+        requestAnimationFrame(step);
+    }
+
+    // 사용 예: 150에서 33까지 2초 동안 애니메이션
+    animateCount(150, 33, 2000);
+</script>
+
+</body>
+</html>
