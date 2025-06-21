@@ -79,7 +79,7 @@
   </style>
 </head>
 <body>
-  
+  <div>
   <label>
   이메일
   <input type="email" name="email">
@@ -89,6 +89,7 @@
   이메일
   <input id="email" type="email" name="email">
 </label>
+</div>
 
 <div class="toggle-container">
   <!-- 접근성 토글 스위치 -->
@@ -107,6 +108,7 @@
 </div>
 
 <script>
+function aa(){
   const toggle = document.getElementById('toggle');
   let isOn = false;
   let startX = 0;
@@ -173,6 +175,8 @@
 
   // 초기화
   updateState();
+  }
+  aa()
 </script>
 
 </body>
