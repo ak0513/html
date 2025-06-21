@@ -105,6 +105,9 @@
 </div>
 
 <script>
+function cc(){
+    alert('터치 이벤트2')
+    }
 function aa(){
   const toggle = document.getElementById('toggle');
   let isOn = false;
@@ -153,6 +156,7 @@ function aa(){
     e.preventDefault(); // click과 중복 방지
 
     bb()
+    cc()
   }, { passive: false });
 
   // 키보드 접근성 (Space, Enter)
@@ -161,7 +165,7 @@ function aa(){
       e.preventDefault();
       isOn = !isOn;
       updateState();
-      bb()
+      
     }
   });
 
@@ -179,8 +183,9 @@ function aa(){
   }
   
   function bb(){
-    alert('터치 이벤트')
+    alert('터치 이벤트1')
     }
+    
   aa()
 </script>
 
