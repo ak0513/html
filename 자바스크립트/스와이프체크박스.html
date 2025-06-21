@@ -152,7 +152,7 @@ function aa(){
     dragging = false;
     e.preventDefault(); // click과 중복 방지
 
-alert('터치 이벤트')
+    bb()
   }, { passive: false });
 
   // 키보드 접근성 (Space, Enter)
@@ -161,6 +161,7 @@ alert('터치 이벤트')
       e.preventDefault();
       isOn = !isOn;
       updateState();
+      bb()
     }
   });
 
@@ -176,6 +177,10 @@ alert('터치 이벤트')
   // 초기화
   updateState();
   }
+  
+  function bb(){
+    alert('터치 이벤트')
+    }
   aa()
 </script>
 
