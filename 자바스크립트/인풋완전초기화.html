@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>iOS 입력 초기화 버그 대응</title>
+  <title>iOS 조합 버그 대응 (키패드 유지)</title>
   <style>
     body {
       font-family: sans-serif;
@@ -30,17 +30,26 @@
 
   <script>
     function clearInput() {
-      const oldInput = document.getElementById('myInput');
-      const parent = oldInput.parentNode;
-      const newInput = oldInput.cloneNode(true); // 모든 속성 복사
+      const input = document.getElementById('myInput');
 
-      newInput.value = ''; // 값 초기화
-      newInput.id = 'myInput'; // ID 유지
+      // 1. 값 초기화
+      input.value = '';
 
-      parent.replaceChild(newInput, oldInput);
+      // 2. 조합 종료 이벤트 강제 발생 (IME 캐시 방지)
+      const compEndEvent = new CompositionEvent('compositionend', {
+        data: '',
+        bubbles: true
+      });
+      input.dispatchEvent(compEndEvent);
 
-      // 포커스를 다시 주기 (iOS에서 키패드는 다시 안 뜰 수 있음)
-      setTimeout(() => newInput.focus(), 0);
+      // 3. input 이벤트도 수동 발생
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+
+      // 4. selection도 0으로 초기화 → 커서 깔끔하게 이동
+      input.setSelectionRange(0, 0);
+
+      // 5. 포커스 유지 → 키패드 유지됨
+      input.focus();
     }
   </script>
 
