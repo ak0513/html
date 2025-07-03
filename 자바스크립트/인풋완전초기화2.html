@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>iOS 조합 버그 대응 - 전역 클릭 기반</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .input-wrapper {
+      margin-bottom: 1rem;
+    }
+
+    input {
+      padding: 0.5rem;
+      font-size: 1.2rem;
+      width: 200px;
+    }
+
+    .clear-btn,
+    .add-btn {
+      margin-left: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 동적 input을 만들 버튼 -->
+  <button class="add-btn">+ 입력창 추가</button>
+
+  <!-- input들이 들어갈 컨테이너 -->
+  <div id="container"></div>
+
+  <script>
+    // ✅ iOS 조합 상태 초기화 + 키보드 유지
+    function resetInputSafely(input) {
+      input.value = '';
+
+      // 조합 상태 강제 종료
+      input.dispatchEvent(new CompositionEvent('compositionend', {
+        data: '',
+        bubbles: true
+      }));
+
+      // input 이벤트 강제 트리거
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+
+      // 커서 위치 맨 앞으로
+      input.setSelectionRange(0, 0);
+
+      // 키보드 유지
+      input.focus();
+    }
+
+    // ✅ 고유 id 부여용 카운터
+    let count = 0;
+
+    // ✅ 전역 클릭 이벤트 - add 버튼, clear 버튼 모두 처리
+    document.addEventListener('click', function (e) {
+      // [1] 입력창 추가 버튼 클릭 처리
+      if (e.target.closest('.add-btn')) {
+        const container = document.getElementById('container');
+        const wrapper = document.createElement('div');
+        wrapper.className = 'input-wrapper';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = '입력하세요';
+        input.className = 'my-input';
+        input.dataset.id = ++count;
+
+        const button = document.createElement('button');
+        button.textContent = '삭제';
+        button.className = 'clear-btn';
+        button.dataset.target = input.dataset.id;
+
+        wrapper.appendChild(input);
+        wrapper.appendChild(button);
+        container.appendChild(wrapper);
+
+        // 새로 생성된 input에 포커스 주기
+        input.focus();
+        return;
+      }
+
+      // [2] 삭제 버튼 클릭 처리
+      const clearBtn = e.target.closest('.clear-btn');
+      if (clearBtn) {
+        const targetId = clearBtn.dataset.target;
+        const input = document.querySelector(`.my-input[data-id="${targetId}"]`);
+        if (input) {
+          resetInputSafely(input);
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
