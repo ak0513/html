@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>iOS 구형 대응용 입력 초기화</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .input-wrapper {
+      margin-bottom: 1rem;
+    }
+
+    input {
+      padding: 0.5rem;
+      font-size: 1.2rem;
+      width: 200px;
+    }
+
+    .clear-btn,
+    .add-btn {
+      margin-left: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 입력창 추가 버튼 -->
+  <button class="add-btn">+ 입력창 추가</button>
+
+  <!-- 입력창이 들어갈 영역 -->
+  <div id="container"></div>
+
+  <script>
+    let count = 0;
+
+    // ✅ iOS 구형 대응: 조합 없이 값 초기화 + 키패드 유지
+    function resetInputSafely(input) {
+      input.value = ''; // 값 초기화
+
+      // 커서 위치 맨 앞
+      input.setSelectionRange(0, 0);
+
+      // input 이벤트 강제 발생 → 조합 상태 우회 리셋
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+
+      // 포커스 유지 (키패드 유지 목적)
+      input.focus();
+    }
+
+    // ✅ document 클릭 이벤트 하나로 처리 (이벤트 위임)
+    document.addEventListener('click', function(e) {
+      // [1] 입력창 추가 버튼 클릭
+      if (e.target.closest('.add-btn')) {
+        const container = document.getElementById('container');
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'input-wrapper';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = '입력하세요';
+        input.className = 'my-input';
+        input.dataset.id = ++count;
+
+        const button = document.createElement('button');
+        button.textContent = '삭제';
+        button.className = 'clear-btn';
+        button.dataset.target = input.dataset.id;
+
+        wrapper.appendChild(input);
+        wrapper.appendChild(button);
+        container.appendChild(wrapper);
+
+        input.focus(); // 바로 포커스 주기 (키보드 띄우기)
+        return;
+      }
+
+      // [2] 삭제 버튼 클릭
+      const clearBtn = e.target.closest('.clear-btn');
+      if (clearBtn) {
+        const targetId = clearBtn.dataset.target;
+        const input = document.querySelector(`.my-input[data-id="${targetId}"]`);
+        if (input) {
+          resetInputSafely(input);
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
