@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>iOS 스크롤 연동</title>
+  <title>스크롤 연동 예제</title>
   <style>
     body {
       margin: 0;
@@ -22,6 +22,7 @@
       gap: 8px;
       padding: 12px;
       justify-content: center;
+      flex-wrap: wrap;
     }
     .buttons button {
       padding: 8px 16px;
@@ -34,9 +35,13 @@
       color: white;
     }
     .section {
-      height: 100vh;
+      height: 300px;
       padding-top: 60px; /* 헤더 높이 고려 */
       box-sizing: border-box;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .section:nth-child(odd) { background: #eee; }
     .section:nth-child(even) { background: #ddd; }
@@ -49,12 +54,18 @@
       <button data-target="sec1">1번</button>
       <button data-target="sec2">2번</button>
       <button data-target="sec3">3번</button>
+      <button data-target="sec4">4번</button>
+      <button data-target="sec5">5번</button>
+      <button data-target="sec6">6번</button>
     </div>
   </div>
 
   <div id="sec1" class="section">섹션 1</div>
   <div id="sec2" class="section">섹션 2</div>
   <div id="sec3" class="section">섹션 3</div>
+  <div id="sec4" class="section">섹션 4</div>
+  <div id="sec5" class="section">섹션 5</div>
+  <div id="sec6" class="section">섹션 6</div>
 
   <script>
     const buttons = document.querySelectorAll('.buttons button');
@@ -66,14 +77,13 @@
       if (isProgrammaticScroll) return;
 
       let scrollY = window.scrollY;
-      let windowHeight = window.innerHeight;
+      let headerHeight = 60;
 
       sections.forEach((sec, index) => {
-        const rect = sec.getBoundingClientRect();
-        const offsetTop = window.scrollY + rect.top;
+        const offsetTop = sec.offsetTop;
+        const offsetBottom = offsetTop + sec.offsetHeight;
 
-        // 60px은 헤더 높이만큼 보정
-        if (scrollY + 70 >= offsetTop && scrollY + 70 < offsetTop + sec.offsetHeight) {
+        if (scrollY + headerHeight >= offsetTop && scrollY + headerHeight < offsetBottom) {
           setActiveButton(index);
         }
       });
@@ -94,14 +104,14 @@
 
         window.scrollTo({ top: targetY, behavior: 'smooth' });
 
-        // iOS에서 scroll이 완전히 끝날 때까지 대기 (600ms 이상 권장)
+        // iOS 대응: 스크롤 애니메이션이 끝났을 때 false 처리
         setTimeout(() => {
           isProgrammaticScroll = false;
         }, 700);
       });
     });
 
-    // 엑티브 클래스 처리
+    // 버튼 활성화 처리
     function setActiveButton(activeIdx) {
       buttons.forEach((b, i) => {
         b.classList.toggle('active', i === activeIdx);
