@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>스크롤 연동 예제</title>
+  <title>iOS 안정 스크롤 연동</title>
   <style>
     body {
       margin: 0;
@@ -29,6 +29,7 @@
       border: 1px solid #888;
       background: #fff;
       cursor: pointer;
+      transition: background 0.3s;
     }
     .buttons button.active {
       background: #007bff;
@@ -36,7 +37,7 @@
     }
     .section {
       height: 300px;
-      padding-top: 60px; /* 헤더 높이 고려 */
+      padding-top: 60px;
       box-sizing: border-box;
       font-size: 24px;
       display: flex;
@@ -98,20 +99,21 @@
         if (!target) return;
 
         isProgrammaticScroll = true;
+
+        // 직접 버튼 활성화 (스크롤 중 다른 버튼으로 안 바뀌게)
         setActiveButton(idx);
 
-        const targetY = target.offsetTop - 60; // 헤더 높이 보정
+        const targetY = target.offsetTop - 60;
 
         window.scrollTo({ top: targetY, behavior: 'smooth' });
 
-        // iOS 대응: 스크롤 애니메이션이 끝났을 때 false 처리
+        // 충분히 기다린 뒤 스크롤 감지 다시 허용
         setTimeout(() => {
           isProgrammaticScroll = false;
         }, 700);
       });
     });
 
-    // 버튼 활성화 처리
     function setActiveButton(activeIdx) {
       buttons.forEach((b, i) => {
         b.classList.toggle('active', i === activeIdx);
