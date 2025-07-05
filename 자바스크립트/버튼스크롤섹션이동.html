@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iOS 스크롤 연동</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: #fff;
+      border-bottom: 1px solid #ccc;
+      z-index: 10;
+    }
+    .buttons {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      justify-content: center;
+    }
+    .buttons button {
+      padding: 8px 16px;
+      border: 1px solid #888;
+      background: #fff;
+      cursor: pointer;
+    }
+    .buttons button.active {
+      background: #007bff;
+      color: white;
+    }
+    .section {
+      height: 100vh;
+      padding-top: 60px; /* 헤더 높이 고려 */
+      box-sizing: border-box;
+    }
+    .section:nth-child(odd) { background: #eee; }
+    .section:nth-child(even) { background: #ddd; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="buttons">
+      <button data-target="sec1">1번</button>
+      <button data-target="sec2">2번</button>
+      <button data-target="sec3">3번</button>
+    </div>
+  </div>
+
+  <div id="sec1" class="section">섹션 1</div>
+  <div id="sec2" class="section">섹션 2</div>
+  <div id="sec3" class="section">섹션 3</div>
+
+  <script>
+    const buttons = document.querySelectorAll('.buttons button');
+    const sections = document.querySelectorAll('.section');
+    let isProgrammaticScroll = false;
+
+    // 스크롤 시 섹션 감지
+    window.addEventListener('scroll', () => {
+      if (isProgrammaticScroll) return;
+
+      let scrollY = window.scrollY;
+      let windowHeight = window.innerHeight;
+
+      sections.forEach((sec, index) => {
+        const rect = sec.getBoundingClientRect();
+        const offsetTop = window.scrollY + rect.top;
+
+        // 60px은 헤더 높이만큼 보정
+        if (scrollY + 70 >= offsetTop && scrollY + 70 < offsetTop + sec.offsetHeight) {
+          setActiveButton(index);
+        }
+      });
+    });
+
+    // 버튼 클릭 → 해당 섹션으로 스크롤
+    buttons.forEach((btn, idx) => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.target;
+        const target = document.getElementById(targetId);
+
+        if (!target) return;
+
+        isProgrammaticScroll = true;
+        setActiveButton(idx);
+
+        const targetY = target.offsetTop - 60; // 헤더 높이 보정
+
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+
+        // iOS에서 scroll이 완전히 끝날 때까지 대기 (600ms 이상 권장)
+        setTimeout(() => {
+          isProgrammaticScroll = false;
+        }, 700);
+      });
+    });
+
+    // 엑티브 클래스 처리
+    function setActiveButton(activeIdx) {
+      buttons.forEach((b, i) => {
+        b.classList.toggle('active', i === activeIdx);
+      });
+    }
+  </script>
+
+</body>
+</html>
