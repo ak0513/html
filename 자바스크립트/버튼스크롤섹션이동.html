@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>iOS 안정 스크롤 연동</title>
+  <title>iOS 대응 스크롤 연동</title>
   <style>
     body {
       margin: 0;
@@ -19,17 +19,16 @@
     }
     .buttons {
       display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 8px;
       padding: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
     }
     .buttons button {
       padding: 8px 16px;
       border: 1px solid #888;
       background: #fff;
       cursor: pointer;
-      transition: background 0.3s;
     }
     .buttons button.active {
       background: #007bff;
@@ -37,7 +36,7 @@
     }
     .section {
       height: 300px;
-      padding-top: 60px;
+      padding-top: 60px; /* 헤더 높이 보정 */
       box-sizing: border-box;
       font-size: 24px;
       display: flex;
@@ -73,50 +72,53 @@
     const sections = document.querySelectorAll('.section');
     let isProgrammaticScroll = false;
 
-    // 스크롤 시 섹션 감지
+    // 스크롤에 따라 활성화될 버튼을 설정
     window.addEventListener('scroll', () => {
       if (isProgrammaticScroll) return;
 
-      let scrollY = window.scrollY;
-      let headerHeight = 60;
+      const scrollY = window.scrollY;
+      const headerHeight = 60;
 
-      sections.forEach((sec, index) => {
-        const offsetTop = sec.offsetTop;
-        const offsetBottom = offsetTop + sec.offsetHeight;
+      sections.forEach((section, index) => {
+        const top = section.offsetTop;
+        const bottom = top + section.offsetHeight;
 
-        if (scrollY + headerHeight >= offsetTop && scrollY + headerHeight < offsetBottom) {
+        if (scrollY + headerHeight >= top && scrollY + headerHeight < bottom) {
           setActiveButton(index);
         }
       });
     });
 
-    // 버튼 클릭 → 해당 섹션으로 스크롤
-    buttons.forEach((btn, idx) => {
-      btn.addEventListener('click', () => {
-        const targetId = btn.dataset.target;
-        const target = document.getElementById(targetId);
+    // 버튼 클릭 시 스크롤 이동 및 버튼 활성화
+    buttons.forEach((button, index) => {
+      button.addEventListener('click', () => {
+        const targetId = button.dataset.target;
+        const targetEl = document.getElementById(targetId);
+        if (!targetEl) return;
 
-        if (!target) return;
+        const targetY = targetEl.offsetTop - 60;
 
         isProgrammaticScroll = true;
-
-        // 직접 버튼 활성화 (스크롤 중 다른 버튼으로 안 바뀌게)
-        setActiveButton(idx);
-
-        const targetY = target.offsetTop - 60;
+        setActiveButton(index); // 클릭한 버튼을 먼저 활성화
 
         window.scrollTo({ top: targetY, behavior: 'smooth' });
 
-        // 충분히 기다린 뒤 스크롤 감지 다시 허용
-        setTimeout(() => {
-          isProgrammaticScroll = false;
-        }, 700);
+        // 스크롤 완료 여부를 확인하는 폴링 방식
+        const waitForScrollEnd = () => {
+          if (Math.round(window.scrollY) === Math.round(targetY)) {
+            isProgrammaticScroll = false;
+          } else {
+            requestAnimationFrame(waitForScrollEnd);
+          }
+        };
+        requestAnimationFrame(waitForScrollEnd);
       });
     });
 
-    function setActiveButton(activeIdx) {
-      buttons.forEach((b, i) => {
-        b.classList.toggle('active', i === activeIdx);
+    // 버튼 active 클래스 처리
+    function setActiveButton(activeIndex) {
+      buttons.forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === activeIndex);
       });
     }
   </script>
