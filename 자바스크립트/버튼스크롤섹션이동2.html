@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Scroll Sync Fix</title>
+  <title>Scroll Sync 완전 고정</title>
   <style>
     body {
       margin: 0;
@@ -46,7 +46,7 @@
     .section:nth-child(odd) { background: #eee; }
     .section:nth-child(even) { background: #ddd; }
 
-    /* 하단 여백 확보 */
+    /* 하단 여백 확보 (iOS 대응) */
     body::after {
       content: "";
       display: block;
@@ -63,7 +63,7 @@
       <button data-target="sec3">3번</button>
       <button data-target="sec4">4번</button>
       <button data-target="sec5">5번</button>
-      <button data-target="sec6">6번</button>
+      <button data-target="sec6">16번</button>
     </div>
   </div>
 
@@ -76,11 +76,12 @@
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <script>
     let isProgrammaticScroll = false;
     let forcedActiveIndex = null;
 
-    // 버튼 클릭 시 스크롤 이동 + 강제 엑티브
+    // 버튼 클릭 시 스크롤 이동 + 버튼 활성화
     $('.buttons').on('click', 'button', function () {
       const $btn = $(this);
       const targetId = $btn.data('target');
@@ -90,6 +91,7 @@
       const index = $('.buttons button').index($btn);
       const targetY = $target.offset().top - 60;
 
+      // 깜빡임 방지용 플래그
       setTimeout(() => {
         isProgrammaticScroll = true;
         forcedActiveIndex = index;
@@ -98,15 +100,24 @@
       setActiveButton(index);
 
       $('html, body').stop().animate({ scrollTop: targetY }, 500, function () {
-        // 스크롤 애니메이션 종료 후
         isProgrammaticScroll = false;
         forcedActiveIndex = null;
       });
     });
 
-    // 스크롤 감지 (강제 엑티브 중이면 무시)
-    $(window).on('scroll', function () {
-      if (isProgrammaticScroll || forcedActiveIndex !== null) return;
+    // 버튼 활성화 처리 함수
+    function setActiveButton(activeIndex) {
+      $('.buttons button').each(function (i) {
+        $(this).toggleClass('active', i === activeIndex);
+      });
+    }
+
+    // scroll 감시 (requestAnimationFrame 사용)
+    function watchScroll() {
+      if (isProgrammaticScroll || forcedActiveIndex !== null) {
+        requestAnimationFrame(watchScroll);
+        return;
+      }
 
       const scrollY = $(window).scrollTop();
       const headerHeight = 60;
@@ -120,13 +131,12 @@
           setActiveButton(index);
         }
       });
-    });
 
-    function setActiveButton(activeIndex) {
-      $('.buttons button').each(function (i) {
-        $(this).toggleClass('active', i === activeIndex);
-      });
+      requestAnimationFrame(watchScroll);
     }
+
+    // 감시 시작
+    requestAnimationFrame(watchScroll);
   </script>
 
 </body>
