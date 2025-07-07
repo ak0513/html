@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>jQuery Scroll Sync</title>
+  <title>jQuery Scroll Sync 안정형</title>
   <style>
     body {
       margin: 0;
@@ -73,7 +73,7 @@
   <script>
     let isProgrammaticScroll = false;
 
-    // 버튼 클릭 → 스크롤 이동 + 버튼 엑티브 처리
+    // 버튼 클릭 시 스크롤 이동
     $('.buttons').on('click', 'button', function () {
       const $btn = $(this);
       const targetId = $btn.data('target');
@@ -83,7 +83,11 @@
       const index = $('.buttons button').index($btn);
       const targetY = $target.offset().top - 60;
 
-      isProgrammaticScroll = true;
+      // 중요: scroll 이벤트보다 우선 적용되도록 밀어 넣기
+      setTimeout(() => {
+        isProgrammaticScroll = true;
+      }, 0);
+
       setActiveButton(index);
 
       $('html, body').stop().animate({ scrollTop: targetY }, 500, function () {
@@ -91,7 +95,7 @@
       });
     });
 
-    // 스크롤 이벤트 감지 → 해당 섹션에 도달하면 버튼 엑티브
+    // 스크롤에 따라 섹션 감지
     $(window).on('scroll', function () {
       if (isProgrammaticScroll) return;
 
@@ -109,7 +113,7 @@
       });
     });
 
-    // 버튼 엑티브 처리 함수
+    // 버튼 active 처리
     function setActiveButton(activeIndex) {
       $('.buttons button').each(function (i) {
         $(this).toggleClass('active', i === activeIndex);
