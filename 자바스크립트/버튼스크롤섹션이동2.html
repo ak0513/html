@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>jQuery Scroll Sync</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: #fff;
+      border-bottom: 1px solid #ccc;
+      z-index: 10;
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px;
+    }
+    .buttons button {
+      padding: 8px 16px;
+      border: 1px solid #888;
+      background: #fff;
+      cursor: pointer;
+    }
+    .buttons button.active {
+      background: #007bff;
+      color: white;
+    }
+    .section {
+      height: 300px;
+      padding-top: 60px;
+      box-sizing: border-box;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .section:nth-child(odd) { background: #eee; }
+    .section:nth-child(even) { background: #ddd; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="buttons">
+      <button data-target="sec1">1번</button>
+      <button data-target="sec2">2번</button>
+      <button data-target="sec3">3번</button>
+      <button data-target="sec4">4번</button>
+      <button data-target="sec5">5번</button>
+      <button data-target="sec6">6번</button>
+    </div>
+  </div>
+
+  <div id="sec1" class="section">섹션 1</div>
+  <div id="sec2" class="section">섹션 2</div>
+  <div id="sec3" class="section">섹션 3</div>
+  <div id="sec4" class="section">섹션 4</div>
+  <div id="sec5" class="section">섹션 5</div>
+  <div id="sec6" class="section">섹션 6</div>
+
+  <!-- jQuery CDN -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+    let isProgrammaticScroll = false;
+
+    // 버튼 클릭 → 스크롤 이동 + 버튼 엑티브 처리
+    $('.buttons').on('click', 'button', function () {
+      const $btn = $(this);
+      const targetId = $btn.data('target');
+      const $target = $('#' + targetId);
+      if (!$target.length) return;
+
+      const index = $('.buttons button').index($btn);
+      const targetY = $target.offset().top - 60;
+
+      isProgrammaticScroll = true;
+      setActiveButton(index);
+
+      $('html, body').stop().animate({ scrollTop: targetY }, 500, function () {
+        isProgrammaticScroll = false;
+      });
+    });
+
+    // 스크롤 이벤트 감지 → 해당 섹션에 도달하면 버튼 엑티브
+    $(window).on('scroll', function () {
+      if (isProgrammaticScroll) return;
+
+      const scrollY = $(window).scrollTop();
+      const headerHeight = 60;
+
+      $('.section').each(function (index) {
+        const $section = $(this);
+        const top = $section.offset().top;
+        const bottom = top + $section.outerHeight();
+
+        if (scrollY + headerHeight >= top && scrollY + headerHeight < bottom) {
+          setActiveButton(index);
+        }
+      });
+    });
+
+    // 버튼 엑티브 처리 함수
+    function setActiveButton(activeIndex) {
+      $('.buttons button').each(function (i) {
+        $(this).toggleClass('active', i === activeIndex);
+      });
+    }
+  </script>
+
+</body>
+</html>
