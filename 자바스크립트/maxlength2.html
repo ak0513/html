@@ -2,52 +2,89 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>iOS maxlength 우회</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>iOS maxlength Fix</title>
   <style>
-    .input-wrap {
-      margin-bottom: 10px;
+    input, textarea {
+      display: block;
+      margin: 10px 0;
+      font-size: 16px;
+      padding: 6px;
+      width: 300px;
     }
   </style>
 </head>
 <body>
-  <div class="input-wrap">
-    <label>기본 인풋: </label>
-    <input type="text" class="limit-input" data-maxlength="10">
-  </div>
 
-  <div class="input-wrap">
-    <label>동적 생성 인풋: </label>
-    <button id="add-input">인풋 추가</button>
-    <div id="dynamic-container"></div>
-  </div>
+  <h2>정적 input</h2>
+  <input type="text" class="limited" maxlength="10" placeholder="최대 10자"/>
+
+  <h2>동적 input</h2>
+  <button id="addInput">input 추가</button>
+  <div id="dynamicContainer"></div>
 
   <script>
-    function enforceMaxLength(input) {
-      const max = parseInt(input.dataset.maxlength, 10);
-      const value = input.value;
-      const charArray = [...value]; // 이모지, 조합문자 등 분리 대응
-      if (charArray.length > max) {
-        input.value = charArray.slice(0, max).join('');
+    function enforceMaxLength(el) {
+      const maxLength = parseInt(el.getAttribute('maxlength'), 10);
+      if (!maxLength) return;
+
+      let isComposing = false;
+
+      // 조합 시작
+      el.addEventListener('compositionstart', () => {
+        isComposing = true;
+      });
+
+      // 조합 끝
+      el.addEventListener('compositionend', () => {
+        isComposing = false;
+        trimValue(el, maxLength);
+      });
+
+      // 입력 시 감시
+      el.addEventListener('input', () => {
+        if (!isComposing) {
+          trimValue(el, maxLength);
+        }
+      });
+
+      // 백스페이스 문제 대응: blur → refocus
+      el.addEventListener('blur', () => {
+        if (el.value.length > maxLength) {
+          trimValue(el, maxLength);
+        }
+      });
+    }
+
+    function trimValue(el, maxLength) {
+      if (el.value.length > maxLength) {
+        el.value = el.value.slice(0, maxLength);
+
+        // iOS 키보드 커서 갱신 트릭 (포커스 리셋)
+        const selectionEnd = el.selectionEnd;
+        el.blur();
+        setTimeout(() => {
+          el.focus();
+          el.setSelectionRange(selectionEnd, selectionEnd);
+        }, 10);
       }
     }
 
-    function bindInputEnforce(el) {
-      el.addEventListener('input', () => enforceMaxLength(el));
-    }
+    // 초기 적용
+    document.querySelectorAll('input.limited').forEach(enforceMaxLength);
 
-    // 초기 static 인풋 바인딩
-    document.querySelectorAll('.limit-input').forEach(bindInputEnforce);
-
-    // 동적 생성
-    document.getElementById('add-input').addEventListener('click', () => {
+    // 동적 input 추가
+    document.getElementById('addInput').addEventListener('click', () => {
       const input = document.createElement('input');
       input.type = 'text';
-      input.className = 'limit-input';
-      input.dataset.maxlength = '10';
-      input.placeholder = '동적 인풋';
-      bindInputEnforce(input);
-      document.getElementById('dynamic-container').appendChild(input);
+      input.className = 'limited';
+      input.setAttribute('maxlength', '10');
+      input.placeholder = '동적 최대 10자';
+      document.getElementById('dynamicContainer').appendChild(input);
+
+      enforceMaxLength(input);
     });
   </script>
+
 </body>
 </html>
