@@ -2,71 +2,84 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>iOS 한글 maxlength 대응</title>
+  <title>iOS 삭제 문제 해결</title>
   <style>
-    .input-limit {
+    input {
+      padding: 8px;
+      font-size: 16px;
+    }
+    .maxed {
       border: 2px solid red;
+      background-color: #ffe6e6;
+    }
+    .hidden-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      left: -9999px;
     }
   </style>
 </head>
 <body>
-  <h3>✅ 적용된 인풋</h3>
-  <input type="text" class="limit-input" maxlength="5" placeholder="최대 5자" />
 
-  <h3>❌ 일반 인풋 (비교용)</h3>
-  <input type="text" maxlength="5" placeholder="최대 5자" />
-
-  <br /><br />
-  <button id="addInput">➕ 인풋 동적 추가</button>
-  <div id="inputContainer"></div>
+  <input type="text" maxlength="5" class="watch-input" placeholder="입력하세요">
 
   <script>
-    function enforceMaxLength(input) {
-      const max = parseInt(input.getAttribute('maxlength'), 10);
-      let previousValue = "";
+    function handleInput(input) {
+      const maxLen = parseInt(input.getAttribute('maxlength'), 10);
+      const value = input.value;
 
-      input.addEventListener('beforeinput', (e) => {
-        if (input.value.length >= max && e.inputType !== 'deleteContentBackward') {
-          e.preventDefault(); // 입력 자체 차단
-          input.classList.add('input-limit');
-        }
-      });
+      if (value.length >= maxLen) {
+        input.classList.add('maxed');
+      } else {
+        input.classList.remove('maxed');
+      }
+    }
 
-      input.addEventListener('compositionstart', () => {
-        previousValue = input.value;
-      });
+    // 삭제 시 iOS 대응 우회처리
+    function setupIOSBackspaceFix(input) {
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Backspace') {
+          // iOS의 조합 상태일 수 있으므로, 우회적으로 리셋
+          const hiddenInput = document.createElement('input');
+          hiddenInput.className = 'hidden-input';
+          document.body.appendChild(hiddenInput);
 
-      input.addEventListener('compositionend', () => {
-        const maxLength = parseInt(input.getAttribute('maxlength'), 10);
-        if (input.value.length > maxLength) {
-          input.value = input.value.slice(0, maxLength); // 잘라냄
-        }
-      });
+          // 0. iOS에서 조합 문제 해결을 위해 blur → focus 우회
+          input.blur();
 
-      input.addEventListener('input', () => {
-        if (input.value.length > max) {
-          input.value = input.value.slice(0, max);
-        }
+          setTimeout(() => {
+            hiddenInput.focus();
 
-        // 스타일 초기화
-        if (input.value.length < max) {
-          input.classList.remove('input-limit');
+            setTimeout(() => {
+              hiddenInput.remove(); // 히든 인풋 제거
+              input.focus(); // 원래 인풋으로 복귀
+            }, 10);
+          }, 10);
         }
       });
     }
 
-    // 초기 인풋 적용
-    document.querySelectorAll('input.limit-input').forEach(enforceMaxLength);
+    // 초기 바인딩
+    document.querySelectorAll('.watch-input').forEach(input => {
+      input.addEventListener('input', () => handleInput(input));
+      setupIOSBackspaceFix(input);
+    });
 
-    // 동적 인풋 생성
-    document.getElementById('addInput').addEventListener('click', () => {
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.setAttribute('maxlength', '5');
-      input.classList.add('limit-input');
-      input.placeholder = '동적 인풋 (최대 5자)';
-      document.getElementById('inputContainer').appendChild(input);
-      enforceMaxLength(input);
+    // ✅ 동적으로 생성되는 인풋에도 적용
+    const observer = new MutationObserver(() => {
+      document.querySelectorAll('.watch-input').forEach(input => {
+        if (!input._watchSetup) {
+          input.addEventListener('input', () => handleInput(input));
+          setupIOSBackspaceFix(input);
+          input._watchSetup = true; // 중복 방지
+        }
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
     });
   </script>
 </body>
