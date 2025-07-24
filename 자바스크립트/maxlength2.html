@@ -1,35 +1,31 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>iOS Maxlength Fix</title>
+  <meta charset="UTF-8" />
+  <title>iOS maxlength 우회</title>
   <style>
-    body { padding: 2em; font-family: sans-serif; }
     input {
-      padding: 0.5em;
-      font-size: 18px;
-      width: 100%;
-      box-sizing: border-box;
-      margin-bottom: 1em;
+      width: 300px;
+      padding: 8px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    input.maxed {
+      background-color: #ffe6e6;
+      border: 2px solid red;
     }
   </style>
 </head>
 <body>
-  <h2>iOS 대응 강제 maxlength 입력</h2>
+  <h3>정적 input</h3>
+  <input type="text" class="watch-length" data-maxlength="6" placeholder="최대 6자 입력" />
 
-  <input type="text" class="fixed-maxlength" data-maxlength="5" placeholder="최대 5자" />
-
-  <button onclick="addInput()">+ 동적 인풋 추가</button>
-  <div id="dynamic"></div>
+  <h3>동적으로 추가된 input</h3>
+  <button id="addInput">인풋 추가</button>
+  <div id="dynamic-container"></div>
 
   <script>
-    function enforceMaxLength(input, max) {
-      const trimToMax = () => {
-        if (input.value.length > max) {
-          input.value = input.value.slice(0, max);
-        }
-      };
-
+    function enforceMaxLength(input, maxLength) {
       let isComposing = false;
 
       input.addEventListener('compositionstart', () => {
@@ -38,37 +34,45 @@
 
       input.addEventListener('compositionend', () => {
         isComposing = false;
-        trimToMax();
+        trimValue();
       });
 
       input.addEventListener('input', () => {
-        if (!isComposing) {
-          trimToMax();
+        if (!isComposing) trimValue();
+      });
+
+      function trimValue() {
+        if (input.value.length > maxLength) {
+          input.value = input.value.slice(0, maxLength);
         }
-      });
+
+        if (input.value.length >= maxLength) {
+          input.classList.add('maxed');
+          input.setAttribute('aria-invalid', 'true');
+        } else {
+          input.classList.remove('maxed');
+          input.removeAttribute('aria-invalid');
+        }
+      }
     }
 
-    function applyToAll() {
-      const inputs = document.querySelectorAll('.fixed-maxlength');
-      inputs.forEach(input => {
-        const max = parseInt(input.dataset.maxlength, 10);
-        enforceMaxLength(input, max);
-      });
-    }
+    // 초기 인풋 적용
+    document.querySelectorAll('.watch-length').forEach(input => {
+      const max = parseInt(input.dataset.maxlength, 10);
+      enforceMaxLength(input, max);
+    });
 
-    function addInput() {
-      const wrapper = document.getElementById('dynamic');
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.className = 'fixed-maxlength';
-      input.placeholder = '동적 인풋 (5자)';
-      input.setAttribute('data-maxlength', '5');
-      wrapper.appendChild(input);
-      enforceMaxLength(input, 5);
-    }
+    // 동적 input 생성
+    document.getElementById('addInput').addEventListener('click', () => {
+      const newInput = document.createElement('input');
+      newInput.type = 'text';
+      newInput.placeholder = '동적 input (최대 8자)';
+      newInput.classList.add('watch-length');
+      newInput.setAttribute('data-maxlength', '8');
+      document.getElementById('dynamic-container').appendChild(newInput);
 
-    // 초기 적용
-    applyToAll();
+      enforceMaxLength(newInput, 8);
+    });
   </script>
 </body>
 </html>
