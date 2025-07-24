@@ -2,47 +2,103 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>iOS 백스페이스 감지</title>
+  <title>iOS 백스페이스 우회 - 범용</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    input {
-      padding: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
+    body {
+      font-family: sans-serif;
+      padding: 20px;
     }
-    input.full {
-      border-color: red;
+    input {
+      font-size: 18px;
+      padding: 10px;
+      width: 100%;
+      max-width: 300px;
+      display: block;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
 
-<input type="text" maxlength="4" id="testInput" autocomplete="off" />
+  <h2>여러 개의 입력 필드</h2>
+  <input type="text" maxlength="10" placeholder="이름" />
+  <input type="text" maxlength="5" placeholder="나이" />
+  <input type="text" maxlength="15" placeholder="도시" id="city" />
 
-<script>
-  const input = document.getElementById('testInput');
-  let prevValue = '';
+  <button onclick="addInput()">동적으로 인풋 추가</button>
 
-  input.addEventListener('input', (e) => {
-    const currValue = e.target.value;
+  <script>
+    // 백스페이스 우회 로직을 적용할 함수
+    function applyBackspaceFix(input) {
+      let hasRedirectedFocus = false;
 
-    // 백스페이스 감지 (이전 값보다 길이가 짧아짐)
-    if (prevValue.length > currValue.length) {
-      console.log('Backspace 감지됨!');
-      // 예시: 포커스 다른 데 보내기
-      // document.getElementById('dummyInput').focus();
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Backspace') {
+          if (input.value.length > 0) {
+            e.preventDefault();
+
+            if (!hasRedirectedFocus) {
+              hasRedirectedFocus = true;
+
+              const hiddenInput = document.createElement('input');
+              hiddenInput.type = 'text';
+              hiddenInput.setAttribute('aria-hidden', 'true');
+              hiddenInput.style.position = 'absolute';
+              hiddenInput.style.opacity = '0';
+              hiddenInput.style.pointerEvents = 'none';
+              hiddenInput.style.zIndex = '-1';
+              document.body.appendChild(hiddenInput);
+
+              hiddenInput.focus();
+
+              setTimeout(() => {
+                input.focus();
+                hiddenInput.remove();
+
+                input.value = input.value.slice(0, -1);
+
+                // 다시 백스페이스가 작동할 수 있게 플래그 초기화
+                setTimeout(() => {
+                  hasRedirectedFocus = false;
+                }, 50);
+              }, 10);
+            } else {
+              // 히든 인풋 포커스 없이 바로 삭제
+              input.value = input.value.slice(0, -1);
+            }
+          }
+        }
+      });
     }
 
-    // 예시: maxlength 도달 시 입력 막기
-    if (currValue.length >= input.maxLength) {
-      input.classList.add('full');
-      input.blur(); // 자동으로 포커스 아웃
-    } else {
-      input.classList.remove('full');
+    // 초기 적용
+    function initializeBackspaceFix() {
+      const allInputs = document.querySelectorAll('input[type="text"][maxlength]');
+      allInputs.forEach(input => {
+        // 중복 적용 방지
+        if (!input._backspaceFixApplied) {
+          applyBackspaceFix(input);
+          input._backspaceFixApplied = true;
+        }
+      });
     }
 
-    prevValue = currValue;
-  });
-</script>
+    // 페이지 로드 후 초기 인풋에 적용
+    initializeBackspaceFix();
+
+    // 동적 추가 테스트용
+    function addInput() {
+      const newInput = document.createElement('input');
+      newInput.type = 'text';
+      newInput.maxLength = 8;
+      newInput.placeholder = '동적 입력';
+      document.body.appendChild(newInput);
+
+      // 자동으로 백스페이스 패치 적용
+      initializeBackspaceFix();
+    }
+  </script>
 
 </body>
 </html>
