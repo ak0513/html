@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>iOS 백스페이스 우회</title>
+  <title>iOS 백스페이스 우회 및 maxlength</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -19,39 +19,50 @@
 </head>
 <body>
 
-  <h2>텍스트 입력</h2>
-  <input type="text" id="mainInput" placeholder="여기에 입력하세요" autocomplete="off" />
+  <h2>텍스트 입력 (최대 10자)</h2>
+  <input type="text" id="mainInput" maxlength="10" placeholder="여기에 입력하세요" autocomplete="off" />
 
   <script>
     const mainInput = document.getElementById('mainInput');
 
+    let hasRedirectedFocus = false; // 히든 인풋으로 이동했는지 플래그
+
     mainInput.addEventListener('keydown', function (e) {
-      // 백스페이스 키 감지
       if (e.key === 'Backspace') {
         if (mainInput.value.length > 0) {
-          e.preventDefault(); // 기본 백스페이스 동작 방지
+          e.preventDefault(); // 기본 백스페이스 삭제 방지
 
-          // 히든 인풋 생성
-          const hiddenInput = document.createElement('input');
-          hiddenInput.type = 'text';
-          hiddenInput.setAttribute('aria-hidden', 'true');
-          hiddenInput.style.position = 'absolute';
-          hiddenInput.style.opacity = '0';
-          hiddenInput.style.pointerEvents = 'none';
-          hiddenInput.style.zIndex = '-1';
+          // 포커스 이동이 아직 안됐을 때만 수행
+          if (!hasRedirectedFocus) {
+            hasRedirectedFocus = true;
 
-          document.body.appendChild(hiddenInput);
-          hiddenInput.focus();
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'text';
+            hiddenInput.setAttribute('aria-hidden', 'true');
+            hiddenInput.style.position = 'absolute';
+            hiddenInput.style.opacity = '0';
+            hiddenInput.style.pointerEvents = 'none';
+            hiddenInput.style.zIndex = '-1';
+            document.body.appendChild(hiddenInput);
 
-          setTimeout(() => {
-            mainInput.focus();
+            hiddenInput.focus();
 
-            // 마지막 글자 제거
+            setTimeout(() => {
+              mainInput.focus();
+              hiddenInput.remove();
+
+              // 값에서 마지막 문자 제거
+              mainInput.value = mainInput.value.slice(0, -1);
+
+              // 플래그 초기화 (포커스 이동이 끝난 이후 다시 백스페이스 허용)
+              setTimeout(() => {
+                hasRedirectedFocus = false;
+              }, 50);
+            }, 10);
+          } else {
+            // 히든 인풋 포커스는 이미 갔다 왔으므로, 그냥 마지막 글자 삭제
             mainInput.value = mainInput.value.slice(0, -1);
-
-            // 히든 인풋 제거
-            hiddenInput.remove();
-          }, 10);
+          }
         }
       }
     });
