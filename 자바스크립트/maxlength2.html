@@ -1,74 +1,73 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>iOS maxlength fix</title>
+  <meta charset="UTF-8">
+  <title>iOS 한글 maxlength 대응</title>
   <style>
-    input {
-      padding: 10px;
-      font-size: 16px;
-      margin: 10px;
-      border: 1px solid #ccc;
-    }
-    input.over-limit {
+    .input-limit {
       border: 2px solid red;
     }
   </style>
 </head>
 <body>
+  <h3>✅ 적용된 인풋</h3>
+  <input type="text" class="limit-input" maxlength="5" placeholder="최대 5자" />
 
-  <input type="text" class="limit-input" maxlength="10" placeholder="최대 10자" />
-  <button id="addInput">동적 인풋 추가</button>
+  <h3>❌ 일반 인풋 (비교용)</h3>
+  <input type="text" maxlength="5" placeholder="최대 5자" />
+
+  <br /><br />
+  <button id="addInput">➕ 인풋 동적 추가</button>
+  <div id="inputContainer"></div>
 
   <script>
     function enforceMaxLength(input) {
       const max = parseInt(input.getAttribute('maxlength'), 10);
-      if (isNaN(max)) return;
+      let previousValue = "";
 
-      let isComposing = false;
+      input.addEventListener('beforeinput', (e) => {
+        if (input.value.length >= max && e.inputType !== 'deleteContentBackward') {
+          e.preventDefault(); // 입력 자체 차단
+          input.classList.add('input-limit');
+        }
+      });
 
       input.addEventListener('compositionstart', () => {
-        isComposing = true;
+        previousValue = input.value;
       });
 
       input.addEventListener('compositionend', () => {
-        isComposing = false;
-        if (input.value.length > max) {
-          input.value = input.value.slice(0, max);
+        const maxLength = parseInt(input.getAttribute('maxlength'), 10);
+        if (input.value.length > maxLength) {
+          input.value = input.value.slice(0, maxLength); // 잘라냄
         }
-        updateStyle();
       });
 
       input.addEventListener('input', () => {
-        if (!isComposing && input.value.length > max) {
+        if (input.value.length > max) {
           input.value = input.value.slice(0, max);
         }
-        updateStyle();
-      });
 
-      function updateStyle() {
-        if (input.value.length >= max) {
-          input.classList.add('over-limit');
-        } else {
-          input.classList.remove('over-limit');
+        // 스타일 초기화
+        if (input.value.length < max) {
+          input.classList.remove('input-limit');
         }
-      }
+      });
     }
 
-    // 기존 인풋 처리
+    // 초기 인풋 적용
     document.querySelectorAll('input.limit-input').forEach(enforceMaxLength);
 
-    // 동적 인풋 추가
+    // 동적 인풋 생성
     document.getElementById('addInput').addEventListener('click', () => {
-      const newInput = document.createElement('input');
-      newInput.type = 'text';
-      newInput.placeholder = '동적 인풋 (최대 5자)';
-      newInput.setAttribute('maxlength', '5');
-      newInput.classList.add('limit-input');
-      document.body.appendChild(newInput);
-      enforceMaxLength(newInput);
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.setAttribute('maxlength', '5');
+      input.classList.add('limit-input');
+      input.placeholder = '동적 인풋 (최대 5자)';
+      document.getElementById('inputContainer').appendChild(input);
+      enforceMaxLength(input);
     });
   </script>
-
 </body>
 </html>
