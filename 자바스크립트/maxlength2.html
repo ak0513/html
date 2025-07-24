@@ -2,76 +2,51 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>iOS maxlength 한글 조합 이슈 해결</title>
+  <title>iOS maxlength 우회</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    input { margin: 10px 0; padding: 8px; width: 200px; font-size: 16px; }
+    .input-wrap {
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
-  <h1>iOS maxlength 이슈 테스트</h1>
+  <div class="input-wrap">
+    <label>기본 인풋: </label>
+    <input type="text" class="limit-input" data-maxlength="10">
+  </div>
 
-  <label>기본 인풋 (maxlength=5)</label><br/>
-  <input type="text" maxlength="5" class="limit-input" />
-
-  <br/><br/>
-
-  <button id="addInput">동적 인풋 추가</button>
-  <div id="dynamicInputs"></div>
+  <div class="input-wrap">
+    <label>동적 생성 인풋: </label>
+    <button id="add-input">인풋 추가</button>
+    <div id="dynamic-container"></div>
+  </div>
 
   <script>
-    function enforceMaxLength(el) {
-      const maxLength = parseInt(el.getAttribute('maxlength'), 10);
-      if (isNaN(maxLength)) return;
-
-      let isComposing = false;
-
-      el.addEventListener('compositionstart', () => {
-        isComposing = true;
-      });
-
-      el.addEventListener('compositionend', () => {
-        isComposing = false;
-        truncateIfNeeded(el, maxLength);
-      });
-
-      el.addEventListener('input', () => {
-        if (!isComposing) {
-          truncateIfNeeded(el, maxLength);
-        }
-      });
-    }
-
-    function truncateIfNeeded(el, maxLength) {
-      if (el.value.length > maxLength) {
-        el.value = el.value.slice(0, maxLength);
+    function enforceMaxLength(input) {
+      const max = parseInt(input.dataset.maxlength, 10);
+      const value = input.value;
+      const charArray = [...value]; // 이모지, 조합문자 등 분리 대응
+      if (charArray.length > max) {
+        input.value = charArray.slice(0, max).join('');
       }
     }
 
-    // 초기 인풋에 적용
-    document.querySelectorAll('input.limit-input').forEach(enforceMaxLength);
+    function bindInputEnforce(el) {
+      el.addEventListener('input', () => enforceMaxLength(el));
+    }
 
-    // 동적으로 추가되는 인풋 감지
-    const observer = new MutationObserver(() => {
-      document.querySelectorAll('input.limit-input:not([data-processed])').forEach(input => {
-        enforceMaxLength(input);
-        input.dataset.processed = "true";
-      });
-    });
+    // 초기 static 인풋 바인딩
+    document.querySelectorAll('.limit-input').forEach(bindInputEnforce);
 
-    observer.observe(document.getElementById('dynamicInputs'), {
-      childList: true,
-      subtree: true
-    });
-
-    // 동적 인풋 추가 버튼
-    document.getElementById('addInput').addEventListener('click', () => {
+    // 동적 생성
+    document.getElementById('add-input').addEventListener('click', () => {
       const input = document.createElement('input');
       input.type = 'text';
-      input.maxLength = 5;
       input.className = 'limit-input';
-      document.getElementById('dynamicInputs').appendChild(input);
+      input.dataset.maxlength = '10';
+      input.placeholder = '동적 인풋';
+      bindInputEnforce(input);
+      document.getElementById('dynamic-container').appendChild(input);
     });
   </script>
 </body>
