@@ -1,68 +1,76 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>iOS maxlength 완전 대응</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>iOS 한글 maxlength 포커스 리셋 예제</title>
   <style>
-    .fake-input {
-      border: 1px solid #ccc;
-      padding: 0.5rem;
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+    }
+    input {
       font-size: 1.2rem;
-      min-height: 1.6rem;
+      padding: 0.5rem;
       width: 100%;
       max-width: 300px;
-      outline: none;
     }
   </style>
 </head>
 <body>
-  <h2>✅ iOS 한글 maxlength 완전 대응 (Shadow 방식)</h2>
-  <div id="fakeInput" class="fake-input" contenteditable="true" aria-label="최대 10자 입력"></div>
-  <input type="hidden" id="realInput" name="textValue">
+  <h2>포커스 강제 이동으로 iOS 한글 maxlength 버그 완화</h2>
+  <input type="text" id="myInput" maxlength="10" placeholder="최대 10자 입력" />
 
   <script>
     (function () {
-      const fake = document.getElementById('fakeInput');
-      const real = document.getElementById('realInput');
-      const maxLength = 10;
-
+      const input = document.getElementById('myInput');
+      const maxLength = parseInt(input.getAttribute('maxlength'), 10);
       let isComposing = false;
 
-      fake.addEventListener('compositionstart', () => {
+      input.addEventListener('compositionstart', () => {
         isComposing = true;
       });
 
-      fake.addEventListener('compositionend', () => {
+      input.addEventListener('compositionend', () => {
         isComposing = false;
-        sanitize();
+        truncateToMaxLength();
+        resetComposition(input);
       });
 
-      fake.addEventListener('input', () => {
+      input.addEventListener('input', () => {
         if (!isComposing) {
-          sanitize();
+          truncateToMaxLength();
         }
       });
 
-      fake.addEventListener('blur', sanitize); // 포커스 아웃 시도 방지용
-
-      function sanitize() {
-        let text = fake.innerText.replace(/\n/g, ''); // 줄바꿈 제거
-        if ([...text].length > maxLength) {
-          text = [...text].slice(0, maxLength).join('');
-        }
-        fake.innerText = text;
-        placeCaretAtEnd(fake);
-        real.value = text; // 실제 전송은 hidden input
+      function truncateToMaxLength() {
+        requestAnimationFrame(() => {
+          if (input.value.length > maxLength) {
+            input.value = input.value.slice(0, maxLength);
+          }
+        });
       }
 
-      function placeCaretAtEnd(el) {
-        const range = document.createRange();
-        const sel = window.getSelection();
-        range.selectNodeContents(el);
-        range.collapse(false);
-        sel.removeAllRanges();
-        sel.addRange(range);
+      function resetComposition(targetInput) {
+        // 포커스를 다른 임시 input으로 옮겼다가 다시 돌아오는 동작
+        targetInput.blur();
+
+        const tempInput = document.createElement('input');
+        tempInput.style.position = 'absolute';
+        tempInput.style.opacity = 0;
+        tempInput.style.height = 0;
+        tempInput.style.width = 0;
+        tempInput.style.border = 'none';
+        tempInput.style.padding = 0;
+        tempInput.style.margin = 0;
+
+        document.body.appendChild(tempInput);
+        tempInput.focus();
+
+        setTimeout(() => {
+          tempInput.remove();
+          targetInput.focus();
+        }, 0);
       }
     })();
   </script>
