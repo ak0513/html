@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>iOS maxlength 한글 조합 이슈 해결</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    input { margin: 10px 0; padding: 8px; width: 200px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>iOS maxlength 이슈 테스트</h1>
+
+  <label>기본 인풋 (maxlength=5)</label><br/>
+  <input type="text" maxlength="5" class="limit-input" />
+
+  <br/><br/>
+
+  <button id="addInput">동적 인풋 추가</button>
+  <div id="dynamicInputs"></div>
+
+  <script>
+    function enforceMaxLength(el) {
+      const maxLength = parseInt(el.getAttribute('maxlength'), 10);
+      if (isNaN(maxLength)) return;
+
+      let isComposing = false;
+
+      el.addEventListener('compositionstart', () => {
+        isComposing = true;
+      });
+
+      el.addEventListener('compositionend', () => {
+        isComposing = false;
+        truncateIfNeeded(el, maxLength);
+      });
+
+      el.addEventListener('input', () => {
+        if (!isComposing) {
+          truncateIfNeeded(el, maxLength);
+        }
+      });
+    }
+
+    function truncateIfNeeded(el, maxLength) {
+      if (el.value.length > maxLength) {
+        el.value = el.value.slice(0, maxLength);
+      }
+    }
+
+    // 초기 인풋에 적용
+    document.querySelectorAll('input.limit-input').forEach(enforceMaxLength);
+
+    // 동적으로 추가되는 인풋 감지
+    const observer = new MutationObserver(() => {
+      document.querySelectorAll('input.limit-input:not([data-processed])').forEach(input => {
+        enforceMaxLength(input);
+        input.dataset.processed = "true";
+      });
+    });
+
+    observer.observe(document.getElementById('dynamicInputs'), {
+      childList: true,
+      subtree: true
+    });
+
+    // 동적 인풋 추가 버튼
+    document.getElementById('addInput').addEventListener('click', () => {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.maxLength = 5;
+      input.className = 'limit-input';
+      document.getElementById('dynamicInputs').appendChild(input);
+    });
+  </script>
+</body>
+</html>
