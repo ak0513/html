@@ -1,78 +1,135 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>iOS 한글 maxlength 포커스 리셋 예제</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 2rem;
-    }
-    input {
-      font-size: 1.2rem;
-      padding: 0.5rem;
-      width: 100%;
-      max-width: 300px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>iOS 한글 커스텀 maxlength 입력기</title>
+<style>
+  body {
+    font-family: sans-serif;
+    padding: 2rem;
+  }
+  #editor {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    min-height: 2rem;
+    max-width: 400px;
+    font-size: 1.2rem;
+    outline: none;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+</style>
 </head>
 <body>
-  <h2>포커스 강제 이동으로 iOS 한글 maxlength 버그 완화</h2>
-  <input type="text" id="myInput" maxlength="10" placeholder="최대 10자 입력" />
 
-  <script>
-    (function () {
-      const input = document.getElementById('myInput');
-      const maxLength = parseInt(input.getAttribute('maxlength'), 10);
-      let isComposing = false;
+<h2>iOS 한글 조합 대응 커스텀 입력기 (maxlength 10)</h2>
+<div id="editor" contenteditable="true" aria-label="최대 10자 입력" spellcheck="false"></div>
+<input type="hidden" id="hiddenInput" name="inputValue" />
 
-      input.addEventListener('compositionstart', () => {
-        isComposing = true;
-      });
+<script>
+(() => {
+  const editor = document.getElementById('editor');
+  const hiddenInput = document.getElementById('hiddenInput');
+  const maxLength = 10;
 
-      input.addEventListener('compositionend', () => {
-        isComposing = false;
-        truncateToMaxLength();
-        resetComposition(input);
-      });
+  let isComposing = false;
 
-      input.addEventListener('input', () => {
-        if (!isComposing) {
-          truncateToMaxLength();
-        }
-      });
+  // composition 이벤트 관리
+  editor.addEventListener('compositionstart', () => {
+    isComposing = true;
+  });
 
-      function truncateToMaxLength() {
-        requestAnimationFrame(() => {
-          if (input.value.length > maxLength) {
-            input.value = input.value.slice(0, maxLength);
-          }
-        });
+  editor.addEventListener('compositionend', () => {
+    isComposing = false;
+    sanitizeAndUpdate();
+  });
+
+  // input 이벤트 - 조합 중 아니면 바로 처리
+  editor.addEventListener('input', () => {
+    if (!isComposing) {
+      sanitizeAndUpdate();
+    }
+  });
+
+  // keydown 이벤트로 백스페이스 등도 강제 처리
+  editor.addEventListener('keydown', (e) => {
+    // 길이 제한 초과 상태에서 문자 입력 차단
+    if (!isComposing && !isControlKey(e) && getTextLength() >= maxLength) {
+      // 허용키: 백스페이스(8), Delete(46), 방향키 등 제어키는 허용
+      if (!isAllowedKey(e)) {
+        e.preventDefault();
       }
+    }
+  });
 
-      function resetComposition(targetInput) {
-        // 포커스를 다른 임시 input으로 옮겼다가 다시 돌아오는 동작
-        targetInput.blur();
+  // 입력값 자르고 hiddenInput에 동기화
+  function sanitizeAndUpdate() {
+    let text = getEditorText();
 
-        const tempInput = document.createElement('input');
-        tempInput.style.position = 'absolute';
-        tempInput.style.opacity = 0;
-        tempInput.style.height = 0;
-        tempInput.style.width = 0;
-        tempInput.style.border = 'none';
-        tempInput.style.padding = 0;
-        tempInput.style.margin = 0;
+    // 유니코드 문자 단위로 안전하게 자르기
+    if ([...text].length > maxLength) {
+      text = [...text].slice(0, maxLength).join('');
+    }
 
-        document.body.appendChild(tempInput);
-        tempInput.focus();
+    setEditorText(text);
+    hiddenInput.value = text;
+    placeCaretAtEnd(editor);
+  }
 
-        setTimeout(() => {
-          tempInput.remove();
-          targetInput.focus();
-        }, 0);
-      }
-    })();
-  </script>
+  // 현재 입력 텍스트 가져오기 (innerText → 줄바꿈 제거)
+  function getEditorText() {
+    return editor.innerText.replace(/\n/g, '');
+  }
+
+  // 에디터 텍스트 설정
+  function setEditorText(text) {
+    editor.innerText = text;
+  }
+
+  // 현재 텍스트 길이 (유니코드 문자 단위)
+  function getTextLength() {
+    return [...getEditorText()].length;
+  }
+
+  // 커서 맨 끝으로 이동
+  function placeCaretAtEnd(el) {
+    el.focus();
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  // 제어키 판단 (Ctrl, Shift, Alt, Meta)
+  function isControlKey(e) {
+    return e.ctrlKey || e.altKey || e.metaKey;
+  }
+
+  // 백스페이스, Delete, 방향키 등 허용키 판단
+  function isAllowedKey(e) {
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'ArrowUp',
+      'ArrowDown',
+      'Tab',
+      'Enter',
+      'Home',
+      'End',
+    ];
+    return allowedKeys.includes(e.key);
+  }
+
+  // 초기 포커스 및 hiddenInput 초기화
+  sanitizeAndUpdate();
+
+})();
+</script>
+
 </body>
 </html>
