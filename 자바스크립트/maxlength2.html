@@ -1,84 +1,48 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>iOS 백스페이스 버그 대응</title>
+  <meta charset="UTF-8">
+  <title>iOS 백스페이스 감지</title>
   <style>
     input {
-      font-size: 16px;
       padding: 8px;
       border: 1px solid #ccc;
-      margin: 10px;
+      font-size: 16px;
     }
-    .blocked {
-      border: 2px solid red;
-    }
-    .hidden-fix-input {
-      position: absolute;
-      left: -9999px;
+    input.full {
+      border-color: red;
     }
   </style>
 </head>
 <body>
-  <input type="text" id="targetInput" placeholder="입력해보세요" maxlength="4" />
 
-  <script>
-    const input = document.getElementById('targetInput');
-    let focusFixed = false;
+<input type="text" maxlength="4" id="testInput" autocomplete="off" />
 
-    function fixIOSBackspaceBug(inputEl) {
-      if (focusFixed || !/iPhone|iPad|iPod/i.test(navigator.userAgent)) return;
+<script>
+  const input = document.getElementById('testInput');
+  let prevValue = '';
 
-      focusFixed = true;
+  input.addEventListener('input', (e) => {
+    const currValue = e.target.value;
 
-      const hiddenInput = document.createElement('input');
-      hiddenInput.setAttribute('type', 'text');
-      hiddenInput.setAttribute('class', 'hidden-fix-input');
-      document.body.appendChild(hiddenInput);
-
-      hiddenInput.focus();
-
-      setTimeout(() => {
-        inputEl.focus();
-        document.body.removeChild(hiddenInput);
-      }, 30); // 너무 짧으면 안됨
+    // 백스페이스 감지 (이전 값보다 길이가 짧아짐)
+    if (prevValue.length > currValue.length) {
+      console.log('Backspace 감지됨!');
+      // 예시: 포커스 다른 데 보내기
+      // document.getElementById('dummyInput').focus();
     }
 
-    input.addEventListener('focus', () => {
-      fixIOSBackspaceBug(input);
-    });
+    // 예시: maxlength 도달 시 입력 막기
+    if (currValue.length >= input.maxLength) {
+      input.classList.add('full');
+      input.blur(); // 자동으로 포커스 아웃
+    } else {
+      input.classList.remove('full');
+    }
 
-    // 입력 막기: maxlength 도달 시
-    input.addEventListener('input', () => {
-      const max = input.maxLength;
-      if (input.value.length >= max) {
-        input.classList.add('blocked');
-        input.value = input.value.slice(0, max); // 강제로 자름
-      } else {
-        input.classList.remove('blocked');
-      }
-    });
+    prevValue = currValue;
+  });
+</script>
 
-    // 동적으로 생성된 인풋도 대응
-    const observer = new MutationObserver(() => {
-      document.querySelectorAll('input[type="text"]').forEach(el => {
-        if (!el.dataset.fixed) {
-          el.addEventListener('focus', () => fixIOSBackspaceBug(el));
-          el.addEventListener('input', () => {
-            const max = el.maxLength;
-            if (el.value.length >= max) {
-              el.classList.add('blocked');
-              el.value = el.value.slice(0, max);
-            } else {
-              el.classList.remove('blocked');
-            }
-          });
-          el.dataset.fixed = 'true';
-        }
-      });
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-  </script>
 </body>
 </html>
