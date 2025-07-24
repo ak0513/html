@@ -2,30 +2,29 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>iOS maxlength 우회</title>
+  <title>iOS maxlength fix</title>
   <style>
     input {
-      width: 300px;
-      padding: 8px;
+      padding: 10px;
       font-size: 16px;
-      margin-bottom: 10px;
+      margin: 10px;
+      border: 1px solid #ccc;
     }
-    input.maxed {
-      background-color: #ffe6e6;
+    input.over-limit {
       border: 2px solid red;
     }
   </style>
 </head>
 <body>
-  <h3>정적 input</h3>
-  <input type="text" class="watch-length" data-maxlength="6" placeholder="최대 6자 입력" />
 
-  <h3>동적으로 추가된 input</h3>
-  <button id="addInput">인풋 추가</button>
-  <div id="dynamic-container"></div>
+  <input type="text" class="limit-input" maxlength="10" placeholder="최대 10자" />
+  <button id="addInput">동적 인풋 추가</button>
 
   <script>
-    function enforceMaxLength(input, maxLength) {
+    function enforceMaxLength(input) {
+      const max = parseInt(input.getAttribute('maxlength'), 10);
+      if (isNaN(max)) return;
+
       let isComposing = false;
 
       input.addEventListener('compositionstart', () => {
@@ -34,45 +33,42 @@
 
       input.addEventListener('compositionend', () => {
         isComposing = false;
-        trimValue();
+        if (input.value.length > max) {
+          input.value = input.value.slice(0, max);
+        }
+        updateStyle();
       });
 
       input.addEventListener('input', () => {
-        if (!isComposing) trimValue();
+        if (!isComposing && input.value.length > max) {
+          input.value = input.value.slice(0, max);
+        }
+        updateStyle();
       });
 
-      function trimValue() {
-        if (input.value.length > maxLength) {
-          input.value = input.value.slice(0, maxLength);
-        }
-
-        if (input.value.length >= maxLength) {
-          input.classList.add('maxed');
-          input.setAttribute('aria-invalid', 'true');
+      function updateStyle() {
+        if (input.value.length >= max) {
+          input.classList.add('over-limit');
         } else {
-          input.classList.remove('maxed');
-          input.removeAttribute('aria-invalid');
+          input.classList.remove('over-limit');
         }
       }
     }
 
-    // 초기 인풋 적용
-    document.querySelectorAll('.watch-length').forEach(input => {
-      const max = parseInt(input.dataset.maxlength, 10);
-      enforceMaxLength(input, max);
-    });
+    // 기존 인풋 처리
+    document.querySelectorAll('input.limit-input').forEach(enforceMaxLength);
 
-    // 동적 input 생성
+    // 동적 인풋 추가
     document.getElementById('addInput').addEventListener('click', () => {
       const newInput = document.createElement('input');
       newInput.type = 'text';
-      newInput.placeholder = '동적 input (최대 8자)';
-      newInput.classList.add('watch-length');
-      newInput.setAttribute('data-maxlength', '8');
-      document.getElementById('dynamic-container').appendChild(newInput);
-
-      enforceMaxLength(newInput, 8);
+      newInput.placeholder = '동적 인풋 (최대 5자)';
+      newInput.setAttribute('maxlength', '5');
+      newInput.classList.add('limit-input');
+      document.body.appendChild(newInput);
+      enforceMaxLength(newInput);
     });
   </script>
+
 </body>
 </html>
