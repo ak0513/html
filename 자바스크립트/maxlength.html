@@ -3,57 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>iOS maxlength 비교</title>
+  <title>iOS maxlength 패치</title>
   <style>
-    body {
-      font-family: sans-serif;
-      padding: 2rem;
-    }
-    .container {
-      display: flex;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
-    .box {
-      flex: 1 1 300px;
-    }
+    body { font-family: sans-serif; padding: 2rem; }
     input {
       font-size: 1.2rem;
       padding: 0.5rem;
       width: 100%;
-    }
-    h2 {
-      font-size: 1.1rem;
-      margin-bottom: 0.5rem;
-    }
-    p {
-      font-size: 0.9rem;
-      color: #666;
-      margin-top: 0.25rem;
+      max-width: 300px;
     }
   </style>
 </head>
 <body>
-  <h1>iOS 한글 입력 maxlength 비교</h1>
-  <div class="container">
-    <!-- 버그 있는 기본 input -->
-    <div class="box">
-      <h2>❌ 기본 input (버그 있음)</h2>
-      <input type="text" id="input-plain" maxlength="10" placeholder="최대 10자 입력" />
-      <p>한글 조합 중 백스페이스를 눌러보세요</p>
-    </div>
-
-    <!-- 버그 대응 input -->
-    <div class="box">
-      <h2>✅ 패치 적용 input</h2>
-      <input type="text" id="input-patched" maxlength="10" placeholder="최대 10자 입력" />
-      <p>한글 조합 상태도 정상 동작</p>
-    </div>
-  </div>
+  <h2>✅ iOS maxlength 한글 조합 버그 대응</h2>
+  <input type="text" id="myInput" maxlength="10" placeholder="최대 10자 입력" />
 
   <script>
     (function () {
-      const input = document.getElementById('input-patched');
+      const input = document.getElementById('myInput');
       const maxLength = parseInt(input.getAttribute('maxlength'), 10);
       let isComposing = false;
 
@@ -73,9 +40,12 @@
       });
 
       function truncateToMaxLength() {
-        if (input.value.length > maxLength) {
-          input.value = input.value.slice(0, maxLength);
-        }
+        // requestAnimationFrame을 사용해 입력 후 DOM 업데이트 시점에 적용
+        requestAnimationFrame(() => {
+          if (input.value.length > maxLength) {
+            input.value = input.value.slice(0, maxLength);
+          }
+        });
       }
     })();
   </script>
