@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>iOS 백스페이스 버그 대응</title>
+  <style>
+    .hidden-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <input type="text" maxlength="5" placeholder="iOS 대응 input" />
+  <button id="addInput">input 동적 추가</button>
+
+  <script>
+    // iOS 환경인지 감지
+    const isIOS = /iP(ad|hone|od)/.test(navigator.userAgent);
+
+    if (isIOS) {
+      // 히든 input 준비 (단일 인스턴스)
+      const hiddenInput = document.createElement('input');
+      hiddenInput.setAttribute('type', 'text');
+      hiddenInput.classList.add('hidden-input');
+      document.body.appendChild(hiddenInput);
+
+      // 백스페이스 대응 로직을 추가하는 함수
+      function applyBackspaceFix(input) {
+        let backspaceSent = false;
+
+        input.addEventListener('keydown', (e) => {
+          const isBackspace = e.key === 'Backspace';
+          const isEmpty = input.value === '';
+          const isMaxed = input.maxLength > 0 && input.value.length >= input.maxLength;
+
+          // iOS에서는 maxlength일 때 더 이상 입력되지 않지만, 지우는 이벤트가 안 먹는 문제 있음
+          if (isBackspace && isEmpty && !backspaceSent) {
+            backspaceSent = true;
+
+            // 히든 input으로 잠시 포커스를 이동 → 다시 원래 input으로
+            hiddenInput.focus();
+
+            setTimeout(() => {
+              input.focus();
+              backspaceSent = false;
+            }, 0);
+          }
+        });
+      }
+
+      // 초기 input들에 fix 적용
+      document.querySelectorAll('input[maxlength]').forEach(applyBackspaceFix);
+
+      // 동적 input 감지 및 적용 (옵저버 사용)
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              // 새로 추가된 input 요소들 중 maxlength가 있는 경우에만 적용
+              if (node.matches('input[maxlength]')) {
+                applyBackspaceFix(node);
+              }
+
+              // 여러 input이 한 번에 추가되는 경우를 위해 내부 탐색
+              node.querySelectorAll?.('input[maxlength]').forEach(applyBackspaceFix);
+            }
+          });
+        });
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    }
+
+    // 테스트용 동적 input 추가
+    document.getElementById('addInput').addEventListener('click', () => {
+      const newInput = document.createElement('input');
+      newInput.setAttribute('type', 'text');
+      newInput.setAttribute('maxlength', '4');
+      newInput.setAttribute('placeholder', '동적 input');
+      document.body.appendChild(newInput);
+    });
+  </script>
+</body>
+</html>
