@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>ARIA 테이블 최소 예제</title>
+  <style>
+    .table {
+      display: table;
+      border-collapse: collapse;
+    }
+    .row {
+      display: table-row;
+    }
+    .cell {
+      display: table-cell;
+      border: 1px solid #ccc;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="table">
+  <div class="row">
+    <div class="cell" role="columnheader">과목</div>
+    <div class="cell" role="columnheader">점수</div>
+  </div>
+  <div class="row">
+    <div class="cell" role="rowheader">수학</div>
+    <div class="cell">95</div>
+  </div>
+  <div class="row">
+    <div class="cell" role="rowheader">영어</div>
+    <div class="cell">88</div>
+  </div>
+</div>
+
+
+
+<div role="table">
+  <div>
+    <div class="cell" role="columnheader">과목</div>
+    <div class="cell" role="columnheader">점수</div>
+  </div>
+  <div>
+    <div class="cell" role="rowheader">수학</div>
+    <div class="cell">95</div>
+  </div>
+  <div>
+    <div class="cell" role="rowheader">영어</div>
+    <div class="cell">88</div>
+  </div>
+</div>
+
+
+
+
+
+<div role="table">
+  <div role="row">
+    <div class="cell" role="columnheader">과목</div>
+    <div class="cell" role="columnheader">점수</div>
+  </div>
+  <div role="row">
+    <div class="cell" role="rowheader">수학</div>
+    <div class="cell">95</div>
+  </div>
+  <div role="row">
+    <div class="cell" role="rowheader">영어</div>
+    <div class="cell">88</div>
+  </div>
+</div>
+</body>
+</html>
