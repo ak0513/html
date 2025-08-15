@@ -2,50 +2,49 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chips Wrap Example</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chips Wrap – Toggle & Scroll</title>
 <style>
-body {
-    font-family: sans-serif;
-    padding: 20px;
-}
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 16px; }
 
-/* 칩스 컨테이너 */
-.chips-container {
-    display: flex;
-    overflow-x: auto;
-    gap: 8px;
-    scroll-behavior: smooth;
-    padding-bottom: 5px;
-}
+    .chips-wrap { margin: 16px 0; }
 
-/* 칩 스타일 */
-.chip {
-    flex: 0 0 auto;
-    padding: 8px 12px;
-    background: #ddd;
-    border-radius: 20px;
-    white-space: nowrap;
-}
+    /* 가로 모드 기본 */
+    .chips-container {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 6px;     /* 모바일서 스크롤 잡기 용이 */
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    }
+    .chip {
+        flex: 0 0 auto;
+        padding: 8px 12px;
+        background: #e9e9ee;
+        border-radius: 20px;
+        white-space: nowrap;
+        font-size: 14px;
+    }
 
-/* 세로 보기 모드 */
-.chips-wrap.vertical .chips-container {
-    flex-wrap: wrap;
-    overflow-x: hidden;
-}
+    /* 버티컬 모드(세로 나열) */
+    .chips-wrap.vertical .chips-container {
+        flex-wrap: wrap;
+        overflow-x: hidden;   /* 가로 스크롤 끔 */
+        scroll-behavior: auto;
+    }
 
-/* 스크롤 끝 상태 */
-.chips-wrap.scroll-end {
-    background-color: #f5f5f5; /* 예시 */
-}
+    /* 스크롤 끝 감지 상태 (예시 스타일) */
+    .chips-wrap.scroll-end { background: #fafafa; }
 
-/* 토글 버튼 */
-.toggle-btn {
-    margin-top: 5px;
-}
-.toggle-btn.hidden {
-    display: none;
-}
+    .toggle-btn {
+        margin-top: 8px;
+        padding: 6px 10px;
+        border-radius: 10px;
+        border: 1px solid #d7d7df;
+        background: #fff;
+    }
+    .toggle-btn.hidden { display: none; }
 </style>
 </head>
 <body>
@@ -53,76 +52,134 @@ body {
 <h2>📌 칩스가 많은 경우 (스크롤 O)</h2>
 <div class="chips-wrap">
     <div class="chips-container">
-        <div class="chip">칩1</div>
-        <div class="chip">칩2</div>
-        <div class="chip">칩3</div>
-        <div class="chip">칩4</div>
-        <div class="chip">칩5</div>
-        <div class="chip">칩6</div>
-        <div class="chip">칩7</div>
-        <div class="chip">칩8</div>
-        <div class="chip">칩9</div>
-        <div class="chip">칩10</div>
+        <div class="chip">칩1</div><div class="chip">칩2</div><div class="chip">칩3</div>
+        <div class="chip">칩4</div><div class="chip">칩5</div><div class="chip">칩6</div>
+        <div class="chip">칩7</div><div class="chip">칩8</div><div class="chip">칩9</div>
+        <div class="chip">칩10</div><div class="chip">칩11</div><div class="chip">칩12</div>
     </div>
-    <button class="toggle-btn">토글</button>
+    <button class="toggle-btn" type="button" aria-expanded="false">토글</button>
 </div>
 
 <h2>📌 칩스가 적은 경우 (스크롤 X)</h2>
 <div class="chips-wrap">
     <div class="chips-container">
-        <div class="chip">A</div>
-        <div class="chip">B</div>
-        <div class="chip">C</div>
+        <div class="chip">A</div><div class="chip">B</div><div class="chip">C</div>
     </div>
-    <button class="toggle-btn">토글</button>
+    <button class="toggle-btn" type="button" aria-expanded="false">토글</button>
 </div>
 
 <script>
+/**
+ * 내부 상태 저장 (클래스를 읽어서 로직 판단하지 않음)
+ * vertical: 현재 세로 모드 여부
+ */
+const WRAP_STATE = new WeakMap();
+
+/** 유틸: 애니메이션 없이 가로 스크롤 위치 설정 */
+function setScrollLeftInstant(el, x) {
+    const prev = el.style.scrollBehavior;
+    el.style.scrollBehavior = 'auto';
+    el.scrollLeft = x;
+    // reflow 유도까지는 필요없음
+    el.style.scrollBehavior = prev || '';
+}
+
 function initChipsWrap(wrap) {
+    if (!wrap) return;
     const container = wrap.querySelector('.chips-container');
     const toggleBtn = wrap.querySelector('.toggle-btn');
+    if (!container || !toggleBtn) return;
 
-    // 토글 버튼 클릭 → vertical 클래스 토글
-    toggleBtn.addEventListener('click', () => {
-        wrap.classList.toggle('vertical');
-    });
+    // 상태 초기화
+    WRAP_STATE.set(wrap, { vertical: false });
 
-    // 스크롤 끝 감지
+    const getState = () => WRAP_STATE.get(wrap);
+
+    // 스크롤 끝 감지 (가로 모드에서만 의미)
     const checkScrollEnd = () => {
+        const { vertical } = getState();
+        if (vertical) {
+            wrap.classList.remove('scroll-end');
+            return;
+        }
         const isEnd = Math.ceil(container.scrollLeft + container.clientWidth) >= container.scrollWidth;
         wrap.classList.toggle('scroll-end', isEnd);
     };
 
-    // 토글 버튼 노출 여부 체크
+    // 토글 버튼 가시성
+    // - 가로 모드: 스크롤이 있을 때만 보임
+    // - 세로 모드: 항상 보임 (버그 방지: 토글 후 사라지지 않게)
     const checkToggleVisibility = () => {
+        const { vertical } = getState();
         const hasScroll = container.scrollWidth > container.clientWidth;
-        toggleBtn.classList.toggle('hidden', !hasScroll);
+        const hide = !vertical && !hasScroll;
+        toggleBtn.classList.toggle('hidden', hide);
     };
 
     const updateState = () => {
-        checkScrollEnd();
         checkToggleVisibility();
+        checkScrollEnd();
     };
 
-    container.addEventListener('scroll', checkScrollEnd);
-    window.addEventListener('resize', updateState);
+    // 토글 동작
+    toggleBtn.addEventListener('click', () => {
+        const state = getState();
+        const nextVertical = !state.vertical;
+        state.vertical = nextVertical;
+        WRAP_STATE.set(wrap, state);
 
-    // 칩스 동적 추가/제거 감지
-    const observer = new MutationObserver(updateState);
-    observer.observe(container, { childList: true, subtree: true });
+        // 스타일 클래스로는 UI만 변경 (로직은 상태 사용)
+        wrap.classList.toggle('vertical', nextVertical);
+        toggleBtn.setAttribute('aria-expanded', String(nextVertical));
 
+        // 버그 픽스 1: 버티컬 진입 시 가로 스크롤 잔상 제거
+        if (nextVertical) {
+            setScrollLeftInstant(container, 0);
+        }
+
+        // 레이아웃 적용 후 상태 갱신 (1프레임 뒤)
+        requestAnimationFrame(updateState);
+    });
+
+    // 이벤트 & 옵저버
+    container.addEventListener('scroll', () => {
+        // 버그 픽스 2: 세로 모드일 땐 스크롤 상태를 강제로 초기화
+        if (getState().vertical) {
+            setScrollLeftInstant(container, 0);
+            return;
+        }
+        checkScrollEnd();
+    });
+
+    // 사이즈 변동 대응: ResizeObserver를 우선 사용
+    if ('ResizeObserver' in window) {
+        const ro = new ResizeObserver(updateState);
+        ro.observe(container);
+    } else {
+        window.addEventListener('resize', updateState);
+    }
+
+    // 칩스 동적 추가/제거 대응
+    const childObserver = new MutationObserver(updateState);
+    childObserver.observe(container, { childList: true, subtree: true });
+
+    // 초기 상태 적용
     updateState();
 }
 
 // 초기 로드 시 모든 랩 초기화
 document.querySelectorAll('.chips-wrap').forEach(initChipsWrap);
 
-// chips-wrap 자체 동적 생성 감지
+// chips-wrap 자체가 동적으로 추가되는 경우도 대응
 const wrapObserver = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-            if (node.classList && node.classList.contains('chips-wrap')) {
+    mutations.forEach((m) => {
+        m.addedNodes.forEach((node) => {
+            if (!(node instanceof HTMLElement)) return;
+            if (node.classList?.contains('chips-wrap')) {
                 initChipsWrap(node);
+            } else {
+                // 랩 내부에 동적 생성된 경우(템플릿 등)
+                node.querySelectorAll?.('.chips-wrap').forEach(initChipsWrap);
             }
         });
     });
