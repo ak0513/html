@@ -2,27 +2,44 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chips Wrap Example</title>
 <style>
+body {
+    font-family: sans-serif;
+    padding: 20px;
+}
+
+/* 칩스 컨테이너 */
 .chips-container {
     display: flex;
     overflow-x: auto;
     gap: 8px;
     scroll-behavior: smooth;
+    padding-bottom: 5px;
 }
+
+/* 칩 스타일 */
 .chip {
     flex: 0 0 auto;
     padding: 8px 12px;
     background: #ddd;
     border-radius: 20px;
+    white-space: nowrap;
 }
+
+/* 세로 보기 모드 */
 .chips-wrap.vertical .chips-container {
     flex-wrap: wrap;
     overflow-x: hidden;
 }
+
+/* 스크롤 끝 상태 */
 .chips-wrap.scroll-end {
-    background-color: #f5f5f5; /* 스크롤 끝일 때 예시 */
+    background-color: #f5f5f5; /* 예시 */
 }
+
+/* 토글 버튼 */
 .toggle-btn {
     margin-top: 5px;
 }
@@ -33,6 +50,7 @@
 </head>
 <body>
 
+<h2>📌 칩스가 많은 경우 (스크롤 O)</h2>
 <div class="chips-wrap">
     <div class="chips-container">
         <div class="chip">칩1</div>
@@ -40,14 +58,21 @@
         <div class="chip">칩3</div>
         <div class="chip">칩4</div>
         <div class="chip">칩5</div>
+        <div class="chip">칩6</div>
+        <div class="chip">칩7</div>
+        <div class="chip">칩8</div>
+        <div class="chip">칩9</div>
+        <div class="chip">칩10</div>
     </div>
     <button class="toggle-btn">토글</button>
 </div>
 
+<h2>📌 칩스가 적은 경우 (스크롤 X)</h2>
 <div class="chips-wrap">
     <div class="chips-container">
         <div class="chip">A</div>
         <div class="chip">B</div>
+        <div class="chip">C</div>
     </div>
     <button class="toggle-btn">토글</button>
 </div>
