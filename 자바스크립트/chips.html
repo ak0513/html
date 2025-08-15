@@ -8,25 +8,45 @@
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 16px; }
     .chips-wrap { margin: 16px 0; }
 
+    /* 칩스 컨테이너: 가로 스크롤 가능 */
     .chips-container {
-        display: flex;
-        gap: 8px;
-        overflow-x: auto;
-        padding-bottom: 6px;
-        scroll-behavior: smooth;
-        -webkit-overflow-scrolling: touch;
+        display: flex;                  /* 칩들을 가로 나열 */
+        gap: 8px;                       /* 칩 간격 */
+        overflow-x: auto;               /* 가로 스크롤 가능 */
+        padding-bottom: 6px;            /* 모바일 손가락 스크롤 편의 */
+        scroll-behavior: smooth;        /* 스크롤 부드럽게 */
+        -webkit-overflow-scrolling: touch; /* iOS 스크롤 최적화 */
     }
+
+    /* 칩 스타일 */
     .chip {
-        flex: 0 0 auto;
+        flex: 0 0 auto;                 /* 크기 고정, 축소 금지 */
         padding: 8px 12px;
         background: #e9e9ee;
         border-radius: 20px;
-        white-space: nowrap;
+        white-space: nowrap;            /* 줄바꿈 없이 표시 */
         font-size: 14px;
     }
-    .chips-wrap.vertical .chips-container { flex-wrap: wrap; overflow-x: hidden; scroll-behavior: auto; }
+
+    /* 버티컬 모드: 세로 나열 */
+    .chips-wrap.vertical .chips-container {
+        flex-wrap: wrap;                /* 여러 줄로 배치 */
+        overflow-x: hidden;             /* 가로 스크롤 제거 */
+        scroll-behavior: auto;          /* 스크롤 행동 즉시 반영 */
+    }
+
+    /* 스크롤 끝 도달 상태 표시용 (예시 스타일) */
     .chips-wrap.scroll-end { background: #fafafa; }
-    .toggle-btn { margin-top: 8px; padding: 6px 10px; border-radius: 10px; border: 1px solid #d7d7df; background: #fff; }
+
+    /* 토글 버튼 */
+    .toggle-btn {
+        margin-top: 8px;
+        padding: 6px 10px;
+        border-radius: 10px;
+        border: 1px solid #d7d7df;
+        background: #fff;
+    }
+    /* 숨김 상태 */
     .toggle-btn.hidden { display: none; }
 
     /* 숨김 부모 예시 */
@@ -52,8 +72,6 @@
         <div class="chips-container">
             <div class="chip">숨1</div><div class="chip">숨2</div><div class="chip">숨3</div>
             <div class="chip">숨4</div><div class="chip">숨5</div><div class="chip">숨6</div>
-             <div class="chip">숨4</div><div class="chip">숨5</div><div class="chip">숨6</div>
-             <div class="chip">숨4</div><div class="chip">숨5</div><div class="chip">숨6</div>
         </div>
         <button class="toggle-btn" type="button" aria-expanded="false">토글</button>
     </div>
@@ -65,8 +83,17 @@
 
 <!-- ===================== 기본 Chips Wrap 스크립트 ===================== -->
 <script>
+/**
+ * WRAP_STATE: 각 chips-wrap 요소의 상태를 WeakMap으로 저장
+ * vertical: 현재 세로 모드인지 여부
+ */
 const WRAP_STATE = new WeakMap();
 
+/**
+ * setScrollLeftInstant
+ * - 애니메이션 없이 즉시 가로 스크롤 위치 설정
+ * - 버티컬 전환 시 잔존 스크롤 제거용
+ */
 function setScrollLeftInstant(el, x) {
     const prev = el.style.scrollBehavior;
     el.style.scrollBehavior = 'auto';
@@ -74,14 +101,21 @@ function setScrollLeftInstant(el, x) {
     el.style.scrollBehavior = prev || '';
 }
 
+/**
+ * initChipsWrap
+ * - 개별 chips-wrap 초기화
+ * - 토글, 스크롤 끝 감지, 토글 버튼 숨김/표시, 동적 추가 대응
+ */
 function initChipsWrap(wrap) {
     const container = wrap.querySelector('.chips-container');
     const toggleBtn = wrap.querySelector('.toggle-btn');
     if (!container || !toggleBtn) return;
 
+    // 초기 상태 저장
     WRAP_STATE.set(wrap, { vertical: false });
     const getState = () => WRAP_STATE.get(wrap);
 
+    // 스크롤 끝 감지: 가로 모드에서만 의미
     const checkScrollEnd = () => {
         const { vertical } = getState();
         if (vertical) { wrap.classList.remove('scroll-end'); return; }
@@ -89,6 +123,7 @@ function initChipsWrap(wrap) {
         wrap.classList.toggle('scroll-end', isEnd);
     };
 
+    // 토글 버튼 가시성: 가로 모드에서만 스크롤 여부 체크
     const checkToggleVisibility = () => {
         const { vertical } = getState();
         const hasScroll = container.scrollWidth > container.clientWidth;
@@ -96,11 +131,13 @@ function initChipsWrap(wrap) {
         toggleBtn.classList.toggle('hidden', hide);
     };
 
+    // 상태 갱신 함수
     const updateState = () => {
         checkToggleVisibility();
         checkScrollEnd();
     };
 
+    // 토글 버튼 클릭 이벤트
     toggleBtn.addEventListener('click', () => {
         const state = getState();
         const nextVertical = !state.vertical;
@@ -108,20 +145,27 @@ function initChipsWrap(wrap) {
         WRAP_STATE.set(wrap, state);
         wrap.classList.toggle('vertical', nextVertical);
         toggleBtn.setAttribute('aria-expanded', String(nextVertical));
+
+        // 버티컬 모드 전환 시 스크롤 초기화
         if (nextVertical) setScrollLeftInstant(container, 0);
-        requestAnimationFrame(updateState);
+
+        requestAnimationFrame(updateState); // 다음 프레임에 상태 갱신
     });
 
+    // 컨테이너 스크롤 이벤트
     container.addEventListener('scroll', () => {
         if (getState().vertical) { setScrollLeftInstant(container, 0); return; }
         checkScrollEnd();
     });
 
+    // ResizeObserver: 컨테이너 크기 변화 감지
     if ('ResizeObserver' in window) { new ResizeObserver(updateState).observe(container); } 
     else { window.addEventListener('resize', updateState); }
 
+    // MutationObserver: 칩스 동적 추가/삭제 대응
     new MutationObserver(updateState).observe(container, { childList: true, subtree: true });
 
+    // IntersectionObserver: 부모 숨김→노출 시 상태 갱신
     if ('IntersectionObserver' in window) {
         const io = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) updateState(); });
@@ -129,11 +173,14 @@ function initChipsWrap(wrap) {
         io.observe(wrap);
     }
 
+    // 초기 상태 적용
     updateState();
 }
 
+// 페이지 로드 시 기존 chips-wrap 초기화
 document.querySelectorAll('.chips-wrap').forEach(initChipsWrap);
 
+// body 내부 동적 chips-wrap 생성 감지
 new MutationObserver((mutations) => {
     mutations.forEach((m) => {
         m.addedNodes.forEach((node) => {
@@ -147,11 +194,21 @@ new MutationObserver((mutations) => {
 
 <!-- ===================== 샘플 동작 스크립트 ===================== -->
 <script>
+/**
+ * 숨겨진 부모 표시 버튼
+ * - 숨겨진 부모를 display:block으로 변경
+ * - IntersectionObserver가 자동으로 상태 갱신
+ */
 document.getElementById('show-hidden').addEventListener('click', () => {
     const hidden = document.getElementById('hidden-parent');
     hidden.style.display = 'block';
 });
 
+/**
+ * 동적 Chips Wrap 생성 버튼
+ * - 클릭 시 새로운 chips-wrap 생성
+ * - 자동으로 initChipsWrap 적용됨
+ */
 document.getElementById('add-dynamic').addEventListener('click', () => {
     const container = document.getElementById('dynamic-container');
     const wrap = document.createElement('div');
@@ -159,8 +216,7 @@ document.getElementById('add-dynamic').addEventListener('click', () => {
     wrap.innerHTML = `
         <div class="chips-container">
             <div class="chip">D1</div><div class="chip">D2</div><div class="chip">D3</div>
-            <div class="chip">D4</div><div class="chip">D5</div> <div class="chip">숨4</div><div class="chip">숨5</div><div class="chip">숨6</div>
-             <div class="chip">숨4</div><div class="chip">숨5</div><div class="chip">숨6</div>
+            <div class="chip">D4</div><div class="chip">D5</div>
         </div>
         <button class="toggle-btn" type="button" aria-expanded="false">토글</button>
     `;
