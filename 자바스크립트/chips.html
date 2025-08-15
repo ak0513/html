@@ -3,18 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chips Wrap – Toggle & Scroll</title>
+<title>Chips Wrap 샘플</title>
 <style>
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 16px; }
-
     .chips-wrap { margin: 16px 0; }
 
-    /* 가로 모드 기본 */
     .chips-container {
         display: flex;
         gap: 8px;
         overflow-x: auto;
-        padding-bottom: 6px;     /* 모바일서 스크롤 잡기 용이 */
+        padding-bottom: 6px;
         scroll-behavior: smooth;
         -webkit-overflow-scrolling: touch;
     }
@@ -26,89 +24,69 @@
         white-space: nowrap;
         font-size: 14px;
     }
-
-    /* 버티컬 모드(세로 나열) */
-    .chips-wrap.vertical .chips-container {
-        flex-wrap: wrap;
-        overflow-x: hidden;   /* 가로 스크롤 끔 */
-        scroll-behavior: auto;
-    }
-
-    /* 스크롤 끝 감지 상태 (예시 스타일) */
+    .chips-wrap.vertical .chips-container { flex-wrap: wrap; overflow-x: hidden; scroll-behavior: auto; }
     .chips-wrap.scroll-end { background: #fafafa; }
-
-    .toggle-btn {
-        margin-top: 8px;
-        padding: 6px 10px;
-        border-radius: 10px;
-        border: 1px solid #d7d7df;
-        background: #fff;
-    }
+    .toggle-btn { margin-top: 8px; padding: 6px 10px; border-radius: 10px; border: 1px solid #d7d7df; background: #fff; }
     .toggle-btn.hidden { display: none; }
+
+    /* 숨김 부모 예시 */
+    .hidden-parent { display: none; padding: 10px; border: 1px dashed #ccc; margin: 20px 0; }
 </style>
 </head>
 <body>
 
-<h2>📌 칩스가 많은 경우 (스크롤 O)</h2>
+<h2>📌 칩스 샘플 (초기 렌더링)</h2>
 <div class="chips-wrap">
     <div class="chips-container">
         <div class="chip">칩1</div><div class="chip">칩2</div><div class="chip">칩3</div>
         <div class="chip">칩4</div><div class="chip">칩5</div><div class="chip">칩6</div>
-        <div class="chip">칩7</div><div class="chip">칩8</div><div class="chip">칩9</div>
-        <div class="chip">칩10</div><div class="chip">칩11</div><div class="chip">칩12</div>
+        <div class="chip">칩7</div><div class="chip">칩8</div>
     </div>
     <button class="toggle-btn" type="button" aria-expanded="false">토글</button>
 </div>
 
-<h2>📌 칩스가 적은 경우 (스크롤 X)</h2>
-<div class="chips-wrap">
-    <div class="chips-container">
-        <div class="chip">A</div><div class="chip">B</div><div class="chip">C</div>
+<h2>📌 숨겨졌다가 나타나는 부모 예시</h2>
+<button id="show-hidden">숨겨진 부모 표시</button>
+<div class="hidden-parent" id="hidden-parent">
+    <div class="chips-wrap">
+        <div class="chips-container">
+            <div class="chip">숨1</div><div class="chip">숨2</div><div class="chip">숨3</div>
+            <div class="chip">숨4</div><div class="chip">숨5</div><div class="chip">숨6</div>
+        </div>
+        <button class="toggle-btn" type="button" aria-expanded="false">토글</button>
     </div>
-    <button class="toggle-btn" type="button" aria-expanded="false">토글</button>
 </div>
 
+<h2>📌 동적 생성 샘플</h2>
+<button id="add-dynamic">동적 Chips Wrap 추가</button>
+<div id="dynamic-container"></div>
+
+<!-- ===================== 기본 Chips Wrap 스크립트 ===================== -->
 <script>
-/**
- * 내부 상태 저장 (클래스를 읽어서 로직 판단하지 않음)
- * vertical: 현재 세로 모드 여부
- */
 const WRAP_STATE = new WeakMap();
 
-/** 유틸: 애니메이션 없이 가로 스크롤 위치 설정 */
 function setScrollLeftInstant(el, x) {
     const prev = el.style.scrollBehavior;
     el.style.scrollBehavior = 'auto';
     el.scrollLeft = x;
-    // reflow 유도까지는 필요없음
     el.style.scrollBehavior = prev || '';
 }
 
 function initChipsWrap(wrap) {
-    if (!wrap) return;
     const container = wrap.querySelector('.chips-container');
     const toggleBtn = wrap.querySelector('.toggle-btn');
     if (!container || !toggleBtn) return;
 
-    // 상태 초기화
     WRAP_STATE.set(wrap, { vertical: false });
-
     const getState = () => WRAP_STATE.get(wrap);
 
-    // 스크롤 끝 감지 (가로 모드에서만 의미)
     const checkScrollEnd = () => {
         const { vertical } = getState();
-        if (vertical) {
-            wrap.classList.remove('scroll-end');
-            return;
-        }
+        if (vertical) { wrap.classList.remove('scroll-end'); return; }
         const isEnd = Math.ceil(container.scrollLeft + container.clientWidth) >= container.scrollWidth;
         wrap.classList.toggle('scroll-end', isEnd);
     };
 
-    // 토글 버튼 가시성
-    // - 가로 모드: 스크롤이 있을 때만 보임
-    // - 세로 모드: 항상 보임 (버그 방지: 토글 후 사라지지 않게)
     const checkToggleVisibility = () => {
         const { vertical } = getState();
         const hasScroll = container.scrollWidth > container.clientWidth;
@@ -121,70 +99,70 @@ function initChipsWrap(wrap) {
         checkScrollEnd();
     };
 
-    // 토글 동작
     toggleBtn.addEventListener('click', () => {
         const state = getState();
         const nextVertical = !state.vertical;
         state.vertical = nextVertical;
         WRAP_STATE.set(wrap, state);
-
-        // 스타일 클래스로는 UI만 변경 (로직은 상태 사용)
         wrap.classList.toggle('vertical', nextVertical);
         toggleBtn.setAttribute('aria-expanded', String(nextVertical));
-
-        // 버그 픽스 1: 버티컬 진입 시 가로 스크롤 잔상 제거
-        if (nextVertical) {
-            setScrollLeftInstant(container, 0);
-        }
-
-        // 레이아웃 적용 후 상태 갱신 (1프레임 뒤)
+        if (nextVertical) setScrollLeftInstant(container, 0);
         requestAnimationFrame(updateState);
     });
 
-    // 이벤트 & 옵저버
     container.addEventListener('scroll', () => {
-        // 버그 픽스 2: 세로 모드일 땐 스크롤 상태를 강제로 초기화
-        if (getState().vertical) {
-            setScrollLeftInstant(container, 0);
-            return;
-        }
+        if (getState().vertical) { setScrollLeftInstant(container, 0); return; }
         checkScrollEnd();
     });
 
-    // 사이즈 변동 대응: ResizeObserver를 우선 사용
-    if ('ResizeObserver' in window) {
-        const ro = new ResizeObserver(updateState);
-        ro.observe(container);
-    } else {
-        window.addEventListener('resize', updateState);
+    if ('ResizeObserver' in window) { new ResizeObserver(updateState).observe(container); } 
+    else { window.addEventListener('resize', updateState); }
+
+    new MutationObserver(updateState).observe(container, { childList: true, subtree: true });
+
+    if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) updateState(); });
+        }, { threshold: 0 });
+        io.observe(wrap);
     }
 
-    // 칩스 동적 추가/제거 대응
-    const childObserver = new MutationObserver(updateState);
-    childObserver.observe(container, { childList: true, subtree: true });
-
-    // 초기 상태 적용
     updateState();
 }
 
-// 초기 로드 시 모든 랩 초기화
 document.querySelectorAll('.chips-wrap').forEach(initChipsWrap);
 
-// chips-wrap 자체가 동적으로 추가되는 경우도 대응
-const wrapObserver = new MutationObserver((mutations) => {
+new MutationObserver((mutations) => {
     mutations.forEach((m) => {
         m.addedNodes.forEach((node) => {
             if (!(node instanceof HTMLElement)) return;
-            if (node.classList?.contains('chips-wrap')) {
-                initChipsWrap(node);
-            } else {
-                // 랩 내부에 동적 생성된 경우(템플릿 등)
-                node.querySelectorAll?.('.chips-wrap').forEach(initChipsWrap);
-            }
+            if (node.classList?.contains('chips-wrap')) { initChipsWrap(node); }
+            else node.querySelectorAll?.('.chips-wrap').forEach(initChipsWrap);
         });
     });
+}).observe(document.body, { childList: true, subtree: true });
+</script>
+
+<!-- ===================== 샘플 동작 스크립트 ===================== -->
+<script>
+document.getElementById('show-hidden').addEventListener('click', () => {
+    const hidden = document.getElementById('hidden-parent');
+    hidden.style.display = 'block';
 });
-wrapObserver.observe(document.body, { childList: true, subtree: true });
+
+document.getElementById('add-dynamic').addEventListener('click', () => {
+    const container = document.getElementById('dynamic-container');
+    const wrap = document.createElement('div');
+    wrap.className = 'chips-wrap';
+    wrap.innerHTML = `
+        <div class="chips-container">
+            <div class="chip">D1</div><div class="chip">D2</div><div class="chip">D3</div>
+            <div class="chip">D4</div><div class="chip">D5</div>
+        </div>
+        <button class="toggle-btn" type="button" aria-expanded="false">토글</button>
+    `;
+    container.appendChild(wrap);
+});
 </script>
 
 </body>
