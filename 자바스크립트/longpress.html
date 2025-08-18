@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>웹뷰 새로고침 샘플</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+    header {
+      background: #4CAF50;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 20px;
+    }
+    main {
+      padding: 20px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: #2196F3;
+      color: white;
+    }
+    .btn-link {
+      background: #FF9800;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <header>웹뷰 새로고침 샘플</header>
+  <main>
+    <p>아래 버튼을 눌러보세요. 1초 이상 길게 누르면 링크 이동이 차단되고, 아래로 드래그하면 새로고침됩니다.</p>
+    <button class="btn btn-primary" onclick="alert('버튼 클릭됨!')">일반 버튼</button>
+    <a href="https://www.naver.com" class="btn btn-link">네이버로 이동</a>
+  </main>
+
+  <script>
+    let touchStartY = 0;
+    let touchStartTime = 0;
+    let longPress = false;
+    let longPressTimer;
+
+    document.addEventListener("touchstart", (e) => {
+      touchStartY = e.touches[0].clientY;
+      touchStartTime = Date.now();
+      longPress = false;
+
+      // 1초 이상 누른 경우 longPress 설정
+      longPressTimer = setTimeout(() => {
+        if (Date.now() - touchStartTime >= 1000) {
+          longPress = true;
+          e.preventDefault(); // 링크 이동, 버튼 클릭 등 기본 이벤트 막음
+        }
+      }, 1000);
+    }, { passive: false });
+
+    document.addEventListener("touchmove", (e) => {
+      if (longPress) {
+        const currentY = e.touches[0].clientY;
+        const diff = currentY - touchStartY;
+
+        if (diff > 50) { // 50px 이상 아래로 드래그 시 새로고침
+          location.reload();
+        }
+      }
+    }, { passive: false });
+
+    document.addEventListener("touchend", (e) => {
+      clearTimeout(longPressTimer);
+      // 손을 뗐을 때 longPress 상태라면 클릭/링크 이동 차단
+      if (longPress) {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
