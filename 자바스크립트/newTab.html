@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
 	<meta charset="UTF-8">
 	<title>Tabs</title>
@@ -41,7 +40,7 @@
 			border-radius: 10px;
 		}
 
-		.tabs {
+		.tab {
 			position: relative;
 		}
 
@@ -56,17 +55,17 @@
 			z-index: 2;
 		}
 
-		.tabs_group {
+		.tab_group {
 			position: relative;
 			display: flex;
 			border-bottom: 2px solid #ddd;
 		}
 
-		.tabs_item {
+		.tab_item {
 			flex: 1;
 		}
 
-		.tabs_btn {
+		.tab_btn {
 			display: flex;
 			justify-content: center;
 			width: 100%;
@@ -79,23 +78,20 @@
 			transition: background-color 0.3s;
 		}
 
-		.tabs_btn:hover {
+		.tab_btn:hover {
 			background-color: #ddd;
 		}
 
-		.tabs_btn.active {
+		.tab_btn.active {
 			font-weight: bold;
 			background-color: #eee;
-		}
-
-		.tab-content {
-			transition: opacity 0.3s ease-in-out;
 		}
 
 		.tab-pane {
 			display: none;
 			opacity: 0;
 			padding: 20px;
+			height: 1000px;
 		}
 
 		.tab-pane.active {
@@ -103,33 +99,51 @@
 			opacity: 1;
 		}
 
-		/* 탭 - 세로 스크롤 */
-		.tab-container[data-tab-scroll] .tabs {
-			position: sticky;
+		.tab-pane:nth-child(odd) {
+			background-color: aquamarine;
+		}
+
+		.tab-pane:nth-child(even) {
+			background-color: beige;
+		}
+
+		/* 탭 - fixed */
+		.tab-container[data-tab-pos="fixed"] > .tab {
+			position: fixed;
 			top: 60px;
+			width:100%;
+			z-index: 10;
+			background-color: white;
+		}
+		.tab-container[data-tab-pos="fixed"] > .tab-content {
+			padding-top:56px;
+		}
+		/* 탭 - sticky */
+		.tab-container[data-tab-pos="sticky"] > .tab {
+			position: sticky;
+			top: 120px;
 			z-index: 10;
 			background-color: white;
 		}
 
-		.tab-container[data-tab-scroll] .tab-pane {
-			height: 1000px;
+		.tab-container[data-tab-pos="sticky"] > .tab-content .tab-pane {
+			height: 100px;
 		}
 
-		.tab-container[data-tab-scroll] .tab-pane:nth-child(odd) {
-			background-color: aquamarine;
+		/* 탭 - 사이즈 */
+		.tab-container[data-tab-size="small"] > .tab .tab_item {
+			flex: none;
 		}
 
-		.tab-container[data-tab-scroll] .tab-pane:nth-child(even) {
-			background-color: beige;
-		}
-
-		/* 탭 사이즈 */
-		.tab-container[data-tab-size="small"] .tabs_item {
-			flex: none
-		}
-
-		.swiper {
+		/* 탭 - swiper */
+		.tab-container[data-tab-swiper] > .tab {
 			overflow: hidden;
+		}
+		.tab-container[data-tab-swiper] > .tab .tab-indicator {
+			display: none;
+		}
+		.tab-container[data-tab-swiper] > .tab .tab_btn.active {
+			border-bottom:2px solid #3498db;
 		}
 	</style>
 </head>
@@ -138,120 +152,70 @@
 	<header id="header">Header</header>
 	<div id="container">
 		<!-- 일반 탭 -->
-		<div class="tab-container">
-			<div class="tabs" role="tablist">
-				<ul class="tabs_group">
-					<li class="tabs_item"><button class="tabs_btn" id="tab_btn_1_1" aria-controls="tab1_1"
-							role="tab">Tab1</button></li>
-					<li class="tabs_item"><button class="tabs_btn" id="tab_btn_1_2" aria-controls="tab1_2"
-							role="tab">Tab2</button></li>
-					<li class="tabs_item"><button class="tabs_btn" id="tab_btn_1_3" aria-controls="tab1_3"
-							role="tab">Tab3</button></li>
+		<div class="tab-container" data-tab-scroll data-tab-pos="fixed">
+			<div class="tab" role="tablist">
+				<ul class="tab_group">
+					<li class="tab_item"><button class="tab_btn" id="tab_btn_1_1" aria-controls="tab1_1" role="tab">Tab1</button></li>
+					<li class="tab_item"><button class="tab_btn" id="tab_btn_1_2" aria-controls="tab1_2" role="tab">Tab2</button></li>
+					<li class="tab_item"><button class="tab_btn" id="tab_btn_1_3" aria-controls="tab1_3" role="tab">Tab3</button></li>
 				</ul>
 				<div class="tab-indicator"></div>
 			</div>
 			<div class="tab-content">
 				<div id="tab1_1" class="tab-pane" role="tabpanel">
-					<h2>Tab 1 Content</h2>
-					<p>This is the content for Tab 1.</p>
+					<div class="tab-container" data-tab-swiper>
+						<div class="tab" role="tablist">
+							<div class="tab_group">
+								<div class="tab_item"><button class="tab_btn" id="tab_btn_3_1" aria-controls="tab3_1" role="tab">Tab1Tab1Tab1Tab1Tab1Tab1</button></div>
+								<div class="tab_item"><button class="tab_btn" id="tab_btn_3_2" aria-controls="tab3_2" role="tab">Tab2Tab2Tab2Tab2Tab2</button></div>
+								<div class="tab_item"><button class="tab_btn" id="tab_btn_3_3" aria-controls="tab3_3" role="tab">Tab3Tab3Tab3Tab3Tab3</button></div>
+							</div>
+							<div class="tab-indicator"></div>
+						</div>
+						<div class="tab-content">
+							<div id="tab3_1" class="tab-pane" role="tabpanel">
+								<h2>Tab 1 Content</h2>
+							</div>
+							<div id="tab3_2" class="tab-pane" role="tabpanel">
+								<h2>Tab 2 Content</h2>
+							</div>
+							<div id="tab3_3" class="tab-pane" role="tabpanel">
+								<h2>Tab 3 Content</h2>
+							</div>
+						</div>
+					</div>
+
+					<div class="tab-container" data-tab-size="small" data-tab-pos="sticky">
+						<div class="tab" role="tablist">
+							<div class="tab_group">
+								<div class="tab_item"><button class="tab_btn" id="tab_btn_4_1" aria-controls="tab4_1" role="tab">탭1</button></div>
+								<div class="tab_item"><button class="tab_btn" id="tab_btn_4_2" aria-controls="tab4_2" role="tab">탭2</button></div>
+								<div class="tab_item"><button class="tab_btn" id="tab_btn_4_3" aria-controls="tab4_3" role="tab">탭3</button></div>
+								<div class="tab_item"><button class="tab_btn" id="tab_btn_4_4" aria-controls="tab4_4" role="tab">탭4</button></div>
+							</div>
+							<div class="tab-indicator"></div>
+						</div>
+						<div class="tab-content">
+							<div id="tab4_1" class="tab-pane" role="tabpanel">
+								<h2>Tab 1 Content</h2>
+							</div>
+							<div id="tab4_2" class="tab-pane" role="tabpanel">
+								<h2>Tab 2 Content</h2>
+							</div>
+							<div id="tab4_3" class="tab-pane" role="tabpanel">
+								<h2>Tab 3 Content</h2>
+							</div>
+							<div id="tab4_4" class="tab-pane" role="tabpanel">
+								<h2>Tab 4 Content</h2>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div id="tab1_2" class="tab-pane" role="tabpanel">
-					<h2>Tab 2 Content</h2>
-					<p>This is the content for Tab 2.</p>
+					
 				</div>
 				<div id="tab1_3" class="tab-pane" role="tabpanel">
 					<h2>Tab 3 Content</h2>
-					<p>This is the content for Tab 3.</p>
-				</div>
-			</div>
-		</div>
-
-		<!-- 일반 탭 swiper -->
-		<div class="tab-container" data-tab-swiper>
-			<div class="tabs swiper" role="tablist">
-				<div class="tabs_group swiper-wrapper">
-					<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_3_1" aria-controls="tab3_1"
-							role="tab">Tab1Tab1Tab1Tab1Tab1Tab1</button></div>
-					<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_3_2" aria-controls="tab3_2"
-							role="tab">Tab2Tab2Tab2Tab2Tab2</button></div>
-					<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_3_3" aria-controls="tab3_3"
-							role="tab">Tab3Tab3Tab3Tab3Tab3</button></div>
-				</div>
-				<!-- <div class="tab-indicator"></div> -->
-			</div>
-			<div class="tab-content">
-				<div id="tab3_1" class="tab-pane" role="tabpanel">
-					<h2>Tab 1 Content</h2>
-					<p>This is the content for Tab 1.</p>
-				</div>
-				<div id="tab3_2" class="tab-pane" role="tabpanel">
-					<h2>Tab 2 Content</h2>
-					<p>This is the content for Tab 2.</p>
-				</div>
-				<div id="tab3_3" class="tab-pane" role="tabpanel">
-					<h2>Tab 3 Content</h2>
-					<p>This is the content for Tab 3.</p>
-				</div>
-			</div>
-		</div>
-
-		<br><br>
-
-		<!-- 스크롤 연동 swiper -->
-		<div class="tab-container" data-tab-scroll data-tab-swiper>
-			<div class="tabs swiper" role="tablist">
-				<div class="tabs_group swiper-wrapper">
-					<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_4_1" aria-controls="tab4_1" role="tab">Tab111111111111111</button></div>
-					<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_4_2" aria-controls="tab4_2" role="tab">Tab222222222222222</button></div>
-					<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_4_3" aria-controls="tab4_3" role="tab">Tab33333333333333</button></div>
-					<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_4_4" aria-controls="tab4_4" role="tab">Tab444444444</button></div>
-				</div>
-				<!-- <div class="tab-indicator"></div> -->
-			</div>
-			<div class="tab-content">
-				<div id="tab4_1" class="tab-pane" role="tabpanel">
-					<h2>Tab 1 Content</h2>
-					<p>This is the content for Tab 1.</p>
-				</div>
-				<div id="tab4_2" class="tab-pane" role="tabpanel">
-					<h2>Tab 2 Content</h2>
-					<p>This is the content for Tab 2.</p>
-				</div>
-				<div id="tab4_3" class="tab-pane" role="tabpanel">
-					<h2>Tab 3 Content</h2>
-					<p>This is the content for Tab 3.</p>
-				</div>
-				<div id="tab4_4" class="tab-pane" role="tabpanel">
-					<h2>Tab 4 Content</h2>
-					<p>This is the content for Tab 4.</p>
-				</div>
-			</div>
-		</div>
-
-		<br><br>
-
-		<!-- 스크롤 연동 탭 -->
-		<div class="tab-container" data-tab-scroll data-tab-size="small">
-			<div class="tabs" role="tablist">
-				<ul class="tabs_group">
-					<li class="tabs_item"><button class="tabs_btn" id="tab_btn_2_1" aria-controls="tab2_1">Tab 1</button>
-					</li>
-					<li class="tabs_item"><button class="tabs_btn" id="tab_btn_2_2" aria-controls="tab2_2">Tab 2</button>
-					</li>
-					<li class="tabs_item"><button class="tabs_btn" id="tab_btn_2_3" aria-controls="tab2_3">Tab 3</button>
-					</li>
-				</ul>
-				<div class="tab-indicator"></div>
-			</div>
-			<div class="tab-content">
-				<div id="tab2_1" class="tab-pane" role="tabpanel">
-					<h2>Tab 1 Scroll Content</h2>
-				</div>
-				<div id="tab2_2" class="tab-pane" role="tabpanel">
-					<h2>Tab 2 Scroll Content</h2>
-				</div>
-				<div id="tab2_3" class="tab-pane" role="tabpanel">
-					<h2>Tab 3 Scroll Content</h2>
 				</div>
 			</div>
 		</div>
@@ -340,11 +304,12 @@
 					if (!container) return;
 
 					const isScrollTab = container.hasAttribute('data-tab-scroll'); // 스크롤 연동 탭 여부
-					const tabGroup = container.querySelector('.tabs'); // 탭 버튼 그룹 컨테이너
-					const tabs = container.querySelectorAll('.tabs_btn'); // 개별 탭 버튼들
-					const tabPanes = container.querySelectorAll('.tab-pane'); // 탭 내용 패널들
+					const tabGroup = container.querySelector('.tab'); // 탭 버튼 그룹 컨테이너
+					const tabs = container.querySelector('.tab').querySelectorAll('.tab_btn'); // 개별 탭 버튼들
+					const tabContent = container.querySelector('.tab-content');
+					const tabPanes = tabContent ? Array.from(tabContent.children).filter(el => el.classList.contains('tab-pane')) : []; // 탭 내용 패널들
 					const indicator = container.querySelector('.tab-indicator'); // 하단 이동 표시 바
-
+					console.log(tabs)
 					if (!tabs.length || !tabPanes.length) return; // 탭 또는 패널 없으면 종료
 
 					// 스크롤 연동 탭이면 모든 패널 항상 표시 (숨기지 않음)
@@ -370,20 +335,44 @@
 
 				/**
 				 * Swiper 초기화 함수
-				 * @param {HTMLElement} container 탭 컨테이너
-				 * @param {HTMLElement} tabGroup 탭 버튼 그룹 요소
-				 * @returns {Swiper|null} swiper 인스턴스 또는 null
+				 * - data-tab-swiper 속성이 있는 경우 자동으로 swiper 관련 클래스 추가 및 Swiper 인스턴스 초기화
+				 * @param {HTMLElement} container 탭 컨테이너 요소
+				 * @param {HTMLElement} tabGroup 탭 버튼 그룹 요소 (.tab)
+				 * @returns {Swiper|null} Swiper 인스턴스 또는 null
 				 */
 				initSwiper(container, tabGroup) {
+					// swiper 활성화 조건 확인: data-tab-swiper 속성이 없으면 처리하지 않음
 					if (!container.hasAttribute('data-tab-swiper')) return null;
 
-					const swiper = new Swiper(tabGroup, {
-						slidesPerView: 'auto', // 탭 버튼 개수에 따라 자동 슬라이드 폭 조절
+					// 1. 탭 버튼 그룹 (.tab_group) 찾기
+					const tabsGroup = tabGroup.querySelector('.tab_group');
+
+					// 2. .tabs_group에 swiper-wrapper 클래스 자동 추가
+					if (tabsGroup && !tabsGroup.classList.contains('swiper-wrapper')) {
+						tabsGroup.classList.add('swiper-wrapper');
+					}
+
+					// 3. 각 탭 항목 (.tab_item)에 swiper-slide 클래스 자동 추가
+					const tabItems = tabsGroup ? tabsGroup.querySelectorAll('.tab_item') : [];
+					tabItems.forEach(item => {
+						if (!item.classList.contains('swiper-slide')) {
+							item.classList.add('swiper-slide');
+						}
 					});
-					// container에 swiper 인스턴스 저장해 재사용 용이하게 함
+
+					// 5. Swiper 인스턴스 생성
+					const swiper = new Swiper(tabGroup, {
+						slidesPerView: 'auto', // 자동 너비 슬라이드 (탭 개수/길이 따라감)
+						// 추가 옵션 필요 시 여기에 작성 가능 (예: spaceBetween, loop 등)
+					});
+
+					// 6. 컨테이너에 swiper 인스턴스 저장 (재사용 목적)
 					container._swiperInstance = swiper;
+
+					// 7. 생성된 인스턴스 반환
 					return swiper;
 				},
+
 
 				/**
 				 * 탭 활성화 함수 - 버튼과 패널 상태를 동기화
@@ -441,7 +430,7 @@
 					container.addEventListener('keydown', (e) => {
 						const target = e.target;
 						// 탭 버튼에서만 동작
-						if (!target.classList.contains('tabs_btn')) return;
+						if (!target.classList.contains('tab_btn')) return;
 
 						const tabsArray = Array.from(tabs);
 						const idx = tabsArray.indexOf(target);
@@ -474,7 +463,7 @@
 				 * @param {Swiper|null} swiperInstance swiper 인스턴스
 				 */
 				setupClickHandler(container, tabs, tabPanes, indicator, isScrollTab, swiperInstance) {
-					const tabsGroup = tabs[0].closest('.tabs');
+					const tabsGroup = tabs[0].closest('.tab');
 					const tabsHeight = tabsGroup ? tabsGroup.offsetHeight : 0;
 
 					// 스크롤 연동 탭일 경우 스크롤 상태 관리용 객체
@@ -486,7 +475,7 @@
 					// 컨테이너 단위 클릭 이벤트 위임
 					container.addEventListener('click', (e) => {
 						const target = e.target;
-						if (!target.classList.contains('tabs_btn')) return;
+						if (!target.classList.contains('tab_btn')) return;
 
 						const tabsArray = Array.from(tabs);
 						const idx = tabsArray.indexOf(target);
@@ -503,10 +492,15 @@
 							const offset = UI.common.getOffsetHeight('header'); // fixed header 높이 보정 포함
 							const targetY = paneRect.top + scrollY - tabsHeight - offset; // 탭 높이만큼 오프셋 보정
 
-							this.activateTab(tabs, tabPanes, idx, indicator, true);
-							this.slideToSwiper(swiperInstance, idx);
+							// 스크롤 이동 전 활성화
+							// this.activateTab(tabs, tabPanes, idx, indicator, true);
+							// this.slideToSwiper(swiperInstance, idx);
 							
 							UI.common.scrollToWithCallback(targetY, 500, () => {
+								// 스크롤 이동 후 활성화
+								this.activateTab(tabs, tabPanes, idx, indicator, true);
+								this.slideToSwiper(swiperInstance, idx);
+
 								if (typeof window.onTabScrollComplete === 'function') {
 									window.onTabScrollComplete(idx, pane);
 								}
@@ -543,7 +537,7 @@
 				 */
 				handleScrollNavigation(tabs, panes, indicator, scrollState, swiperInstance) {
 					const { isScrollingByClick, scrollTargetIdx } = scrollState;
-					const tabsEl = tabs[0].closest('.tab-container').querySelector('.tabs');
+					const tabsEl = tabs[0].closest('.tab-container').querySelector('.tab');
 					const tabsHeight = tabsEl ? tabsEl.offsetHeight : 0;
 
 					// 클릭에 의한 스크롤 이동 중이면, 목표 위치 근처 도달 여부 체크
@@ -602,8 +596,8 @@
 				console.log('callback')
 				const firstTag = pane.firstElementChild;
 				if (firstTag) {
-					firstTag.setAttribute('tabindex', 0);
-					firstTag.focus();
+					//firstTag.setAttribute('tabindex', 0);
+					//firstTag.focus();
 				}
 			};
 		});
