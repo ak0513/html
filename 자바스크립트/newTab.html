@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
 	<meta charset="UTF-8">
 	<title>Tabs</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
+	<script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
 	<style>
 		* {
 			margin: 0;
@@ -87,36 +90,48 @@
 			opacity: 1;
 		}
 
-		.tab-container[data-tab="scroll"] .tabs {
+		/* 탭 - 세로 스크롤 */
+		.tab-container[data-tab-scroll] .tabs {
 			position: sticky;
 			top: 0;
 			z-index: 10;
 			background-color: white;
 		}
 
-		.tab-container[data-tab="scroll"] .tab-pane {
+		.tab-container[data-tab-scroll] .tab-pane {
 			height: 1000px;
 		}
 
-		.tab-container[data-tab="scroll"] .tab-pane:nth-child(odd) {
+		.tab-container[data-tab-scroll] .tab-pane:nth-child(odd) {
 			background-color: aquamarine;
 		}
 
-		.tab-container[data-tab="scroll"] .tab-pane:nth-child(even) {
+		.tab-container[data-tab-scroll] .tab-pane:nth-child(even) {
 			background-color: beige;
+		}
+
+		/* 탭 사이즈 */
+		.tab-container[data-tab-size="small"] .tabs_item {
+			flex: none
+		}
+
+		.swiper {
+			overflow: hidden;
 		}
 	</style>
 </head>
 
 <body>
-
 	<!-- 일반 탭 -->
 	<div class="tab-container">
 		<div class="tabs" role="tablist">
 			<ul class="tabs_group">
-				<li class="tabs_item"><button class="tabs_btn" id="tab_btn_1_1" aria-controls="tab1_1" role="tab">Tab1</button></li>
-				<li class="tabs_item"><button class="tabs_btn" id="tab_btn_1_2" aria-controls="tab1_2" role="tab">Tab2</button></li>
-				<li class="tabs_item"><button class="tabs_btn" id="tab_btn_1_3" aria-controls="tab1_3" role="tab">Tab3</button></li>
+				<li class="tabs_item"><button class="tabs_btn" id="tab_btn_1_1" aria-controls="tab1_1"
+						role="tab">Tab1</button></li>
+				<li class="tabs_item"><button class="tabs_btn" id="tab_btn_1_2" aria-controls="tab1_2"
+						role="tab">Tab2</button></li>
+				<li class="tabs_item"><button class="tabs_btn" id="tab_btn_1_3" aria-controls="tab1_3"
+						role="tab">Tab3</button></li>
 			</ul>
 			<div class="tab-indicator"></div>
 		</div>
@@ -136,154 +151,359 @@
 		</div>
 	</div>
 
+	<!-- 일반 탭 swiper -->
+	<div class="tab-container" data-tab-swiper>
+		<div class="tabs swiper" role="tablist">
+			<div class="tabs_group swiper-wrapper">
+				<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_3_1" aria-controls="tab3_1"
+						role="tab">Tab1Tab1Tab1Tab1Tab1Tab1</button></div>
+				<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_3_2" aria-controls="tab3_2"
+						role="tab">Tab2Tab2Tab2Tab2Tab2</button></div>
+				<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_3_3" aria-controls="tab3_3"
+						role="tab">Tab3Tab3Tab3Tab3Tab3</button></div>
+			</div>
+			<!-- <div class="tab-indicator"></div> -->
+		</div>
+		<div class="tab-content">
+			<div id="tab3_1" class="tab-pane" role="tabpanel">
+				<h2>Tab 1 Content</h2>
+				<p>This is the content for Tab 1.</p>
+			</div>
+			<div id="tab3_2" class="tab-pane" role="tabpanel">
+				<h2>Tab 2 Content</h2>
+				<p>This is the content for Tab 2.</p>
+			</div>
+			<div id="tab3_3" class="tab-pane" role="tabpanel">
+				<h2>Tab 3 Content</h2>
+				<p>This is the content for Tab 3.</p>
+			</div>
+		</div>
+	</div>
+
+	<br><br>
+
+	<!-- 스크롤 연동 swiper -->
+	<div class="tab-container" data-tab-scroll data-tab-swiper>
+		<div class="tabs swiper" role="tablist">
+			<div class="tabs_group swiper-wrapper">
+				<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_4_1" aria-controls="tab4_1"
+						role="tab">Tab1Tab1Tab1Tab1Tab1Tab1</button></div>
+				<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_4_2" aria-controls="tab4_2"
+						role="tab">Tab2Tab2Tab2Tab2Tab2</button></div>
+				<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_4_3" aria-controls="tab4_3"
+						role="tab">Tab3Tab3Tab3Tab3Tab3</button></div>
+			</div>
+			<!-- <div class="tab-indicator"></div> -->
+		</div>
+		<div class="tab-content">
+			<div id="tab4_1" class="tab-pane" role="tabpanel">
+				<h2>Tab 1 Content</h2>
+				<p>This is the content for Tab 1.</p>
+			</div>
+			<div id="tab4_2" class="tab-pane" role="tabpanel">
+				<h2>Tab 2 Content</h2>
+				<p>This is the content for Tab 2.</p>
+			</div>
+			<div id="tab4_3" class="tab-pane" role="tabpanel">
+				<h2>Tab 3 Content</h2>
+				<p>This is the content for Tab 3.</p>
+			</div>
+		</div>
+	</div>
+
 	<br><br>
 
 	<!-- 스크롤 연동 탭 -->
-	<div class="tab-container" data-tab="scroll">
+	<div class="tab-container" data-tab-scroll data-tab-size="small">
 		<div class="tabs" role="tablist">
 			<ul class="tabs_group">
-				<li class="tabs_item"><button class="tabs_btn" id="tab_btn_2_1" aria-controls="tab2_1">Tab 1</button></li>
-				<li class="tabs_item"><button class="tabs_btn" id="tab_btn_2_2" aria-controls="tab2_2">Tab 2</button></li>
-				<li class="tabs_item"><button class="tabs_btn" id="tab_btn_2_3" aria-controls="tab2_3">Tab 3</button></li>
+				<li class="tabs_item"><button class="tabs_btn" id="tab_btn_2_1" aria-controls="tab2_1">Tab 1</button>
+				</li>
+				<li class="tabs_item"><button class="tabs_btn" id="tab_btn_2_2" aria-controls="tab2_2">Tab 2</button>
+				</li>
+				<li class="tabs_item"><button class="tabs_btn" id="tab_btn_2_3" aria-controls="tab2_3">Tab 3</button>
+				</li>
 			</ul>
 			<div class="tab-indicator"></div>
 		</div>
 		<div class="tab-content">
 			<div id="tab2_1" class="tab-pane" role="tabpanel">
-				<h2 tabindex="0">Tab 1 Scroll Content</h2>
-				<a href="#">sfsdf</a>
+				<h2>Tab 1 Scroll Content</h2>
 			</div>
 			<div id="tab2_2" class="tab-pane" role="tabpanel">
-				<h2 tabindex="0">Tab 2 Scroll Content</h2>
-				<a href="#">sfsdf</a>
+				<h2>Tab 2 Scroll Content</h2>
 			</div>
 			<div id="tab2_3" class="tab-pane" role="tabpanel">
-				<h2 tabindex="0">Tab 3 Scroll Content</h2>
-				<a href="#">sfsdf</a>
+				<h2>Tab 3 Scroll Content</h2>
 			</div>
 		</div>
 	</div>
 
 	<script>
 		const TabUI = {
+			// 스크롤 위치 인식 허용 오차 (px)
+			SCROLL_THRESHOLD: 10,
+			// 스크롤 이벤트 throttle 지연시간 (ms)
+			THROTTLE_DELAY: 100,
+
+			/**
+			 * throttle 함수: 특정 시간 간격으로만 콜백 실행
+			 * @param {Function} fn 실행할 함수
+			 * @param {number} wait 대기 시간 (밀리초)
+			 * @returns {Function} throttle된 함수
+			 */
+			throttle(fn, wait) {
+				let lastTime = 0;
+				return function (...args) {
+					const now = Date.now();
+					if (now - lastTime >= wait) {
+						lastTime = now;
+						fn.apply(this, args);
+					}
+				};
+			},
+
+			/**
+			 * 페이지 내 모든 탭 컨테이너 초기화
+			 */
 			initAll() {
 				const containers = document.querySelectorAll('.tab-container');
 				containers.forEach(container => this.init(container));
 			},
 
+			/**
+			 * 개별 탭 컨테이너 초기화
+			 * @param {HTMLElement} container 탭 컨테이너 요소
+			 */
 			init(container) {
-				const isScrollTab = container.dataset.tab === 'scroll';
-				const tabs = container.querySelectorAll('.tabs_btn');
-				const tabPanes = container.querySelectorAll('.tab-pane');
-				const indicator = container.querySelector('.tab-indicator');
+				if (!container) return;
 
-				if (!tabs.length || !tabPanes.length) return;
+				const isScrollTab = container.hasAttribute('data-tab-scroll'); // 스크롤 연동 탭 여부
+				const tabGroup = container.querySelector('.tabs'); // 탭 버튼 그룹 컨테이너
+				const tabs = container.querySelectorAll('.tabs_btn'); // 개별 탭 버튼들
+				const tabPanes = container.querySelectorAll('.tab-pane'); // 탭 내용 패널들
+				const indicator = container.querySelector('.tab-indicator'); // 하단 이동 표시 바
 
-				tabs.forEach(tab => {
-					const newTab = tab.cloneNode(true);
-					tab.parentNode.replaceChild(newTab, tab);
-				});
+				if (!tabs.length || !tabPanes.length) return; // 탭 또는 패널 없으면 종료
 
-				const updatedTabs = container.querySelectorAll('.tabs_btn');
-
+				// 스크롤 연동 탭이면 모든 패널 항상 표시 (숨기지 않음)
 				if (isScrollTab) {
-					const scrollState = {
-						isScrollingByClick: false,
-						scrollTargetIdx: null
-					};
-
 					tabPanes.forEach(pane => {
 						pane.classList.add('active');
 						pane.removeAttribute('hidden');
+						pane.setAttribute('aria-hidden', 'false');
 					});
+				}
 
-					updatedTabs.forEach((tab, idx) => {
-						tab.addEventListener('click', () => {
-							scrollState.isScrollingByClick = true;
-							scrollState.scrollTargetIdx = idx;
+				// swiper가 필요한 경우 초기화하고 swiper 인스턴스 반환
+				const swiperInstance = this.initSwiper(container, tabGroup);
 
-							const pane = tabPanes[idx];
-							const paneRect = pane.getBoundingClientRect();
-							const scrollY = window.scrollY || window.pageYOffset;
-							const tabsEl = container.querySelector('.tabs');
-							const tabsHeight = tabsEl ? tabsEl.offsetHeight : 0;
-							const targetY = paneRect.top + scrollY - tabsHeight;
+				// 키보드 네비게이션 이벤트 위임 설정 (컨테이너 단위)
+				this.setupKeyboardNavigation(tabs, container);
 
-							this.activateTab(updatedTabs, tabPanes, idx, indicator, true);
+				// 클릭 이벤트 위임 설정
+				this.setupClickHandler(container, tabs, tabPanes, indicator, isScrollTab, swiperInstance);
 
-							window.scrollTo({
-								top: targetY,
-								behavior: 'smooth'
-							});
-						});
+				// 첫 번째 탭 활성화 (초기 상태)
+				this.activateTab(tabs, tabPanes, 0, indicator, isScrollTab);
+			},
 
-						this.setupKeyboardNavigation(tab, idx, updatedTabs);
-					});
+			/**
+			 * Swiper 초기화 함수
+			 * @param {HTMLElement} container 탭 컨테이너
+			 * @param {HTMLElement} tabGroup 탭 버튼 그룹 요소
+			 * @returns {Swiper|null} swiper 인스턴스 또는 null
+			 */
+			initSwiper(container, tabGroup) {
+				if (!container.hasAttribute('data-tab-swiper')) return null;
 
-					window.addEventListener('scroll', () => {
-						this.handleScrollNavigation(updatedTabs, tabPanes, indicator, scrollState);
-					});
+				const swiper = new Swiper(tabGroup, {
+					slidesPerView: 'auto', // 탭 버튼 개수에 따라 자동 슬라이드 폭 조절
+				});
+				// container에 swiper 인스턴스 저장해 재사용 용이하게 함
+				container._swiperInstance = swiper;
+				return swiper;
+			},
 
-					this.activateTab(updatedTabs, tabPanes, 0, indicator, true);
-				} else {
-					updatedTabs.forEach((tab, idx) => {
-						tab.addEventListener('click', () => {
-							this.activateTab(updatedTabs, tabPanes, idx, indicator);
-						});
+			/**
+			 * 탭 활성화 함수 - 버튼과 패널 상태를 동기화
+			 * @param {NodeListOf<HTMLElement>} tabs 탭 버튼 리스트
+			 * @param {NodeListOf<HTMLElement>} panes 탭 내용 패널 리스트
+			 * @param {number} idx 활성화할 탭 인덱스
+			 * @param {HTMLElement|null} indicator 하단 활성 표시 요소
+			 * @param {boolean} isScrollTab 스크롤 연동 탭인지 여부
+			 */
+			activateTab(tabs, panes, idx, indicator, isScrollTab = false) {
+				tabs.forEach((tab, i) => {
+					const isActive = i === idx;
+					tab.classList.toggle('active', isActive);
+					tab.setAttribute('aria-selected', isActive ? 'true' : 'false'); // 접근성용 aria-selected 설정
+					tab.setAttribute('tabindex', isActive ? '0' : '-1'); // 포커스 순서 관리
+				});
 
-						this.setupKeyboardNavigation(tab, idx, updatedTabs);
-					});
+				panes.forEach((pane, i) => {
+					if (!isScrollTab) {
+						// 일반 탭 - 선택된 페인만 보이도록 설정
+						pane.classList.toggle('active', i === idx);
+						pane.hidden = i !== idx;
+						pane.setAttribute('aria-hidden', i !== idx ? 'true' : 'false');
+					} else {
+						// 스크롤 연동 탭은 항상 보임, aria-hidden 속성만 설정
+						pane.setAttribute('aria-hidden', 'false');
+					}
+				});
 
-					this.activateTab(updatedTabs, tabPanes, 0, indicator);
+				if (indicator && tabs[idx]) {
+					const tab = tabs[idx];
+					// 하단 표시바 위치와 너비 변경 (애니메이션 효과 있음)
+					indicator.style.width = `${tab.offsetWidth}px`;
+					indicator.style.left = `${tab.offsetLeft}px`;
 				}
 			},
 
-			setupKeyboardNavigation(tab, idx, updatedTabs) {
-				tab.addEventListener('keydown', e => {
+			/**
+			 * Swiper 슬라이드 이동 함수
+			 * @param {Swiper|null} swiperInstance swiper 인스턴스
+			 * @param {number} idx 이동할 슬라이드 인덱스
+			 */
+			slideToSwiper(swiperInstance, idx, tabs) {
+				if (swiperInstance) {
+					swiperInstance.slideTo(idx);
+				}
+			},
+
+			/**
+			 * 키보드 네비게이션 (화살표, 엔터/스페이스) 이벤트 위임 설정
+			 * @param {NodeListOf<HTMLElement>} tabs 탭 버튼 리스트
+			 * @param {HTMLElement} container 탭 컨테이너 요소
+			 */
+			setupKeyboardNavigation(tabs, container) {
+				container.addEventListener('keydown', (e) => {
+					const target = e.target;
+					// 탭 버튼에서만 동작
+					if (!target.classList.contains('tabs_btn')) return;
+
+					const tabsArray = Array.from(tabs);
+					const idx = tabsArray.indexOf(target);
+					if (idx === -1) return;
+
 					let newIdx = idx;
 
 					if (e.key === 'ArrowRight') {
-						newIdx = (idx + 1) % updatedTabs.length;
-					} else if (e.key === 'ArrowLeft') {
-						newIdx = (idx - 1 + updatedTabs.length) % updatedTabs.length;
-					}
-
-					updatedTabs[newIdx].focus();
-
-					if (e.key === 'Enter' || e.key === ' ') {
 						e.preventDefault();
-						updatedTabs[newIdx].click();
+						newIdx = (idx + 1) % tabsArray.length; // 오른쪽 화살표: 다음 탭으로 이동 (순환)
+						tabsArray[newIdx].focus();
+					} else if (e.key === 'ArrowLeft') {
+						e.preventDefault();
+						newIdx = (idx - 1 + tabsArray.length) % tabsArray.length; // 왼쪽 화살표: 이전 탭으로 이동 (순환)
+						tabsArray[newIdx].focus();
+					} else if (e.key === 'Enter' || e.key === ' ') {
+						e.preventDefault();
+						target.click(); // 엔터나 스페이스 누르면 해당 탭 클릭 이벤트 발생
 					}
 				});
 			},
 
-			handleScrollNavigation(tabs, panes, indicator, scrollState) {
+			/**
+			 * 클릭 이벤트 위임 설정
+			 * @param {HTMLElement} container 탭 컨테이너 요소
+			 * @param {NodeListOf<HTMLElement>} tabs 탭 버튼 리스트
+			 * @param {NodeListOf<HTMLElement>} tabPanes 탭 내용 패널 리스트
+			 * @param {HTMLElement|null} indicator 하단 활성 표시 요소
+			 * @param {boolean} isScrollTab 스크롤 연동 탭 여부
+			 * @param {Swiper|null} swiperInstance swiper 인스턴스
+			 */
+			setupClickHandler(container, tabs, tabPanes, indicator, isScrollTab, swiperInstance) {
+				const tabsGroup = tabs[0].closest('.tabs');
+				const tabsHeight = tabsGroup ? tabsGroup.offsetHeight : 0;
+
+				// 스크롤 연동 탭일 경우 스크롤 상태 관리용 객체
+				let scrollState = {
+					isScrollingByClick: false,
+					scrollTargetIdx: null,
+				};
+
+				// 컨테이너 단위 클릭 이벤트 위임
+				container.addEventListener('click', (e) => {
+					const target = e.target;
+					if (!target.classList.contains('tabs_btn')) return;
+
+					const tabsArray = Array.from(tabs);
+					const idx = tabsArray.indexOf(target);
+					if (idx === -1) return;
+
+					if (isScrollTab) {
+						// 스크롤 연동 탭 클릭 시 스크롤 이동 트리거 및 상태 갱신
+						scrollState.isScrollingByClick = true;
+						scrollState.scrollTargetIdx = idx;
+
+						const pane = tabPanes[idx];
+						const paneRect = pane.getBoundingClientRect();
+						const scrollY = window.scrollY || window.pageYOffset;
+						const targetY = paneRect.top + scrollY - tabsHeight; // 탭 높이만큼 오프셋 보정
+
+						this.activateTab(tabs, tabPanes, idx, indicator, true);
+
+						window.scrollTo({
+							top: targetY,
+							behavior: 'smooth',
+						});
+						this.slideToSwiper(swiperInstance, idx);
+					} else {
+						// 일반 탭 클릭 시 즉시 탭 활성화
+						this.activateTab(tabs, tabPanes, idx, indicator);
+						this.slideToSwiper(swiperInstance, idx);
+					}
+				});
+
+				// 스크롤 이벤트를 throttle 적용해서 등록 (스크롤 연동 탭에만)
+				if (isScrollTab) {
+					window.addEventListener(
+						'scroll',
+						this.throttle(() => {
+							this.handleScrollNavigation(tabs, tabPanes, indicator, scrollState, swiperInstance);
+						}, this.THROTTLE_DELAY)
+					);
+				}
+			},
+
+			/**
+			 * 스크롤 위치에 따른 탭 활성화 처리 함수
+			 * @param {NodeListOf<HTMLElement>} tabs 탭 버튼 리스트
+			 * @param {NodeListOf<HTMLElement>} panes 탭 내용 패널 리스트
+			 * @param {HTMLElement|null} indicator 하단 활성 표시 요소
+			 * @param {Object} scrollState 스크롤 상태 객체
+			 * @param {Swiper|null} swiperInstance swiper 인스턴스 (추가)
+			 */
+			handleScrollNavigation(tabs, panes, indicator, scrollState, swiperInstance) {
 				const { isScrollingByClick, scrollTargetIdx } = scrollState;
 				const tabsEl = tabs[0].closest('.tab-container').querySelector('.tabs');
 				const tabsHeight = tabsEl ? tabsEl.offsetHeight : 0;
 
+				// 클릭에 의한 스크롤 이동 중이면, 목표 위치 근처 도달 여부 체크
 				if (isScrollingByClick && scrollTargetIdx !== null) {
 					const pane = panes[scrollTargetIdx];
 					const paneTop = pane.getBoundingClientRect().top;
-					if (Math.abs(paneTop - tabsHeight) <= 10) {
-                        scrollState.isScrollingByClick = false;
-                        
-						// ✅ 스크롤 완료 후 콜백 실행
-						if (typeof window.onTabScrollComplete === 'function') {
-                            window.onTabScrollComplete(scrollTargetIdx, pane);
+					if (Math.abs(paneTop - tabsHeight) <= this.SCROLL_THRESHOLD) {
+						// 목표 위치 도달하면 스크롤 이동 상태 초기화
+						scrollState.isScrollingByClick = false;
 
-                            const firstTag = pane.firstElementChild;
-                            firstTag.focus()
-                            console.log(firstTag);
-                            console.log(pane)
+						// swiper도 해당 탭으로 슬라이드 이동 추가
+						this.slideToSwiper(swiperInstance, scrollTargetIdx);
+
+						// 외부 콜백 함수 호출 (존재 시)
+						if (typeof window.onTabScrollComplete === 'function') {
+							window.onTabScrollComplete(scrollTargetIdx, pane);
 						}
 
 						scrollState.scrollTargetIdx = null;
+						// 탭 활성화 상태 재설정 (aria 등 갱신)
 						this.activateTab(tabs, panes, scrollTargetIdx, indicator, true);
 					}
-					return;
+					return; // 클릭 스크롤 중엔 아래 일반 스크롤 처리 로직 건너뜀
 				}
 
+				// 클릭 이동이 아닐 때는 현재 스크롤 위치에 가장 가까운 패널 찾기
 				let foundIdx = 0;
 				let minDiff = Infinity;
 				const tabsBottom = tabsEl.getBoundingClientRect().bottom;
@@ -291,48 +511,37 @@
 				panes.forEach((pane, idx) => {
 					const rect = pane.getBoundingClientRect();
 					const diff = Math.abs(rect.top - tabsBottom);
-					if (rect.top - tabsBottom <= 10 && diff < minDiff) {
+					// 탭 하단 근처 위치를 기준으로 가장 가까운 패널 선택
+					if (rect.top - tabsBottom <= this.SCROLL_THRESHOLD && diff < minDiff) {
 						minDiff = diff;
 						foundIdx = idx;
 					}
 				});
 
+				// 스크롤 위치 기준으로 탭 활성화 갱신
 				this.activateTab(tabs, panes, foundIdx, indicator, true);
+
+				// swiper 슬라이드 위치도 갱신 (추가)
+				this.slideToSwiper(swiperInstance, foundIdx);
 			},
-
-			activateTab(tabs, panes, idx, indicator, isScrollTab = false) {
-				tabs.forEach((tab, i) => {
-					tab.classList.toggle('active', i === idx);
-					tab.setAttribute('aria-selected', i === idx ? 'true' : 'false');
-					tab.setAttribute('tabindex', i === idx ? '0' : '-1');
-				});
-
-				panes.forEach((pane, i) => {
-					if (!isScrollTab) {
-						pane.classList.toggle('active', i === idx);
-						pane.hidden = i !== idx;
-					} else {
-						//pane.setAttribute('aria-hidden', i !== idx ? 'true' : 'false');
-					}
-				});
-
-				if (indicator && tabs[idx]) {
-					const tab = tabs[idx];
-					indicator.style.width = `${tab.offsetWidth}px`;
-					indicator.style.left = `${tab.offsetLeft}px`;
-				}
-			}
 		};
 
+		// DOMContentLoaded 이벤트에 탭 UI 초기화 및 스크롤 완료 콜백 정의
 		document.addEventListener('DOMContentLoaded', () => {
 			TabUI.initAll();
 
-			// ✅ 콜백 등록
-			window.onTabScrollComplete = function(tabIndex, pane) {
-				console.log(`✅ 스크롤 완료 후 콜백 실행됨! 현재 탭 인덱스: ${pane}`);
-				// 여기에 원하는 코드 작성
+			// 스크롤 완료 후 첫 자식 요소에 tabindex 0 부여 및 포커스 이동 (접근성 보완)
+			window.onTabScrollComplete = function (tabIndex, pane) {
+				const firstTag = pane.firstElementChild;
+				if (firstTag) {
+					firstTag.setAttribute('tabindex', 0);
+					firstTag.focus();
+				}
 			};
 		});
 	</script>
+
+
 </body>
+
 </html>
