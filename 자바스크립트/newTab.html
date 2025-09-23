@@ -201,12 +201,10 @@
 		<div class="tab-container" data-tab-scroll data-tab-swiper>
 			<div class="tabs swiper" role="tablist">
 				<div class="tabs_group swiper-wrapper">
-					<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_4_1" aria-controls="tab4_1"
-							role="tab">Tab1Tab1Tab1Tab1Tab1Tab1</button></div>
-					<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_4_2" aria-controls="tab4_2"
-							role="tab">Tab2Tab2Tab2Tab2Tab2</button></div>
-					<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_4_3" aria-controls="tab4_3"
-							role="tab">Tab3Tab3Tab3Tab3Tab3</button></div>
+					<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_4_1" aria-controls="tab4_1" role="tab">Tab111111111111111</button></div>
+					<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_4_2" aria-controls="tab4_2" role="tab">Tab222222222222222</button></div>
+					<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_4_3" aria-controls="tab4_3" role="tab">Tab33333333333333</button></div>
+					<div class="tabs_item swiper-slide"><button class="tabs_btn" id="tab_btn_4_4" aria-controls="tab4_4" role="tab">Tab444444444</button></div>
 				</div>
 				<!-- <div class="tab-indicator"></div> -->
 			</div>
@@ -222,6 +220,10 @@
 				<div id="tab4_3" class="tab-pane" role="tabpanel">
 					<h2>Tab 3 Content</h2>
 					<p>This is the content for Tab 3.</p>
+				</div>
+				<div id="tab4_4" class="tab-pane" role="tabpanel">
+					<h2>Tab 4 Content</h2>
+					<p>This is the content for Tab 4.</p>
 				</div>
 			</div>
 		</div>
@@ -256,17 +258,54 @@
 	</div>
 	<script>
 		const UI = {
+			common: {
+				/**
+				 * 요소의 offsetHeight 반환 (선택자 또는 요소)
+				 * @param {string|HTMLElement|null} target - 선택자 문자열 또는 DOM 요소
+				 * @returns {number}
+				 */
+				getOffsetHeight(target) {
+					let el = null;
+
+					if (typeof target === 'string') {
+						el = document.querySelector(target);
+					} else if (target instanceof HTMLElement) {
+						el = target;
+					}
+
+					return el ? el.offsetHeight : 0;
+				},
+				/**
+				 * 스크롤 이동 후 콜백 실행 (jQuery animate 대체)
+				 * @param {number} targetY - 이동할 Y 위치
+				 * @param {number} duration - 애니메이션 시간 (ms)
+				 * @param {Function} callback - 완료 후 실행할 콜백
+				 */
+				scrollToWithCallback(targetY, duration = 500, callback) {
+					const start = window.scrollY || window.pageYOffset;
+					const startTime = performance.now();
+
+					function scroll() {
+						const now = performance.now();
+						const time = Math.min(1, (now - startTime) / duration);
+						const easeOut = time * (2 - time); // easeOutQuad
+						window.scrollTo(0, Math.ceil((easeOut * (targetY - start)) + start));
+
+						if (time < 1) {
+							requestAnimationFrame(scroll);
+						} else if (typeof callback === 'function') {
+							callback(); // 스크롤 완료 후 실행
+						}
+					}
+
+					requestAnimationFrame(scroll);
+				}
+			},
 			tab : {
 				// 스크롤 위치 인식 허용 오차 (px)
 				SCROLL_THRESHOLD: 10,
 				// 스크롤 이벤트 throttle 지연시간 (ms)
 				THROTTLE_DELAY: 100,
-
-				// fixed 헤더 높이를 반환
-				getHeaderOffset() {
-					const header = document.querySelector('header');
-					return header ? header.offsetHeight : 0;
-				},
 
 				/**
 				 * throttle 함수: 특정 시간 간격으로만 콜백 실행
@@ -313,7 +352,6 @@
 						tabPanes.forEach(pane => {
 							pane.classList.add('active');
 							pane.removeAttribute('hidden');
-							pane.setAttribute('aria-hidden', 'false');
 						});
 					}
 
@@ -462,16 +500,21 @@
 							const pane = tabPanes[idx];
 							const paneRect = pane.getBoundingClientRect();
 							const scrollY = window.scrollY || window.pageYOffset;
-							const offset = this.getHeaderOffset(); // fixed header 높이 보정 포함
+							const offset = UI.common.getOffsetHeight('header'); // fixed header 높이 보정 포함
 							const targetY = paneRect.top + scrollY - tabsHeight - offset; // 탭 높이만큼 오프셋 보정
 
 							this.activateTab(tabs, tabPanes, idx, indicator, true);
-
-							window.scrollTo({
-								top: targetY,
-								behavior: 'smooth',
-							});
 							this.slideToSwiper(swiperInstance, idx);
+							
+							UI.common.scrollToWithCallback(targetY, 500, () => {
+								if (typeof window.onTabScrollComplete === 'function') {
+									window.onTabScrollComplete(idx, pane);
+								}
+
+								// 스크롤 상태 초기화
+								scrollState.isScrollingByClick = false;
+								scrollState.scrollTargetIdx = null;
+							});
 						} else {
 							// 일반 탭 클릭 시 즉시 탭 활성화
 							this.activateTab(tabs, tabPanes, idx, indicator);
@@ -556,6 +599,7 @@
 
 			// 스크롤 완료 후 첫 자식 요소에 tabindex 0 부여 및 포커스 이동 (접근성 보완)
 			window.onTabScrollComplete = function (tabIndex, pane) {
+				console.log('callback')
 				const firstTag = pane.firstElementChild;
 				if (firstTag) {
 					firstTag.setAttribute('tabindex', 0);
