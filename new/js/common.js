@@ -1,1 +1,711 @@
-11
+// DOMContentLoaded 이벤트에 탭 UI 초기화 및 스크롤 완료 콜백 정의
+document.addEventListener('DOMContentLoaded', () => {
+  UI.com.setAttrRandomNum(document.querySelectorAll('link[rel="stylesheet"]'), 'href');
+	UI.com.setAttrRandomNum(document.querySelectorAll('script[src]'), 'src');
+
+  UI.tab.initAll();
+
+  // 스크롤 완료 후 첫 자식 요소에 tabindex 0 부여 및 포커스 이동 (접근성 보완)
+  window.onTabScrollComplete = function (tabIndex, pane) {
+    const firstTag = pane.firstElementChild;
+    if (firstTag) {
+      firstTag.setAttribute('tabindex', 0);
+      firstTag.focus();
+    }
+  };
+});
+
+const UI = {
+	com: {
+		/**
+		 * 요소의 offsetHeight 반환 (선택자 또는 요소)
+		 * @param {string|HTMLElement|null} target - 선택자 문자열 또는 DOM 요소
+		 * @returns {number}
+		 */
+		getOffsetHeight(target) {
+			let el = null;
+
+			if (typeof target === 'string') {
+				el = document.querySelector(target);
+			} else if (target instanceof HTMLElement) {
+				el = target;
+			}
+
+			return el ? el.offsetHeight : 0;
+		},
+
+
+		/**
+		 * 스크롤 이동 후 콜백 실행 (jQuery animate 대체)
+		 * @param {number} targetY - 이동할 Y 위치
+		 * @param {number} duration - 애니메이션 시간 (ms)
+		 * @param {Function} callback - 완료 후 실행할 콜백
+		 */
+		scrollToWithCallback(targetY, duration = 500, callback) {
+			const start = window.scrollY || window.pageYOffset;
+			const startTime = performance.now();
+
+			function scroll() {
+				const now = performance.now();
+				const time = Math.min(1, (now - startTime) / duration);
+				const easeOut = time * (2 - time); // easeOutQuad
+				window.scrollTo(0, Math.ceil((easeOut * (targetY - start)) + start));
+
+				if (time < 1) {
+					requestAnimationFrame(scroll);
+				} else if (typeof callback === 'function') {
+					callback(); // 스크롤 완료 후 실행
+				}
+			}
+
+			requestAnimationFrame(scroll);
+		},
+
+
+		/**
+		 * 여러 요소에서 특정 클래스 제거
+		 * @param {NodeList|HTMLElement[]} elements - DOM 요소 배열 또는 NodeList
+		 * @param {string} className - 제거할 클래스 이름
+		*/
+		removeClass(elements, className) {
+			for (let i = 0; i < elements.length; i++) {
+				elements[i].classList.remove(className);
+			}
+		},
+
+
+		/**
+		 * 현재 날짜 기반 난수 반환 (정수)
+		 * @returns {number} - 현재 날짜 기반 난수
+		*/
+		getRandomNum() {
+			return new Date().setDate(new Date().getDate());
+		},
+
+
+		/**
+		 * 요소의 속성(attr)에 날짜 기반 난수 쿼리 추가
+		 * @param {HTMLElement|HTMLElement[]|NodeList} elements
+		 * @param {string} attr
+		*/
+		setAttrRandomNum(elements, attr) {
+			const list = elements instanceof HTMLElement ? [elements] : Array.from(elements || []);
+			const rand = UI.com.getRandomNum();
+
+			list.forEach(el => {
+				let val = el.getAttribute(attr);
+				if (!val) return;
+
+				// 기존에 이미 ? 또는 &로 붙은 날짜 기반 쿼리 제거
+				val = val.replace(/([?&])\d{8}$/, ''); // YYYYMMDD 형식 숫자 제거
+
+				const sep = val.includes('?') ? '&' : '?';
+				el.setAttribute(attr, `${val}${sep}${rand}`);
+			});
+		},
+
+
+		/**
+		 * 요소들의 속성(setAttr) 설정
+		 * @param {HTMLElement[]|NodeList} elements - 요소 배열 또는 NodeList
+		 * @param {string} attr - 설정할 속성 이름
+		 * @param {string} value - 설정할 값
+		*/
+		setAttr(elements, attr, value) {
+			if (!elements || !attr) return;
+
+			// elements가 배열/반복 가능한 객체가 아닐 경우 단일 요소로 감싸기
+			if (!('forEach' in elements)) {
+				elements = [elements];
+			}
+
+			elements.forEach(item => {
+				if (item && item.setAttribute) {
+					item.setAttribute(attr, value);
+				}
+			});
+		},
+
+
+		/**
+		 * 요소들의 속성(attr) 제거
+		 * @param {HTMLElement[]|NodeList|HTMLElement} elements - 요소 배열, NodeList 또는 단일 요소
+		 * @param {string} attr - 제거할 속성 이름
+		*/
+		removeAttr(elements, attr) {
+			if (!elements || !attr) return;
+
+			if (!('forEach' in elements)) {
+				elements = [elements];
+			}
+
+			elements.forEach(item => {
+				if (item && item.removeAttribute) {
+					item.removeAttribute(attr);
+				}
+			});
+		},
+
+
+		/**
+		 * URL에서 특정 쿼리 파라미터 값을 가져옴
+		 * @param {string} param - 파라미터 이름
+		 * @param {string} [url=location.href] - 검사할 URL (기본값: 현재 페이지 URL)
+		 * @returns {string|null} - 파라미터 값 또는 null
+		*/
+		getUrlParam(param, url = window.location.href) {
+			if (!param) return null;
+
+			try {
+				const urlObj = new URL(url);
+				return urlObj.searchParams.get(param);
+			} catch (e) {
+				console.error('잘못된 URL:', url);
+				return null;
+			}
+		},
+
+
+		/**
+		 * 지정 요소 이전의 모든 형제 요소 반환
+		 * @param {HTMLElement} ele - 기준 요소
+		 * @param {string} [selector] - 선택자 필터 (선택 사항)
+		 * @returns {HTMLElement[]} - 이전 형제 요소 배열 (DOM 순서대로)
+		*/
+		prevAll(ele, selector) {
+			if (!ele || !ele.previousElementSibling) return [];
+
+			const result = [];
+			let current = ele.previousElementSibling;
+
+			while (current) {
+				if (!selector || current.matches(selector)) {
+					result.push(current);
+				}
+				current = current.previousElementSibling;
+			}
+
+			return result.reverse(); // DOM 상 순서대로 반환
+		},
+
+		
+		/**
+		 * 지정 요소 이후의 모든 형제 요소 반환
+		 * @param {HTMLElement} ele - 기준 요소
+		 * @param {string} [selector] - 선택자 필터 (선택 사항)
+		 * @returns {HTMLElement[]} - 다음 형제 요소 배열
+		*/
+		nextAll(ele, selector) {
+			if (!ele || !ele.nextElementSibling) return [];
+
+			const result = [];
+			let current = ele.nextElementSibling;
+
+			while (current) {
+				if (!selector || current.matches(selector)) {
+					result.push(current);
+				}
+				current = current.nextElementSibling;
+			}
+
+			return result;
+		},
+
+
+		/**
+		 * 지정 요소의 형제 요소 반환
+		 * @param {HTMLElement|string} ele - 요소 또는 선택자
+		 * @returns {HTMLElement[]} - 형제 요소 배열
+		*/
+		getSiblings(ele) {
+			if (typeof ele === 'string') {
+				ele = document.querySelector(ele);
+				if (!ele) return [];
+			}
+
+			if (!ele || !ele.parentNode) return [];
+
+			return Array.from(ele.parentNode.children).filter(child => child !== ele);
+		},
+
+
+		/**
+		 * 접근성 비활성화 (포커스, aria-hidden 등)
+		 * @param {HTMLElement|HTMLElement[]} eleDisable - 비활성화할 요소(들)
+		 * @param {string} module - 모듈명 (ex: "modal")
+		 */
+		accessDisable(eleDisable, module) {
+			if (!eleDisable) return;
+
+			const elements = (eleDisable instanceof HTMLElement)
+				? [eleDisable]
+				: Array.isArray(eleDisable) || eleDisable instanceof NodeList
+					? Array.from(eleDisable)
+					: [];
+
+			elements.forEach(ele => {
+				if (!ele) return;
+
+				const baseClassHidden = `is-a11y-${module}-hidden`;
+				const baseClassFixed = `is-a11y-${module}-fixed`;
+				const baseClassTags = `is-a11y-${module}-tags`;
+				const baseClassTabindex = `is-a11y-${module}-tabindex`;
+
+				const focusTags = ele.querySelectorAll('input:not([tabindex]), button:not([tabindex]), a:not([tabindex]), select:not([tabindex]), textarea:not([tabindex])');
+				const tab0 = ele.querySelectorAll('[tabindex="0"]');
+				const tabM1 = ele.querySelectorAll('[tabindex="-1"]');
+
+				if (!ele.hasAttribute('aria-hidden')) {
+					ele.setAttribute('aria-hidden', 'true');
+					ele.classList.add(baseClassHidden);
+				} else {
+					ele.classList.add(baseClassFixed);
+				}
+
+				focusTags.forEach(tag => {
+					tag.setAttribute('tabindex', '-1');
+					tag.classList.add(baseClassTags);
+				});
+				tab0.forEach(tag => {
+					tag.setAttribute('tabindex', '-1');
+					tag.classList.add(baseClassTabindex);
+				});
+				tabM1.forEach(tag => {
+					tag.classList.add(baseClassFixed);
+				});
+			});
+		},
+
+
+		/**
+		 * 접근성 활성화 (포커스, aria-hidden 등 복구)
+		 * @param {HTMLElement|HTMLElement[]} eleEnable - 복구할 요소(들)
+		 * @param {string} module - 모듈명 (ex: "modal")
+		*/
+		accessEnable(eleEnable, module) {
+			if (!eleEnable) return;
+
+			const elements = (eleEnable instanceof HTMLElement)
+				? [eleEnable]
+				: Array.isArray(eleEnable) || eleEnable instanceof NodeList
+					? Array.from(eleEnable)
+					: [];
+
+			elements.forEach(ele => {
+				if (!ele) return;
+
+				const baseClassHidden = `is-a11y-${module}-hidden`;
+				const baseClassFixed = `is-a11y-${module}-fixed`;
+				const baseClassTags = `is-a11y-${module}-tags`;
+				const baseClassTabindex = `is-a11y-${module}-tabindex`;
+
+				if (ele.classList.contains(baseClassHidden)) {
+					ele.removeAttribute('aria-hidden');
+					ele.classList.remove(baseClassHidden);
+				} else {
+					ele.classList.remove(baseClassFixed);
+				}
+
+				const focusTags = ele.querySelectorAll(`.${baseClassTags}`);
+				const tab0 = ele.querySelectorAll(`.${baseClassTabindex}`);
+				const tabM1 = ele.querySelectorAll(`.${baseClassFixed}`);
+
+				focusTags.forEach(tag => {
+					tag.removeAttribute('tabindex');
+					tag.classList.remove(baseClassTags);
+				});
+				tab0.forEach(tag => {
+					tag.setAttribute('tabindex', '0');
+					tag.classList.remove(baseClassTabindex);
+				});
+				tabM1.forEach(tag => {
+					tag.classList.remove(baseClassFixed);
+				});
+			});
+		},
+	},
+	
+	modal: {
+		/**
+		 * 모달 열기
+		 * @param {string} target - 열 대상 모달 선택자
+		 * @param {HTMLElement} btn - 트리거 버튼 (포커스 복원용)
+		 */
+		open(target, btn) {
+			const modal = document.querySelector(target);
+			const openedModal = document.querySelectorAll('.modal.active');
+
+			modal.setAttribute('aria-modal', 'true');
+			setTimeout(() => modal.focus(), 1);
+			modal.classList.add('visible');
+			setTimeout(() => modal.classList.add('active'), 100);
+
+			modal.setAttribute('role', modal.classList.contains('alert') ? 'alertdialog' : 'dialog');
+
+			if (openedModal.length > 0) {
+				modal.style.zIndex = 1000 + openedModal.length;
+			}
+
+			btn.setAttribute('data-modal', target);
+
+			const modalBody = modal.querySelector('.modal-body');
+			const contentHeight = modalBody.scrollHeight;
+			const visibleHeight = modalBody.clientHeight;
+			if (contentHeight > visibleHeight) {
+				modalBody.setAttribute('tabindex', '0');
+			} else {
+				modalBody.removeAttribute('tabindex');
+			}
+
+			if (!btn.closest('.modal')) {
+				UI.com.accessDisable(UI.com.prevAll(modal), 'modal');
+			} else {
+				UI.com.accessDisable(btn.closest('.modal'), 'modal');
+			}
+		},
+
+		/**
+		 * 모달 닫기
+		 * @param {string} target - 닫을 모달 선택자
+		 */
+		close(target) {
+			const modal = document.querySelector(target);
+			const openedBtn = document.querySelector(`[data-modal="${target}"]`);
+			const openedModal = document.querySelectorAll('.modal.active');
+
+			modal.classList.remove('active');
+			setTimeout(() => modal.classList.remove('visible'), 100);
+
+			if (openedModal.length > 1) {
+				UI.com.accessEnable(openedBtn.closest('.modal'), 'modal');
+			} else {
+				UI.com.accessEnable(UI.com.prevAll(modal), 'modal');
+			}
+
+			setTimeout(() => openedBtn.focus(), 300);
+			openedBtn.removeAttribute('data-modal');
+			modal.removeAttribute('aria-modal');
+		},
+	},
+
+	tab : {
+		// 스크롤 위치 인식 허용 오차 (px)
+		SCROLL_THRESHOLD: 10,
+		// 스크롤 이벤트 throttle 지연시간 (ms)
+		THROTTLE_DELAY: 100,
+
+		/**
+		 * throttle 함수: 특정 시간 간격으로만 콜백 실행
+		 * @param {Function} fn 실행할 함수
+		 * @param {number} wait 대기 시간 (밀리초)
+		 * @returns {Function} throttle된 함수
+		 */
+		throttle(fn, wait) {
+			let lastTime = 0;
+			return function (...args) {
+				const now = Date.now();
+				if (now - lastTime >= wait) {
+					lastTime = now;
+					fn.apply(this, args);
+				}
+			};
+		},
+
+		/**
+		 * 페이지 내 모든 탭 컨테이너 초기화
+		 */
+		initAll() {
+			const containers = document.querySelectorAll('.tab');
+			containers.forEach(container => this.init(container));
+		},
+
+		/**
+		 * 개별 탭 컨테이너 초기화
+		 * @param {HTMLElement} container 탭 컨테이너 요소
+		 */
+		init(container) {
+			if (!container) return;
+
+			const isScrollTab = container.hasAttribute('data-tab-scroll'); // 스크롤 연동 탭 여부
+			const tabContainer = container.querySelector('.tab_container'); // 탭 버튼 그룹 컨테이너
+			const tabsBtns = container.querySelector('.tab_container').querySelectorAll('.tab_btn'); // 개별 탭 버튼들
+			const tabContent = container.querySelector('.tab_content');
+			const tabPanes = tabContent ? Array.from(tabContent.children).filter(el => el.classList.contains('tab_pane')) : []; // 탭 내용 패널들
+			const tabIndicator = container.querySelector('.tab_indicator'); // 하단 이동 표시 
+
+			if (!tabsBtns.length || !tabPanes.length) return; // 탭 또는 패널 없으면 종료
+
+			// 스크롤 연동 탭이면 모든 패널 항상 표시 (숨기지 않음)
+			if (isScrollTab) {
+				tabPanes.forEach(pane => {
+					pane.classList.add('active');
+				});
+			}
+
+			// swiper가 필요한 경우 초기화하고 swiper 인스턴스 반환
+			const swiperInstance = this.initSwiper(container, tabContainer);
+
+			// 키보드 네비게이션 이벤트 위임 설정 (컨테이너 단위)
+			this.setupKeyboardNavigation(tabsBtns, container);
+
+			// 클릭 이벤트 위임 설정
+			this.setupClickHandler(container, tabsBtns, tabPanes, tabIndicator, isScrollTab, swiperInstance);
+
+      // HTML data 속성에서 초기 활성 탭 인덱스 읽기 (기본값 0)
+      const activeIndex = parseInt(container.getAttribute('data-tab-active')) || 0;
+      this.activateTab(tabsBtns, tabPanes, activeIndex, tabIndicator, isScrollTab);
+		},
+
+		/**
+		 * Swiper 초기화 함수
+		 * - data-tab-swiper 속성이 있는 경우 자동으로 swiper 관련 클래스 추가 및 Swiper 인스턴스 초기화
+		 * @param {HTMLElement} container 탭 컨테이너 요소
+		 * @param {HTMLElement} tabContainer 탭 버튼 그룹 요소 (.tab_container)
+		 * @returns {Swiper|null} Swiper 인스턴스 또는 null
+		 */
+		initSwiper(container, tabContainer) {
+			// swiper 활성화 조건 확인: data-tab-swiper 속성이 없으면 처리하지 않음
+			if (!container.hasAttribute('data-tab-swiper')) return null;
+
+			// 1. 탭 버튼 그룹 (.tab_group) 찾기
+			const tabsGroup = tabContainer.querySelector('.tab_group');
+
+			// 2. .tabs_group에 swiper-wrapper 클래스 자동 추가
+			if (tabsGroup && !tabsGroup.classList.contains('swiper-wrapper')) {
+				tabsGroup.classList.add('swiper-wrapper');
+			}
+
+			// 3. 각 탭 항목 (.tab_item)에 swiper-slide 클래스 자동 추가
+			const tabItems = tabsGroup ? tabsGroup.querySelectorAll('.tab_item') : [];
+			tabItems.forEach(item => {
+				if (!item.classList.contains('swiper-slide')) {
+					item.classList.add('swiper-slide');
+				}
+			});
+
+			// 5. Swiper 인스턴스 생성
+			const swiper = new Swiper(tabContainer, {
+				slidesPerView: 'auto', // 자동 너비 슬라이드 (탭 개수/길이 따라감)
+				// 추가 옵션 필요 시 여기에 작성 가능 (예: spaceBetween, loop 등)
+			});
+
+			// 6. 컨테이너에 swiper 인스턴스 저장 (재사용 목적)
+			container._swiperInstance = swiper;
+
+			// 7. 생성된 인스턴스 반환
+			return swiper;
+		},
+
+
+		/**
+		 * 탭 활성화 함수 - 버튼과 패널 상태를 동기화
+		 * @param {NodeListOf<HTMLElement>} tabsBtns 탭 버튼 리스트
+		 * @param {NodeListOf<HTMLElement>} panes 탭 내용 패널 리스트
+		 * @param {number} idx 활성화할 탭 인덱스
+		 * @param {HTMLElement|null} tabIndicator 하단 활성 표시 요소
+		 * @param {boolean} isScrollTab 스크롤 연동 탭인지 여부
+		 */
+		activateTab(tabsBtns, panes, idx, tabIndicator, isScrollTab = false) {
+			tabsBtns.forEach((tabBtn, i) => {
+				const isActive = i === idx;
+				tabBtn.classList.toggle('active', isActive);
+				tabBtn.setAttribute('aria-selected', isActive ? 'true' : 'false'); // 접근성용 aria-selected 설정
+				tabBtn.setAttribute('tabindex', isActive ? '0' : '-1'); // 포커스 순서 관리
+			});
+
+			panes.forEach((pane, i) => {
+				if (!isScrollTab) {
+					// 일반 탭 - 선택된 페인만 보이도록 설정
+					pane.classList.toggle('active', i === idx);
+					pane.hidden = i !== idx;
+					pane.setAttribute('aria-hidden', i !== idx ? 'true' : 'false');
+				} else {
+					// 스크롤 연동 탭은 항상 보임, aria-hidden 속성만 설정
+					pane.setAttribute('aria-hidden', 'false');
+				}
+			});
+
+			if (tabIndicator && tabsBtns[idx]) {
+				const tabBtn = tabsBtns[idx];
+				// 하단 표시바 위치와 너비 변경 (애니메이션 효과 있음)
+				tabIndicator.style.width = `${tabBtn.offsetWidth}px`;
+				tabIndicator.style.left = `${tabBtn.offsetLeft}px`;
+			}
+		},
+
+		/**
+		 * Swiper 슬라이드 이동 함수
+		 * @param {Swiper|null} swiperInstance swiper 인스턴스
+		 * @param {number} idx 이동할 슬라이드 인덱스
+		 */
+		slideToSwiper(swiperInstance, idx, tabsBtns) {
+			if (swiperInstance) {
+				swiperInstance.slideTo(idx);
+			}
+		},
+
+		/**
+		 * 키보드 네비게이션 (화살표, 엔터/스페이스) 이벤트 위임 설정
+		 * @param {NodeListOf<HTMLElement>} tabsBtns 탭 버튼 리스트
+		 * @param {HTMLElement} container 탭 컨테이너 요소
+		 */
+		setupKeyboardNavigation(tabsBtns, container) {
+			container.addEventListener('keydown', (e) => {
+				const target = e.target;
+				// 탭 버튼에서만 동작
+				if (!target.classList.contains('tab_btn')) return;
+
+				const tabsArray = Array.from(tabsBtns);
+				const idx = tabsArray.indexOf(target);
+				if (idx === -1) return;
+
+				let newIdx = idx;
+
+				if (e.key === 'ArrowRight') {
+					e.preventDefault();
+					newIdx = (idx + 1) % tabsArray.length; // 오른쪽 화살표: 다음 탭으로 이동 (순환)
+					tabsArray[newIdx].focus();
+				} else if (e.key === 'ArrowLeft') {
+					e.preventDefault();
+					newIdx = (idx - 1 + tabsArray.length) % tabsArray.length; // 왼쪽 화살표: 이전 탭으로 이동 (순환)
+					tabsArray[newIdx].focus();
+				} else if (e.key === 'Enter' || e.key === ' ') {
+					e.preventDefault();
+					target.click(); // 엔터나 스페이스 누르면 해당 탭 클릭 이벤트 발생
+				}
+			});
+		},
+
+		/**
+		 * 클릭 이벤트 위임 설정
+		 * @param {HTMLElement} container 탭 컨테이너 요소
+		 * @param {NodeListOf<HTMLElement>} tabsBtns 탭 버튼 리스트
+		 * @param {NodeListOf<HTMLElement>} tabPanes 탭 내용 패널 리스트
+		 * @param {HTMLElement|null} tabIndicator 하단 활성 표시 요소
+		 * @param {boolean} isScrollTab 스크롤 연동 탭 여부
+		 * @param {Swiper|null} swiperInstance swiper 인스턴스
+		 */
+		setupClickHandler(container, tabsBtns, tabPanes, tabIndicator, isScrollTab, swiperInstance) {
+			const tabsGroup = tabsBtns[0].closest('.tab_container');
+			const tabsHeight = tabsGroup ? tabsGroup.offsetHeight : 0;
+
+			// 스크롤 연동 탭일 경우 스크롤 상태 관리용 객체
+			let scrollState = {
+				isScrollingByClick: false,
+				scrollTargetIdx: null,
+			};
+
+			// 컨테이너 단위 클릭 이벤트 위임
+			container.addEventListener('click', (e) => {
+				const target = e.target;
+				if (!target.classList.contains('tab_btn')) return;
+
+				const tabsArray = Array.from(tabsBtns);
+				const idx = tabsArray.indexOf(target);
+				if (idx === -1) return;
+
+				if (isScrollTab) {
+					// 스크롤 연동 탭 클릭 시 스크롤 이동 트리거 및 상태 갱신
+					scrollState.isScrollingByClick = true;
+					scrollState.scrollTargetIdx = idx;
+
+					const pane = tabPanes[idx];
+					const paneRect = pane.getBoundingClientRect();
+					const scrollY = window.scrollY || window.pageYOffset;
+					const offset = UI.com.getOffsetHeight('header'); // fixed header 높이 보정 포함
+					const targetY = paneRect.top + scrollY - tabsHeight - offset; // 탭 높이만큼 오프셋 보정
+
+					// 스크롤 이동 전 활성화
+					// this.activateTab(tabsBtns, tabPanes, idx, tabIndicator, true);
+					// this.slideToSwiper(swiperInstance, idx);
+					
+					UI.com.scrollToWithCallback(targetY, 500, () => {
+						// 스크롤 이동 후 활성화
+						this.activateTab(tabsBtns, tabPanes, idx, tabIndicator, true);
+						this.slideToSwiper(swiperInstance, idx);
+
+						if (typeof window.onTabScrollComplete === 'function') {
+							window.onTabScrollComplete(idx, pane);
+						}
+
+						// 스크롤 상태 초기화
+						scrollState.isScrollingByClick = false;
+						scrollState.scrollTargetIdx = null;
+					});
+				} else {
+					// 일반 탭 클릭 시 즉시 탭 활성화
+					this.activateTab(tabsBtns, tabPanes, idx, tabIndicator);
+					this.slideToSwiper(swiperInstance, idx);
+				}
+			});
+
+			// 스크롤 이벤트를 throttle 적용해서 등록 (스크롤 연동 탭에만)
+			if (isScrollTab) {
+				window.addEventListener(
+					'scroll',
+					this.throttle(() => {
+						this.handleScrollNavigation(tabsBtns, tabPanes, tabIndicator, scrollState, swiperInstance);
+					}, this.THROTTLE_DELAY)
+				);
+			}
+		},
+
+		/**
+		 * 스크롤 위치에 따른 탭 활성화 처리 함수
+		 * @param {NodeListOf<HTMLElement>} tabsBtns 탭 버튼 리스트
+		 * @param {NodeListOf<HTMLElement>} panes 탭 내용 패널 리스트
+		 * @param {HTMLElement|null} tabIndicator 하단 활성 표시 요소
+		 * @param {Object} scrollState 스크롤 상태 객체
+		 * @param {Swiper|null} swiperInstance swiper 인스턴스 (추가)
+		 */
+		handleScrollNavigation(tabsBtns, panes, tabIndicator, scrollState, swiperInstance) {
+			const { isScrollingByClick, scrollTargetIdx } = scrollState;
+			const tabsEl = tabsBtns[0].closest('.tab').querySelector('.tab_container');
+			const tabsHeight = tabsEl ? tabsEl.offsetHeight : 0;
+
+			// 클릭에 의한 스크롤 이동 중이면, 목표 위치 근처 도달 여부 체크
+			if (isScrollingByClick && scrollTargetIdx !== null) {
+				const pane = panes[scrollTargetIdx];
+				const paneTop = pane.getBoundingClientRect().top;
+				if (Math.abs(paneTop - tabsHeight) <= this.SCROLL_THRESHOLD) {
+					// 목표 위치 도달하면 스크롤 이동 상태 초기화
+					scrollState.isScrollingByClick = false;
+
+					// swiper도 해당 탭으로 슬라이드 이동 추가
+					this.slideToSwiper(swiperInstance, scrollTargetIdx);
+
+					// 외부 콜백 함수 호출 (존재 시)
+					if (typeof window.onTabScrollComplete === 'function') {
+						window.onTabScrollComplete(scrollTargetIdx, pane);
+					}
+
+					scrollState.scrollTargetIdx = null;
+					// 탭 활성화 상태 재설정 (aria 등 갱신)
+					this.activateTab(tabsBtns, panes, scrollTargetIdx, tabIndicator, true);
+				}
+				return; // 클릭 스크롤 중엔 아래 일반 스크롤 처리 로직 건너뜀
+			}
+
+			// 클릭 이동이 아닐 때는 현재 스크롤 위치에 가장 가까운 패널 찾기
+			let foundIdx = 0;
+			let minDiff = Infinity;
+			const tabsBottom = tabsEl.getBoundingClientRect().bottom;
+
+			panes.forEach((pane, idx) => {
+				const rect = pane.getBoundingClientRect();
+				const diff = Math.abs(rect.top - tabsBottom);
+				// 탭 하단 근처 위치를 기준으로 가장 가까운 패널 선택
+				if (rect.top - tabsBottom <= this.SCROLL_THRESHOLD && diff < minDiff) {
+					minDiff = diff;
+					foundIdx = idx;
+				}
+			});
+
+			// 스크롤 위치 기준으로 탭 활성화 갱신
+			this.activateTab(tabsBtns, panes, foundIdx, tabIndicator, true);
+
+			// swiper 슬라이드 위치도 갱신 (추가)
+			this.slideToSwiper(swiperInstance, foundIdx);
+		},
+	},
+}
