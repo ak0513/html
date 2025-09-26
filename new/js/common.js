@@ -1,11 +1,10 @@
-// DOMContentLoaded 이벤트에 탭 UI 초기화 및 스크롤 완료 콜백 정의
 document.addEventListener('DOMContentLoaded', () => {
-  UI.com.setAttrRandomNum(document.querySelectorAll('link[rel="stylesheet"]'), 'href');
-	UI.com.setAttrRandomNum(document.querySelectorAll('script[src]'), 'src');
+  UI.initAll();
 
-  UI.tab.initAll();
+  UI.util.setAttrRandomNum(document.querySelectorAll('link[rel="stylesheet"]'), 'href');
+	UI.util.setAttrRandomNum(document.querySelectorAll('script[src]'), 'src');
 
-  // 스크롤 완료 후 첫 자식 요소에 tabindex 0 부여 및 포커스 이동 (접근성 보완)
+  // Tab 스크롤 완료 후 첫 자식 요소에 tabindex 0 부여 및 포커스 이동 (접근성 보완)
   window.onTabScrollComplete = function (tabIndex, pane) {
     const firstTag = pane.firstElementChild;
     if (firstTag) {
@@ -13,16 +12,33 @@ document.addEventListener('DOMContentLoaded', () => {
       firstTag.focus();
     }
   };
+
+  /* formatter 테스트 */
+  console.log(UI.formatter.addCommas(123456789)); // "123,456,789"
+  console.log(UI.formatter.removeCommas("123,456,789")); // "123456789"
+  console.log(UI.formatter.trimSpaces("   hello world   ")); // "hello world"
+  console.log(UI.formatter.truncate("This is a long text", 10)); // "This is a ..."
+  console.log(UI.formatter.removeSpecialChars("Hello!@# World$$")); // "Hello World"
+  console.log(UI.formatter.formatDate("2025-09-22T10:00:00Z")); // "2025-09-22"
+  console.log(UI.formatter.formatDate("2025.09.22")); // "2025-09-22"
+  console.log(UI.formatter.roundTo(3.14159, 2)); // "3.14"
+  console.log(UI.formatter.isValidEmail("test@example.com")); // true
+  console.log(UI.formatter.isValidEmail("test#example.com")); // false
 });
 
 const UI = {
-	com: {
-		/**
+  initAll: function() {
+      this.deviceInfo.init();
+      this.tab.initAll();
+  },
+
+  dom: {
+    /**
 		 * 요소의 offsetHeight 반환 (선택자 또는 요소)
 		 * @param {string|HTMLElement|null} target - 선택자 문자열 또는 DOM 요소
 		 * @returns {number}
 		 */
-		getOffsetHeight(target) {
+		getOffsetHeight: function(target) {
 			let el = null;
 
 			if (typeof target === 'string') {
@@ -34,137 +50,16 @@ const UI = {
 			return el ? el.offsetHeight : 0;
 		},
 
-
-		/**
-		 * 스크롤 이동 후 콜백 실행 (jQuery animate 대체)
-		 * @param {number} targetY - 이동할 Y 위치
-		 * @param {number} duration - 애니메이션 시간 (ms)
-		 * @param {Function} callback - 완료 후 실행할 콜백
-		 */
-		scrollToWithCallback(targetY, duration = 500, callback) {
-			const start = window.scrollY || window.pageYOffset;
-			const startTime = performance.now();
-
-			function scroll() {
-				const now = performance.now();
-				const time = Math.min(1, (now - startTime) / duration);
-				const easeOut = time * (2 - time); // easeOutQuad
-				window.scrollTo(0, Math.ceil((easeOut * (targetY - start)) + start));
-
-				if (time < 1) {
-					requestAnimationFrame(scroll);
-				} else if (typeof callback === 'function') {
-					callback(); // 스크롤 완료 후 실행
-				}
-			}
-
-			requestAnimationFrame(scroll);
-		},
-
-
-		/**
+    /**
 		 * 여러 요소에서 특정 클래스 제거
 		 * @param {NodeList|HTMLElement[]} elements - DOM 요소 배열 또는 NodeList
 		 * @param {string} className - 제거할 클래스 이름
 		*/
-		removeClass(elements, className) {
+		removeClass: function(elements, className) {
 			for (let i = 0; i < elements.length; i++) {
 				elements[i].classList.remove(className);
 			}
 		},
-
-
-		/**
-		 * 현재 날짜 기반 난수 반환 (정수)
-		 * @returns {number} - 현재 날짜 기반 난수
-		*/
-		getRandomNum() {
-			return new Date().setDate(new Date().getDate());
-		},
-
-
-		/**
-		 * 요소의 속성(attr)에 날짜 기반 난수 쿼리 추가
-		 * @param {HTMLElement|HTMLElement[]|NodeList} elements
-		 * @param {string} attr
-		*/
-		setAttrRandomNum(elements, attr) {
-			const list = elements instanceof HTMLElement ? [elements] : Array.from(elements || []);
-			const rand = UI.com.getRandomNum();
-
-			list.forEach(el => {
-				let val = el.getAttribute(attr);
-				if (!val) return;
-
-				// 기존에 이미 ? 또는 &로 붙은 날짜 기반 쿼리 제거
-				val = val.replace(/([?&])\d{8}$/, ''); // YYYYMMDD 형식 숫자 제거
-
-				const sep = val.includes('?') ? '&' : '?';
-				el.setAttribute(attr, `${val}${sep}${rand}`);
-			});
-		},
-
-
-		/**
-		 * 요소들의 속성(setAttr) 설정
-		 * @param {HTMLElement[]|NodeList} elements - 요소 배열 또는 NodeList
-		 * @param {string} attr - 설정할 속성 이름
-		 * @param {string} value - 설정할 값
-		*/
-		setAttr(elements, attr, value) {
-			if (!elements || !attr) return;
-
-			// elements가 배열/반복 가능한 객체가 아닐 경우 단일 요소로 감싸기
-			if (!('forEach' in elements)) {
-				elements = [elements];
-			}
-
-			elements.forEach(item => {
-				if (item && item.setAttribute) {
-					item.setAttribute(attr, value);
-				}
-			});
-		},
-
-
-		/**
-		 * 요소들의 속성(attr) 제거
-		 * @param {HTMLElement[]|NodeList|HTMLElement} elements - 요소 배열, NodeList 또는 단일 요소
-		 * @param {string} attr - 제거할 속성 이름
-		*/
-		removeAttr(elements, attr) {
-			if (!elements || !attr) return;
-
-			if (!('forEach' in elements)) {
-				elements = [elements];
-			}
-
-			elements.forEach(item => {
-				if (item && item.removeAttribute) {
-					item.removeAttribute(attr);
-				}
-			});
-		},
-
-
-		/**
-		 * URL에서 특정 쿼리 파라미터 값을 가져옴
-		 * @param {string} param - 파라미터 이름
-		 * @param {string} [url=location.href] - 검사할 URL (기본값: 현재 페이지 URL)
-		 * @returns {string|null} - 파라미터 값 또는 null
-		*/
-		getUrlParam(param, url = window.location.href) {
-			if (!param) return null;
-
-			try {
-				const urlObj = new URL(url);
-				return urlObj.searchParams.get(param);
-			} catch (e) {
-				console.error('잘못된 URL:', url);
-				return null;
-			}
-		},
-
 
 		/**
 		 * 지정 요소 이전의 모든 형제 요소 반환
@@ -172,7 +67,7 @@ const UI = {
 		 * @param {string} [selector] - 선택자 필터 (선택 사항)
 		 * @returns {HTMLElement[]} - 이전 형제 요소 배열 (DOM 순서대로)
 		*/
-		prevAll(ele, selector) {
+		prevAll: function(ele, selector) {
 			if (!ele || !ele.previousElementSibling) return [];
 
 			const result = [];
@@ -188,14 +83,13 @@ const UI = {
 			return result.reverse(); // DOM 상 순서대로 반환
 		},
 
-		
 		/**
 		 * 지정 요소 이후의 모든 형제 요소 반환
 		 * @param {HTMLElement} ele - 기준 요소
 		 * @param {string} [selector] - 선택자 필터 (선택 사항)
 		 * @returns {HTMLElement[]} - 다음 형제 요소 배열
 		*/
-		nextAll(ele, selector) {
+		nextAll: function(ele, selector) {
 			if (!ele || !ele.nextElementSibling) return [];
 
 			const result = [];
@@ -211,13 +105,12 @@ const UI = {
 			return result;
 		},
 
-
-		/**
+    /**
 		 * 지정 요소의 형제 요소 반환
 		 * @param {HTMLElement|string} ele - 요소 또는 선택자
 		 * @returns {HTMLElement[]} - 형제 요소 배열
 		*/
-		getSiblings(ele) {
+		getSiblings: function(ele) {
 			if (typeof ele === 'string') {
 				ele = document.querySelector(ele);
 				if (!ele) return [];
@@ -228,8 +121,228 @@ const UI = {
 			return Array.from(ele.parentNode.children).filter(child => child !== ele);
 		},
 
+		/**
+		 * 요소들의 속성(setAttr) 설정
+		 * @param {HTMLElement[]|NodeList} elements - 요소 배열 또는 NodeList
+		 * @param {string} attr - 설정할 속성 이름
+		 * @param {string} value - 설정할 값
+		*/
+		setAttr: function(elements, attr, value) {
+			if (!elements || !attr) return;
+
+			// elements가 배열/반복 가능한 객체가 아닐 경우 단일 요소로 감싸기
+			if (!('forEach' in elements)) {
+				elements = [elements];
+			}
+
+			elements.forEach(item => {
+				if (item && item.setAttribute) {
+					item.setAttribute(attr, value);
+				}
+			});
+		},
 
 		/**
+		 * 요소들의 속성(attr) 제거
+		 * @param {HTMLElement[]|NodeList|HTMLElement} elements - 요소 배열, NodeList 또는 단일 요소
+		 * @param {string} attr - 제거할 속성 이름
+		*/
+		removeAttr: function(elements, attr) {
+			if (!elements || !attr) return;
+
+			if (!('forEach' in elements)) {
+				elements = [elements];
+			}
+
+			elements.forEach(item => {
+				if (item && item.removeAttribute) {
+					item.removeAttribute(attr);
+				}
+			});
+		},
+  },
+
+  userAgent: {
+    ua: navigator.userAgent.toLowerCase(),
+
+    /** @returns {boolean} BlackBerry 여부 */
+    BlackBerry: function() {
+      return /blackberry/i.test(this.ua);
+    },
+    /** @returns {boolean} Android 여부 */
+    Android: function() {
+      return /android/i.test(this.ua);
+    },
+    /** @returns {boolean} iOS 여부 (iPhone, iPad, iPod) */
+    iOS: function() {
+      return /iphone|ipad|ipod/i.test(this.ua);
+    },
+    /** @returns {boolean} iPhone 여부 */
+    iPhone: function() {
+      return /iphone/i.test(this.ua);
+    },
+    /** @returns {boolean} iPad 여부 */
+    iPad: function() {
+      return /ipad/i.test(this.ua);
+    },
+    /** @returns {boolean} Windows 여부 */
+    Windows: function() {
+      return /windows/i.test(this.ua);
+    },
+    /** @returns {boolean} Edge 브라우저 여부 */
+    edge: function() {
+      return /edge|edg/i.test(this.ua);
+    },
+    /** @returns {boolean} Opera 브라우저 여부 */
+    opera: function() {
+      return /opr/i.test(this.ua);
+    },
+    /** @returns {boolean} Chrome 브라우저 여부 */
+    chrome: function() {
+      return /chrome/i.test(this.ua);
+    },
+    /** @returns {boolean} Internet Explorer 여부 */
+    msie: function() {
+      return /trident/i.test(this.ua);
+    },
+    /** @returns {boolean} Firefox 브라우저 여부 */
+    firefox: function() {
+      return /firefox/i.test(this.ua);
+    },
+    /** @returns {boolean} Safari 브라우저 여부 */
+    safari: function() {
+      return /safari/i.test(this.ua);
+    },
+    /** @returns {boolean} 주요 모바일 OS/브라우저 중 하나라도 해당하는지 여부 */
+    any: function() {
+      return this.Android() || this.BlackBerry() || this.iOS() || this.opera() || this.Windows();
+    },
+    /** @returns {boolean} 모바일 디바이스 여부 */
+    isMobile: function() {
+      return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(this.ua);
+    }
+  },
+
+  deviceInfo: {
+    /** @type {string|null} 운영체제 */
+    os: null,
+    /** @type {string|null} 디바이스 */
+    device: null,
+    /** @type {string|null} 브라우저 */
+    browser: null,
+    /** @type {string|null} 브라우저 버전 (주요 버전) */
+    version: null,
+    /** @type {boolean|null} 모바일 여부 */
+    mobile: null,
+
+    /**
+     * 초기화 함수
+     * @returns {void}
+     */
+    init: function() {
+      this.mobile = UI.userAgent.isMobile();
+      this.setDeviceInfo();
+      this.setBodyClass();
+    },
+
+    /**
+     * 운영체제, 디바이스, 브라우저, 버전 정보를 세팅한다
+     * @returns {void}
+     */
+    setDeviceInfo: function() {
+      // OS 체크
+      if (UI.userAgent.iOS()) {
+        this.os = 'os_ios';
+      } else if (UI.userAgent.Android()) {
+        this.os = 'os_android';
+      } else if (UI.userAgent.BlackBerry()) {
+        this.os = 'os_blackBerry';
+      } else if (UI.userAgent.Windows()) {
+        this.os = 'os_windows';
+      } else {
+        this.os = 'other-os';
+      }
+
+      // 디바이스 체크
+      if (UI.userAgent.iPhone()) {
+        this.device = 'iphone';
+      } else if (UI.userAgent.iPad()) {
+        this.device = 'ipad';
+      } else {
+        this.device = 'other-device';
+      }
+
+      // 브라우저 체크
+      if (UI.userAgent.edge()) {
+        this.browser = 'edge';
+      } else if (UI.userAgent.opera() && !!window.opr) {
+        this.browser = 'opera';
+      } else if (UI.userAgent.chrome() && !!window.chrome) {
+        this.browser = 'chrome';
+      } else if (UI.userAgent.msie()) {
+        this.browser = 'msie';
+      } else if (UI.userAgent.firefox()) {
+        this.browser = 'firefox';
+      } else if (UI.userAgent.safari()) {
+        this.browser = 'safari';
+      } else {
+        this.browser = 'other-browser';
+      }
+
+      this.version = this.getVersion(this.browser);
+    },
+
+    /**
+     * 브라우저 버전 정보를 User-Agent에서 추출한다.
+     * @param {string} agent 브라우저명 (edge, opera, chrome, msie, firefox, safari)
+     * @returns {string|null} 주요 버전 숫자 또는 null
+     */
+    getVersion: function(agent) {
+      const ua = UI.userAgent.ua;
+      let matches = null;
+
+      switch (agent) {
+        case 'edge':
+          matches = ua.match(/edg\/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/);
+          break;
+        case 'opera':
+          matches = ua.match(/opera\/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/);
+          break;
+        case 'chrome':
+          matches = ua.match(/chrome\/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/);
+          break;
+        case 'msie':
+          matches = ua.match(/msie\/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/);
+          break;
+        case 'firefox':
+          matches = ua.match(/firefox\/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/);
+          break;
+        case 'safari':
+          matches = ua.match(/version\/([0-9]+\.[0-9]+)/);
+          break;
+        default:
+          return null;
+      }
+
+      if (matches && matches[1]) {
+        return matches[1].split('.')[0]; // 주요 버전만 리턴
+      }
+      return null;
+    },
+
+    /**
+     * body 태그에 platform, os, browser, version, device 클래스를 세팅한다.
+     * @returns {void}
+     */
+    setBodyClass: function() {
+      const platform = this.mobile ? 'mobile' : 'pc';
+      const classes = [platform, this.os, this.browser, `ver${this.version}`, this.device];
+      document.querySelector('body').setAttribute('class', classes.filter(Boolean).join(' '));
+    }
+  },
+
+  a11y: {
+    /**
 		 * 접근성 비활성화 (포커스, aria-hidden 등)
 		 * @param {HTMLElement|HTMLElement[]} eleDisable - 비활성화할 요소(들)
 		 * @param {string} module - 모듈명 (ex: "modal")
@@ -323,15 +436,178 @@ const UI = {
 				});
 			});
 		},
-	},
-	
-	modal: {
+  },
+
+  util: {
+    /**
+		 * 현재 날짜 기반 난수 반환 (정수)
+		 * @returns {number} - 현재 날짜 기반 난수
+		*/
+		getRandomNum() {
+			return new Date().setDate(new Date().getDate());
+		},
+
+		/**
+		 * 요소의 속성(attr)에 날짜 기반 난수 쿼리 추가
+		 * @param {HTMLElement|HTMLElement[]|NodeList} elements
+		 * @param {string} attr
+		*/
+		setAttrRandomNum(elements, attr) {
+			const list = elements instanceof HTMLElement ? [elements] : Array.from(elements || []);
+			const rand = UI.util.getRandomNum();
+
+			list.forEach(el => {
+				let val = el.getAttribute(attr);
+				if (!val) return;
+
+				// 기존에 이미 ? 또는 &로 붙은 날짜 기반 쿼리 제거
+				val = val.replace(/([?&])\d{8}$/, ''); // YYYYMMDD 형식 숫자 제거
+
+				const sep = val.includes('?') ? '&' : '?';
+				el.setAttribute(attr, `${val}${sep}${rand}`);
+			});
+		},
+
+    /**
+		 * URL에서 특정 쿼리 파라미터 값을 가져옴
+		 * @param {string} param - 파라미터 이름
+		 * @param {string} [url=location.href] - 검사할 URL (기본값: 현재 페이지 URL)
+		 * @returns {string|null} - 파라미터 값 또는 null
+		*/
+		getUrlParam(param, url = window.location.href) {
+			if (!param) return null;
+
+			try {
+				const urlObj = new URL(url);
+				return urlObj.searchParams.get(param);
+			} catch (e) {
+				console.error('잘못된 URL:', url);
+				return null;
+			}
+		},
+
+    /**
+		 * 스크롤 이동 후 콜백 실행 (jQuery animate 대체)
+		 * @param {number} targetY - 이동할 Y 위치
+		 * @param {number} duration - 애니메이션 시간 (ms)
+		 * @param {Function} callback - 완료 후 실행할 콜백
+		 */
+		scrollToWithCallback(targetY, duration = 500, callback) {
+			const start = window.scrollY || window.pageYOffset;
+			const startTime = performance.now();
+
+			function scroll() {
+				const now = performance.now();
+				const time = Math.min(1, (now - startTime) / duration);
+				const easeOut = time * (2 - time); // easeOutQuad
+				window.scrollTo(0, Math.ceil((easeOut * (targetY - start)) + start));
+
+				if (time < 1) {
+					requestAnimationFrame(scroll);
+				} else if (typeof callback === 'function') {
+					callback(); // 스크롤 완료 후 실행
+				}
+			}
+
+			requestAnimationFrame(scroll);
+		},
+  },
+
+  formatter: {
+    /**
+     * 숫자 문자열에서 모든 콤마(,)를 제거합니다.
+     * @param {string} str - 콤마를 제거할 문자열
+     * @returns {string} 콤마가 제거된 문자열
+     */
+    removeCommas: (str) => str.replace(/,/g, ""),
+
+    /**
+     * 숫자에 천 단위 콤마(,)를 추가합니다.
+     * @param {number|string} num - 콤마를 추가할 숫자 또는 숫자 문자열
+     * @returns {string} 콤마가 추가된 문자열
+     */
+    addCommas: (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+    
+    /**
+     * 숫자를 지정한 소수점 자리수까지 반올림합니다.
+     * @param {number} num - 반올림할 숫자
+     * @param {number} decimalPlaces - 소수점 자리수
+     * @returns {string} 반올림된 숫자 문자열
+     */
+    roundTo: (num, decimalPlaces) => {
+      return num.toFixed(decimalPlaces);
+    },
+
+    /**
+     * 문자열 양쪽의 공백을 제거합니다.
+     * @param {string} str - 공백을 제거할 문자열
+     * @returns {string} 공백이 제거된 문자열
+     */
+    trimSpaces: (str) => str.trim(),
+
+    /**
+     * 문자열을 지정된 길이만큼 자르고, 초과 시 "..."을 붙입니다.
+     * @param {string} str - 자를 문자열
+     * @param {number} length - 최대 길이
+     * @returns {string} 잘린 문자열 또는 원본 문자열
+    */
+    truncate: (str, length) => {
+      if (str.length > length) {
+        return str.slice(0, length) + "...";
+      }
+      return str;
+    },
+
+    /**
+     * 문자열에서 영문자, 숫자, 공백을 제외한 모든 특수 문자를 제거합니다.
+     * @param {string} str - 특수 문자를 제거할 문자열
+     * @returns {string} 특수 문자가 제거된 문자열
+     */
+    removeSpecialChars: (str) => {
+      return str.replace(/[^a-zA-Z0-9 ]/g, '');
+    },
+
+    /**
+     * 날짜를 "YYYY-MM-DD" 형식의 문자열로 포맷합니다.
+     * @param {Date|string|number} date - Date 객체 또는 날짜로 변환 가능한 값
+     * @returns {string} 포맷된 날짜 문자열 (예: "2025-09-26")
+     */
+    formatDate: (date) => {
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    },
+
+    /**
+     * 이메일 형식이 유효한지 검사합니다.
+     * @param {string} email - 검사할 이메일 주소
+     * @returns {boolean} 유효하면 true, 아니면 false
+     */
+    isValidEmail: (email) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    },
+  },
+
+  modal: {
+    /**
+     * 기본 z-index 값을 가져온다.
+     * @param {HTMLElement} modal - 대상 모달 엘리먼트
+     * @returns {number} - z-index 값 (숫자)
+    */
+    getBaseZIndex(modal) {
+      const z = window.getComputedStyle(modal).zIndex;
+      return isNaN(parseInt(z)) ? 0 : parseInt(z);
+    },
+
 		/**
 		 * 모달 열기
 		 * @param {string} target - 열 대상 모달 선택자
 		 * @param {HTMLElement} btn - 트리거 버튼 (포커스 복원용)
-		 */
-		open(target, btn) {
+    */
+		open: function(target, btn) {
 			const modal = document.querySelector(target);
 			const openedModal = document.querySelectorAll('.modal.active');
 
@@ -343,12 +619,13 @@ const UI = {
 			modal.setAttribute('role', modal.classList.contains('alert') ? 'alertdialog' : 'dialog');
 
 			if (openedModal.length > 0) {
-				modal.style.zIndex = 1000 + openedModal.length;
+        const baseZ = this.getBaseZIndex(modal);
+				modal.style.zIndex = baseZ + openedModal.length;
 			}
 
 			btn.setAttribute('data-modal', target);
 
-			const modalBody = modal.querySelector('.modal-body');
+			const modalBody = modal.querySelector('.modal_body');
 			const contentHeight = modalBody.scrollHeight;
 			const visibleHeight = modalBody.clientHeight;
 			if (contentHeight > visibleHeight) {
@@ -358,17 +635,17 @@ const UI = {
 			}
 
 			if (!btn.closest('.modal')) {
-				UI.com.accessDisable(UI.com.prevAll(modal), 'modal');
+				UI.a11y.accessDisable(UI.dom.prevAll(modal), 'modal');
 			} else {
-				UI.com.accessDisable(btn.closest('.modal'), 'modal');
+				UI.a11y.accessDisable(btn.closest('.modal'), 'modal');
 			}
 		},
 
 		/**
 		 * 모달 닫기
 		 * @param {string} target - 닫을 모달 선택자
-		 */
-		close(target) {
+    */
+		close: function(target) {
 			const modal = document.querySelector(target);
 			const openedBtn = document.querySelector(`[data-modal="${target}"]`);
 			const openedModal = document.querySelectorAll('.modal.active');
@@ -377,9 +654,9 @@ const UI = {
 			setTimeout(() => modal.classList.remove('visible'), 100);
 
 			if (openedModal.length > 1) {
-				UI.com.accessEnable(openedBtn.closest('.modal'), 'modal');
+				UI.a11y.accessEnable(openedBtn.closest('.modal'), 'modal');
 			} else {
-				UI.com.accessEnable(UI.com.prevAll(modal), 'modal');
+				UI.a11y.accessEnable(UI.dom.prevAll(modal), 'modal');
 			}
 
 			setTimeout(() => openedBtn.focus(), 300);
@@ -387,6 +664,15 @@ const UI = {
 			modal.removeAttribute('aria-modal');
 		},
 	},
+
+  toast: {
+    show: () => {},
+    hide: () => {},
+  },
+
+  tooltip: {
+
+  },
 
 	tab : {
 		// 스크롤 위치 인식 허용 오차 (px)
@@ -400,7 +686,7 @@ const UI = {
 		 * @param {number} wait 대기 시간 (밀리초)
 		 * @returns {Function} throttle된 함수
 		 */
-		throttle(fn, wait) {
+		throttle: function(fn, wait) {
 			let lastTime = 0;
 			return function (...args) {
 				const now = Date.now();
@@ -414,7 +700,7 @@ const UI = {
 		/**
 		 * 페이지 내 모든 탭 컨테이너 초기화
 		 */
-		initAll() {
+		initAll: function() {
 			const containers = document.querySelectorAll('.tab');
 			containers.forEach(container => this.init(container));
 		},
@@ -423,7 +709,7 @@ const UI = {
 		 * 개별 탭 컨테이너 초기화
 		 * @param {HTMLElement} container 탭 컨테이너 요소
 		 */
-		init(container) {
+		init: function(container) {
 			if (!container) return;
 
 			const isScrollTab = container.hasAttribute('data-tab-scroll'); // 스크롤 연동 탭 여부
@@ -463,7 +749,7 @@ const UI = {
 		 * @param {HTMLElement} tabContainer 탭 버튼 그룹 요소 (.tab_container)
 		 * @returns {Swiper|null} Swiper 인스턴스 또는 null
 		 */
-		initSwiper(container, tabContainer) {
+		initSwiper: function(container, tabContainer) {
 			// swiper 활성화 조건 확인: data-tab-swiper 속성이 없으면 처리하지 않음
 			if (!container.hasAttribute('data-tab-swiper')) return null;
 
@@ -505,7 +791,7 @@ const UI = {
 		 * @param {HTMLElement|null} tabIndicator 하단 활성 표시 요소
 		 * @param {boolean} isScrollTab 스크롤 연동 탭인지 여부
 		 */
-		activateTab(tabsBtns, panes, idx, tabIndicator, isScrollTab = false) {
+		activateTab: function(tabsBtns, panes, idx, tabIndicator, isScrollTab = false) {
 			tabsBtns.forEach((tabBtn, i) => {
 				const isActive = i === idx;
 				tabBtn.classList.toggle('active', isActive);
@@ -538,7 +824,7 @@ const UI = {
 		 * @param {Swiper|null} swiperInstance swiper 인스턴스
 		 * @param {number} idx 이동할 슬라이드 인덱스
 		 */
-		slideToSwiper(swiperInstance, idx, tabsBtns) {
+		slideToSwiper: function(swiperInstance, idx, tabsBtns) {
 			if (swiperInstance) {
 				swiperInstance.slideTo(idx);
 			}
@@ -549,7 +835,7 @@ const UI = {
 		 * @param {NodeListOf<HTMLElement>} tabsBtns 탭 버튼 리스트
 		 * @param {HTMLElement} container 탭 컨테이너 요소
 		 */
-		setupKeyboardNavigation(tabsBtns, container) {
+		setupKeyboardNavigation: function(tabsBtns, container) {
 			container.addEventListener('keydown', (e) => {
 				const target = e.target;
 				// 탭 버튼에서만 동작
@@ -585,7 +871,7 @@ const UI = {
 		 * @param {boolean} isScrollTab 스크롤 연동 탭 여부
 		 * @param {Swiper|null} swiperInstance swiper 인스턴스
 		 */
-		setupClickHandler(container, tabsBtns, tabPanes, tabIndicator, isScrollTab, swiperInstance) {
+		setupClickHandler: function(container, tabsBtns, tabPanes, tabIndicator, isScrollTab, swiperInstance) {
 			const tabsGroup = tabsBtns[0].closest('.tab_container');
 			const tabsHeight = tabsGroup ? tabsGroup.offsetHeight : 0;
 
@@ -612,14 +898,14 @@ const UI = {
 					const pane = tabPanes[idx];
 					const paneRect = pane.getBoundingClientRect();
 					const scrollY = window.scrollY || window.pageYOffset;
-					const offset = UI.com.getOffsetHeight('header'); // fixed header 높이 보정 포함
+					const offset = UI.dom.getOffsetHeight('header'); // fixed header 높이 보정 포함
 					const targetY = paneRect.top + scrollY - tabsHeight - offset; // 탭 높이만큼 오프셋 보정
 
 					// 스크롤 이동 전 활성화
 					// this.activateTab(tabsBtns, tabPanes, idx, tabIndicator, true);
 					// this.slideToSwiper(swiperInstance, idx);
 					
-					UI.com.scrollToWithCallback(targetY, 500, () => {
+					UI.util.scrollToWithCallback(targetY, 500, () => {
 						// 스크롤 이동 후 활성화
 						this.activateTab(tabsBtns, tabPanes, idx, tabIndicator, true);
 						this.slideToSwiper(swiperInstance, idx);
@@ -658,7 +944,7 @@ const UI = {
 		 * @param {Object} scrollState 스크롤 상태 객체
 		 * @param {Swiper|null} swiperInstance swiper 인스턴스 (추가)
 		 */
-		handleScrollNavigation(tabsBtns, panes, tabIndicator, scrollState, swiperInstance) {
+		handleScrollNavigation: function(tabsBtns, panes, tabIndicator, scrollState, swiperInstance) {
 			const { isScrollingByClick, scrollTargetIdx } = scrollState;
 			const tabsEl = tabsBtns[0].closest('.tab').querySelector('.tab_container');
 			const tabsHeight = tabsEl ? tabsEl.offsetHeight : 0;
@@ -708,4 +994,12 @@ const UI = {
 			this.slideToSwiper(swiperInstance, foundIdx);
 		},
 	},
-}
+
+  accordion: {
+
+  },
+
+  form: {
+  
+  },
+};
