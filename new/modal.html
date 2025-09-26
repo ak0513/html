@@ -5,8 +5,10 @@
 	<title>모달</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
 	<link rel="stylesheet" href="./css/common.css">
-	<script src="./js/common.js" defer></script>
+	<script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js" defer></script>
+  <script src="./js/common.js" defer></script>
 </head>
 
 <body>
@@ -16,28 +18,28 @@
 			<h2 class="h-tit1"><span>팝업</span></h2>
 			<h3 class="h-tit2" id="팝업 기본"><span># 기본</span></h3>
 			<div class="example">
-				<div class="btn-wrap">
-					<button onclick="UI.modal.open('#modal1', this)">팝업 열기</button>
+				<div class="btn_wrap">
+					<button onclick="UI.modal.open('#modal1', this)" class="btn primary small">팝업 열기</button>
 				</div>
 			</div>
 		</section>
   </div>
   
   <!-- 팝업 -->
-	<div id="modal1" class="modal" aria-labelledby="modal-title">
-		<div class="modal-inner">
-			<div class="modal-top">
-				<h2 id="modal-title">팝업1</h2>
-				<button class="btn-modal-close" onClick="UI.modal.close('#modal1')"></button>
+	<div id="modal1" class="modal" aria-labelledby="modal_title">
+		<div class="modal_dialog">
+			<div class="modal_top">
+				<h2 id="modal_title">팝업1</h2>
+				<button class="btn_modal_close" onClick="UI.modal.close('#modal1')"></button>
 			</div>
-			<div class="modal-body">
+			<div class="modal_body">
 				팝업 내용1
 				<div style="height:300px"></div>
 				<div class="btn-wrap">
 					<button type="button" class="btn primary" title="팝업 열기" onClick="UI.modal.open('#modal2', this)">팝업 열기2</button>
 				</div>
 			</div>
-			<div class="modal-bottom">
+			<div class="modal_bottom">
 				<div class="btn-wrap j-c-end">
 					<button type="button" class="btn primary small" onClick="UI.modal.close('#modal1')">팝업 닫기</button>
 				</div>
@@ -45,19 +47,19 @@
 		</div>
 	</div>
 	<style>
-		#modal1 .modal-body {max-height:200px;overflow: auto;}
+		#modal1 .modal_body {max-height:200px;overflow: auto;}
 	</style>
 
-	<div id="modal3" class="modal alert" aria-labelledby="modal-3">
-		<div class="modal-inner">
-			<div class="modal-top">
-				<h2 id="modal-title3">팝업3</h2>
-				<button class="btn-modal-close" onClick="UI.modal.close('#modal3')"></button>
+	<div id="modal3" class="modal alert" aria-labelledby="modal_3">
+		<div class="modal_dialog">
+			<div class="modal_top">
+				<h2 id="modal_title3">팝업3</h2>
+				<button class="btn_modal_close" onClick="UI.modal.close('#modal3')"></button>
 			</div>
-			<div class="modal-body">
+			<div class="modal_body">
 				팝업 내용3
 			</div>
-			<div class="modal-bottom">
+			<div class="modal_bottom">
 				<div class="btn-wrap j-c-end">
 					<button type="button" class="btn primary small" onClick="UI.modal.close('#modal3')">팝업 닫기2</button>
 				</div>
@@ -65,19 +67,19 @@
 		</div>
 	</div>
 
-	<div id="modal2" class="modal" aria-labelledby="modal-title2">
-		<div class="modal-inner">
-			<div class="modal-top">
-				<h2 id="modal-title2">팝업2</h2>
-				<button class="btn-modal-close" onClick="UI.modal.close('#modal2')"></button>
+	<div id="modal2" class="modal" aria-labelledby="modal_title2">
+		<div class="modal_dialog">
+			<div class="modal_top">
+				<h2 id="modal_title2">팝업2</h2>
+				<button class="btn_modal_close" onClick="UI.modal.close('#modal2')"></button>
 			</div>
-			<div class="modal-body">
+			<div class="modal_body">
 				팝업 내용2
 				<div class="btn-wrap">
 					<button type="button" class="btn primary" title="팝업 열기" onClick="UI.modal.open('#modal3', this)">팝업 열기3</button>
 				</div>
 			</div>
-			<div class="modal-bottom">
+			<div class="modal_bottom">
 				<div class="btn-wrap j-c-end">
 					<button type="button" class="btn primary small" onClick="UI.modal.close('#modal2')">팝업 닫기2</button>
 				</div>
