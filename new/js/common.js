@@ -30,6 +30,73 @@ const UI = {
   initAll: function() {
       this.deviceInfo.init();
       this.tab.initAll();
+      this.loadHTMLIncludes(UI.util.getVersion());
+  },
+
+  /**
+   * 외부 HTML 파일을 data-load-html 속성을 가진 요소에 비동기로 로드합니다.
+   * @param {string} vers - 버전 정보 (캐시 방지용 쿼리스트링)
+   */
+  loadHTMLIncludes: function(vers) {
+    // data-load-html 속성을 가진 모든 요소 선택
+    const elements = document.querySelectorAll('[data-load-html]');
+
+    elements.forEach(elmnt => {
+      let file = elmnt.getAttribute('data-load-html');
+      if (!file) return;
+
+      // 버전 정보 붙이기 (캐시 방지)
+      file += "?v=" + vers;
+
+      // XMLHttpRequest 생성 및 초기화
+      const xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState === 4) {
+          if (this.status === 200) {
+            // 성공: 응답 텍스트를 파싱하여 HTML과 스크립트 분리 후 적용
+            elmnt.removeAttribute("data-load-html");
+            elmnt.setAttribute("data-loaded-html", file);
+
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(this.responseText, "text/html");
+
+            // innerHTML로 컨텐츠 채우기
+            elmnt.innerHTML = doc.body.innerHTML;
+
+            // 스크립트 태그 찾아서 실행 (src 포함)
+            const scripts = elmnt.querySelectorAll('script');
+            scripts.forEach(script => {
+              const newScript = document.createElement('script');
+              if (script.src) {
+                newScript.src = script.src;
+              } else {
+                newScript.textContent = script.textContent;
+              }
+              document.head.appendChild(newScript);
+              script.remove();
+            });
+
+          } else {
+            // 상태코드에 따른 에러 처리
+            const messages = {
+              403: "접근이 거절되었습니다.",
+              404: "페이지를 찾을 수 없습니다.",
+              500: "서버에 오류가 발생했습니다."
+            };
+            elmnt.innerHTML = messages[this.status] || "오류가 발생했습니다.";
+            elmnt.removeAttribute("data-load-html");
+            elmnt.setAttribute(`data-load-html-false-${this.status}`, file);
+          }
+
+          // 외부 후처리 함수 호출 (존재하면)
+          if (typeof m4aComm !== "undefined" && typeof m4aComm.runAfter === "function") {
+            m4aComm.runAfter();
+          }
+        }
+      };
+      xhttp.open("GET", file, true);
+      xhttp.send();
+    });
   },
 
   dom: {
@@ -439,12 +506,22 @@ const UI = {
   },
 
   util: {
-    /**
-		 * 현재 날짜 기반 난수 반환 (정수)
-		 * @returns {number} - 현재 날짜 기반 난수
-		*/
-		getRandomNum() {
-			return new Date().setDate(new Date().getDate());
+		/**
+		 * 현재 날짜를 'YYYYMMDD' 형식의 문자열로 반환합니다.
+		 * 
+		 * 주로 캐시 무효화를 위한 버전 파라미터로 사용할 수 있으며,
+		 * 매일 자정에 값이 변경됩니다. (ex: '20250930')
+		 *
+		 * @function
+		 * @returns {string} 'YYYYMMDD' 형식의 날짜 문자열
+		 *
+		 * @example
+		 * const version = getVersion(); // '20250930'
+		 * const url = `header.js?v=${version}`;
+		 */
+		getVersion: function () {
+			const d = new Date();
+			return `${d.getFullYear()}${d.getMonth() + 1}${d.getDate()}`;
 		},
 
 		/**
@@ -452,9 +529,9 @@ const UI = {
 		 * @param {HTMLElement|HTMLElement[]|NodeList} elements
 		 * @param {string} attr
 		*/
-		setAttrRandomNum(elements, attr) {
+		setAttrRandomNum: function(elements, attr) {
 			const list = elements instanceof HTMLElement ? [elements] : Array.from(elements || []);
-			const rand = UI.util.getRandomNum();
+			const rand = UI.util.getVersion();
 
 			list.forEach(el => {
 				let val = el.getAttribute(attr);
@@ -474,7 +551,7 @@ const UI = {
 		 * @param {string} [url=location.href] - 검사할 URL (기본값: 현재 페이지 URL)
 		 * @returns {string|null} - 파라미터 값 또는 null
 		*/
-		getUrlParam(param, url = window.location.href) {
+		getUrlParam: function(param, url = window.location.href) {
 			if (!param) return null;
 
 			try {
@@ -492,7 +569,7 @@ const UI = {
 		 * @param {number} duration - 애니메이션 시간 (ms)
 		 * @param {Function} callback - 완료 후 실행할 콜백
 		 */
-		scrollToWithCallback(targetY, duration = 500, callback) {
+		scrollToWithCallback: function(targetY, duration = 500, callback) {
 			const start = window.scrollY || window.pageYOffset;
 			const startTime = performance.now();
 
