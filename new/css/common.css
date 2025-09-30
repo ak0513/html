@@ -667,7 +667,11 @@ select.round {
 
 
 .form_check .form_check_input:focus-visible {
-	outline:1
+	outline: 1;
+}
+
+body.mobile .form_check .form_check_input:focus-visible {
+	outline: none;
 }
 
 .form_check.check_btn .form_check_label {
