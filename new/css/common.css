@@ -647,7 +647,7 @@ select.round {
 
 
 /* ==================== checkbox ==================== */
-.form_check input[type='checkbox'] + .form_check_icon {
+.form_check input[type='checkbox'] {
 	display: flex;
 	width: 2.0rem;
 	height: 2.0rem;
@@ -658,25 +658,14 @@ select.round {
 	-moz-appearance: none;
 }
 
-.form_check input[type='checkbox']:checked + .form_check_icon {
+.form_check input[type='checkbox']:checked {
 	border-color:#0d6efd;
 	background: #0d6efd url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e") no-repeat center;
 }
 
 
-.form_check input[type='checkbox']:focus-visible + .form_check_icon {
-	outline: 2px solid black;
-}
-
-.form_check input[type='checkbox'] {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	opacity: 0;
-	pointer-events: none;
-	appearance: none;
-	-webkit-appearance: none;
-	-moz-appearance: none;
+.form_check input[type='checkbox']:focus-visible {
+	outline:1
 }
 
 
