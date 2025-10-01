@@ -11,9 +11,6 @@
   <script src="./js/common.js" defer></script>
 </head>
 <body>
-<style>
-  .section:nth-child(odd){background-color: #f8f8f8;margin-left:calc(var(--container_gap) * -1);margin-right:calc(var(--container_gap) * -1);padding:var(--spacing_lg) var(--container_gap);}
-</style>
 <div id="wrap">
   <header id="header" data-load-html="./header.html"></header>
   <main id="container">
@@ -128,26 +125,30 @@
 				<h3 class="h_tit2" id="인풋 형태"><span># 형태</span></h3>
 				<h4 class="h_tit3">기본</h4>
         <div class="form_input">
-          <input type="text" id="input1-1">
+          <input type="text" id="input1-1" class="form_control">
+          <button type="button" class="btn_input_reset" aria-label="입력값 초기화"></button>
         </div>
 
 				<h4 class="h_tit3">버튼 추가</h4>
-        <div class="form_input side_btn">
-          <input type="text" id="input2-3">
+        <div class="form_input">
+          <input type="text" id="input2-3" class="form_control">
+          <button type="button" class="btn_input_reset" aria-label="입력값 초기화"></button>
           <button type="button" class="btn light">버튼</button>
         </div>
 
 				<h4 class="h_tit3">유닛 추가</h4>
-        <div class="form_input with_unit">
+        <div class="form_input">
           <span class="unit">약정</span>
-          <input type="text" id="input2-4" class="align-r">
+          <input type="text" id="input2-4" class="form_control align_r">
+          <button type="button" class="btn_input_reset" aria-label="입력값 초기화"></button>
           <span class="unit">%</span>
         </div>
 
 				<h4 class="h_tit3">유닛 + 버튼 추가</h4>
-        <div class="form_input side_btn with_unit">
+        <div class="form_input">
           <span class="unit">가격</span>
-          <input type="text" id="input2-5">
+          <input type="text" id="input2-5" class="form_control">
+          <button type="button" class="btn_input_reset" aria-label="입력값 초기화"></button>
           <span class="unit">원</span>
           <button type="button" class="btn light">btn</button>
         </div>
@@ -238,33 +239,30 @@
           <div class="form_check_item">
             <label class="form_check_label">
               <input type="checkbox" name="chk" class="form_check_input" checked>
-              <i class="form_check_icon"></i>
-              체크박스1
+              <span class="form_check_txt">체크박스1</span>
             </label>
           </div>
           <div class="form_check_item">
-            <input type="checkbox" id="chk2-2" name="chk">
-            <label class="form_check_label" for="chk2-2">체크박스2</label>
-          </div>
-          <div class="form_check_item">
-            <input type="checkbox" id="chk2-3" name="chk">
-            <label class="form_check_label" for="chk2-3">체크박스3</label>
+            <label class="form_check_label">
+              <input type="checkbox" name="chk" class="form_check_input">
+              <span class="form_check_txt">체크박스2</span>
+            </label>
           </div>
         </div>
 
 				<h4 class="h_tit3">체크박스 + 레이블(세로)</h4>
-        <div class="form_check col">
+        <div class="form_check check_col">
           <div class="form_check_item">
-            <input type="checkbox" id="chk3-1" name="chk" checked>
-            <label class="form_check_label" for="chk3-1">체크박스1</label>
+            <label class="form_check_label">
+              <input type="checkbox" name="chk2" class="form_check_input" checked>
+              <span class="form_check_txt">체크박스1</span>
+            </label>
           </div>
           <div class="form_check_item">
-            <input type="checkbox" id="chk3-2" name="chk">
-            <label class="form_check_label" for="chk3-2">체크박스2</label>
-          </div>
-          <div class="form_check_item">
-            <input type="checkbox" id="chk3-3" name="chk">
-            <label class="form_check_label" for="chk3-3">체크박스3</label>
+            <label class="form_check_label">
+              <input type="checkbox" name="chk2" class="form_check_input">
+              <span class="form_check_txt">체크박스2</span>
+            </label>
           </div>
         </div>
 
@@ -273,13 +271,13 @@
           <div class="form_check_item">
             <label class="form_check_label">
               <input type="checkbox" name="chk_btn1" class="form_check_input" checked>
-              체크박스1
+              <span class="form_check_txt">체크박스1</span>
             </label>
           </div>
           <div class="form_check_item">
             <label class="form_check_label">
               <input type="checkbox" name="chk_btn1" class="form_check_input">
-              체크박스2
+              <span class="form_check_txt">체크박스2</span>
             </label>
           </div>
         </div>
@@ -290,50 +288,61 @@
 				<!-- 라디오버튼 -->
 				<h2 class="h_tit1"><span>라디오버튼</span></h2>
 				<h3 class="h_tit2" id="라디오버튼 형태"><span># 형태</span></h3>
-				<h4 class="h_tit3">라디오버튼 혼자</h4>
+				<h4 class="h_tit3">혼자</h4>
         <div class="form_check check_only">
           <div class="form_check_item">
-            <input type="radio" id="radio1-1" name="radio1" checked>
+            <input type="radio" id="radio1-1" class="form_check_input" name="radio1" checked>
           </div>
         </div>
 
-				<h4 class="h_tit3">라디오버튼 + 레이블(가로)</h4>
+				<h4 class="h_tit3">가로</h4>
         <div class="form_check">
           <div class="form_check_item">
-            <input type="radio" id="radio2-1" name="radio2" checked>
-            <label class="form_check_label" for="radio2-1">체크박스1</label>
+            <label class="form_check_label">
+              <input type="radio" class="form_check_input" name="radio2" checked>
+              <span class="form_check_txt">라디오버튼1</span>
+            </label>
           </div>
           <div class="form_check_item">
-            <input type="radio" id="radio2-2" name="radio2">
-            <label class="form_check_label" for="radio2-2">체크박스2</label>
+            <label class="form_check_label">
+              <input type="radio" class="form_check_input" name="radio2">
+              <span class="form_check_txt">라디오버튼2</span>
+            </label>
           </div>
           <div class="form_check_item">
-            <input type="radio" id="radio2-3" name="radio2">
-            <label class="form_check_label" for="radio2-3">체크박스3</label>
+            <label class="form_check_label">
+              <input type="radio" class="form_check_input" name="radio2">
+              <span class="form_check_txt">라디오버튼3</span>
+            </label>
           </div>
         </div>
 
-				<h4 class="h_tit3">라디오버튼 + 레이블(세로)</h4>
-        <div class="form_check col">
+				<h4 class="h_tit3">세로</h4>
+        <div class="form_check check_col">
           <div class="form_check_item">
-            <input type="radio" id="radio3-1" name="radio3" checked>
-            <label class="form_check_label" for="radio3-1">체크박스1</label>
+            <label class="form_check_label">
+              <input type="radio" class="form_check_input" name="radio3" checked>
+              <span class="form_check_txt">라디오버튼1</span>
+            </label>
           </div>
           <div class="form_check_item">
-            <input type="radio" id="radio3-2" name="radio3">
-            <label class="form_check_label" for="radio3-2">체크박스2</label>
+            <label class="form_check_label">
+              <input type="radio" class="form_check_input" name="radio3">
+              <span class="form_check_txt">라디오버튼2</span>
+            </label>
           </div>
           <div class="form_check_item">
-            <input type="radio" id="radio3-3" name="radio3">
-            <label class="form_check_label" for="radio3-3">체크박스3</label>
+            <label class="form_check_label">
+              <input type="radio" class="form_check_input" name="radio3">
+              <span class="form_check_txt">라디오버튼3</span>
+            </label>
           </div>
         </div>
-      </div>
 
       <div class="section">
 				<h3 class="h_tit1">텍스트박스</h3>
 				<h3 class="h_tit2" id="텍스트박스 형태"><span># 형태</span></h3>
-        <div class="textarea-wrap">
+        <div class="textarea_wrap">
           <textarea id="description"></textarea>
         </div>
       </div>
