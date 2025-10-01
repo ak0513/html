@@ -31,6 +31,8 @@ const UI = {
       this.deviceInfo.init();
       this.tab.initAll();
       this.loadHTMLIncludes(UI.util.getVersion());
+			this.input.init();
+
   },
 
   /**
@@ -665,6 +667,100 @@ const UI = {
     isValidEmail: (email) => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailRegex.test(email);
+    },
+  },
+
+	input: {
+		/**
+     * input 관련 초기화 함수들을 호출합니다.
+     * 보통 페이지 로드 시 한 번 실행합니다.
+     */
+    init: function() {
+      this.reset();
+      this.bindFocusState();
+    },
+
+		/**
+     * input 요소에 값이 있고 포커스가 있는 경우에만 초기화 버튼을 보여줍니다.
+     */
+    toggleResetButton: function(input) {
+      const wrapper = input.closest('.form_input');
+      const resetButton = wrapper?.querySelector('.btn_input_reset');
+
+      if (!resetButton) return;
+
+      if (document.activeElement === input && input.value.trim() !== '') {
+        resetButton.classList.add('visible');  // 클래스로 표시
+      } else {
+        resetButton.classList.remove('visible'); // 클래스 제거
+      }
+    },
+
+    /**
+     * `.btn_input_reset` 버튼 클릭 시 인접한 input 값을 초기화하고 포커스를 이동합니다.
+     */
+    reset: function() {
+      const resetButtons = document.querySelectorAll('.btn_input_reset');
+
+      resetButtons.forEach((btn) => {
+        btn.addEventListener('click', function() {
+          const input = btn.closest('.form_input')?.querySelector('.form_control');
+          if (input) {
+            input.value = '';
+            input.focus();
+            btn.classList.remove('visible'); // 클래스 제거
+          }
+        });
+      });
+    },
+
+    /**
+     * input 요소에 포커스되면 `.form_input`에 'focused' 클래스 추가,
+     * 포커스 해제되면 제거. 입력값에 따라 리셋 버튼 제어.
+     */
+    bindFocusState: function() {
+      const inputs = document.querySelectorAll('.form_control');
+
+      inputs.forEach((input) => {
+        const wrapper = input.closest('.form_input');
+        if (!wrapper) return;
+
+        const resetButton = wrapper.querySelector('.btn_input_reset');
+
+        // input에 포커스
+        input.addEventListener('focus', () => {
+          wrapper.classList.add('focused');
+          UI.input.toggleResetButton(input);
+        });
+
+        // input에서 포커스 빠짐
+        input.addEventListener('blur', () => {
+          setTimeout(() => {
+            const active = document.activeElement;
+            if (resetButton && active !== resetButton) {
+              wrapper.classList.remove('focused');
+              resetButton.classList.remove('visible'); // 클래스로 숨김
+            }
+          }, 0);
+        });
+
+        // 입력 중일 때 버튼 노출 상태 업데이트
+        input.addEventListener('input', () => {
+          UI.input.toggleResetButton(input);
+        });
+
+        // 버튼에서 포커스가 빠졌을 때 숨김
+        if (resetButton) {
+          resetButton.addEventListener('blur', () => {
+            resetButton.classList.remove('visible');
+          });
+
+          // 버튼에 포커스가 갔을 때 focused 클래스 유지
+          resetButton.addEventListener('focus', () => {
+            wrapper.classList.add('focused');
+          });
+        }
+      });
     },
   },
 
