@@ -32,7 +32,8 @@ const UI = {
       this.tab.initAll();
       this.loadHTMLIncludes(UI.util.getVersion());
 			this.input.init();
-
+			this.accordion.init();
+			this.tooltip.init();
   },
 
   /**
@@ -509,6 +510,69 @@ const UI = {
 
   util: {
 		/**
+		 * 지정된 요소를 slideDown 애니메이션으로 표시합니다. (jQuery slideDown 유사)
+		 * @param {HTMLElement} el - 애니메이션을 적용할 요소
+		 * @param {number} [duration=350] - 애니메이션 지속 시간 (ms)
+		 */
+		slideDown: function(el, duration = 350) {
+			if (!el) return;
+
+			el.style.removeProperty('display');
+			let display = window.getComputedStyle(el).display;
+			if (display === 'none') display = 'block';
+			el.style.display = display;
+
+			const height = el.offsetHeight;
+
+			el.style.overflow = 'hidden';
+			el.style.height = 0;
+			el.offsetHeight; // 강제 리플로우
+
+			el.classList.remove('collapse', 'show');
+			el.classList.add('collapsing');
+
+			el.style.transition = `height ${duration}ms ease`;
+			el.style.height = `${height}px`;
+
+			setTimeout(() => {
+				el.classList.remove('collapsing');
+				el.classList.add('collapse', 'show');
+				el.style.removeProperty('height');
+				el.style.removeProperty('overflow');
+				el.style.removeProperty('transition');
+			}, duration);
+		},
+
+		/**
+		 * 지정된 요소를 slideUp 애니메이션으로 숨깁니다. (jQuery slideUp 유사)
+		 * @param {HTMLElement} el - 애니메이션을 적용할 요소
+		 * @param {number} [duration=350] - 애니메이션 지속 시간 (ms)
+		 */
+		slideUp: function(el, duration = 350) {
+			if (!el) return;
+
+			el.style.height = `${el.offsetHeight}px`;
+			el.offsetHeight; // 강제 리플로우
+
+			el.style.overflow = 'hidden';
+			el.style.transition = `height ${duration}ms ease`;
+
+			el.classList.remove('collapse', 'show');
+			el.classList.add('collapsing');
+
+			el.style.height = 0;
+
+			setTimeout(() => {
+				el.classList.remove('collapsing');
+				el.classList.add('collapse');
+				el.style.display = 'none';
+				el.style.removeProperty('height');
+				el.style.removeProperty('overflow');
+				el.style.removeProperty('transition');
+			}, duration);
+		},
+		
+		/**
 		 * 현재 날짜를 'YYYYMMDD' 형식의 문자열로 반환합니다.
 		 * 
 		 * 주로 캐시 무효화를 위한 버전 파라미터로 사용할 수 있으며,
@@ -671,54 +735,72 @@ const UI = {
   },
 
 	input: {
-		/**
+    /**
      * input 관련 초기화 함수들을 호출합니다.
      * 보통 페이지 로드 시 한 번 실행합니다.
      */
-    init: function() {
+    init: function () {
       this.reset();
       this.bindFocusState();
     },
 
-		/**
+    /**
      * input 요소에 값이 있고 포커스가 있는 경우에만 초기화 버튼을 보여줍니다.
      */
-    toggleResetButton: function(input) {
+    toggleResetButton: function (input) {
       const wrapper = input.closest('.form_input');
       const resetButton = wrapper?.querySelector('.btn_input_reset');
 
       if (!resetButton) return;
 
       if (document.activeElement === input && input.value.trim() !== '') {
-        resetButton.classList.add('visible');  // 클래스로 표시
+        resetButton.classList.add('visible');  // 리셋 버튼 노출
       } else {
-        resetButton.classList.remove('visible'); // 클래스 제거
+        resetButton.classList.remove('visible'); // 리셋 버튼 숨김
       }
     },
 
     /**
      * `.btn_input_reset` 버튼 클릭 시 인접한 input 값을 초기화하고 포커스를 이동합니다.
      */
-    reset: function() {
+    reset: function () {
       const resetButtons = document.querySelectorAll('.btn_input_reset');
 
       resetButtons.forEach((btn) => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
           const input = btn.closest('.form_input')?.querySelector('.form_control');
           if (input) {
             input.value = '';
             input.focus();
-            btn.classList.remove('visible'); // 클래스 제거
+            btn.classList.remove('visible'); // 리셋 버튼 숨김
           }
         });
       });
     },
 
     /**
+     * wrapper 내부에 포커스가 완전히 사라졌을 때
+     * focused / visible 클래스를 제거합니다.
+     */
+    handleFocusOut: function (wrapper) {
+      setTimeout(() => {
+        const active = document.activeElement;
+				console.log(active)
+        if (!wrapper.contains(active)) {
+          wrapper.classList.remove('focused');
+          const resetButton = wrapper.querySelector('.btn_input_reset');
+          if (resetButton) {
+            resetButton.classList.remove('visible');
+          }
+        }
+      }, 0);
+    },
+
+    /**
      * input 요소에 포커스되면 `.form_input`에 'focused' 클래스 추가,
      * 포커스 해제되면 제거. 입력값에 따라 리셋 버튼 제어.
      */
-    bindFocusState: function() {
+    bindFocusState: function () {
       const inputs = document.querySelectorAll('.form_control');
 
       inputs.forEach((input) => {
@@ -727,37 +809,37 @@ const UI = {
 
         const resetButton = wrapper.querySelector('.btn_input_reset');
 
-        // input에 포커스
+        // input에 포커스: focused 클래스 추가 및 리셋 버튼 토글
         input.addEventListener('focus', () => {
           wrapper.classList.add('focused');
           UI.input.toggleResetButton(input);
         });
 
-        // input에서 포커스 빠짐
+        // input에서 포커스 빠짐: wrapper 전체의 포커스 상태 확인
         input.addEventListener('blur', () => {
-          setTimeout(() => {
-            const active = document.activeElement;
-            if (resetButton && active !== resetButton) {
-              wrapper.classList.remove('focused');
-              resetButton.classList.remove('visible'); // 클래스로 숨김
-            }
-          }, 0);
+          UI.input.handleFocusOut(wrapper);
         });
 
-        // 입력 중일 때 버튼 노출 상태 업데이트
+        // btn에서 포커스 빠짐: wrapper 전체의 포커스 상태 확인
+				wrapper.querySelector('.btn')?.addEventListener('blur', () => {
+          UI.input.handleFocusOut(wrapper);
+        });
+
+        // 입력 중: 리셋 버튼 표시 상태 업데이트
         input.addEventListener('input', () => {
           UI.input.toggleResetButton(input);
         });
 
-        // 버튼에서 포커스가 빠졌을 때 숨김
+        // 리셋 버튼 관련 이벤트
         if (resetButton) {
-          resetButton.addEventListener('blur', () => {
-            resetButton.classList.remove('visible');
-          });
-
-          // 버튼에 포커스가 갔을 때 focused 클래스 유지
+          // 버튼 포커스: focused 유지
           resetButton.addEventListener('focus', () => {
             wrapper.classList.add('focused');
+          });
+
+          // 버튼 blur: wrapper 외부로 나가면 focused 제거
+          resetButton.addEventListener('blur', () => {
+            UI.input.handleFocusOut(wrapper);
           });
         }
       });
@@ -843,9 +925,173 @@ const UI = {
     hide: () => {},
   },
 
-  tooltip: {
+	tooltip: {
+		// 툴팁과 버튼 사이 간격 (px)
+		TOOLTIP_GAP: 4,
+		
+		/**
+		 * 툴팁 기능 초기화
+		 *
+		 * - 클릭 이벤트를 통해 툴팁 토글
+		 * - 창 리사이즈 시 툴팁 제거
+		 * - HTML 내에 미리 존재하는 DOM 요소 기반으로 작동
+		 *
+		 * @function
+		*/
+		init: function () {
+			document.addEventListener('click', (e) => {
+				const trigger = e.target.closest('[data-tooltip-target]');
+				if (trigger) {
+					e.preventDefault();
+					UI.tooltip.toggle(trigger);
+				} else {
+					UI.tooltip.hideAll();
+				}
+			});
 
-  },
+			window.addEventListener('resize', UI.tooltip.hideAll);
+		},
+
+		/**
+		 * 트리거 요소를 클릭했을 때 툴팁을 토글합니다.
+		 *
+		 * - 이미 열린 툴팁이면 닫고
+		 * - 닫혀 있으면 열고 위치 계산 후 표시
+		 *
+		 * @param {HTMLElement} trigger - 툴팁을 트리거하는 요소 (data-tooltip-target 속성 필요)
+		*/
+		toggle: function (trigger) {
+			const targetSelector = trigger.dataset.tooltipTarget;
+			if (!targetSelector) return;
+
+			const tooltip = document.querySelector(targetSelector);
+			if (!tooltip) return;
+
+			// 이미 열려 있다면 닫기
+			if (tooltip.classList.contains('is_active')) {
+				UI.tooltip.hideAll();
+				return;
+			}
+
+			// 다른 툴팁 닫고 현재 툴팁 표시
+			UI.tooltip.hideAll();
+			UI.tooltip.show(trigger, tooltip);
+		},
+
+		/**
+		 * 트리거 요소에 맞게 툴팁 요소를 보여주고 위치를 설정합니다.
+		 *
+		 * @param {HTMLElement} trigger - 툴팁을 트리거한 버튼/요소
+		 * @param {HTMLElement} tooltip - 보여줄 툴팁 DOM 요소
+		*/
+		show: function (trigger, tooltip) {
+			const wrapper = trigger.closest('.tooltip_wrap');
+			if (!wrapper) return;
+
+			// data-position, data-align 읽기 (default align: center)
+			// 속성이 없는 경우 기본값 top / center
+			const position = tooltip.dataset.tooltipPosition || 'top';
+			const align = tooltip.dataset.tooltipAlign || 'center';
+
+			const triggerRect = trigger.getBoundingClientRect();
+			const wrapperRect = wrapper.getBoundingClientRect();
+			const tooltipRect = tooltip.getBoundingClientRect();
+
+			// wrapper 기준 상대좌표
+			const relativeTop = triggerRect.top - wrapperRect.top;
+			const relativeLeft = triggerRect.left - wrapperRect.left;
+
+			const gap = this.TOOLTIP_GAP;
+
+			let top = 0;
+			let left = 0;
+
+			switch (position) {
+				case 'top':
+					top = relativeTop - tooltipRect.height - gap;
+					switch (align) {
+						case 'start':
+							left = relativeLeft;
+							break;
+						case 'end':
+							left = relativeLeft + triggerRect.width - tooltipRect.width;
+							break;
+						case 'center':
+						default:
+							left = relativeLeft + (triggerRect.width / 2) - (tooltipRect.width / 2);
+							break;
+					}
+					break;
+
+				case 'bottom':
+					top = relativeTop + triggerRect.height + gap;
+					switch (align) {
+						case 'start':
+							left = relativeLeft;
+							break;
+						case 'end':
+							left = relativeLeft + triggerRect.width - tooltipRect.width;
+							break;
+						case 'center':
+						default:
+							left = relativeLeft + (triggerRect.width / 2) - (tooltipRect.width / 2);
+							break;
+					}
+					break;
+
+				case 'left':
+					left = relativeLeft - tooltipRect.width - gap;
+					switch (align) {
+						case 'start':
+							top = relativeTop;
+							break;
+						case 'end':
+							top = relativeTop + triggerRect.height - tooltipRect.height;
+							break;
+						case 'center':
+						default:
+							top = relativeTop + (triggerRect.height / 2) - (tooltipRect.height / 2);
+							break;
+					}
+					break;
+
+				case 'right':
+					left = relativeLeft + triggerRect.width + gap;
+					switch (align) {
+						case 'start':
+							top = relativeTop;
+							break;
+						case 'end':
+							top = relativeTop + triggerRect.height - tooltipRect.height;
+							break;
+						case 'center':
+						default:
+							top = relativeTop + (triggerRect.height / 2) - (tooltipRect.height / 2);
+							break;
+					}
+					break;
+			}
+
+			tooltip.style.top = `${top}px`;
+			tooltip.style.left = `${left}px`;
+			tooltip.classList.add('is_active');
+			tooltip.setAttribute('aria-hidden', 'false');
+		},
+
+		/**
+		 * 현재 열린 모든 툴팁을 닫고 위치 스타일을 초기화합니다.
+		 *
+		 * @function
+		*/
+		hideAll: function () {
+			const openTooltips = document.querySelectorAll('.tooltip.is_active');
+			openTooltips.forEach(tip => {
+				tip.classList.remove('is_active');
+				tip.style.top = '';
+				tip.style.left = '';
+			});
+		}
+	},
 
 	tab : {
 		// 스크롤 위치 인식 허용 오차 (px)
@@ -1168,11 +1414,149 @@ const UI = {
 		},
 	},
 
-  accordion: {
+	accordion : {
+		/**
+		 * 초기화: 모든 아코디언 버튼에 이벤트 바인딩
+		 */
+		init: function () {
+			const accordionBtns = document.querySelectorAll('.accordion_button');
+			accordionBtns.forEach(btn => {
+				btn.addEventListener('click', (e) => {
+					this.toggle(e.target);
+				});
+			});
+		},
 
-  },
+		/**
+		 * 아코디언 토글 동작 처리
+		 * @param {HTMLElement} target - 클릭된 버튼 요소
+		 */
+		toggle: function (target) {
+			const self = target;
+			const accordion = self.closest('.accordion');
+			const accBtns = accordion.querySelectorAll('.accordion-button');
+			const accItem = self.closest('.accordion-item');
+			const accSiblings = UI.dom.getSiblings(accItem);
+			const accCollapse = accordion.querySelector('#' + self.getAttribute('aria-controls'));
 
-  form: {
+			const allowMultiple = accordion.hasAttribute('data-accordion-all');
+
+			const isCollapsed = self.classList.contains('collapsed');
+
+			if (isCollapsed) {
+				UI.util.slideDown(accCollapse, 350);
+
+				if (!allowMultiple) {
+					// 단일 열림 모드일 때만 형제 아코디언 닫기
+					accSiblings.forEach(sibling => {
+						const sibCollapse = sibling.querySelector('.accordion-collapse');
+						const sibButton = sibling.querySelector('.accordion-button');
+						if (sibCollapse.classList.contains('show')) {
+							UI.util.slideUp(sibCollapse, 350);
+							this.hideHeader(sibButton);
+						}
+					});
+
+					accBtns.forEach(btn => this.hideHeader(btn));
+				}
+
+				this.showHeader(self);
+			} else {
+				UI.util.slideUp(accCollapse, 350);
+				this.hideHeader(self);
+			}
+
+			// 클릭한 아코디언 위치로 스크롤 이동
+			setTimeout(() => {
+				const accordionWrapper = self.closest('.accordion');
   
-  },
+				// 스크롤 옵션 판단
+				const hasScroll = !accordionWrapper.hasAttribute('data-accordion-no-scroll');
+
+				if (hasScroll) {
+					const scrollTargetY = this.getOffsetTopWithHeader(self);
+					window.scroll({
+						top: scrollTargetY,
+						left: 0,
+						behavior: 'smooth'
+					});
+				}
+			}, 400);
+		},
+
+		getOffsetTopWithHeader: function (element) {
+			const headerHeight = UI.dom.getOffsetHeight('#header');
+			const elementTop = element.getBoundingClientRect().top + window.pageYOffset;
+			return elementTop - headerHeight;
+		},
+
+		/**
+		 * 아코디언 헤더를 닫는 함수 (collapsed 추가)
+		 * @param {HTMLElement} target
+		 */
+		hideHeader: function (target) {
+			target.classList.add('collapsed');
+			target.setAttribute('aria-expanded', 'false');
+		},
+
+		/**
+		 * 아코디언 헤더를 여는 함수 (collapsed 제거)
+		 * @param {HTMLElement} target
+		 */
+		showHeader: function (target) {
+			target.classList.remove('collapsed');
+			target.setAttribute('aria-expanded', 'true');
+		},
+
+		/**
+		 * 아코디언 바디 보이기
+		 * @param {HTMLElement} element
+		 * @param {number} duration
+		 */
+		showCollapse: function (element, duration = 350) {
+			element.style.height = '0px';
+			element.classList.add('collapsing');
+			element.classList.remove('collapse');
+			element.classList.remove('show');
+
+			const height = element.scrollHeight;
+			requestAnimationFrame(() => {
+				element.style.transition = `height ${duration}ms ease`;
+				element.style.height = `${height}px`;
+			});
+
+			setTimeout(() => {
+				element.classList.remove('collapsing');
+				element.classList.add('collapse');
+				element.classList.add('show');
+				element.style.height = '';
+				element.style.transition = '';
+			}, duration);
+		},
+
+		/**
+		 * 아코디언 바디 숨기기
+		 * @param {HTMLElement} element
+		 * @param {number} duration
+		 */
+		hideCollapse: function (element, duration = 350) {
+			element.style.height = `${element.scrollHeight}px`;
+			element.style.transition = `height ${duration}ms ease`;
+
+			requestAnimationFrame(() => {
+				element.style.height = '0px';
+			});
+
+			element.classList.remove('collapse');
+			element.classList.remove('show');
+			element.classList.add('collapsing');
+
+			setTimeout(() => {
+				element.classList.remove('collapsing');
+				element.classList.add('collapse');
+				element.style.height = '';
+				element.style.transition = '';
+			}, duration);
+		},
+	},
 };
