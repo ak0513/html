@@ -3,9 +3,8 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>GSAP Pin + Scrub (Flexible Height)</title>
+	<title>GSAP Pin + Scrub (Natural Start)</title>
 
-	<!-- GSAP -->
 	<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
 	<script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
 
@@ -22,15 +21,13 @@
 			color: #111;
 		}
 
-		/* 스크롤 테스트용 */
 		.spacer {
 			height: 100vh;
 			background: #f2f2f2;
 		}
 
-		/* PIN SECTION */
 		.pin-section {
-			min-height: 100vh; /* ⭐ 핵심 */
+			min-height: 100vh;
 			padding: 80px 20px;
 			background: #fff;
 		}
@@ -40,11 +37,6 @@
 			font-weight: 500;
 			line-height: 1.5;
 			margin-bottom: 28px;
-			word-break: keep-all;
-		}
-
-		.text-item:last-child {
-			margin-bottom: 0;
 		}
 	</style>
 </head>
@@ -53,14 +45,11 @@
 	<div class="spacer"></div>
 
 	<section class="pin-section">
-		<p class="text-item">pin 섹션은 화면을 고정하지만</p>
-		<p class="text-item">콘텐츠 높이를 고정하지는 않습니다.</p>
-		<p class="text-item">텍스트가 많아져도</p>
-		<p class="text-item">스크롤에 맞춰 자연스럽게</p>
-		<p class="text-item">등장하도록 만들 수 있습니다.</p>
-		<p class="text-item">이 방식은 모바일에서도</p>
-		<p class="text-item">안정적으로 동작하며</p>
-		<p class="text-item">실무에서 가장 많이 쓰이는 구조입니다.</p>
+		<p class="text-item">이제 스크롤이 시작되면</p>
+		<p class="text-item">바로 반응하지 않고</p>
+		<p class="text-item">조금 여유를 둔 뒤</p>
+		<p class="text-item">자연스럽게 텍스트가</p>
+		<p class="text-item">등장합니다.</p>
 	</section>
 
 	<div class="spacer"></div>
@@ -74,14 +63,18 @@
 			scrollTrigger: {
 				trigger: section,
 				start: "top top",
-				end: () => "+=" + section.scrollHeight * 0.6,
+				end: () => "+=" + section.scrollHeight * 0.7,
 				pin: true,
-				scrub: 0.6,                // ⭐ 살짝 관성
+				scrub: 0.6,
 				anticipatePin: 1,
-				invalidateOnRefresh: true // 모바일 대응
+				invalidateOnRefresh: true
 			}
 		});
 
+		// ⬇️ 첫 20%는 아무 변화 없는 구간
+		tl.to({}, { duration: 0.2 });
+
+		// ⬇️ 그 다음부터 텍스트 등장
 		tl.fromTo(
 			".text-item",
 			{
