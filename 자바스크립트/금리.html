@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>대출 조기상환 계산기</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        input {
+            margin: 5px 0;
+            padding: 5px;
+        }
+
+        button {
+            padding: 8px 15px;
+            margin-top: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: right;
+        }
+
+        th {
+            background: #f5f5f5;
+        }
+
+        .result-block {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 20px;
+            background: #fafafa;
+        }
+
+        .title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>대출 조기상환 계산기</h2>
+
+    <label>대출원금 (원)</label><br>
+    <input type="number" id="principal" value="100000000"><br>
+
+    <label>연이율 (%)</label><br>
+    <input type="number" id="rate" value="5"><br>
+
+    <label>대출기간 (년)</label><br>
+    <input type="number" id="years" value="30"><br>
+
+    <label>조기상환 시점 (년)</label><br>
+    <input type="number" id="earlyYear" value="4"><br>
+
+    <button onclick="runCalculation()">계산하기</button>
+
+    <div id="results"></div>
+
+    <script>
+        function calculateLoan({ principal, annualRate, years, earlyRepayYear, type }) {
+
+            const monthlyRate = annualRate / 12;
+            const totalMonths = years * 12;
+            const earlyMonths = earlyRepayYear * 12;
+
+            let remaining = principal;
+            let totalInterest = 0;
+            let totalPrincipalPaid = 0;
+            let monthlyPayment = 0;
+
+            if (type === "equalPayment") {
+
+                monthlyPayment =
+                    principal *
+                    (monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) /
+                    (Math.pow(1 + monthlyRate, totalMonths) - 1);
+
+                for (let m = 0; m < earlyMonths; m++) {
+                    const interest = remaining * monthlyRate;
+                    const principalPaid = monthlyPayment - interest;
+
+                    totalInterest += interest;
+                    totalPrincipalPaid += principalPaid;
+                    remaining -= principalPaid;
+                }
+
+            } else if (type === "equalPrincipal") {
+
+                const monthlyPrincipal = principal / totalMonths;
+
+                for (let m = 0; m < earlyMonths; m++) {
+                    const interest = remaining * monthlyRate;
+                    const payment = monthlyPrincipal + interest;
+
+                    totalInterest += interest;
+                    totalPrincipalPaid += monthlyPrincipal;
+                    remaining -= monthlyPrincipal;
+
+                    if (m === 0) {
+                        monthlyPayment = payment;
+                    }
+                }
+            }
+
+            return {
+                monthlyPayment,
+                totalInterest,
+                totalPrincipalPaid,
+                remainingPrincipal: remaining
+            };
+        }
+
+        function runCalculation() {
+
+            const principal = Number(document.getElementById("principal").value);
+            const ratePercent = Number(document.getElementById("rate").value);
+            const rate = ratePercent / 100;
+            const years = Number(document.getElementById("years").value);
+            const earlyYear = Number(document.getElementById("earlyYear").value);
+
+            const equalPayment = calculateLoan({
+                principal,
+                annualRate: rate,
+                years,
+                earlyRepayYear: earlyYear,
+                type: "equalPayment"
+            });
+
+            const equalPrincipal = calculateLoan({
+                principal,
+                annualRate: rate,
+                years,
+                earlyRepayYear: earlyYear,
+                type: "equalPrincipal"
+            });
+
+            const resultHTML = `
+        <div class="result-block">
+            <div class="title">
+                📌 대출 ${principal.toLocaleString()}원 /
+                금리 ${ratePercent}% /
+                만기 ${years}년 /
+                ${earlyYear}년 후 조기상환
+            </div>
+            <div style='overflow:auto'>
+                <table>
+                    <tr>
+                        <th>구분</th>
+                        <th>월 납입액</th>
+                        <th>${earlyYear}년간 이자</th>
+                        <th>${earlyYear}년간 원금</th>
+                        <th>${earlyYear}년 후 남은 원금</th>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left;">원리금균등</td>
+                        <td>${Math.round(equalPayment.monthlyPayment).toLocaleString()}</td>
+                        <td>${Math.round(equalPayment.totalInterest).toLocaleString()}</td>
+                        <td>${Math.round(equalPayment.totalPrincipalPaid).toLocaleString()}</td>
+                        <td>${Math.round(equalPayment.remainingPrincipal).toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left;">원금균등</td>
+                        <td>${Math.round(equalPrincipal.monthlyPayment).toLocaleString()}</td>
+                        <td>${Math.round(equalPrincipal.totalInterest).toLocaleString()}</td>
+                        <td>${Math.round(equalPrincipal.totalPrincipalPaid).toLocaleString()}</td>
+                        <td>${Math.round(equalPrincipal.remainingPrincipal).toLocaleString()}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    `;
+
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.insertAdjacentHTML("afterbegin", resultHTML);
+        }
+    </script>
+
+</body>
+
+</html>
